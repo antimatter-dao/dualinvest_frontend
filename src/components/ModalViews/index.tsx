@@ -1,16 +1,17 @@
-import React from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import { AutoColumn, ColumnCenter } from '../Column'
 import styled from 'styled-components'
 import { RowBetween } from '../Row'
-import { TYPE, CloseIcon, CustomLightSpinner } from '../../theme'
+import { CloseIcon } from '../../theme'
 import { ReactComponent as CheckCircle } from '../../assets/svg/transaction_submitted.svg'
 import { ReactComponent as CrossCircle } from '../../assets/svg/transaction_error.svg'
-import Circle from '../../assets/svg/gray_loader.svg'
 import { getEtherscanLink } from '../../utils'
 import { ExternalLink } from '../../theme/components'
 import useTheme from 'hooks/useTheme'
 import { ButtonPrimary } from 'components/Button'
+import { Typography } from '@material-ui/core'
+import { Text } from 'rebass'
+import Spinner from 'components/Spinner'
 
 const ConfirmOrLoadingWrapper = styled.div`
   width: 100%;
@@ -29,11 +30,11 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
         <CloseIcon onClick={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
-        <CustomLightSpinner src={Circle} alt="loader" size={'45px'} />
+        <Spinner size={'45px'} color="#ffffff" />
       </ConfirmedIcon>
       <AutoColumn gap="28px" justify={'center'}>
         {children}
-        <TYPE.smallGray>Confirm this transaction in your wallet</TYPE.smallGray>
+        <Typography variant="caption">Confirm this transaction in your wallet</Typography>
       </AutoColumn>
     </ConfirmOrLoadingWrapper>
   )
@@ -68,15 +69,15 @@ export function SubmittedView({
         {children}
         {!hideLink && !isError && chainId && hash && (
           <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')} style={{ color: theme.primary1 }}>
-            <TYPE.main fontWeight={400} fontSize={14} color={theme.primary1}>
+            <Text fontWeight={400} fontSize={14} color={theme.primary1}>
               View on Etherscan
-            </TYPE.main>
+            </Text>
           </ExternalLink>
         )}
         <ButtonPrimary onClick={onDismiss} style={{ marginTop: '-10px' }}>
-          <TYPE.main fontWeight={500} fontSize={16} color={theme.bg1}>
+          <Text fontWeight={500} fontSize={16} color={theme.bg1}>
             Close
-          </TYPE.main>
+          </Text>
         </ButtonPrimary>
       </AutoColumn>
     </ConfirmOrLoadingWrapper>

@@ -1,4 +1,3 @@
-import React from 'react'
 import JSBI from 'jsbi'
 import { CurrencyAmount, Fraction } from '../../constants/token/fractions'
 

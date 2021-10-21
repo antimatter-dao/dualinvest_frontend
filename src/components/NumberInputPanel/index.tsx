@@ -1,12 +1,11 @@
-import React from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { AutoRow } from '../Row'
-import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 
 import { useActiveWeb3React } from '../../hooks'
 import useTheme from '../../hooks/useTheme'
+import { Text } from 'rebass'
 
 const InputRow = styled.div<{ disabled?: boolean }>`
   align-items: center;
@@ -109,12 +108,12 @@ export default function NumberInputPanel({
         <LabelRow>
           <AutoRow justify="space-between">
             {!hideLabel && (
-              <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+              <Text color={theme.text3} fontWeight={500} fontSize={14}>
                 {label}
-              </TYPE.body>
+              </Text>
             )}
             {account && (
-              <TYPE.body
+              <Text
                 onClick={onMax}
                 color={theme.text3}
                 fontWeight={500}
@@ -122,7 +121,7 @@ export default function NumberInputPanel({
                 style={{ display: 'inline', cursor: 'pointer' }}
               >
                 {!hideBalance ? (customBalanceText ?? 'Your balance: ') + '' : ''}
-              </TYPE.body>
+              </Text>
             )}
           </AutoRow>
         </LabelRow>

@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'
 import { Currency } from '../../constants/token/currency'

@@ -1,15 +1,13 @@
-import React  from 'react'
 import styled from 'styled-components'
+import { useTheme } from '@material-ui/core'
 import { darken } from 'polished'
+import { Text } from 'rebass'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { AutoRow } from '../Row'
-import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
-import { useTranslation } from 'react-i18next'
-import useTheme from '../../hooks/useTheme'
 import { Currency } from '../../constants/token/currency'
 
 const InputRow = styled.div<{ selected: boolean; halfWidth?: boolean; hideSelect?: boolean }>`
@@ -175,8 +173,6 @@ export default function CurrencyInputPanel({
   halfWidth,
   negativeMarginTop
 }: CurrencyInputPanelProps) {
-  const { t } = useTranslation()
-
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
@@ -187,13 +183,13 @@ export default function CurrencyInputPanel({
         {!hideInput && (
           <LabelRow>
             <AutoRow justify="space-between">
-              <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+              <Text color={theme.textColor.text3} fontWeight={500} fontSize={14}>
                 {label}
-              </TYPE.body>
+              </Text>
               {account && (
-                <TYPE.body
+                <Text
                   onClick={onMax}
-                  color={theme.text3}
+                  color={theme.textColor.text3}
                   fontWeight={500}
                   fontSize={14}
                   style={{ display: 'inline', cursor: 'pointer' }}
@@ -201,7 +197,7 @@ export default function CurrencyInputPanel({
                   {!hideBalance && !!currency && selectedCurrencyBalance
                     ? (customBalanceText ?? 'Your balance: ') + selectedCurrencyBalance?.toSignificant(6)
                     : ' -'}
-                </TYPE.body>
+                </Text>
               )}
             </AutoRow>
           </LabelRow>
@@ -213,7 +209,6 @@ export default function CurrencyInputPanel({
               className="open-currency-select-button"
               onClick={() => {
                 if (!disableCurrencySelect) {
-
                 }
               }}
               halfWidth={halfWidth}
@@ -225,7 +220,7 @@ export default function CurrencyInputPanel({
                       ? currency.symbol.slice(0, 4) +
                         '...' +
                         currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                      : currency?.symbol) || t('selectToken')}
+                      : currency?.symbol) || 'Select a token'}
                   </StyledTokenName>
                 </Aligner>
                 {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}

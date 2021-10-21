@@ -1,12 +1,12 @@
-import React, { useState, useRef, useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import { useState, useRef } from 'react'
+import styled from 'styled-components'
+import { darken } from 'polished'
+import { Text } from 'rebass'
+import { useTheme } from '@material-ui/core'
 
 import QuestionHelper from '../QuestionHelper'
-import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-
-import { darken } from 'polished'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -92,14 +92,14 @@ export interface SlippageTabsProps {
   onlySlippage?: boolean
 }
 
-export default function SlippageTabs({
+export default function TransactionSettings({
   rawSlippage,
   setRawSlippage,
   deadline,
   setDeadline,
   onlySlippage
 }: SlippageTabsProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const inputRef = useRef<HTMLInputElement>()
 
@@ -154,9 +154,9 @@ export default function SlippageTabs({
     <AutoColumn gap="24px">
       <AutoColumn gap="sm">
         <RowFixed>
-          <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+          <Text fontWeight={400} fontSize={14} color={theme.textColor.text2}>
             Slippage tolerance
-          </TYPE.black>
+          </Text>
           <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
         </RowFixed>
         <RowBetween>
@@ -232,9 +232,9 @@ export default function SlippageTabs({
       {!onlySlippage && (
         <AutoColumn gap="sm">
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <Text fontSize={14} fontWeight={400} color={theme.textColor.text2}>
               Transaction deadline
-            </TYPE.black>
+            </Text>
             <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />
           </RowFixed>
           <RowFixed>
@@ -249,9 +249,9 @@ export default function SlippageTabs({
                 onChange={e => parseCustomDeadline(e.target.value)}
               />
             </OptionCustom>
-            <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
+            <Text style={{ paddingLeft: '8px' }} fontSize={14}>
               minutes
-            </TYPE.body>
+            </Text>
           </RowFixed>
         </AutoColumn>
       )}

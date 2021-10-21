@@ -1,9 +1,7 @@
-import React from 'react'
 import styled from 'styled-components'
 import { useActivePopups } from '../../state/application/hooks'
 import { AutoColumn } from '../Column'
 import PopupItem from './PopupItem'
-import { useURLWarningVisible } from '../../state/user/hooks'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
   position: relative;
@@ -47,67 +45,9 @@ export default function Popups() {
   // get all popups
   const activePopups = useActivePopups()
 
-  // const activePopups = [
-  //   {
-  //     removeAfterMs: 1,
-  //     content: {
-  //       txn: {
-  //         hash: '045983485739458733145',
-  //         success: true,
-  //         summary: '23857jhsjhaasfdsdaf'
-  //       }
-  //     },
-  //     key: 'asaaaaaa'
-  //   },
-  //   {
-  //     removeAfterMs: 1,
-  //     content: {
-  //       listUrl: 'listUrl',
-  //       oldList: [
-  //         {
-  //           name: 'cccccc',
-  //           timestamp: 'cccccccc',
-  //           version: 'cccccccc',
-  //           tokens: [],
-  //           keywords: [],
-  //           tags: {
-  //             tagID: {
-  //               name: 'name',
-  //               description: 'description'
-  //             }
-  //           },
-
-  //           logoURI: 'logoURI'
-  //         }
-  //       ],
-  //       newList: [
-  //         {
-  //           name: 'cccccc',
-  //           timestamp: 'cccccccc',
-  //           version: 'cccccccc',
-  //           tokens: [],
-  //           keywords: [],
-  //           tags: {
-  //             tagID: {
-  //               name: 'name',
-  //               description: 'description'
-  //             }
-  //           },
-
-  //           logoURI: 'logoURI'
-  //         }
-  //       ],
-  //       auto: true
-  //     },
-  //     key: 'asaaaaaavbbbbb'
-  //   }
-  // ]
-
-  const urlWarningActive = useURLWarningVisible()
-
   return (
     <>
-      <FixedPopupColumn gap="20px" extraPadding={urlWarningActive}>
+      <FixedPopupColumn gap="20px" extraPadding={false}>
         {activePopups.map(item => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}

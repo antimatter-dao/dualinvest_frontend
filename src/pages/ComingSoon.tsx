@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import { Dots } from '../components/styleds'
 const Frame = styled.div`

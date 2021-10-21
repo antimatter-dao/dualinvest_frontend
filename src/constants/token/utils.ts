@@ -77,6 +77,6 @@ export function sortedInsert<T>(items: T[], add: T, maxSize: number, comparator:
       }
     }
     items.splice(lo, 0, add)
-    return isFull ? items.pop()! : null
+    return isFull ? items.pop() ?? null : null
   }
 }

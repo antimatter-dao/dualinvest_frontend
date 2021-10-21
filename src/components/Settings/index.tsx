@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
@@ -9,12 +9,9 @@ import {
   useExpertModeManager,
   useUserTransactionTTL,
   useUserSlippageTolerance,
-  useUserRedeemSlippageTolerance,
-  useUserGenerationSlippageTolerance,
   useUserSingleHopOnly
 } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
-import { ButtonError } from '../Button'
+import { ButtonOutlinedPrimary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
@@ -22,7 +19,7 @@ import { RowBetween, RowFixed, AutoRow } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import { ReactComponent as Settings } from '../../assets/svg/setting.svg'
-import { /*Filler,*/ Wrapper } from '../Modal'
+import { Wrapper } from '../Modal'
 import { Marginer } from 'pages/App'
 
 const StyledMenuIcon = styled(Settings)`
@@ -97,9 +94,7 @@ const Overlay = styled.div`
   left: 0
   background-color: ${({ theme }) => theme.modalBG};
 `
-// ${({ theme }) => theme.mediaWidth.upToMedium`
 
-// `}
 const OverlayWrapper = styled.div`
 width: 100%;
 display: flex;
@@ -144,26 +139,13 @@ const CustomizedAutoRow = styled(AutoRow)`
 `
 export const SLIPPAGE_TYPE = { generation: 'generation', redeem: 'redeem' }
 
-export default function SettingsTab({
-  onlySlippage,
-  slippageType
-}: {
-  onlySlippage?: boolean
-  slippageType?: typeof SLIPPAGE_TYPE[keyof typeof SLIPPAGE_TYPE]
-}) {
+export default function SettingsTab({ onlySlippage }: { onlySlippage?: boolean }) {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
 
   const theme = useContext(ThemeContext)
-  const userSlippage = useUserSlippageTolerance()
-  const generationSlippage = useUserGenerationSlippageTolerance()
-  const redeemSlippage = useUserRedeemSlippageTolerance()
-  const [currentSlippage, currentSlippageSetting] = slippageType
-    ? slippageType === SLIPPAGE_TYPE.generation
-      ? generationSlippage
-      : redeemSlippage
-    : userSlippage
+  const [userSlippage, useSlippageSetting] = useUserSlippageTolerance()
 
   const [ttl, setTtl] = useUserTransactionTTL()
 
@@ -198,9 +180,8 @@ export default function SettingsTab({
               <Text fontWeight={600} fontSize={14}>
                 ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.
               </Text>
-              <ButtonError
+              <ButtonOutlinedPrimary
                 style={{ marginTop: '1rem' }}
-                error={false}
                 padding={'14px'}
                 onClick={() => {
                   if (window.prompt(`Please type the word "confirm" to enable expert mode.`) === 'confirm') {
@@ -212,7 +193,7 @@ export default function SettingsTab({
                 <Text fontSize={16} fontWeight={500} id="confirm-expert-mode" color={theme.bg1}>
                   Turn On Expert Mode
                 </Text>
-              </ButtonError>
+              </ButtonOutlinedPrimary>
             </AutoColumn>
           </AutoColumn>
         </ModalContentWrapper>
@@ -239,8 +220,8 @@ export default function SettingsTab({
                   Transaction Settings
                 </Text>
                 <TransactionSettings
-                  rawSlippage={currentSlippage}
-                  setRawSlippage={currentSlippageSetting}
+                  rawSlippage={userSlippage}
+                  setRawSlippage={useSlippageSetting}
                   deadline={ttl}
                   setDeadline={setTtl}
                   onlySlippage={onlySlippage}
@@ -253,9 +234,9 @@ export default function SettingsTab({
                     <CustomizedAutoRow>
                       <Column>
                         <RowFixed style={{ marginBottom: '11px' }}>
-                          <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                          <Text fontWeight={400} fontSize={14} color={theme.text2}>
                             Toggle Expert Mode
-                          </TYPE.black>
+                          </Text>
                           <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
                         </RowFixed>
                         <Toggle
@@ -276,9 +257,9 @@ export default function SettingsTab({
                       </Column>
                       <Column>
                         <RowFixed style={{ marginBottom: '11px' }}>
-                          <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                          <Text fontWeight={400} fontSize={14} color={theme.text2}>
                             Disable Multihops
-                          </TYPE.black>
+                          </Text>
                           <QuestionHelper text="Restricts swaps to direct pairs only." />
                         </RowFixed>
                         <Toggle
@@ -296,8 +277,6 @@ export default function SettingsTab({
           </Wrapper>
         </OverlayWrapper>
       )}
-
-      {/* </StyledMenu> */}
     </>
   )
 }

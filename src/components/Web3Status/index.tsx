@@ -1,9 +1,9 @@
+import { useMemo } from 'react'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { useTheme } from '@material-ui/core'
 import { darken } from 'polished'
-import React, { useMemo } from 'react'
 import { Activity } from 'react-feather'
-import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
@@ -19,14 +19,9 @@ import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
 import { ButtonOutlined } from '../Button'
 import Copy from '../AccountDetails/Copy'
-
-// import Identicon from '../Identicon'
 import Loader from '../Loader'
-
 import { RowBetween } from '../Row'
-import WalletModal from '../WalletModal'
-import { TYPE } from 'theme'
-import useTheme from 'hooks/useTheme'
+import WalletModal from 'components/muiModal/WalletModal/index'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -183,7 +178,6 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 }
 
 function Web3StatusInner() {
-  const { t } = useTranslation()
   const { account, connector, error } = useWeb3React()
 
   const { ENSName } = useENSName(account ?? undefined)
@@ -208,7 +202,8 @@ function Web3StatusInner() {
           {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
           {hasPendingTransactions ? (
             <RowBetween>
-              <Loader stroke={theme.text1} /> <Text style={{ marginLeft: '12px' }}>{pending?.length} Pending</Text>
+              <Loader stroke={theme.textColor.text1} />{' '}
+              <Text style={{ marginLeft: '12px' }}>{pending?.length} Pending</Text>
             </RowBetween>
           ) : (
             <>
@@ -230,7 +225,7 @@ function Web3StatusInner() {
   } else {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <TYPE.black fontSize={16}>{t('Connect Wallet')}</TYPE.black>
+        Connect Wallet
       </Web3StatusConnect>
     )
   }

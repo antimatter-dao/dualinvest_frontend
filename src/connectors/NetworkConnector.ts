@@ -89,20 +89,24 @@ class MiniRpcProvider implements AsyncSendable {
         reject,
         request: { method }
       } = byKey[result.id]
-      if (resolve && reject) {
-        if ('error' in result) {
-          reject(new RequestError(result?.error?.message, result?.error?.code, result?.error?.data))
-        } else if ('result' in result) {
-          resolve(result.result)
-        } else {
-          reject(new RequestError(`Received unexpected JSON-RPC response to ${method} request.`, -32000, result))
-        }
+
+      if ('error' in result) {
+        reject(new RequestError(result?.error?.message, result?.error?.code, result?.error?.data))
+      } else if ('result' in result) {
+        resolve(result.result)
+      } else {
+        reject(new RequestError(`Received unexpected JSON-RPC response to ${method} request.`, -32000, result))
       }
     }
   }
 
   public readonly sendAsync = (
-    request: { jsonrpc: '2.0'; id: number | string | null; method: string; params?: unknown[] | object },
+    request: {
+      jsonrpc: '2.0'
+      id: number | string | null
+      method: string
+      params?: unknown[] | Record<string, unknown>
+    },
     callback: (error: any, response: any) => void
   ): void => {
     this.request(request.method, request.params)
@@ -112,7 +116,7 @@ class MiniRpcProvider implements AsyncSendable {
 
   public readonly request = async (
     method: string | { method: string; params: unknown[] },
-    params?: unknown[] | object
+    params?: unknown[] | Record<string, unknown>
   ): Promise<unknown> => {
     if (typeof method !== 'string') {
       return this.request(method.method, method.params)

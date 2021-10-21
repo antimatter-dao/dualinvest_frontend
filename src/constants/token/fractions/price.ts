@@ -53,11 +53,11 @@ export class Price extends Fraction {
     return CurrencyAmount.ether(super.multiply(currencyAmount.raw).quotient)
   }
 
-  public toSignificant(significantDigits = 6, format?: object, rounding?: Rounding): string {
+  public toSignificant(significantDigits = 6, format?: Record<string, unknown>, rounding?: Rounding): string {
     return this.adjusted.toSignificant(significantDigits, format, rounding)
   }
 
-  public toFixed(decimalPlaces = 4, format?: object, rounding?: Rounding): string {
+  public toFixed(decimalPlaces = 4, format?: Record<string, unknown>, rounding?: Rounding): string {
     return this.adjusted.toFixed(decimalPlaces, format, rounding)
   }
 }

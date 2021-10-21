@@ -1,6 +1,6 @@
+import { Typography } from '@material-ui/core'
 import React from 'react'
 import styled from 'styled-components'
-import { TYPE } from '../theme'
 import { ColumnCenter } from '../components/Column'
 
 export const BodyWrapper = styled.div<{ maxWidth?: string; gradient1?: boolean; isCard?: boolean }>`
@@ -57,7 +57,7 @@ export function BodyHeader({ title }: { title: string }) {
   return (
     <StyledSwapHeader>
       <ColumnCenter>
-        <TYPE.mediumHeader>{title}</TYPE.mediumHeader>
+        <Typography variant="h6">{title}</Typography>
       </ColumnCenter>
     </StyledSwapHeader>
   )

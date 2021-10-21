@@ -1,6 +1,5 @@
-import React from 'react'
 import styled from 'styled-components'
-
+import { useTheme } from '@material-ui/core'
 import { useActiveWeb3React } from '../../hooks'
 import { getEtherscanLink } from '../../utils'
 import { ExternalLink } from '../../theme'
@@ -8,7 +7,6 @@ import { useAllTransactions } from '../../state/transactions/hooks'
 import { RowFixed } from '../Row'
 import Loader from '../Loader'
 import { CheckCircle, CrossCircle } from 'components/Icons'
-import useTheme from 'hooks/useTheme'
 
 const TransactionWrapper = styled.div``
 
@@ -56,9 +54,9 @@ export default function Transaction({ hash }: { hash: string }) {
           {pending ? (
             <Loader />
           ) : success ? (
-            <CheckCircle size="16px" color={theme.green1} />
+            <CheckCircle size="16px" color={theme.palette.success.main} />
           ) : (
-            <CrossCircle size="16px" color={theme.red1} />
+            <CrossCircle size="16px" color={theme.palette.error.main} />
           )}
         </IconWrapper>
         <RowFixed>

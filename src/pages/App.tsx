@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -6,28 +6,9 @@ import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
-import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-// import AddLiquidity from './AddLiquidity'
-// import {
-//   RedirectDuplicateTokenIds,
-//   RedirectOldAddLiquidityPathStructure,
-//   RedirectToAddLiquidity
-// } from './AddLiquidity/redirects'
-// import MigrateV1 from './MigrateV1'
-// import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
-// import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
-// import Pool from './Pool'
-// import PoolFinder from './PoolFinder'
-// import RemoveLiquidity from './RemoveLiquidity'
-// import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
-// import Swap from './Swap'
-// import Exercise from './Exercise'
-// import ComingSoon from './ComingSoon'
-// import MatterRedemption from './MatterToken/MatterRedemption'
-import WelcomeSlider from 'components/WelcomeSlider'
-import WarningModal from '../components/Modal/WarningModal'
+import WarningModal from '../components/muiModal/WarningModal'
 import ComingSoon from './ComingSoon'
-// import WarningModal from 'components/Modal/WarningModal'
+import { ModalProvider } from 'context/ModalContext'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -89,30 +70,29 @@ export const Marginer = styled.div`
 export default function App() {
   return (
     <Suspense fallback={null}>
-      <Route component={GoogleAnalyticsReporter} />
-      <Route component={DarkModeQueryParamReader} />
-      <AppWrapper id="app">
-        {/* <URLWarning /> */}
-        {/* <Sidebar /> */}
-        <ContentWrapper>
-          <HeaderWrapper id="header">
-            <Header />
-          </HeaderWrapper>
-          <BodyWrapper id="body">
-            <Popups />
-            <Polling />
-            <WelcomeSlider />
-            <WarningModal />
-            {/* <TopLevelModals /> */}
-            <Web3ReactManager>
-              <Switch>
-                <Route exact strict path="/governance" component={ComingSoon} />
-              </Switch>
-            </Web3ReactManager>
-            {/* <Marginer /> */}
-          </BodyWrapper>
-        </ContentWrapper>
-      </AppWrapper>
+      <ModalProvider>
+        <Route component={GoogleAnalyticsReporter} />
+        <AppWrapper id="app">
+          {/* <URLWarning /> */}
+          <ContentWrapper>
+            <HeaderWrapper id="header">
+              <Header />
+            </HeaderWrapper>
+            <BodyWrapper id="body">
+              <Popups />
+              <Polling />
+              <WarningModal />
+              {/* <TopLevelModals /> */}
+              <Web3ReactManager>
+                <Switch>
+                  <Route exact strict path="/governance" component={ComingSoon} />
+                </Switch>
+              </Web3ReactManager>
+              {/* <Marginer /> */}
+            </BodyWrapper>
+          </ContentWrapper>
+        </AppWrapper>
+      </ModalProvider>
     </Suspense>
   )
 }

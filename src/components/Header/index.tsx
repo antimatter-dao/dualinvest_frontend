@@ -1,18 +1,17 @@
-import React from 'react'
 import { ChevronDown } from 'react-feather'
 import { Link, NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { CountUp } from 'use-count-up'
+import { Typography, useTheme } from '@material-ui/core'
+import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
 import { useAggregateUniBalance } from '../../state/wallet/hooks'
-import { ExternalHeaderLink, ExternalLink, TYPE } from '../../theme'
+import { ExternalLink } from '../../theme'
 import Row, { RowFixed, RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
 import usePrevious from '../../hooks/usePrevious'
 import { ReactComponent as Logo } from '../../assets/svg/antimatter_logo.svg'
-import useTheme from 'hooks/useTheme'
-import ToggleMenu from './ToggleMenu'
 import { TokenAmount } from '../../constants/token/fractions'
 
 interface TabContent {
@@ -275,15 +274,14 @@ function FAQButton() {
         justify="center"
         style={{
           borderRadius: '50%',
-          border: `1px solid ${theme.primary1}`,
+          border: `1px solid ${theme.palette.primary.main}`,
           width: '18px',
           height: '18px',
-          marginRight: '12px'
+          marginRight: '12px',
+          color: theme.palette.primary.main
         }}
       >
-        <TYPE.body fontSize={14} color={theme.primary1}>
-          ?
-        </TYPE.body>
+        <Typography variant="body1">?</Typography>
       </RowFixed>
       FAQ
     </RowFixed>
@@ -362,9 +360,9 @@ export default function Header() {
             return (
               <>
                 {link ? (
-                  <ExternalHeaderLink href={link} key={title}>
+                  <ExternalLink href={link} key={title}>
                     {title}
-                  </ExternalHeaderLink>
+                  </ExternalLink>
                 ) : (
                   <StyledNavLink id={`stake-nav-link`} to={'/' + route} key={route}>
                     {title}
@@ -381,8 +379,7 @@ export default function Header() {
                 <UNIWrapper>
                   <UNIAmount style={{ pointerEvents: 'none' }}>
                     {account && (
-                      // <HideSmall>
-                      <TYPE.white
+                      <Text
                         style={{
                           paddingRight: '.4rem'
                         }}
@@ -395,19 +392,12 @@ export default function Header() {
                           thousandsSeparator={','}
                           duration={1}
                         />
-                      </TYPE.white>
-                      // </HideSmall>
+                      </Text>
                     )}
                     MATTER
                   </UNIAmount>
-                  {/* <CardNoise /> */}
                 </UNIWrapper>
               )}
-              {/* {account && userEthBalance ? (
-                <BalanceText style={{ flexShrink: 0 }} fontWeight={500}>
-                  {userEthBalance?.toSignificant(4)} ETH
-                </BalanceText>
-              ) : null} */}
               <Web3Status />
             </AccountElement>
           </HeaderControls>
@@ -418,7 +408,6 @@ export default function Header() {
           <Link to={'/'}>
             <StyledLogo />
           </Link>
-          <ToggleMenu />
         </RowBetween>
       </MobileHeader>
     </HeaderFrame>

@@ -1,8 +1,8 @@
 import React from 'react'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 import { StyledInput } from 'components/NumericalInput'
 import { AutoRow } from 'components/Row'
-import { TYPE } from 'theme'
 import useTheme from 'hooks/useTheme'
 
 const CustomInput = styled(StyledInput)<{ disabled?: boolean }>`
@@ -73,9 +73,9 @@ export const TextInput = React.memo(function InnerInput({
       <LabelRow>
         <AutoRow justify="space-between">
           {label && (
-            <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+            <Text color={theme.text3} fontWeight={500} fontSize={14}>
               {label}
-            </TYPE.body>
+            </Text>
           )}
         </AutoRow>
       </LabelRow>

@@ -1,13 +1,8 @@
 import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
-import styled, {
-  ThemeProvider as StyledComponentsThemeProvider,
-  createGlobalStyle,
-  css,
-  DefaultTheme
-} from 'styled-components'
+import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css, DefaultTheme } from 'styled-components'
 import { useIsDarkMode } from '../state/user/hooks'
-import { Text, TextProps } from 'rebass'
+// import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
 
 export * from './components'
@@ -82,9 +77,6 @@ export function colors(darkMode: boolean): Colors {
     yellow2: '#F3841E',
     blue1: '#2172E5',
 
-    // dont wanna forget these blue yet
-    // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
-    // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
     translucent: 'rgba(255, 255, 255, 0.08)',
     gradient1:
       '#000000 linear-gradient(283.31deg, rgba(255, 255, 255, 0.18) -2.53%, rgba(255, 255, 255, 0.17) 18.66%, rgba(255, 255, 255, 0) 98.68%)',
@@ -139,63 +131,63 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text)<{ color: keyof Colors }>`
-  color: ${({ color, theme }) => (theme as any)[color]};
-`
+// const TextWrapper = styled(Text)<{ color: string }>`
+//   color: ${({ color, theme }: any) => (theme as any)[color as keyof Colors]};
+// `
 
-export const TYPE = {
-  main(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text1'} {...props} />
-  },
-  link(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
-  },
-  black(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text1'} {...props} />
-  },
-  white(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'white'} {...props} />
-  },
-  body(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
-  },
-  largeHeader(props: TextProps) {
-    return <TextWrapper fontWeight={600} fontSize={24} {...props} fontFamily="Futura PT" />
-  },
-  mediumHeader(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={22} {...props} fontFamily="Futura PT" />
-  },
-  smallHeader(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={16} {...props} fontFamily="Futura PT" />
-  },
-  subHeader(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={14} {...props} />
-  },
-  small(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={12} {...props} />
-  },
-  smallGray(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={12} color={'text3'} {...props} />
-  },
-  blue(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'blue1'} {...props} />
-  },
-  yellow(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'yellow1'} {...props} />
-  },
-  darkGray(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text3'} {...props} />
-  },
-  gray(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'bg3'} {...props} />
-  },
-  italic(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'text2'} {...props} />
-  },
-  error({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
-  }
-}
+// export const TYPE = {
+//   main(props: TextProps) {
+//     return <TextWrapper fontWeight={500} color={'text1'} {...props} />
+//   },
+//   link(props: TextProps) {
+//     return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
+//   },
+//   black(props: TextProps) {
+//     return <TextWrapper fontWeight={500} color={'text1'} {...props} />
+//   },
+//   white(props: TextProps) {
+//     return <TextWrapper fontWeight={500} color={'white'} {...props} />
+//   },
+//   body(props: TextProps) {
+//     return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
+//   },
+//   largeHeader(props: TextProps) {
+//     return <TextWrapper fontWeight={600} fontSize={24} {...props} fontFamily="Futura PT" />
+//   },
+//   mediumHeader(props: TextProps) {
+//     return <TextWrapper fontWeight={500} fontSize={22} {...props} fontFamily="Futura PT" />
+//   },
+//   smallHeader(props: TextProps) {
+//     return <TextWrapper fontWeight={500} fontSize={16} {...props} fontFamily="Futura PT" />
+//   },
+//   subHeader(props: TextProps) {
+//     return <TextWrapper fontWeight={500} fontSize={14} {...props} />
+//   },
+//   small(props: TextProps) {
+//     return <TextWrapper fontWeight={400} fontSize={12} {...props} />
+//   },
+//   smallGray(props: TextProps) {
+//     return <TextWrapper fontWeight={400} fontSize={12} color={'text3'} {...props} />
+//   },
+//   blue(props: TextProps) {
+//     return <TextWrapper fontWeight={500} color={'blue1'} {...props} />
+//   },
+//   yellow(props: TextProps) {
+//     return <TextWrapper fontWeight={500} color={'yellow1'} {...props} />
+//   },
+//   darkGray(props: TextProps) {
+//     return <TextWrapper fontWeight={500} color={'text3'} {...props} />
+//   },
+//   gray(props: TextProps) {
+//     return <TextWrapper fontWeight={500} color={'bg3'} {...props} />
+//   },
+//   italic(props: TextProps) {
+//     return <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'text2'} {...props} />
+//   },
+//   error({ error, ...props }: { error: boolean } & TextProps) {
+//     return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
+//   }
+// }
 
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
@@ -213,10 +205,6 @@ body {
   margin: 0;
   padding: 0;
 }
-
- a {
-   color: ${colors(false).blue1}; 
- }
 
 * {
   box-sizing: border-box;
@@ -239,7 +227,7 @@ html {
 
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
-  color: ${({ theme }) => theme.text1};
+  color: #ffffff;
   background-color: ${({ theme }) => theme.bg2};
 }
 

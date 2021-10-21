@@ -1,6 +1,7 @@
-import React, { useCallback, useContext } from 'react'
+import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import styled, { ThemeContext } from 'styled-components'
+import { Typography } from '@material-ui/core'
+import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch } from '../../state'
 import { clearAllTransactions } from '../../state/transactions/actions'
@@ -9,29 +10,17 @@ import Copy from './Copy'
 import Transaction from './Transaction'
 
 import { SUPPORTED_WALLETS } from '../../constants'
-// import { getEtherscanLink } from '../../utils'
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
-// import Identicon from '../Identicon'
-import { ButtonSecondary, ButtonOutlinedPrimary, ButtonPrimary } from '../Button'
-
-// import { ExternalLink as LinkIcon } from 'react-feather'
-import { /*ExternalLink*/ LinkStyledButton, TYPE } from '../../theme'
+import { ButtonSecondary } from 'components/Button'
+import OutlineButton from 'components/Button/OutlineButton'
+import Button from 'components/Button/Button'
 import { AutoColumn } from 'components/Column'
 import { RowBetween } from 'components/Row'
-
-// const HeaderRow = styled.div`
-//   ${({ theme }) => theme.flexRowNoWrap};
-//   padding: 1rem 1rem;
-//   font-weight: 500;
-//   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
-//   ${({ theme }) => theme.mediaWidth.upToMedium`
-//     padding: 1rem;
-//   `};
-// `
+import TextButton from 'components/Button/TextButton'
 
 const UpperSection = styled.div`
   position: relative;
@@ -128,24 +117,6 @@ const AccountControl = styled.div`
   }
 `
 
-// const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
-//   font-size: 0.825rem;
-//   color: ${({ theme }) => theme.text3};
-//   margin-left: 1rem;
-//   font-size: 0.825rem;
-//   display: flex;
-//   :hover {
-//     color: ${({ theme }) => theme.text2};
-//   }
-// `
-
-// const CloseIcon = styled.div`
-//   &:hover {
-//     cursor: pointer;
-//     opacity: 0.6;
-//   }
-// `
-
 const WalletName = styled.div`
   width: initial;
   font-size: 0.825rem;
@@ -191,17 +162,6 @@ const WalletAction = styled(ButtonSecondary)`
     text-decoration: underline;
   }
 `
-// const ActionButton = styled(ButtonOutlined)`
-//   border-radius: 49px;
-//   border: 1px solid ${({ theme }) => theme.primary1};
-//   color: ${({ theme }) => theme.primary1};
-
-//   &.colored {
-//     background-color: ${({ theme }) => theme.primary1};
-
-//     color: ${({ theme }) => theme.bg1};
-//   }
-// `
 
 const MainWalletAction = styled(WalletAction)`
   color: ${({ theme }) => theme.primary1};
@@ -233,7 +193,6 @@ export default function AccountDetails({
   openOptions
 }: AccountDetailsProps) {
   const { chainId, account, connector } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
 
   function formatConnectorName() {
@@ -252,7 +211,6 @@ export default function AccountDetails({
     if (connector === injected) {
       return (
         <IconWrapper size={16}>
-          {/* <Identicon /> */}
           <Dot />
         </IconWrapper>
       )
@@ -348,16 +306,6 @@ export default function AccountDetails({
                             <span style={{ marginLeft: '4px' }}>Copy Address</span>
                           </Copy>
                         )}
-                        {/* {chainId && account && (
-                          <AddressLink
-                            hasENS={!!ENSName}
-                            isENS={true}
-                            href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
-                          >
-                            <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
-                          </AddressLink>
-                        )} */}
                       </div>
                     </AccountControl>
                   </>
@@ -370,16 +318,6 @@ export default function AccountDetails({
                             <span style={{ marginLeft: '4px' }}>Copy Address</span>
                           </Copy>
                         )}
-                        {/* {chainId && account && (
-                          <AddressLink
-                            hasENS={!!ENSName}
-                            isENS={false}
-                            href={getEtherscanLink(chainId, account, 'address')}
-                          >
-                            <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
-                          </AddressLink>
-                        )} */}
                       </div>
                     </AccountControl>
                   </>
@@ -390,22 +328,23 @@ export default function AccountDetails({
         </AccountSection>
       </UpperSection>
       <LowerSection>
-        <ButtonOutlinedPrimary onClick={toggleWalletModal}>Close</ButtonOutlinedPrimary>
-        <ButtonPrimary
+        <OutlineButton onClick={toggleWalletModal} primary>
+          Close
+        </OutlineButton>
+        <Button
           onClick={() => {
             openOptions()
           }}
-          style={{ marginLeft: '20px' }}
         >
           Change
-        </ButtonPrimary>
+        </Button>
       </LowerSection>
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
           <AutoColumn gap="16px" style={{ width: '100%' }}>
             <RowBetween>
-              <TYPE.body>Recent Transactions</TYPE.body>
-              <LinkStyledButton onClick={clearAllTransactionsCallback}>(clear all)</LinkStyledButton>
+              <Typography>Recent Transactions</Typography>
+              <TextButton onClick={clearAllTransactionsCallback}>(clear all)</TextButton>
             </RowBetween>
             <AutoColumn>
               {renderTransactions(pendingTransactions)}
@@ -415,7 +354,7 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body color={theme.text1}>Your transactions will appear here...</TYPE.body>
+          <Typography> Your transactions will appear here...</Typography>
         </LowerSection>
       )}
     </>
