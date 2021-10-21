@@ -1,17 +1,15 @@
 import { transparentize } from 'polished'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css, DefaultTheme } from 'styled-components'
-import { useIsDarkMode } from '../state/user/hooks'
-// import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
 
 export * from './components'
 
 const MEDIA_WIDTHS = {
-  upToExtraSmall: 500,
-  upToSmall: 720,
-  upToMedium: 960,
-  upToLarge: 1280
+  upToExtraSmall: 600,
+  upToSmall: 900,
+  upToMedium: 1200,
+  upToLarge: 1536
 }
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
@@ -29,64 +27,57 @@ const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } 
 const white = '#FFFFFF'
 const black = '#000000'
 
-export function colors(darkMode: boolean): Colors {
-  return {
-    // base
-    white,
-    black,
+export const colors: Colors = {
+  // base
+  white,
+  black,
 
-    // text
-    text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#CCCCCC' : '#565A69',
-    text3: darkMode ? '#999999' : '#888D9B',
-    text4: darkMode ? '#727272' : '#C3C5CB',
-    text5: darkMode ? '#333333' : '#EDEEF2',
+  // text
+  text1: '#FFFFFF',
+  text2: '#CCCCCC',
+  text3: '#999999',
+  text4: '#727272',
+  text5: '#333333',
 
-    // backgrounds / greys
-    bg1: darkMode ? '#000000' : '#FFFFFF',
-    bg2: darkMode ? '#191919' : '#F7F8FA',
-    bg3: darkMode ? '#252525' : '#EDEEF2',
-    bg4: darkMode ? '#303030' : '#CED0D9',
-    bg5: darkMode ? '#A1A1A1' : '#888D9B',
+  // backgrounds / greys
+  bg1: '#000000',
+  bg2: '#191919',
+  bg3: '#252525',
+  bg4: '#303030',
+  bg5: '#A1A1A1',
 
-    //specialty colors
-    modalBG: darkMode ? 'rgba(0,0,0,.7)' : 'rgba(0,0,0,0.3)',
-    advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
+  //specialty colors
+  modalBG: 'rgba(0,0,0,.7)',
+  advancedBG: 'rgba(0,0,0,0.1)',
 
-    //primary colors
-    primary1: darkMode ? '#B2F355' : '#FF007A',
-    primary2: darkMode ? '#B2F355' : '#FF8CC3',
-    primary3: darkMode ? '#B2F355' : '#FF99C9',
-    primary4: darkMode ? '#739A3B' : '#F6DDE8',
-    primary5: darkMode ? '#2B3A14' : '#FDEAF1',
+  //primary colors
+  primary1: '#9867FF',
+  primary2: '#9867FF',
+  primary3: '#7433FF',
+  primary4: '#3E276B',
+  primary5: '#2E2247',
 
-    // color text
-    primaryText1: darkMode ? '#B2F355' : '#ff007a',
+  // color text
+  primaryText1: '#9867FF',
 
-    // secondary colors
-    secondary1: darkMode ? '#739A3B' : '#ff007a',
-    secondary2: darkMode ? '#191919' : '#F6DDE8',
-    secondary3: darkMode ? '#252525' : '#FDEAF1',
+  // secondary colors
+  secondary1: '#3E276B',
+  secondary2: '#211735',
+  secondary3: '#1D152D',
 
-    // other
-    red1: '#FF0000',
-    red2: '#FF2828',
-    red3: '#FF4B4B',
-    green1: '#24FF00',
-    yellow1: '#FFE270',
-    yellow2: '#F3841E',
-    blue1: '#2172E5',
+  // other
+  red1: '#F53030',
+  green1: '#2DAB50',
 
-    translucent: 'rgba(255, 255, 255, 0.08)',
-    gradient1:
-      '#000000 linear-gradient(283.31deg, rgba(255, 255, 255, 0.18) -2.53%, rgba(255, 255, 255, 0.17) 18.66%, rgba(255, 255, 255, 0) 98.68%)',
-    gradient2: '#000000 linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%)'
-  }
+  translucent: 'rgba(255, 255, 255, 0.08)',
+  gradient1:
+    '#000000 linear-gradient(283.31deg, rgba(255, 255, 255, 0.18) -2.53%, rgba(255, 255, 255, 0.17) 18.66%, rgba(255, 255, 255, 0) 98.68%)',
+  gradient2: '#000000 linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%)'
 }
 
-export function theme(darkMode: boolean): DefaultTheme {
+export function theme(): DefaultTheme {
   return {
-    ...colors(darkMode),
+    ...colors,
 
     grids: {
       sm: 8,
@@ -95,7 +86,7 @@ export function theme(darkMode: boolean): DefaultTheme {
     },
 
     //shadows
-    shadow1: darkMode ? '#000' : '#2F80ED',
+    shadow1: '#000',
 
     // media queries
     mediaWidth: mediaWidthTemplates,
@@ -124,70 +115,8 @@ export function theme(darkMode: boolean): DefaultTheme {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const darkMode = useIsDarkMode()
-
-  const themeObject = useMemo(() => theme(darkMode), [darkMode])
-
-  return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
+  return <StyledComponentsThemeProvider theme={theme}>{children}</StyledComponentsThemeProvider>
 }
-
-// const TextWrapper = styled(Text)<{ color: string }>`
-//   color: ${({ color, theme }: any) => (theme as any)[color as keyof Colors]};
-// `
-
-// export const TYPE = {
-//   main(props: TextProps) {
-//     return <TextWrapper fontWeight={500} color={'text1'} {...props} />
-//   },
-//   link(props: TextProps) {
-//     return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
-//   },
-//   black(props: TextProps) {
-//     return <TextWrapper fontWeight={500} color={'text1'} {...props} />
-//   },
-//   white(props: TextProps) {
-//     return <TextWrapper fontWeight={500} color={'white'} {...props} />
-//   },
-//   body(props: TextProps) {
-//     return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
-//   },
-//   largeHeader(props: TextProps) {
-//     return <TextWrapper fontWeight={600} fontSize={24} {...props} fontFamily="Futura PT" />
-//   },
-//   mediumHeader(props: TextProps) {
-//     return <TextWrapper fontWeight={500} fontSize={22} {...props} fontFamily="Futura PT" />
-//   },
-//   smallHeader(props: TextProps) {
-//     return <TextWrapper fontWeight={500} fontSize={16} {...props} fontFamily="Futura PT" />
-//   },
-//   subHeader(props: TextProps) {
-//     return <TextWrapper fontWeight={500} fontSize={14} {...props} />
-//   },
-//   small(props: TextProps) {
-//     return <TextWrapper fontWeight={400} fontSize={12} {...props} />
-//   },
-//   smallGray(props: TextProps) {
-//     return <TextWrapper fontWeight={400} fontSize={12} color={'text3'} {...props} />
-//   },
-//   blue(props: TextProps) {
-//     return <TextWrapper fontWeight={500} color={'blue1'} {...props} />
-//   },
-//   yellow(props: TextProps) {
-//     return <TextWrapper fontWeight={500} color={'yellow1'} {...props} />
-//   },
-//   darkGray(props: TextProps) {
-//     return <TextWrapper fontWeight={500} color={'text3'} {...props} />
-//   },
-//   gray(props: TextProps) {
-//     return <TextWrapper fontWeight={500} color={'bg3'} {...props} />
-//   },
-//   italic(props: TextProps) {
-//     return <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'text2'} {...props} />
-//   },
-//   error({ error, ...props }: { error: boolean } & TextProps) {
-//     return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
-//   }
-// }
 
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {

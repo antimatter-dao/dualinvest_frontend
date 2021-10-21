@@ -5,11 +5,12 @@ import { useTheme } from '@material-ui/core'
 import { darken } from 'polished'
 import { Activity } from 'react-feather'
 import styled, { css } from 'styled-components'
-import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
-import PortisIcon from '../../assets/images/portisIcon.png'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+import CoinbaseWalletIcon from 'assets/wallet/coinbaseWalletIcon.svg'
+import FortmaticIcon from 'assets/wallet/fortmaticIcon.png'
+import PortisIcon from 'assets/wallet/portisIcon.png'
+import WalletConnectIcon from 'assets/wallet/walletConnectIcon.svg'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
+import Copy from 'components/Copy'
 import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
@@ -18,10 +19,10 @@ import { isTransactionRecent, useAllTransactions } from '../../state/transaction
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
 import { ButtonOutlined } from '../Button'
-import Copy from '../AccountDetails/Copy'
 import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from 'components/muiModal/WalletModal/index'
+import { HideOnMobile } from 'theme/muiTheme'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -128,12 +129,6 @@ const Dot = styled.span`
   border-radius: 50%;
 `
 
-const HideSmall = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
-`
-
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
@@ -212,7 +207,7 @@ function Web3StatusInner() {
             </>
           )}
         </Web3StatusConnected>
-        <HideSmall> {account && <Copy toCopy={account}></Copy>}</HideSmall>
+        <HideOnMobile> {account && <Copy toCopy={account}></Copy>}</HideOnMobile>
       </>
     )
   } else if (error) {

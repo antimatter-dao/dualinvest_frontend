@@ -11,6 +11,7 @@ interface Props {
   disabled?: boolean
   color?: string
   borderRadius?: string
+  style?: React.CSSProperties
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: (props: Props) => (props.primary ? theme.palette.primary.main : theme.palette.primary.contrastText),
       borderRadius: (props: Props) => props.borderRadius ?? theme.shape.borderRadius,
       '&:hover': {
-        color: theme.palette.primary.contrastText,
+        color: (props: Props) => (props.primary ? theme.palette.primary.dark : theme.palette.primary.contrastText),
         borderColor: (props: Props) => (props.primary ? theme.palette.primary.dark : theme.palette.primary.main)
       }
     },
@@ -38,11 +39,11 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export default function OutlineButton(props: Props) {
-  const { onClick, disabled } = props
+  const { onClick, disabled, style } = props
   const classes = useStyles(props)
 
   return (
-    <ButtonBase className={classes.root} onClick={onClick ?? undefined} disabled={disabled}>
+    <ButtonBase className={classes.root} onClick={onClick ?? undefined} disabled={disabled} style={style}>
       {props.children}
     </ButtonBase>
   )

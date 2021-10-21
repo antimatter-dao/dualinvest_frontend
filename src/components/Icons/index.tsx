@@ -1,9 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { ReactComponent as Arrow } from '../../assets/svg/arrow_down.svg'
-import { ReactComponent as Cross } from '../../assets/svg/cross.svg'
-import { ReactComponent as CheckCircleIcon } from '../../assets/svg/check_circle.svg'
-import { ReactComponent as CrossCircleIcon } from '../../assets/svg/cross_circle.svg'
+import { ReactComponent as CheckCircleIcon } from '../../assets/componentsIcon/check_circle.svg'
+import { ReactComponent as CrossCircleIcon } from '../../assets/componentsIcon/cross_circle.svg'
 
 export const Wrapper = styled.div<{ clickable: boolean; color?: string; size?: string }>`
   ${({ clickable }) =>
@@ -38,21 +36,6 @@ function IconWrapper({
     <Wrapper onClick={onClick} clickable={!!onClick} color={color} size={size}>
       {children}
     </Wrapper>
-  )
-}
-
-export function ArrowDown({ size, onClick, color }: { size?: string; onClick?: () => void; color?: string }) {
-  return (
-    <IconWrapper size={size} onClick={onClick} color={color}>
-      <Arrow />
-    </IconWrapper>
-  )
-}
-export function Plus({ size, onClick, color }: { size?: string; onClick?: () => void; color?: string }) {
-  return (
-    <IconWrapper size={size} onClick={onClick} color={color}>
-      <Cross />
-    </IconWrapper>
   )
 }
 

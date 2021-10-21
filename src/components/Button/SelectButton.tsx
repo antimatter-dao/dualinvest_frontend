@@ -10,6 +10,7 @@ interface Props {
   children?: React.ReactNode
   primary?: boolean
   disabled?: boolean
+  style?: React.CSSProperties
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -47,11 +48,16 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export default function SelectButton(props: Props) {
-  const { onClick, disabled } = props
+  const { onClick, disabled, style } = props
   const classes = useStyles(props)
 
   return (
-    <ButtonBase classes={{ root: classes.root, disabled: classes.disabled }} onClick={onClick} disabled={disabled}>
+    <ButtonBase
+      classes={{ root: classes.root, disabled: classes.disabled }}
+      onClick={onClick}
+      disabled={disabled}
+      style={style}
+    >
       {props.children}
       <ExpandMoreIcon />
     </ButtonBase>

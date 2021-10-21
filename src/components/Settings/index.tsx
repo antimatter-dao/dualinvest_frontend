@@ -11,7 +11,6 @@ import {
   useUserSlippageTolerance,
   useUserSingleHopOnly
 } from '../../state/user/hooks'
-import { ButtonOutlinedPrimary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
@@ -21,6 +20,7 @@ import TransactionSettings from '../TransactionSettings'
 import { ReactComponent as Settings } from '../../assets/svg/setting.svg'
 import { Wrapper } from '../Modal'
 import { Marginer } from 'pages/App'
+import OutlineButton from 'components/Button/OutlineButton'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -75,15 +75,6 @@ const EmojiWrapper = styled.div`
   right: 0px;
   font-size: 14px;
 `
-
-// const StyledMenu = styled.div`
-//   margin-left: 0.5rem;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   border: none;
-//   text-align: left;
-// `
 
 const Overlay = styled.div`
   z-index: ;
@@ -180,9 +171,9 @@ export default function SettingsTab({ onlySlippage }: { onlySlippage?: boolean }
               <Text fontWeight={600} fontSize={14}>
                 ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.
               </Text>
-              <ButtonOutlinedPrimary
+              <OutlineButton
+                primary
                 style={{ marginTop: '1rem' }}
-                padding={'14px'}
                 onClick={() => {
                   if (window.prompt(`Please type the word "confirm" to enable expert mode.`) === 'confirm') {
                     toggleExpertMode()
@@ -193,7 +184,7 @@ export default function SettingsTab({ onlySlippage }: { onlySlippage?: boolean }
                 <Text fontSize={16} fontWeight={500} id="confirm-expert-mode" color={theme.bg1}>
                   Turn On Expert Mode
                 </Text>
-              </ButtonOutlinedPrimary>
+              </OutlineButton>
             </AutoColumn>
           </AutoColumn>
         </ModalContentWrapper>

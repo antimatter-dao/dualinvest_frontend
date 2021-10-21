@@ -1,5 +1,8 @@
-import theme, { ThemeProvider } from '../src/theme/muiTheme'
+import theme, { ThemeProvider as MuiThemeProvider } from '../src/theme/muiTheme'
+import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from '../src/theme'
 import { ModalProvider } from '../src/context/ModalContext'
+import { Provider } from 'react-redux'
+import store from '../src/state'
 
 export const parameters = {
   backgrounds: {
@@ -22,11 +25,16 @@ export const parameters = {
 
 export const decorators = [
   (Story) => (
-
-    <ThemeProvider theme={theme}>
-      <ModalProvider>
-        <Story />
-      </ModalProvider>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider>
+        <MuiThemeProvider theme={theme}>
+          <FixedGlobalStyle />
+          <ThemedGlobalStyle />
+          <ModalProvider>
+            <Story />
+          </ModalProvider>
+        </MuiThemeProvider>
+      </ThemeProvider>
+    </Provider>
   ),
 ];

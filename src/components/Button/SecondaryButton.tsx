@@ -10,6 +10,7 @@ interface Props {
   height?: string | number
   fontSize?: string
   disabled?: boolean
+  style?: React.CSSProperties
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,11 +37,11 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export default function SecondaryButton(props: Props) {
-  const { onClick, disabled } = props
+  const { onClick, disabled, style } = props
   const classes = useStyles(props)
 
   return (
-    <ButtonBase className={classes.root} onClick={onClick} disabled={disabled}>
+    <ButtonBase className={classes.root} onClick={onClick} disabled={disabled} style={style}>
       {props.children}
     </ButtonBase>
   )

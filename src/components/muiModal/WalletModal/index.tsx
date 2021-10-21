@@ -2,23 +2,22 @@ import { useEffect, useState } from 'react'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { ButtonOutlinedPrimary } from 'components/Button'
 import { isMobile } from 'react-device-detect'
 import styled from 'styled-components'
 import { Typography, Box } from '@material-ui/core'
-import MetamaskIcon from '../../../assets/images/metamask.png'
+import MetamaskIcon from 'assets/wallet/metamask.png'
 import { fortmatic, injected, portis } from 'connectors'
 import { OVERLAY_READY } from 'connectors/Fortmatic'
 import { SUPPORTED_WALLETS } from 'constants/index'
 import usePrevious from 'hooks/usePrevious'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useWalletModalToggle } from 'state/application/hooks'
-// import { ExternalLink } from '../../theme'
 import AccountDetails from 'components/AccountDetails'
 
 import Modal from '../index'
 import Option from './Option'
 import PendingView from './PendingView'
+import OutlineButton from 'components/Button/OutlineButton'
 
 const ContentWrapper = styled.div`
   padding: 2rem 6rem 52px;
@@ -121,8 +120,6 @@ export default function WalletModal({
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      console.log(99, require('../../../assets/images/' + option.iconName)?.default)
       // check for mobile options
       if (isMobile) {
         //disable portis on mobile for now
@@ -139,12 +136,9 @@ export default function WalletModal({
               id={`connect-${key}`}
               key={key}
               active={option.connector && option.connector === connector}
-              color={option.color}
               link={option.href}
               header={option.name}
-              subheader={null}
-              // eslint-disable-next-line @typescript-eslint/no-var-requires
-              icon={require('../../../assets/images/' + option.iconName)?.default}
+              icon={require('../../../assets/wallet/' + option.iconName)?.default}
             />
           )
         }
@@ -160,9 +154,7 @@ export default function WalletModal({
               <Option
                 id={`connect-${key}`}
                 key={key}
-                color={'#E8831D'}
                 header={'Install Metamask'}
-                subheader={null}
                 link={'https://metamask.io/'}
                 icon={MetamaskIcon}
               />
@@ -194,12 +186,9 @@ export default function WalletModal({
             }}
             key={key}
             active={option.connector === connector}
-            color={option.color}
             link={option.href}
             header={option.name}
-            subheader={null} //use OptionCard.descriptio to bring back multi-line
-            icon={require('../../../assets/images/' + option.iconName)}
-            size={21}
+            icon={require('../../../assets/wallet/' + option.iconName)?.default}
           />
         )
       )
@@ -237,7 +226,7 @@ export default function WalletModal({
     return (
       <>
         {walletView === WALLET_VIEWS.ACCOUNT && <Typography variant="h6">Connect to a wallet</Typography>}
-        <Box display="grid" gridGap="12px">
+        <Box display="grid" gridGap="12px" width={'100%'} justifyContent="center">
           {walletView === WALLET_VIEWS.PENDING ? (
             <PendingView
               connector={pendingWallet}
@@ -245,14 +234,16 @@ export default function WalletModal({
               setPendingError={setPendingError}
               tryActivation={tryActivation}
             >
-              <ButtonOutlinedPrimary
+              <OutlineButton
+                primary
                 onClick={() => {
                   setPendingError(false)
                   setWalletView(WALLET_VIEWS.ACCOUNT)
                 }}
+                style={{ whiteSpace: 'nowrap' }}
               >
                 Change Wallet
-              </ButtonOutlinedPrimary>
+              </OutlineButton>
             </PendingView>
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>

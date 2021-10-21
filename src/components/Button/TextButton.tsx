@@ -9,6 +9,7 @@ interface Props {
   primary?: boolean
   underline?: boolean
   opacity?: number
+  style?: React.CSSProperties
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,10 +29,10 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export default function TextButton(props: Props) {
-  const { onClick } = props
+  const { onClick, style } = props
   const classes = useStyles(props)
   return (
-    <ButtonBase classes={{ ...classes }} onClick={onClick}>
+    <ButtonBase classes={{ ...classes }} onClick={onClick} style={style}>
       {props.children}
     </ButtonBase>
   )

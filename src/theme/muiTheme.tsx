@@ -228,14 +228,14 @@ export const override = {
 }
 
 export const HideOnMobile = styled('div')(({ theme, breakpoint }: { theme: Theme; breakpoint?: 'sm' | 'md' }) => ({
-  [theme.breakpoints.down(breakpoint ?? 'md')]: {
+  [theme.breakpoints.down(breakpoint ?? 'sm')]: {
     display: 'none'
   }
 }))
 
 export const ShowOnMobile = styled('div')(({ theme, breakpoint }: { theme: Theme; breakpoint?: 'sm' | 'md' }) => ({
   display: 'none',
-  [theme.breakpoints.down(breakpoint ?? 'md')]: {
+  [theme.breakpoints.down(breakpoint ?? 'sm')]: {
     display: 'block'
   }
 }))

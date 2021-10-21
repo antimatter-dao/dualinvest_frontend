@@ -1,6 +1,5 @@
-import { useContext, useCallback } from 'react'
+import { useContext } from 'react'
 import { ModalContext } from '../context/ModalContext'
-import WalletModal from 'components/muiModal/WalletModal'
 
 export default function useModal() {
   const context = useContext(ModalContext)
@@ -9,13 +8,4 @@ export default function useModal() {
   }
 
   return context
-}
-
-export function useWalletModal() {
-  const { showModal, hideModal } = useModal()
-  const showWalletModal = useCallback(() => showModal(<WalletModal onDismiss={hideModal} />), [showModal, hideModal])
-
-  return {
-    showWalletModal
-  }
 }

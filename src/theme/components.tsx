@@ -1,6 +1,5 @@
 import React, { HTMLProps, useCallback } from 'react'
 // import ReactGA from 'react-ga'
-import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
 import { X } from 'react-feather'
@@ -57,64 +56,6 @@ export const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
   > * {
     stroke: ${({ theme }) => theme.text3};
-  }
-`
-
-// for wrapper react feather icons
-export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRight?: string; marginLeft?: string }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: ${({ size }) => size ?? '20px'};
-  height: ${({ size }) => size ?? '20px'};
-  margin-right: ${({ marginRight }) => marginRight ?? 0};
-  margin-left: ${({ marginLeft }) => marginLeft ?? 0};
-  & > * {
-    stroke: ${({ theme, stroke }) => stroke ?? theme.blue1};
-  }
-`
-
-// A button that triggers some onClick result, but looks like a link.
-export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
-  border: none;
-  text-decoration: none;
-  background: none;
-
-  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
-  color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.primary1)};
-  font-weight: 500;
-
-  :hover {
-    text-decoration: ${({ disabled }) => (disabled ? null : 'underline')};
-  }
-
-  :focus {
-    outline: none;
-    text-decoration: ${({ disabled }) => (disabled ? null : 'underline')};
-  }
-
-  :active {
-    text-decoration: none;
-  }
-`
-
-// An internal link from the react-router-dom library that is correctly styled
-export const StyledInternalLink = styled(Link)`
-  cursor: pointer;
-  color: ${({ theme }) => theme.primary1};
-  font-weight: 500;
-
-  :hover {
-    text-decoration: none;
-  }
-
-  :focus {
-    outline: none;
-    text-decoration: none;
-  }
-
-  :active {
-    text-decoration: none;
   }
 `
 
@@ -187,30 +128,4 @@ export const AnimatedImg = styled.div`
   & > * {
     width: 72px;
   }
-`
-
-export const HideSmall = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
-`
-
-export const ShowSmall = styled.span`
-  display: none;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: inherit;
-  `};
-`
-
-export const HideExtraSmall = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
-`
-
-export const ExtraSmallOnly = styled.span`
-  display: none;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: block;
-  `};
 `

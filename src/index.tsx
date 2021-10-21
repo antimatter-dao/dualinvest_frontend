@@ -16,7 +16,6 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import ApplicationUpdater from './state/application/updater'
 import MulticallUpdater from './state/multicall/updater'
 import TransactionUpdater from './state/transactions/updater'
-import UserUpdater from './state/user/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
 
@@ -46,7 +45,6 @@ if (!!window.ethereum) {
 function Updaters() {
   return (
     <>
-      <UserUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />
       <MulticallUpdater />

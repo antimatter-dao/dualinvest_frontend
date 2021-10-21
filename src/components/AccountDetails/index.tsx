@@ -1,25 +1,24 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { Typography } from '@material-ui/core'
+import { Typography, Box } from '@material-ui/core'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch } from '../../state'
 import { clearAllTransactions } from '../../state/transactions/actions'
 import { shortenAddress } from '../../utils'
-import Copy from './Copy'
+import Copy from 'components/Copy'
 import Transaction from './Transaction'
 
 import { SUPPORTED_WALLETS } from '../../constants'
 import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
-import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
-import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
-import PortisIcon from '../../assets/images/portisIcon.png'
-import { ButtonSecondary } from 'components/Button'
+import CoinbaseWalletIcon from 'assets/wallet/coinbaseWalletIcon.svg'
+import WalletConnectIcon from 'assets/wallet/walletConnectIcon.svg'
+import FortmaticIcon from 'assets/wallet/fortmaticIcon.png'
+import PortisIcon from 'assets/wallet/portisIcon.png'
 import OutlineButton from 'components/Button/OutlineButton'
 import Button from 'components/Button/Button'
-import { AutoColumn } from 'components/Column'
-import { RowBetween } from 'components/Row'
+import { Text } from 'rebass'
+import SecondaryButton from 'components/Button/SecondaryButton'
 import TextButton from 'components/Button/TextButton'
 
 const UpperSection = styled.div`
@@ -83,15 +82,6 @@ const YourAccount = styled.div`
   }
 `
 
-const LowerSection = styled.div`
-  padding: 0 1.5rem 2.5rem;
-  flex-grow: 1;
-  overflow: auto;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  display: flex;
-`
-
 const AccountControl = styled.div`
   display: flex;
   justify-content: space-between;
@@ -115,13 +105,6 @@ const AccountControl = styled.div`
   & > div {
     margin: 0 auto;
   }
-`
-
-const WalletName = styled.div`
-  width: initial;
-  font-size: 0.825rem;
-  font-weight: 500;
-  color: ${({ theme }) => theme.text1};
 `
 
 const IconWrapper = styled.div<{ size?: number }>`
@@ -149,22 +132,6 @@ const Dot = styled.span`
 
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
-`
-
-const WalletAction = styled(ButtonSecondary)`
-  width: fit-content;
-  font-weight: 400;
-  margin-left: 8px;
-  font-size: 0.825rem;
-  padding: 4px 6px;
-  :hover {
-    cursor: pointer;
-    text-decoration: underline;
-  }
-`
-
-const MainWalletAction = styled(WalletAction)`
-  color: ${({ theme }) => theme.primary1};
 `
 
 function renderTransactions(transactions: string[]) {
@@ -204,7 +171,11 @@ export default function AccountDetails({
           SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
       )
       .map(k => SUPPORTED_WALLETS[k].name)[0]
-    return <WalletName>Connected with {name}</WalletName>
+    return (
+      <Text fontSize=" 0.825rem" fontWeight={500}>
+        Connected with {name}
+      </Text>
+    )
   }
 
   function getStatusIcon() {
@@ -237,13 +208,13 @@ export default function AccountDetails({
         <>
           <IconWrapper size={16}>
             <img src={PortisIcon} alt={'portis logo'} />
-            <MainWalletAction
+            <Button
               onClick={() => {
                 portis.portis.showPortis()
               }}
             >
               Show Portis
-            </MainWalletAction>
+            </Button>
           </IconWrapper>
         </>
       )
@@ -258,22 +229,22 @@ export default function AccountDetails({
   return (
     <>
       <UpperSection>
-        {/* <HeaderRow>Account</HeaderRow> */}
         <AccountSection>
           <YourAccount>
             <InfoCard>
               <AccountGroupingRow>
                 {formatConnectorName()}
-                <div>
+                <div style={{ marginRight: '8px' }}>
                   {connector !== injected && connector !== walletlink && (
-                    <WalletAction
-                      style={{ fontSize: '18px', fontWeight: 400, marginRight: '8px' }}
+                    <SecondaryButton
                       onClick={() => {
                         ;(connector as any).close()
                       }}
                     >
-                      Disconnect
-                    </WalletAction>
+                      <Text fontSize="18px" fontWeight={400}>
+                        Disconnect
+                      </Text>
+                    </SecondaryButton>
                   )}
                 </div>
               </AccountGroupingRow>
@@ -297,37 +268,19 @@ export default function AccountDetails({
                 </AccountControl>
               </AccountGroupingRow>
               <AccountGroupingRow>
-                {ENSName ? (
-                  <>
-                    <AccountControl>
-                      <div>
-                        {account && (
-                          <Copy toCopy={account}>
-                            <span style={{ marginLeft: '4px' }}>Copy Address</span>
-                          </Copy>
-                        )}
-                      </div>
-                    </AccountControl>
-                  </>
-                ) : (
-                  <>
-                    <AccountControl>
-                      <div>
-                        {account && (
-                          <Copy toCopy={account}>
-                            <span style={{ marginLeft: '4px' }}>Copy Address</span>
-                          </Copy>
-                        )}
-                      </div>
-                    </AccountControl>
-                  </>
-                )}
+                <AccountControl>
+                  {account && (
+                    <Copy toCopy={account}>
+                      <Typography variant="body2">Copy Address</Typography>
+                    </Copy>
+                  )}
+                </AccountControl>
               </AccountGroupingRow>
             </InfoCard>
           </YourAccount>
         </AccountSection>
       </UpperSection>
-      <LowerSection>
+      <Box display="flex" gridGap="10px" width="100%" justifyContent="center">
         <OutlineButton onClick={toggleWalletModal} primary>
           Close
         </OutlineButton>
@@ -338,24 +291,22 @@ export default function AccountDetails({
         >
           Change
         </Button>
-      </LowerSection>
+      </Box>
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
-        <LowerSection>
-          <AutoColumn gap="16px" style={{ width: '100%' }}>
-            <RowBetween>
-              <Typography>Recent Transactions</Typography>
-              <TextButton onClick={clearAllTransactionsCallback}>(clear all)</TextButton>
-            </RowBetween>
-            <AutoColumn>
-              {renderTransactions(pendingTransactions)}
-              {renderTransactions(confirmedTransactions)}
-            </AutoColumn>
-          </AutoColumn>
-        </LowerSection>
+        <Box display="grid" gridGap="16px" width="100%">
+          <Box display="flex" justifyContent="space-between" width="100%">
+            <Typography>Recent Transactions</Typography>
+            <TextButton onClick={clearAllTransactionsCallback}>(clear all)</TextButton>
+          </Box>
+          <Box display="grid">
+            {renderTransactions(pendingTransactions)}
+            {renderTransactions(confirmedTransactions)}
+          </Box>
+        </Box>
       ) : (
-        <LowerSection>
+        <Box display="flex" width="100%" justifyContent="center" marginTop={1}>
           <Typography> Your transactions will appear here...</Typography>
-        </LowerSection>
+        </Box>
       )}
     </>
   )
