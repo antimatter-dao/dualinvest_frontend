@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme =>
   })
 )
 
-export default function Spinner({ size = 20, thickness = 3, ...props }: Props) {
+export default function Spinner({ size = 16, thickness = 3, ...props }: Props) {
   const classes = useStyles(props)
 
   return (

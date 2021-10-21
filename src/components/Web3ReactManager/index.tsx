@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { network } from '../../connectors'
 import { useEagerConnect, useInactiveListener } from '../../hooks'
 import { NetworkContextName } from '../../constants'
-import Loader from '../Loader'
+import Spinner from 'components/Spinner'
 
 const MessageWrapper = styled.div`
   display: flex;
@@ -67,7 +67,7 @@ export default function Web3ReactManager({ children }: { children: JSX.Element }
   if (!active && !networkActive) {
     return showLoader ? (
       <MessageWrapper>
-        <Loader />
+        <Spinner size="16px" />
       </MessageWrapper>
     ) : null
   }

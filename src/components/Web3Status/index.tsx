@@ -19,10 +19,10 @@ import { isTransactionRecent, useAllTransactions } from '../../state/transaction
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
 import { ButtonOutlined } from '../Button'
-import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from 'components/muiModal/WalletModal/index'
 import { HideOnMobile } from 'theme/muiTheme'
+import Spinner from 'components/Spinner'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -197,7 +197,7 @@ function Web3StatusInner() {
           {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
           {hasPendingTransactions ? (
             <RowBetween>
-              <Loader stroke={theme.textColor.text1} />{' '}
+              <Spinner color={theme.textColor.text1} size="16px" />
               <Text style={{ marginLeft: '12px' }}>{pending?.length} Pending</Text>
             </RowBetween>
           ) : (

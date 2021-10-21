@@ -5,7 +5,7 @@ import { getEtherscanLink } from '../../utils'
 import { ExternalLink } from '../../theme'
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { RowFixed } from '../Row'
-import Loader from '../Loader'
+import Spinner from 'components/Spinner'
 import { CheckCircle, CrossCircle } from 'components/Icons'
 
 const TransactionWrapper = styled.div``
@@ -52,7 +52,7 @@ export default function Transaction({ hash }: { hash: string }) {
       <TransactionState href={getEtherscanLink(chainId, hash, 'transaction')} pending={pending} success={success}>
         <IconWrapper pending={pending} success={success}>
           {pending ? (
-            <Loader />
+            <Spinner />
           ) : success ? (
             <CheckCircle size="16px" color={theme.palette.success.main} />
           ) : (
