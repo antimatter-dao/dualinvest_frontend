@@ -1,8 +1,7 @@
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import 'inter-ui'
 import { StrictMode } from 'react'
-import { ThemeProvider as MuiThemeProvider } from '@material-ui/core'
-// import { isMobile } from 'react-device-detect'
+import { CssBaseline, ThemeProvider as MuiThemeProvider } from '@material-ui/core'
 import ReactDOM from 'react-dom'
 // import ReactGA from 'react-ga'
 import theme from 'theme/muiTheme'
@@ -16,7 +15,7 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import ApplicationUpdater from './state/application/updater'
 import MulticallUpdater from './state/multicall/updater'
 import TransactionUpdater from './state/transactions/updater'
-import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
+import ThemeProvider from './theme'
 import getLibrary from './utils/getLibrary'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
@@ -54,7 +53,6 @@ function Updaters() {
 
 ReactDOM.render(
   <StrictMode>
-    <FixedGlobalStyle />
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
         <Blocklist>
@@ -62,7 +60,7 @@ ReactDOM.render(
             <Updaters />
             <ThemeProvider>
               <MuiThemeProvider theme={theme}>
-                <ThemedGlobalStyle />
+                <CssBaseline />
                 <HashRouter>
                   <App />
                 </HashRouter>

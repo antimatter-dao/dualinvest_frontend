@@ -2,7 +2,7 @@ import React from 'react'
 import { makeStyles, createStyles } from '@material-ui/styles'
 import { ButtonBase, Theme } from '@material-ui/core'
 interface Props {
-  onClick?: () => void
+  onClick?: (e?: any) => void
   children: React.ReactNode
   fontSize?: number | string
   fontWeight?: number

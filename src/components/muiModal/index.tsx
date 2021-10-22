@@ -3,9 +3,7 @@ import { Dialog, makeStyles, Theme, IconButton } from '@material-ui/core'
 import { createStyles } from '@material-ui/styles'
 import CloseIcon from '@material-ui/icons/Close'
 import useModal from 'hooks/useModal'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
-import useBreakpoint from 'hooks/useBreakpoint'
 
 interface Props {
   children?: React.ReactNode
@@ -90,19 +88,18 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function Modal(props: Props) {
   const { children, closeIcon, isCardOnMobile, customIsOpen, customOnDismiss } = props
   const classes = useStyles(props)
-  const { matches } = useBreakpoint()
   const { isOpen, hideModal } = useModal()
   const node = useRef<any>()
-  const hide = customOnDismiss ?? hideModal
-  useOnClickOutside(node, matches ? undefined : hide)
+  const hide = customIsOpen !== undefined ? customOnDismiss : hideModal
 
   return (
     <>
       <Dialog
-        open={customIsOpen !== undefined ? customIsOpen : isOpen}
+        open={customIsOpen !== undefined ? !!customIsOpen : isOpen}
         className={`${classes.root}${isCardOnMobile ? ' ' + classes.mobileRoot : ''}`}
         PaperProps={{ className: `${classes.paper}${isCardOnMobile ? ' ' + classes.mobilePaper : ''}`, ref: node }}
         BackdropProps={{ className: `${classes.backdrop}${isCardOnMobile ? ' ' + classes.mobileBackdrop : ''}` }}
+        onClose={hide}
       >
         {closeIcon && (
           <IconButton className={classes.closeIconContainer} onClick={hide}>

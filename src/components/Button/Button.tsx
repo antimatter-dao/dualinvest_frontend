@@ -6,7 +6,7 @@ interface Props {
   onClick?: () => void
   width?: string
   height?: string
-  background?: string
+  backgroundColor?: string
   disabled?: boolean
   color?: string
   children?: React.ReactNode
@@ -21,8 +21,8 @@ const useStyles = makeStyles((theme: Theme) =>
       width: (props: Props) => props.width || '100%',
       height: (props: Props) => props.height || 60,
       fontSize: (props: Props) => props.fontSize || 16,
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.primary.contrastText,
+      backgroundColor: (props: Props) => props.backgroundColor || theme.palette.primary.main,
+      color: (props: Props) => props.color || theme.palette.primary.contrastText,
       fontWeight: 500,
       borderRadius: theme.shape.borderRadius,
       transition: '.3s',

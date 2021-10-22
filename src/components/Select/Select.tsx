@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: (props: Props) => (props.width ? props.width : '100%'),
-      height: (props: Props) => (props.size === 'small' ? 32 : 48),
-      borderRadius: theme.shape.borderRadius,
+      height: (props: Props) => (props.size === 'small' ? 36 : 48),
+      borderRadius: (props: Props) => (props.size === 'small' ? 6 : theme.shape.borderRadius),
       paddingLeft: (props: Props) => (props.size === 'small' ? 8 : 24),
       cursor: (props: Props) => (props.disabled ? 'cursor' : 'pointer'),
       boxSizing: 'border-box',
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       '&:focus': {
         backgroundColor: theme.bgColor.bg3,
-        borderRadius: theme.shape.borderRadius
+        borderRadius: (props: Props) => (props.size === 'small' ? 6 : theme.shape.borderRadius)
       },
       '&:hover': {
         backgroundColor: theme.palette.primary.main,
@@ -58,8 +58,9 @@ const useStyles = makeStyles((theme: Theme) =>
       color: '#FFFFFF',
       display: (props: Props) => (props.disabled ? 'none' : 'block'),
       opacity: (props: Props) => (props.size === 'small' ? 0.5 : 1),
-      fontSize: (props: Props) => (props.size === 'small' ? '12px' : '24px'),
-      top: (props: Props) => (props.size === 'small' ? 'calc(50% - 6px)' : 'calc(50% - 12px)')
+      fontSize: (props: Props) => (props.size === 'small' ? '18px' : '24px'),
+      top: '50%',
+      transform: 'translateY(-50%)'
     },
     paper: {
       width: (props: Props) => (props.size === 'small' ? 172 : 176),

@@ -68,7 +68,7 @@ export const theme = {
       main: '#2DAB50'
     },
     background: {
-      default: '#131315',
+      default: '#1C1C1F',
       paper: '#191919'
     },
     text: {
@@ -118,7 +118,10 @@ export const theme = {
   // },
 }
 
-export const override = {
+export const override: any = {
+  MuiCssBaseline: {
+    '@global': { body: { backgroundColor: '#1C1C1F' } }
+  },
   MuiButton: {
     root: {
       color: theme.palette.primary.contrastText,
@@ -202,7 +205,7 @@ export const override = {
       fontFamily: 'Roboto'
     },
     inherit: {
-      inherit: 16
+      fontSize: 16
     },
     body1: {
       fontSize: 14

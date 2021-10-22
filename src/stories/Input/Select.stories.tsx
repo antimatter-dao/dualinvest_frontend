@@ -1,6 +1,5 @@
-import { MenuItem } from '@material-ui/core'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-
+import { MenuItem } from '@material-ui/core'
 import Select from 'components/Select/Select'
 
 export default {
@@ -18,5 +17,4 @@ const DefaultTemplate: ComponentStory<typeof Select> = args => (
     </MenuItem>
   </Select>
 )
-
 export const Default = DefaultTemplate.bind({})

@@ -1,15 +1,8 @@
 import { useMemo } from 'react'
-import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { useTheme } from '@material-ui/core'
-import { darken } from 'polished'
+import { useTheme, Box, makeStyles } from '@material-ui/core'
+import { CountUp } from 'use-count-up'
 import { Activity } from 'react-feather'
-import styled, { css } from 'styled-components'
-import CoinbaseWalletIcon from 'assets/wallet/coinbaseWalletIcon.svg'
-import FortmaticIcon from 'assets/wallet/fortmaticIcon.png'
-import PortisIcon from 'assets/wallet/portisIcon.png'
-import WalletConnectIcon from 'assets/wallet/walletConnectIcon.svg'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
 import Copy from 'components/Copy'
 import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
@@ -18,116 +11,34 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
-import { ButtonOutlined } from '../Button'
-import { RowBetween } from '../Row'
 import WalletModal from 'components/muiModal/WalletModal/index'
-import { HideOnMobile } from 'theme/muiTheme'
 import Spinner from 'components/Spinner'
+import { TokenAmount } from 'constants/token'
+import { useAggregateUniBalance } from 'state/wallet/hooks'
+import usePrevious from '../../hooks/usePrevious'
+import Divider from 'components/Divider'
+import useBreakpoint from 'hooks/useBreakpoint'
+import TextButton from 'components/Button/TextButton'
+import Button from 'components/Button/Button'
 
-const IconWrapper = styled.div<{ size?: number }>`
-  ${({ theme }) => theme.flexColumnNoWrap};
-  align-items: center;
-  justify-content: center;
-  & > * {
-    height: ${({ size }) => (size ? size + 'px' : '32px')};
-    width: ${({ size }) => (size ? size + 'px' : '32px')};
+const useStyles = makeStyles(theme => ({
+  actionButton: {
+    [theme.breakpoints.down('md')]: {
+      maxWidth: 320,
+      width: '100%',
+      borderRadius: 49,
+      height: 40
+    }
+  },
+  dot: {
+    width: 12,
+    height: 12,
+    background: `linear-gradient(135deg, #ffffff 4.17%, rgba(255, 255, 255, 0) 75%)`,
+    border: '0.6px solid #ffffff',
+    boxSizing: 'border-box',
+    borderRadius: '50%'
   }
-`
-
-const Web3StatusGeneric = styled(ButtonOutlined)`
-  ${({ theme }) => theme.flexRowNoWrap}
-  width: 100%;
-  align-items: center;
-  padding: 0.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  user-select: none;
-  :focus {
-    outline: none;
-  }
-`
-const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.red1};
-  border: 1px solid ${({ theme }) => theme.red1};
-  color: ${({ theme }) => theme.white};
-  font-weight: 500;
-  :hover,
-  :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.red1)};
-  }
-`
-
-const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  padding: 8px 25px;
-  border: 1px solid ${({ theme }) => theme.text1};
-  border-color: ${({ theme }) => theme.text1};
-  color: ${({ theme }) => theme.text1};
-  font-weight: 500;
-  border-radius: 49px;
-  :hover,
-  :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.text1)};
-    color: ${({ theme }) => theme.primaryText1};
-  }
-
-  ${({ faded }) =>
-    faded &&
-    css`
-      background-color: ${({ theme }) => theme.bg1};
-      border: 1px solid ${({ theme }) => theme.text1};
-      color: ${({ theme }) => theme.text1};
-
-      :hover,
-      :focus {
-        border: 1px solid ${({ theme }) => darken(0.05, theme.text1)};
-        color: ${({ theme }) => darken(0.05, theme.text1)};
-      }
-    `}
-`
-
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.text3)};
-  padding: 0;
-  border: none
-  font-weight: 500;
-  :hover,
-  :focus {
-    color:${({ pending, theme }) => (pending ? darken(0.1, theme.primary1) : theme.text1)};
-    border: none;
-    box-shadow: none
-  }
-  & p{
-    margin: 0;
-    margin-left:.5rem
-  }
-`
-
-const Text = styled.p`
-  flex: 1 1 auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 0 0.5rem 0 0.25rem;
-  font-size: 13px;
-  width: fit-content;
-  font-weight: 400;
-`
-
-const NetworkIcon = styled(Activity)`
-  margin-left: 0.25rem;
-  margin-right: 0.5rem;
-  width: 16px;
-  height: 16px;
-`
-
-const Dot = styled.span`
-  width: 12px;
-  height: 12px;
-  background: linear-gradient(135deg, #ffffff 4.17%, rgba(255, 255, 255, 0) 75%);
-  border: 0.6px solid #ffffff;
-  box-sizing: border-box;
-  border-radius: 50%;
-`
+}))
 
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
@@ -140,40 +51,14 @@ const SOCK = (
   </span>
 )
 
-// eslint-disable-next-line react/prop-types
-function StatusIcon({ connector }: { connector: AbstractConnector }) {
-  if (connector === injected) {
-    return <Dot />
-  } else if (connector === walletconnect) {
-    return (
-      <IconWrapper size={16}>
-        <img src={WalletConnectIcon} alt={''} />
-      </IconWrapper>
-    )
-  } else if (connector === walletlink) {
-    return (
-      <IconWrapper size={16}>
-        <img src={CoinbaseWalletIcon} alt={''} />
-      </IconWrapper>
-    )
-  } else if (connector === fortmatic) {
-    return (
-      <IconWrapper size={16}>
-        <img src={FortmaticIcon} alt={''} />
-      </IconWrapper>
-    )
-  } else if (connector === portis) {
-    return (
-      <IconWrapper size={16}>
-        <img src={PortisIcon} alt={''} />
-      </IconWrapper>
-    )
-  }
-  return null
-}
-
 function Web3StatusInner() {
   const { account, connector, error } = useWeb3React()
+  const isDownMD = useBreakpoint('md')
+  const classes = useStyles()
+  const aggregateBalance: TokenAmount | undefined = useAggregateUniBalance()
+
+  const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
+  const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -192,36 +77,75 @@ function Web3StatusInner() {
   const theme = useTheme()
   if (account) {
     return (
-      <>
-        <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
-          {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}
+      <Box
+        height={'32px'}
+        display={'flex'}
+        border={'1px solid #FFFFFF'}
+        borderRadius={'4px'}
+        alignItems={'center'}
+        style={{ fontSize: 14 }}
+      >
+        {!!account && aggregateBalance && (
+          <>
+            <Box padding={isDownMD ? '0 8px' : '0 10px 0 12px'} gridGap={10}>
+              <CountUp
+                key={countUpValue}
+                isCounting
+                start={parseFloat(countUpValuePrevious)}
+                end={parseFloat(countUpValue)}
+                thousandsSeparator={','}
+                duration={1}
+              />
+
+              <span style={{ marginLeft: 10 }}>MATTER</span>
+            </Box>
+            <Divider orientation={'vertical'} />
+          </>
+        )}
+        <Box display="flex" alignItems="center" padding={isDownMD ? '0 8px' : '0 12px 0 10px'} gridGap={10}>
           {hasPendingTransactions ? (
-            <RowBetween>
+            <>
               <Spinner color={theme.textColor.text1} size="16px" />
-              <Text style={{ marginLeft: '12px' }}>{pending?.length} Pending</Text>
-            </RowBetween>
+              <span>{pending?.length} Pending</span>
+            </>
           ) : (
             <>
               {hasSocks ? SOCK : null}
-              <Text>{ENSName || shortenAddress(account)}</Text>
+              {!hasPendingTransactions && connector && <span className={classes.dot} />}
+              <TextButton onClick={toggleWalletModal} fontSize={12} opacity={0.6}>
+                {ENSName || shortenAddress(account)}
+              </TextButton>
+              {account && <Copy toCopy={account}></Copy>}
             </>
           )}
-        </Web3StatusConnected>
-        <HideOnMobile> {account && <Copy toCopy={account}></Copy>}</HideOnMobile>
-      </>
+        </Box>
+      </Box>
     )
   } else if (error) {
     return (
-      <Web3StatusError onClick={toggleWalletModal}>
-        <NetworkIcon />
-        <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
-      </Web3StatusError>
+      <Button
+        backgroundColor={theme.palette.error.main}
+        classname={classes.actionButton}
+        fontSize={'14px'}
+        width={'140px'}
+        height={'32px'}
+        onClick={toggleWalletModal}
+      >
+        <Activity size={16} style={{ marginRight: 10 }} />
+        {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}
+      </Button>
     )
   } else {
     return (
-      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
+      <Button
+        classname={classes.actionButton}
+        fontSize={'14px'}
+        width={'140px'}
+        height={'32px'}
+        onClick={toggleWalletModal}
+      >
         Connect Wallet
-      </Web3StatusConnect>
+      </Button>
     )
   }
 }

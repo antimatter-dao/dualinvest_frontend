@@ -7,7 +7,6 @@ import '@reach/dialog/styles.css'
 import { useGesture } from 'react-use-gesture'
 import { transparentize } from 'polished'
 import { Marginer } from '../../pages/App'
-// import { headerHeightDisplacement } from '../Header'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

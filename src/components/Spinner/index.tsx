@@ -13,22 +13,27 @@ const useStyles = makeStyles(theme =>
     root: {
       position: 'relative',
       marginLeft: (props: Props) => props.marginLeft ?? 0,
-      marginRight: (props: Props) => props.marginRight ?? 0
+      marginRight: (props: Props) => props.marginRight ?? 0,
+      height: (props: Props) => props.size,
+      width: (props: Props) => props.size
     },
     bottom: {
-      color: theme.palette.grey.A400
+      '& svg circle': {
+        stroke: theme.bgColor.bg5
+      }
     },
     top: {
       color: (props: Props) => props.color ?? theme.palette.primary.main,
       animationDuration: '550ms',
       position: 'absolute',
-      left: 0
+      left: 0,
+      top: 0
     }
   })
 )
 
 export default function Spinner({ size = 16, thickness = 3, ...props }: Props) {
-  const classes = useStyles(props)
+  const classes = useStyles({ ...props, size })
 
   return (
     <div className={classes.root}>
