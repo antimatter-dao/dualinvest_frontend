@@ -1,7 +1,8 @@
-import { useContext, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { X } from 'react-feather'
+import { useTheme } from '@material-ui/core'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
@@ -17,7 +18,7 @@ import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
-import { ReactComponent as Settings } from '../../assets/svg/setting.svg'
+import { ReactComponent as Settings } from 'assets/componentsIcon/setting.svg'
 import { Wrapper } from '../Modal'
 import { Marginer } from 'pages/App'
 import OutlineButton from 'components/Button/OutlineButton'
@@ -135,7 +136,7 @@ export default function SettingsTab({ onlySlippage }: { onlySlippage?: boolean }
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const [userSlippage, useSlippageSetting] = useUserSlippageTolerance()
 
   const [ttl, setTtl] = useUserTransactionTTL()
@@ -181,7 +182,7 @@ export default function SettingsTab({ onlySlippage }: { onlySlippage?: boolean }
                   }
                 }}
               >
-                <Text fontSize={16} fontWeight={500} id="confirm-expert-mode" color={theme.bg1}>
+                <Text fontSize={16} fontWeight={500} id="confirm-expert-mode" color={theme.bgColor.bg1}>
                   Turn On Expert Mode
                 </Text>
               </OutlineButton>
@@ -225,7 +226,7 @@ export default function SettingsTab({ onlySlippage }: { onlySlippage?: boolean }
                     <CustomizedAutoRow>
                       <Column>
                         <RowFixed style={{ marginBottom: '11px' }}>
-                          <Text fontWeight={400} fontSize={14} color={theme.text2}>
+                          <Text fontWeight={400} fontSize={14} color={theme.textColor.text2}>
                             Toggle Expert Mode
                           </Text>
                           <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
@@ -248,7 +249,7 @@ export default function SettingsTab({ onlySlippage }: { onlySlippage?: boolean }
                       </Column>
                       <Column>
                         <RowFixed style={{ marginBottom: '11px' }}>
-                          <Text fontWeight={400} fontSize={14} color={theme.text2}>
+                          <Text fontWeight={400} fontSize={14} color={theme.textColor.text2}>
                             Disable Multihops
                           </Text>
                           <QuestionHelper text="Restricts swaps to direct pairs only." />

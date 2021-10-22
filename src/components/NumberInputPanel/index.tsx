@@ -1,11 +1,11 @@
 import styled from 'styled-components'
+import { useTheme } from '@material-ui/core'
 import { darken } from 'polished'
+import { Text } from 'rebass'
+
 import { AutoRow } from '../Row'
 import { Input as NumericalInput } from '../NumericalInput'
-
 import { useActiveWeb3React } from '../../hooks'
-import useTheme from '../../hooks/useTheme'
-import { Text } from 'rebass'
 
 const InputRow = styled.div<{ disabled?: boolean }>`
   align-items: center;
@@ -108,14 +108,14 @@ export default function NumberInputPanel({
         <LabelRow>
           <AutoRow justify="space-between">
             {!hideLabel && (
-              <Text color={theme.text3} fontWeight={500} fontSize={14}>
+              <Text color={theme.textColor.text3} fontWeight={500} fontSize={14}>
                 {label}
               </Text>
             )}
             {account && (
               <Text
                 onClick={onMax}
-                color={theme.text3}
+                color={theme.textColor.text3}
                 fontWeight={500}
                 fontSize={14}
                 style={{ display: 'inline', cursor: 'pointer' }}

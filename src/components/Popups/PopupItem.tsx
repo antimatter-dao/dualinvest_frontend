@@ -1,6 +1,6 @@
-import { useCallback, useEffect /*, useContext*/ } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useSpring } from 'react-spring/web'
-import styled /*, { ThemeContext }*/ from 'styled-components'
+import styled from 'styled-components'
 import { animated } from 'react-spring'
 import { useRemovePopup } from '../../state/application/hooks'
 import TransactionPopup from './TransactionPopup'
@@ -56,8 +56,6 @@ export default function PopupItem({
       clearTimeout(timeout)
     }
   }, [removeAfterMs, removeThisPopup])
-
-  // const theme = useContext(ThemeContext)
 
   let popupContent
   if ('txn' in content) {

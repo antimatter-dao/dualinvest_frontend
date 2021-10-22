@@ -7,10 +7,13 @@ import { RowBetween } from 'components/Row'
 import { Typography } from '@material-ui/core'
 import useModal from 'hooks/useModal'
 
+const isDev = process.env.NODE_ENV === 'development'
+
 export default function WarningModal() {
   const { showModal, hideModal } = useModal()
 
   useEffect(() => {
+    if (isDev) return
     showModal(<WarningModalContent onDismiss={hideModal} />)
   }, [hideModal, showModal])
 

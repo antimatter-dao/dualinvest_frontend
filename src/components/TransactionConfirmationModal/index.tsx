@@ -1,5 +1,6 @@
-import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React from 'react'
+import { useTheme } from '@material-ui/core'
+import styled from 'styled-components'
 import Modal from '../Modal'
 import { Text } from 'rebass'
 import { CloseIcon } from '../../theme'
@@ -7,9 +8,8 @@ import { RowBetween } from '../Row'
 import { ButtonOutlinedPrimary } from '../Button'
 import { AutoColumn } from '../Column'
 import { useActiveWeb3React } from '../../hooks'
-import useTheme from 'hooks/useTheme'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import { CrossCircle } from 'components/Icons/'
+import { ReactComponent as CrossCircle } from 'assets/componentsIcon/cross_circle.svg'
 import { Currency } from '../../constants/token'
 import { ChainId } from '../../constants/chain'
 
@@ -42,7 +42,7 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
             Waiting For Confirmation
           </Text>
           <AutoColumn gap="12px" justify={'center'}>
-            <Text fontWeight={400} fontSize={14} textAlign="center" color={theme.text2}>
+            <Text fontWeight={400} fontSize={14} textAlign="center" color={theme.textColor.text2}>
               {pendingText}
             </Text>
           </AutoColumn>
@@ -103,7 +103,7 @@ export function ConfirmationModalContent({
 }
 
 export function TransactionErrorContent({ message, onDismiss }: { message: string; onDismiss: () => void }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   return (
     <Wrapper>
       <Section>
@@ -111,8 +111,13 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
           <Close onClick={onDismiss} />
         </RowBetween>
         <AutoColumn style={{ padding: '2rem 0' }} gap="24px" justify="center">
-          <CrossCircle color={theme.red1} size="25px" />
-          <Text fontWeight={500} fontSize={16} color={theme.text1} style={{ textAlign: 'center', width: '85%' }}>
+          <CrossCircle />
+          <Text
+            fontWeight={500}
+            fontSize={16}
+            color={theme.textColor.text1}
+            style={{ textAlign: 'center', width: '85%' }}
+          >
             {message}
           </Text>
         </AutoColumn>

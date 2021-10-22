@@ -1,12 +1,12 @@
 import styled from 'styled-components'
-import { useTheme } from '@material-ui/core'
 import { useActiveWeb3React } from '../../hooks'
 import { getEtherscanLink } from '../../utils'
 import { ExternalLink } from '../../theme'
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { RowFixed } from '../Row'
 import Spinner from 'components/Spinner'
-import { CheckCircle, CrossCircle } from 'components/Icons'
+import { ReactComponent as CheckCircle } from '../../assets/componentsIcon/check_circle.svg'
+import { ReactComponent as CrossCircle } from '../../assets/componentsIcon/cross_circle.svg'
 
 const TransactionWrapper = styled.div``
 
@@ -38,7 +38,6 @@ const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`
 export default function Transaction({ hash }: { hash: string }) {
   const { chainId } = useActiveWeb3React()
   const allTransactions = useAllTransactions()
-  const theme = useTheme()
 
   const tx = allTransactions?.[hash]
   const summary = tx?.summary
@@ -51,13 +50,7 @@ export default function Transaction({ hash }: { hash: string }) {
     <TransactionWrapper>
       <TransactionState href={getEtherscanLink(chainId, hash, 'transaction')} pending={pending} success={success}>
         <IconWrapper pending={pending} success={success}>
-          {pending ? (
-            <Spinner />
-          ) : success ? (
-            <CheckCircle size="16px" color={theme.palette.success.main} />
-          ) : (
-            <CrossCircle size="16px" color={theme.palette.error.main} />
-          )}
+          {pending ? <Spinner /> : success ? <CheckCircle /> : <CrossCircle />}
         </IconWrapper>
         <RowFixed>
           <TransactionStatusText>{summary ?? hash} ↗</TransactionStatusText>

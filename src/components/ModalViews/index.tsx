@@ -1,16 +1,15 @@
+import { Typography, useTheme } from '@material-ui/core'
+import { Text } from 'rebass'
+import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { AutoColumn, ColumnCenter } from '../Column'
-import styled from 'styled-components'
 import { RowBetween } from '../Row'
 import { CloseIcon } from '../../theme'
-import { ReactComponent as CheckCircle } from '../../assets/svg/transaction_submitted.svg'
-import { ReactComponent as CrossCircle } from '../../assets/svg/transaction_error.svg'
+import { ReactComponent as CheckCircle } from 'assets/componentsIcon/check_circle.svg'
+import { ReactComponent as CrossCircle } from 'assets/componentsIcon/cross_circle.svg'
 import { getEtherscanLink } from '../../utils'
 import { ExternalLink } from '../../theme/components'
-import useTheme from 'hooks/useTheme'
 import { ButtonPrimary } from 'components/Button'
-import { Typography } from '@material-ui/core'
-import { Text } from 'rebass'
 import Spinner from 'components/Spinner'
 
 const ConfirmOrLoadingWrapper = styled.div`
@@ -68,14 +67,17 @@ export function SubmittedView({
       <AutoColumn gap="32px" justify={'center'}>
         {children}
         {!hideLink && !isError && chainId && hash && (
-          <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')} style={{ color: theme.primary1 }}>
-            <Text fontWeight={400} fontSize={14} color={theme.primary1}>
+          <ExternalLink
+            href={getEtherscanLink(chainId, hash, 'transaction')}
+            style={{ color: theme.palette.primary.main }}
+          >
+            <Text fontWeight={400} fontSize={14} color={theme.palette.primary.main}>
               View on Etherscan
             </Text>
           </ExternalLink>
         )}
         <ButtonPrimary onClick={onDismiss} style={{ marginTop: '-10px' }}>
-          <Text fontWeight={500} fontSize={16} color={theme.bg1}>
+          <Text fontWeight={500} fontSize={16} color={theme.bgColor.bg1}>
             Close
           </Text>
         </ButtonPrimary>

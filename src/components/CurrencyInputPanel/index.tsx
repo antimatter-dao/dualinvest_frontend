@@ -5,7 +5,7 @@ import { Text } from 'rebass'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { AutoRow } from '../Row'
 import { Input as NumericalInput } from '../NumericalInput'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import { ReactComponent as DropDown } from '../../assets/componentsIcon/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
 import { Currency } from '../../constants/token/currency'
