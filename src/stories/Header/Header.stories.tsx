@@ -4,9 +4,9 @@ import HeaderComponent from 'components/Header'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import getLibrary from 'utils/getLibrary'
 import { NetworkContextName } from 'constants/index'
-import Web3ReactManager from 'components/Web3ReactManager'
+import Web3ReactManager from 'components/essential/Web3ReactManager'
 
-const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
+export const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 export default {
   title: 'Header/Header',
   component: HeaderComponent,

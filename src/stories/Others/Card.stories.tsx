@@ -1,4 +1,4 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import { ComponentMeta } from '@storybook/react'
 
 import { OutlinedCard } from 'components/Card'
 
@@ -7,7 +7,7 @@ export default {
   component: OutlinedCard
 } as ComponentMeta<typeof OutlinedCard>
 
-const DefaultTemplate: ComponentStory<typeof OutlinedCard> = args => (
+export const Default = (args: any) => (
   <OutlinedCard {...args}>
     <ol>
       <li>Default</li>
@@ -16,5 +16,3 @@ const DefaultTemplate: ComponentStory<typeof OutlinedCard> = args => (
     </ol>
   </OutlinedCard>
 )
-
-export const Default = DefaultTemplate.bind({})

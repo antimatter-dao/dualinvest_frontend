@@ -13,6 +13,8 @@ interface Props {
   isCardOnMobile?: boolean
   customIsOpen?: boolean
   customOnDismiss?: () => void
+  padding?: string
+  hasBorder?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,7 +39,8 @@ const useStyles = makeStyles((theme: Theme) =>
       width: (props: Props) => props.width || 480,
       maxWidth: (props: Props) => props.maxWidth || 480,
       background: theme.palette.grey.A700,
-      border: '1px solid rgba(255, 255, 255, 0.2)',
+      border: (props: Props) => (props.padding ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid transparent'),
+      padding: (props: Props) => props.padding || 0,
       boxSizing: 'border-box',
       borderRadius: 20,
       overflowX: 'hidden',
@@ -86,8 +89,8 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export default function Modal(props: Props) {
-  const { children, closeIcon, isCardOnMobile, customIsOpen, customOnDismiss } = props
-  const classes = useStyles(props)
+  const { children, closeIcon, isCardOnMobile, customIsOpen, customOnDismiss, hasBorder = true } = props
+  const classes = useStyles({ ...props, hasBorder })
   const { isOpen, hideModal } = useModal()
   const node = useRef<any>()
   const hide = customIsOpen !== undefined ? customOnDismiss : hideModal

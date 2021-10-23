@@ -1,11 +1,10 @@
 import { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
-import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
-import Polling from '../components/Header/Polling'
-import Popups from '../components/Popups'
-import Web3ReactManager from '../components/Web3ReactManager'
+import Polling from '../components/essential/Polling'
+import Popups from '../components/essential/Popups'
+import Web3ReactManager from '../components/essential/Web3ReactManager'
 import WarningModal from '../components/muiModal/WarningModal'
 import ComingSoon from './ComingSoon'
 import { ModalProvider } from 'context/ModalContext'
@@ -70,7 +69,6 @@ export default function App() {
   return (
     <Suspense fallback={null}>
       <ModalProvider>
-        <Route component={GoogleAnalyticsReporter} />
         <AppWrapper id="app">
           {/* <URLWarning /> */}
           <ContentWrapper>
@@ -84,7 +82,7 @@ export default function App() {
               {/* <TopLevelModals /> */}
               <Web3ReactManager>
                 <Switch>
-                  <Route exact strict path="/governance" component={ComingSoon} />
+                  <Route exact strict path="/test1" component={ComingSoon} />
                 </Switch>
               </Web3ReactManager>
               {/* <Marginer /> */}

@@ -1,9 +1,8 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { useTheme } from '@material-ui/core'
+import { useTheme, Box } from '@material-ui/core'
 import styled from 'styled-components'
-import { StyledInput } from 'components/NumericalInput'
-import { AutoRow } from 'components/Row'
+import { StyledInput } from 'components/Input/NumericalInput'
 
 const CustomInput = styled(StyledInput)<{ disabled?: boolean }>`
   width: 100%;
@@ -71,13 +70,13 @@ export const TextInput = React.memo(function InnerInput({
   return (
     <Container>
       <LabelRow>
-        <AutoRow justify="space-between">
+        <Box display="flex" justifyContent="space-between" alignItems="center">
           {label && (
             <Text color={theme.textColor.text3} fontWeight={500} fontSize={14}>
               {label}
             </Text>
           )}
-        </AutoRow>
+        </Box>
       </LabelRow>
       {textarea ? (
         <CustomTextArea

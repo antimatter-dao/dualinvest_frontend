@@ -1,4 +1,3 @@
-// import ReactGA from 'react-ga'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -34,10 +33,6 @@ export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) =>
 
   const setSingleHopOnly = useCallback(
     (newSingleHopOnly: boolean) => {
-      // ReactGA.event({
-      //   category: 'Routing',
-      //   action: newSingleHopOnly ? 'enable single hop' : 'disable single hop'
-      // })
       dispatch(updateUserSingleHopOnly({ userSingleHopOnly: newSingleHopOnly }))
     },
     [dispatch]

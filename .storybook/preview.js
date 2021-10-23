@@ -11,7 +11,7 @@ export const parameters = {
     values: [
       {
         name: 'default',
-        value: theme.palette.grey[500],
+        value: theme.palette.background.default,
       }
     ],
   },

@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Dots } from '../components/styleds'
+
 const Frame = styled.div`
   width: 500px;
   height: 280px;
@@ -26,7 +27,6 @@ export default function ComingSoon() {
       <Title>
         Coming Soon <Dots />
       </Title>
-
       <div>This section is still implemeting.</div>
       <div>Please come back later</div>
     </Frame>
