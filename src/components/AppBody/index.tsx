@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function AppBody({ onReturnClick, title, children, ...props }: Props) {
   const classes = useStyles(props)
-  const { matches } = useBreakpoint()
+  const matches = useBreakpoint()
 
   return (
     <div className={classes.root}>

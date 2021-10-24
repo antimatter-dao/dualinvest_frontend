@@ -24,7 +24,7 @@ export default function NumericalInput({
         return
       }
       event.target.value = formatted
-      onChange(event)
+      onChange && onChange(event)
     },
     [onChange]
   )
