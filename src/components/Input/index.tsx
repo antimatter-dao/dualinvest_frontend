@@ -1,9 +1,9 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, InputHTMLAttributes } from 'react'
 import { InputBase, Theme } from '@material-ui/core'
 import { createStyles, makeStyles } from '@material-ui/styles'
 import InputLabel from './InputLabel'
 
-interface Props {
+export interface InputProps {
   placeholder?: string
   value: string
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
@@ -49,9 +49,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export default function Input(props: Props) {
+export default function Input(props: InputProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'color' | 'outline'>) {
   const classes = useStyles(props)
-  const { focused, placeholder, onChange, value, disabled, type } = props
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { focused, placeholder, onChange, value, disabled, type, outlined, ...rest } = props
 
   return (
     <div className={classes.formControl}>
@@ -65,6 +66,7 @@ export default function Input(props: Props) {
         value={value}
         disabled={disabled}
         type={type}
+        {...rest}
       />
     </div>
   )

@@ -11,7 +11,7 @@ interface Props {
   disabled?: boolean
   chainList: Chain[]
   selectedChains: Chain[]
-  onChainSelect?: (e: ChangeEvent<{ value: string[] }>) => void
+  onChainSelect?: (chains: Chain[]) => void
   width?: string
 }
 
@@ -42,13 +42,29 @@ export default function ChainMultiSelect(props: Props) {
     return 'Select the chain to enable crosschain functionality'
   }, [selectedChains])
 
+  const handleChainSelect = useCallback(
+    (e: ChangeEvent<{ value: string[] }>) => {
+      const symbols: string[] = e.target.value
+      const selectedItems: Chain[] = []
+
+      for (let i = 0; i < symbols.length; i += 1) {
+        const chain = chainList.find(chain => chain.symbol === symbols[i])
+        if (chain) {
+          selectedItems.push(chain)
+        }
+      }
+      onChainSelect && onChainSelect(selectedItems)
+    },
+    [chainList, onChainSelect]
+  )
+
   return (
     <div>
       {label && <InputLabel>{label}</InputLabel>}
       <Select
         value={selectedChains?.map(el => el.symbol) ?? []}
         disabled={disabled}
-        onChange={onChainSelect}
+        onChange={handleChainSelect}
         width={width}
         multiple
         renderValue={renderValue}

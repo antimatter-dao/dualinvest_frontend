@@ -3,7 +3,6 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { isMobile } from 'react-device-detect'
-import styled from 'styled-components'
 import { Typography, Box } from '@material-ui/core'
 import MetamaskIcon from 'assets/wallet/metamask.png'
 import { fortmatic, injected, portis } from 'connectors'
@@ -12,29 +11,14 @@ import { SUPPORTED_WALLETS } from 'constants/index'
 import usePrevious from 'hooks/usePrevious'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useWalletModalToggle } from 'state/application/hooks'
-import AccountDetails from 'components/muiModal/WalletModal/AccountDetails'
+import AccountDetails from 'components/Modal/WalletModal/AccountDetails'
 
 import Modal from '../index'
 import Option from './Option'
 import PendingView from './PendingView'
 import OutlineButton from 'components/Button/OutlineButton'
+import useBreakpoint from 'hooks/useBreakpoint'
 
-const ContentWrapper = styled.div`
-  padding: 2rem 6rem 52px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
-`
-
-const OptionGrid = styled.div`
-  display: grid;
-  grid-gap: 10px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 1fr;
-    grid-gap: 10px;
-  `};
-`
 const WALLET_VIEWS = {
   OPTIONS: 'options',
   OPTIONS_SECONDARY: 'options_secondary',
@@ -51,6 +35,7 @@ export default function WalletModal({
   confirmedTransactions: string[] // hashes of confirmed
   ENSName?: string
 }) {
+  const isUpToMD = useBreakpoint('md')
   // important that these are destructed from the account-specific web3-react context
   const { active, account, connector, activate, error } = useWeb3React()
 
@@ -205,13 +190,11 @@ export default function WalletModal({
           <Typography variant="h6">
             {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}
           </Typography>
-          <ContentWrapper>
-            {error instanceof UnsupportedChainIdError ? (
-              <h5>Please connect to the appropriate Ethereum network.</h5>
-            ) : (
-              'Error connecting. Try refreshing the page.'
-            )}
-          </ContentWrapper>
+          <Box padding={isUpToMD ? '16px' : '2rem 6rem 52px'}>
+            {error instanceof UnsupportedChainIdError
+              ? 'Please connect to the appropriate Ethereum network.'
+              : 'Error connecting. Try refreshing the page.'}
+          </Box>
         </>
       )
     }
@@ -229,29 +212,30 @@ export default function WalletModal({
     return (
       <>
         {walletView === WALLET_VIEWS.ACCOUNT && <Typography variant="h6">Connect to a wallet</Typography>}
-        <Box display="grid" gridGap="12px" width={'100%'} justifyContent="center">
-          {walletView === WALLET_VIEWS.PENDING ? (
-            <PendingView
-              connector={pendingWallet}
-              error={pendingError}
-              setPendingError={setPendingError}
-              tryActivation={tryActivation}
+
+        {walletView === WALLET_VIEWS.PENDING ? (
+          <PendingView
+            connector={pendingWallet}
+            error={pendingError}
+            setPendingError={setPendingError}
+            tryActivation={tryActivation}
+          >
+            <OutlineButton
+              primary
+              onClick={() => {
+                setPendingError(false)
+                setWalletView(WALLET_VIEWS.ACCOUNT)
+              }}
+              style={{ whiteSpace: 'nowrap' }}
             >
-              <OutlineButton
-                primary
-                onClick={() => {
-                  setPendingError(false)
-                  setWalletView(WALLET_VIEWS.ACCOUNT)
-                }}
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                Change Wallet
-              </OutlineButton>
-            </PendingView>
-          ) : (
-            <OptionGrid>{getOptions()}</OptionGrid>
-          )}
-        </Box>
+              Change Wallet
+            </OutlineButton>
+          </PendingView>
+        ) : (
+          <Box display="grid" gridGap="10px" width="100%" justifyContent="center">
+            {getOptions()}
+          </Box>
+        )}
       </>
     )
   }

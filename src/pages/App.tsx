@@ -5,7 +5,7 @@ import Header from '../components/Header'
 import Polling from '../components/essential/Polling'
 import Popups from '../components/essential/Popups'
 import Web3ReactManager from '../components/essential/Web3ReactManager'
-import WarningModal from '../components/muiModal/WarningModal'
+import WarningModal from '../components/Modal/WarningModal'
 import ComingSoon from './ComingSoon'
 import { ModalProvider } from 'context/ModalContext'
 
@@ -59,18 +59,11 @@ export const Marginer = styled.div`
   ${({ theme }) => theme.desktop}
 `
 
-// function TopLevelModals() {
-//   const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
-//   const toggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-//   return <AddressClaimModal isOpen={open} onDismiss={toggle} />
-// }
-
 export default function App() {
   return (
     <Suspense fallback={null}>
       <ModalProvider>
         <AppWrapper id="app">
-          {/* <URLWarning /> */}
           <ContentWrapper>
             <HeaderWrapper id="header">
               <Header />
@@ -79,7 +72,6 @@ export default function App() {
               <Popups />
               <Polling />
               <WarningModal />
-              {/* <TopLevelModals /> */}
               <Web3ReactManager>
                 <Switch>
                   <Route exact strict path="/test1" component={ComingSoon} />

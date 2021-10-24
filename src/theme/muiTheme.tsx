@@ -102,7 +102,7 @@ export const theme = {
     bg5: '#A1A1A1'
   },
   gradient: {
-    gradient1: 'linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%), #000000'
+    gradient1: '#000000 linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%)'
   },
   height: {
     header: '88px',
@@ -120,7 +120,18 @@ export const theme = {
 
 export const override: any = {
   MuiCssBaseline: {
-    '@global': { body: { backgroundColor: '#1C1C1F' } }
+    '@global': {
+      body: { backgroundColor: '#1C1C1F' },
+      'html, input, textarea, button': {
+        fontFamily: 'Roboto, sans-serif',
+        fontDisplay: 'fallback'
+      },
+      '@supports (font-variation-settings: normal)': {
+        'html, input, textarea, button ': {
+          fontFamily: 'Roboto, sans-serif'
+        }
+      }
+    }
   },
   MuiButton: {
     root: {
@@ -203,9 +214,6 @@ export const override: any = {
   MuiTypography: {
     root: {
       fontFamily: 'Roboto'
-    },
-    inherit: {
-      fontSize: 16
     },
     body1: {
       fontSize: 14

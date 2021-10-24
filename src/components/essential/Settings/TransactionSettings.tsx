@@ -4,7 +4,6 @@ import { darken } from 'polished'
 import { Text } from 'rebass'
 import { useTheme, Box } from '@material-ui/core'
 import QuestionHelper from 'components/essential/QuestionHelper'
-import { RowFixed } from '../../Row'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -151,12 +150,12 @@ export default function TransactionSettings({
   return (
     <Box display="grid" gridGap="24px">
       <Box display="grid" gridGap="8px">
-        <RowFixed>
+        <Box display="flex" alignItems="center">
           <Text fontWeight={400} fontSize={14} color={theme.textColor.text2}>
             Slippage tolerance
           </Text>
           <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
-        </RowFixed>
+        </Box>
         <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
           <Option
             onClick={() => {
@@ -233,13 +232,13 @@ export default function TransactionSettings({
 
       {!onlySlippage && (
         <Box display="grid" gridGap="8px">
-          <RowFixed>
+          <Box display="flex" alignItems="center">
             <Text fontSize={14} fontWeight={400} color={theme.textColor.text2}>
               Transaction deadline
             </Text>
             <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />
-          </RowFixed>
-          <RowFixed>
+          </Box>
+          <Box display="flex" alignItems="center">
             <OptionCustom style={{ width: '10rem', marginRight: '12px' }} tabIndex={-1}>
               <Input
                 color={!!deadlineError ? 'red' : undefined}
@@ -254,7 +253,7 @@ export default function TransactionSettings({
             <Text style={{ paddingLeft: '8px' }} fontSize={14}>
               minutes
             </Text>
-          </RowFixed>
+          </Box>
         </Box>
       )}
     </Box>

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
-import styled from 'styled-components'
+import { styled, Theme } from '@material-ui/core'
 
-import useHttpLocations from '../../../hooks/useHttpLocations'
+// import useHttpLocations from '../../../hooks/useHttpLocations'
 import Logo from './LogoBase'
 import { Currency } from '../../../constants/token/currency'
 import { Token } from '../../../constants/token/token'
@@ -9,13 +9,13 @@ import { Token } from '../../../constants/token/token'
 export const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
-const StyledLogo = styled(Logo)<{ size: string }>`
-  width: ${({ size }) => size};
-  height: ${({ size }) => size};
-  border-radius: ${({ size }) => size};
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  background-color: ${({ theme }) => theme.white};
-`
+const StyledLogo = styled(Logo)(({ theme, size }: { size?: string; theme: Theme }) => ({
+  width: size,
+  height: size,
+  borderRadius: size,
+  boxShadow: ' 0px 6px 10px rgba(0, 0, 0, 0.075)',
+  backgroundColor: theme.palette.primary.contrastText
+}))
 
 export default function CurrencyLogo({
   currency,
@@ -26,13 +26,13 @@ export default function CurrencyLogo({
   size?: string
   style?: React.CSSProperties
 }) {
-  const uriLocations = useHttpLocations(undefined)
+  // const uriLocations = useHttpLocations(undefined)
 
   const srcs: string[] = useMemo(() => {
     if (currency instanceof Token) {
       return [getTokenLogoURL(currency.address)]
     }
     return []
-  }, [currency, uriLocations])
+  }, [currency])
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />
 }

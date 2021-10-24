@@ -1,7 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import ChainSelect, { Chain } from 'components/Select/ChainSelect'
 import DummyLogo from 'assets/images/ethereum-logo.png'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 
 export default {
   title: 'Input/ChainSelect',
@@ -32,11 +32,6 @@ const ChainList = [
 const DefaultTemplate: ComponentStory<typeof ChainSelect> = () => {
   const [selectedChain, setSelectedChain] = useState<Chain | null>(null)
 
-  const handleChainSelect = useCallback(e => {
-    const chain = ChainList.find(chain => chain.symbol === e.target.value) ?? null
-    setSelectedChain(chain)
-  }, [])
-
-  return <ChainSelect chainList={ChainList} selectedChain={selectedChain} onChange={handleChainSelect} />
+  return <ChainSelect chainList={ChainList} selectedChain={selectedChain} onChange={chain => setSelectedChain(chain)} />
 }
 export const Default = DefaultTemplate.bind({})

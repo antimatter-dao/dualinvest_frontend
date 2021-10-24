@@ -48,15 +48,6 @@ export default function CurrencyList({ mode, onSelectCurrency, currencyOptions }
             </Box>
           </Box>
           {mode === Mode.SELECT && <span style={{ fontWeight: 500 }}>{0}</span>}
-          {/* {mode === Mode.IMPORT && (
-            <ImportButton
-              onClick={() => {
-                showModal(<ImportCurrencyModal />)
-              }}
-            >
-              Import
-            </ImportButton>
-          )} */}
         </ListItem>
       )
     },

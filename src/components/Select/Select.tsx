@@ -108,8 +108,9 @@ const useStyles = makeStyles((theme: Theme) =>
     base: {
       width: (props: Props) => props.width ?? '100%',
       borderRadius: theme.shape.borderRadius,
+      border: '1px solid transparent',
       '&.Mui-focused': {
-        border: `1px solid ${theme.palette.primary.main}`
+        borderColor: theme.palette.primary.main
       }
     }
   })

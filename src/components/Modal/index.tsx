@@ -1,190 +1,115 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
-import { animated, useTransition, useSpring } from 'react-spring'
-import { DialogOverlay, DialogContent } from '@reach/dialog'
-import { isMobile } from 'react-device-detect'
-import '@reach/dialog/styles.css'
-import { useGesture } from 'react-use-gesture'
-import { transparentize } from 'polished'
-import { Marginer } from '../../pages/App'
+import { Dialog, makeStyles, Theme, IconButton, createStyles } from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close'
+import useModal from 'hooks/useModal'
+import { useRef } from 'react'
 
-const AnimatedDialogOverlay = animated(DialogOverlay)
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{
-  color?: string
-  overflow?: string
-  alignitems?: string
-}>`
-  &[data-reach-dialog-overlay] {
-    z-index: 2;
-    overflow: ${({ overflow }) => overflow ?? 'hidden'};
-    padding-top: ${({ theme }) => theme.headerHeight}
-
-    display: flex;
-    align-items: ${({ alignitems }) => alignitems ?? 'center'};
-    justify-content: center;
-
-    background-color: ${({ theme, color }) => color ?? theme.modalBG};
-    ${({ theme }) => theme.mediaWidth.upToSmall`
-    height: calc(100% - ${theme.headerHeight});
-    justify-content: flex-end;
-    padding-top: 0
-    `}
-  }
-`
-export const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  ${({ theme }) => theme.mediaWidth.upToSmall`          
-    margin-top: auto;
-    max-height: calc(100% - ${theme.mobileHeaderHeight});
-    overflow-y: auto;
-  `}
-`
-
-// export const Filler = styled.div`
-//   width: 212px;
-//   ${({ theme }) => theme.desktop}
-// `
-
-export const AnimatedDialogContent = animated(DialogContent)
-// destructure to not pass custom props to Dialog DOM element
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, maxWidth, minWidth, ...rest }) => (
-  <AnimatedDialogContent {...rest} />
-)).attrs({
-  'aria-label': 'dialog'
-})`
-  overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
-
-  &[data-reach-dialog-content] {
-    margin: 0 0 2rem 0;
-    background: ${({ theme }) => theme.gradient1};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
-    padding: 0px;
-    width: 42vw;
-    ${({ minWidth }) =>
-      minWidth &&
-      css`
-        min-width: ${minWidth}px;
-      `}
-    overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
-    overflow-x: hidden;
-
-    align-self: center;
-
-    max-width: 480px;
-        ${({ maxWidth }) =>
-          maxWidth &&
-          css`
-            max-width: ${maxWidth}px;
-          `}
-    ${({ maxHeight }) =>
-      maxHeight &&
-      css`
-        max-height: ${maxHeight}vh;
-      `}
-    ${({ minHeight }) =>
-      minHeight &&
-      css`
-        min-height: ${minHeight}vh;
-      `}
-    display: flex;
-    border-radius: 42px;
-    ${({ theme }) => theme.mediaWidth.upToMedium`
-      width: 65vw;
-      margin: 0;
-    `}
-    ${({ theme }) => theme.mediaWidth.upToSmall`
-      width: 100vw;
-      max-width:unset;
-      border-radius: 20px;
-      border-bottom-left-radius: unset;
-      border-bottom-right-radius: unset;
-      max-height: calc(100% - ${theme.mobileHeaderHeight});
-      overflow-y: auto;
-      
-    `}
-  }
-`
-
-interface ModalProps {
-  isOpen: boolean
-  onDismiss: () => void
-  minHeight?: number | false
-  maxHeight?: number
-  initialFocusRef?: React.RefObject<any>
+interface Props {
   children?: React.ReactNode
-  maxWidth?: number
+  closeIcon?: boolean
+  width?: string
+  maxWidth?: string
+  isCardOnMobile?: boolean
+  customIsOpen?: boolean
+  customOnDismiss?: () => void
+  padding?: string
+  hasBorder?: boolean
 }
 
-export default function Modal({
-  isOpen,
-  onDismiss,
-  minHeight = false,
-  maxHeight = 90,
-  maxWidth = 480,
-  initialFocusRef,
-  children
-}: ModalProps) {
-  const fadeTransition = useTransition(isOpen, null, {
-    config: { duration: 200 },
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 }
-  })
-
-  const [{ y }, set] = useSpring(() => ({ y: 0, config: { mass: 1, tension: 210, friction: 20 } }))
-  const bind = useGesture({
-    onDrag: state => {
-      set({
-        y: state.down ? state.movement[1] : 0
-      })
-      if (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) {
-        onDismiss()
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      '& *': {
+        boxSizing: 'border-box'
+      },
+      [theme.breakpoints.down('sm')]: {
+        height: `calc(100% - ${theme.height.mobileHeader})`,
+        marginTop: 'auto'
       }
+    },
+    mobileRoot: {
+      '& .MuiDialog-scrollPaper': {
+        [theme.breakpoints.down('sm')]: {
+          alignItems: 'flex-end'
+        }
+      }
+    },
+    paper: {
+      width: (props: Props) => props.width || 480,
+      maxWidth: (props: Props) => props.maxWidth || 480,
+      background: theme.gradient.gradient1,
+      border: (props: Props) => (props.hasBorder ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid transparent'),
+      padding: (props: Props) => props.padding || 0,
+      boxSizing: 'border-box',
+      borderRadius: 20,
+      overflowX: 'hidden',
+      position: 'absolute',
+      [theme.breakpoints.down('sm')]: {
+        width: 'calc(100% - 32px)!important'
+      }
+    },
+    mobilePaper: {
+      [theme.breakpoints.down('sm')]: {
+        border: 'none',
+        borderTop: '1px solid ' + theme.palette.grey.A200,
+        width: '100%!important',
+        height: '100%',
+        maxHeight: 'unset',
+        margin: 0,
+        paddingBottom: '30px',
+        borderRadius: 0
+      }
+    },
+    backdrop: {
+      backgroundColor: 'rgba(0,0,0,.8)',
+      [theme.breakpoints.down('sm')]: {
+        height: `calc(100% - ${theme.height.mobileHeader})`,
+        marginTop: theme.height.mobileHeader
+      }
+    },
+    mobileBackdrop: {
+      [theme.breakpoints.down('sm')]: {
+        background: 'none'
+      }
+    },
+    closeIconContainer: {
+      padding: 0,
+      position: 'absolute',
+      top: 24,
+      right: 24,
+      '&:hover $closeIcon': {
+        color: theme.palette.text.primary
+      }
+    },
+    closeIcon: {
+      color: theme.palette.grey[500]
     }
   })
+)
+
+export default function Modal(props: Props) {
+  const { children, closeIcon, isCardOnMobile, customIsOpen, customOnDismiss, hasBorder = true } = props
+  const classes = useStyles({ ...props, hasBorder })
+  const { isOpen, hideModal } = useModal()
+  const node = useRef<any>()
+  const hide = customIsOpen !== undefined ? customOnDismiss : hideModal
 
   return (
     <>
-      {fadeTransition.map(
-        ({ item, key, props }) =>
-          item && (
-            <StyledDialogOverlay
-              key={key}
-              style={props}
-              onDismiss={onDismiss}
-              initialFocusRef={initialFocusRef}
-              unstable_lockFocusAcrossFrames={false}
-            >
-              {/* <Filler /> */}
-              <Wrapper>
-                <StyledDialogContent
-                  {...(isMobile
-                    ? {
-                        ...bind(),
-                        style: { transform: y.interpolate(y => `translateY(${(y as any) > 0 ? y : 0}px)`) }
-                      }
-                    : {})}
-                  aria-label="dialog content"
-                  minHeight={minHeight}
-                  maxHeight={maxHeight}
-                  mobile={isMobile}
-                  maxWidth={maxWidth}
-                >
-                  {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
-                  {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
-                  {children}
-                </StyledDialogContent>
-                <Marginer />
-              </Wrapper>
-            </StyledDialogOverlay>
-          )
-      )}
+      <Dialog
+        open={customIsOpen !== undefined ? !!customIsOpen : isOpen}
+        className={`${classes.root}${isCardOnMobile ? ' ' + classes.mobileRoot : ''}`}
+        PaperProps={{ className: `${classes.paper}${isCardOnMobile ? ' ' + classes.mobilePaper : ''}`, ref: node }}
+        BackdropProps={{ className: `${classes.backdrop}${isCardOnMobile ? ' ' + classes.mobileBackdrop : ''}` }}
+        onClose={hide}
+      >
+        {closeIcon && (
+          <IconButton className={classes.closeIconContainer} onClick={hide}>
+            <CloseIcon className={classes.closeIcon} />
+          </IconButton>
+        )}
+        {children}
+      </Dialog>
     </>
   )
 }

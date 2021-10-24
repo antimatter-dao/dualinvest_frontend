@@ -35,7 +35,7 @@ export const Default = () => {
       addPopup(
         {
           txn: {
-            hash: 'TEST1',
+            hash: Math.random() + '',
             success: true,
             summary: 'test1'
           }
@@ -45,14 +45,14 @@ export const Default = () => {
       addPopup(
         {
           txn: {
-            hash: 'TEST2',
+            hash: Math.random() + '',
             success: false,
             summary: 'test2'
           }
         },
         '2'
       )
-    }, 900)
+    }, 500)
     return () => clearInterval(id)
   }, [addPopup])
 

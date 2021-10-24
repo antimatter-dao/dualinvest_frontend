@@ -3,6 +3,7 @@ import Select from 'components/Select/Select'
 import LogoText from 'components/LogoText'
 import InputLabel from 'components/Input/InputLabel'
 import SelectedIcon from 'assets/componentsIcon/selected_icon.svg'
+import { useCallback } from 'react'
 
 export interface Chain {
   logo: string
@@ -16,7 +17,7 @@ interface Props {
   disabled?: boolean
   chainList: Chain[]
   selectedChain: Chain | null
-  onChange?: (e: any) => void
+  onChange: (chain: Chain | null) => void
   width?: string
   active?: boolean
   placeholder?: string
@@ -41,20 +42,36 @@ const useStyles = makeStyles({
   }
 })
 
-export default function ChainSelect(props: Props) {
-  const classes = useStyles(props)
-  const { label, disabled, chainList, onChange, selectedChain, width, active, placeholder } = props
+export default function ChainSelect({
+  label,
+  disabled,
+  chainList,
+  onChange,
+  selectedChain,
+  width,
+  active,
+  placeholder
+}: Props) {
+  const classes = useStyles()
+
+  const handleChange = useCallback(
+    e => {
+      const chain = chainList.find(chain => chain.symbol === e.target.value) ?? null
+      onChange(chain)
+    },
+    [chainList, onChange]
+  )
 
   return (
-    <div>
+    <div style={{ width }}>
       {label && <InputLabel>{label}</InputLabel>}
       <Select
         defaultValue={selectedChain?.symbol}
         value={selectedChain?.symbol ?? ''}
         disabled={disabled}
-        onChange={onChange}
+        onChange={handleChange}
         placeholder={placeholder ?? 'Select Chain'}
-        width={width}
+        width={'100%'}
         primary={active}
       >
         {chainList.map(option => (

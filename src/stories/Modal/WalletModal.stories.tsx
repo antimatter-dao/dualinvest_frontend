@@ -1,15 +1,14 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import { ComponentMeta } from '@storybook/react'
 import { Button } from '@material-ui/core'
-import Modal from 'components/Modal'
 import { useWalletModalToggle } from 'state/application/hooks'
-import WalletModal from 'components/muiModal/WalletModal'
+import WalletModal from 'components/Modal/WalletModal'
 
 export default {
   title: 'Modal/WalletModal',
-  component: Modal
-} as ComponentMeta<typeof Modal>
+  component: WalletModal
+} as ComponentMeta<typeof WalletModal>
 
-const DefaultTemplate: ComponentStory<typeof Modal> = () => {
+export const Default = () => {
   const toggleWalletModal = useWalletModalToggle()
 
   return (
@@ -21,6 +20,3 @@ const DefaultTemplate: ComponentStory<typeof Modal> = () => {
     </>
   )
 }
-
-export const Default = DefaultTemplate.bind({})
-Default.args = {}

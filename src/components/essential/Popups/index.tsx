@@ -1,45 +1,44 @@
-import styled from 'styled-components'
+import { styled, Theme } from '@material-ui/core'
 import { useActivePopups } from 'state/application/hooks'
-import { AutoColumn } from 'components/Column'
 import PopupItem from './PopupItem'
 
-const MobilePopupWrapper = styled.div<{ height: string | number }>`
-  position: relative;
-  max-width: 100%;
-  height: ${({ height }) => height};
-  margin: ${({ height }) => (height ? '0 auto;' : 0)};
-  margin-bottom: ${({ height }) => (height ? '20px' : 0)}};
-
-  display: none;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: block;
-  `};
-`
-
-const MobilePopupInner = styled.div`
-  height: 99%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  display: flex;
-  flex-direction: row;
-  -webkit-overflow-scrolling: touch;
-  ::-webkit-scrollbar {
-    display: none;
+const MobilePopupWrapper = styled('div')(({ height, theme }: { height: string | number; theme: Theme }) => ({
+  position: 'relative',
+  maxWidth: '100%',
+  height: height,
+  margin: height ? '0 auto;' : 0,
+  marginBottom: height ? '20px' : 0,
+  display: 'none',
+  [theme.breakpoints.down('sm')]: {
+    display: 'block'
   }
-`
+}))
 
-const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean }>`
-  position: fixed;
-  top: ${({ extraPadding, theme }) => (extraPadding ? theme.headerHeight : '38px')};
-  right: 1rem;
-  max-width: 340px !important;
-  width: 100%;
-  z-index: 3;
+const MobilePopupInner = styled('div')({
+  height: '99%',
+  overflowX: 'auto',
+  overflowY: 'hidden',
+  display: 'flex',
+  flexDirection: 'row',
+  '-webkit-overflow-scrolling': 'touch',
+  '& ::-webkit-scrollbar': {
+    display: 'none'
+  }
+})
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
-`
+const FixedPopupColumn = styled('div')(({ theme }) => ({
+  position: 'fixed',
+  top: 38,
+  right: 16,
+  maxWidth: 340,
+  width: '100%',
+  zIndex: 3,
+  display: 'grid',
+  gridRowGap: 20,
+  [theme.breakpoints.down('sm')]: {
+    display: 'none'
+  }
+}))
 
 export default function Popups() {
   // get all popups
@@ -47,7 +46,7 @@ export default function Popups() {
 
   return (
     <>
-      <FixedPopupColumn gap="20px" extraPadding={false}>
+      <FixedPopupColumn>
         {activePopups.map(item => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}

@@ -14,6 +14,7 @@ const useStyles = makeStyles({
   root: {
     display: 'flex',
     cursor: 'pointer',
+    gap: 8,
     height: 17,
     '& svg': {
       width: 14

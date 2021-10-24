@@ -10,9 +10,8 @@ import {
   useUserSlippageTolerance,
   useUserSingleHopOnly
 } from '../../../state/user/hooks'
-import Modal from 'components/muiModal'
+import Modal from 'components/Modal'
 import QuestionHelper from 'components/essential/QuestionHelper'
-import { RowFixed } from '../../Row'
 import TransactionSettings from './TransactionSettings'
 import { ReactComponent as SettingsIcon } from 'assets/componentsIcon/setting.svg'
 import Button from 'components/Button/Button'
@@ -133,12 +132,12 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
               </Text>
               <CustomizedAutoRow>
                 <Box display="grid">
-                  <RowFixed style={{ marginBottom: '11px' }}>
+                  <Box display="flex" alignItems="center" marginBottom="11px">
                     <Text fontWeight={400} fontSize={14} color={theme.textColor.text2}>
                       Toggle Expert Mode
                     </Text>
                     <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
-                  </RowFixed>
+                  </Box>
                   <SwitchToggle
                     checked={expertMode}
                     onChange={
@@ -155,12 +154,12 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
                   />
                 </Box>
                 <Box display="grid">
-                  <RowFixed style={{ marginBottom: '11px' }}>
+                  <Box display="flex" alignItems="center" marginBottom="11px">
                     <Text fontWeight={400} fontSize={14} color={theme.textColor.text2}>
                       Disable Multihops
                     </Text>
                     <QuestionHelper text="Restricts swaps to direct pairs only." />
-                  </RowFixed>
+                  </Box>
                   <SwitchToggle
                     checked={singleHopOnly}
                     onChange={() => (singleHopOnly ? setSingleHopOnly(false) : setSingleHopOnly(true))}

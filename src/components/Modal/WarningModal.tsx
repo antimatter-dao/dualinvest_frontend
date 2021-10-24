@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { X } from 'react-feather'
 import Button from 'components/Button/Button'
-import { AutoColumn } from 'components/Column'
 import Modal from './index'
 import { Typography, Box } from '@material-ui/core'
 import useModal from 'hooks/useModal'
@@ -19,16 +18,10 @@ export default function WarningModal() {
   return <></>
 }
 
-function WarningModalContent({ onDismiss }: { onDismiss: () => void }) {
+export function WarningModalContent({ onDismiss }: { onDismiss: () => void }) {
   return (
     <Modal maxWidth="608px" width="100%">
-      <AutoColumn
-        gap="24px"
-        style={{
-          width: '100%',
-          padding: 32
-        }}
-      >
+      <Box display="grid" gridGap="24px" width="100%" padding="32px">
         <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
           <div />
           <Typography variant="h6" style={{ textAlign: 'center' }}>
@@ -50,7 +43,7 @@ function WarningModalContent({ onDismiss }: { onDismiss: () => void }) {
         </Typography>
         <Typography variant="inherit">The project is in beta, use at your own risk.</Typography>
         <Button onClick={onDismiss}>Understand</Button>
-      </AutoColumn>
+      </Box>
     </Modal>
   )
 }

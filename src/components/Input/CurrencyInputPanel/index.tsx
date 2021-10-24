@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react'
 import { styled, Box, useTheme } from '@material-ui/core'
 import { Text } from 'rebass'
-import Input from 'components/Input'
+import InputNumerical from 'components/Input/InputNumerical'
 import OutlineButton from 'components/Button/OutlineButton'
 import InputLabel from 'components/Input/InputLabel'
 import SelectButton from 'components/Button/SelectButton'
@@ -52,7 +52,7 @@ const InputRow = styled('div')(({ theme }) => ({
   }
 }))
 
-const StyledInput = styled(Input)({
+const StyledInput = styled(InputNumerical)({
   position: 'absolute'
 })
 

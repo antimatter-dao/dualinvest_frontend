@@ -2,8 +2,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import React from 'react'
 import { Box, useTheme } from '@material-ui/core'
 import Button from 'components/Button/Button'
-import { ReactComponent as CrossCircle } from 'assets/componentsIcon/cross_circle.svg'
-import { AutoColumn } from 'components/Column'
+import { ReactComponent as CrossCircle } from 'assets/componentsIcon/statusIcon/error_icon.svg'
 import { OutlinedCard } from 'components/Card'
 import Spinner from 'components/Spinner'
 
@@ -23,15 +22,15 @@ export default function PendingView({
   const theme = useTheme()
 
   return (
-    <Box display="grid" gridGap="32px" width="100%" justifyContent="center">
+    <Box display="grid" gridGap="32px" width="100%" justifyItems="center">
       {error ? (
-        <AutoColumn justify="center" gap="16px">
+        <Box display="grid" justifyItems="center" gridGap="16px" width="100%">
           <CrossCircle />
-          Error connecting. Please try again
-        </AutoColumn>
+          <span>Error connecting. Please try again</span>
+        </Box>
       ) : (
         <>
-          <OutlinedCard color={theme.palette.primary.main} padding="16px" width="230px">
+          <OutlinedCard color={theme.palette.primary.main} padding="16px" width="100%">
             <Box display="flex" gridGap="16px" width="100%">
               <Spinner />
               Initializing...
