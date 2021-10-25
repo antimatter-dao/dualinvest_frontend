@@ -4,13 +4,7 @@ import LogoText from 'components/LogoText'
 import InputLabel from 'components/Input/InputLabel'
 import SelectedIcon from 'assets/componentsIcon/selected_icon.svg'
 import { useCallback } from 'react'
-
-export interface Chain {
-  logo: string
-  symbol: string
-  id: string
-  address: string
-}
+import { Chain } from 'models/chain'
 
 interface Props {
   label?: string

@@ -1,6 +1,7 @@
 import { Box } from '@material-ui/core'
 import TextButton from 'components/Button/TextButton'
-import ChainSelect, { Chain } from '../ChainSelect'
+import ChainSelect from '../ChainSelect'
+import { Chain } from 'models/chain'
 import SwitchButton from './SwitcherButton'
 
 export default function ChainSwap({

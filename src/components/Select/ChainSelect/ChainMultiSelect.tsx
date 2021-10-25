@@ -2,7 +2,7 @@ import { ChangeEvent, useCallback } from 'react'
 import { MenuItem, makeStyles } from '@material-ui/core'
 import Select from 'components/Select/Select'
 import LogoText from 'components/LogoText'
-import { Chain } from './index'
+import { Chain } from 'models/chain'
 import InputLabel from 'components/Input/InputLabel'
 import Checkbox from 'components/Checkbox'
 

@@ -1,5 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import ChainSelect, { Chain } from 'components/Select/ChainSelect'
+import ChainSelect from 'components/Select/ChainSelect'
+import { Chain } from 'models/chain'
 import DummyLogo from 'assets/images/ethereum-logo.png'
 import { useState } from 'react'
 
