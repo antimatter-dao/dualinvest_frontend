@@ -15,13 +15,13 @@ const ChainList = [
   {
     logo: DummyIcon,
     symbol: 'ETH',
-    id: 'XXX',
+    id: 1,
     address: 'XXXXXXXXXXXXXXXXXXXX'
   },
   {
     logo: DummyIcon,
     symbol: 'BSC',
-    id: 'XXX',
+    id: 1,
     address: 'XXXXXXXXXXXXXXXXXXXX'
   }
 ]

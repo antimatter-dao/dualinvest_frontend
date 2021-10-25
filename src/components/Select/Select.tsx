@@ -36,7 +36,12 @@ const useStyles = makeStyles((theme: Theme) =>
         borderRadius: (props: Props) => (props.size === 'small' ? 6 : theme.shape.borderRadius)
       },
       '&:hover': {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: (props: Props) =>
+          props.disabled
+            ? props.primary
+              ? theme.palette.primary.main
+              : theme.textColor.text5
+            : theme.palette.primary.main,
         '&:before': {
           color: theme.textColor.text1
         }

@@ -17,14 +17,14 @@ export default {
 const fromChain = {
     logo: DummyLogo,
     symbol: 'ETH',
-    id: 'XXX',
+    id: 1,
     address: 'XXXXXXXXXXXXXXXXXXXX',
     name: 'Ethereum Mainnet'
   },
   toChain = {
     logo: DummyLogo,
     symbol: 'BSC',
-    id: 'XXX',
+    id: 1,
     address: 'XXXXXXXXXXXXXXXXXXXX',
     name: 'Binance Smart Chain'
   }
