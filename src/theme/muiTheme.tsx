@@ -7,6 +7,7 @@ interface Gradient {
 interface Height {
   header: string
   mobileHeader: string
+  footer: string
 }
 
 interface TextColor {
@@ -106,7 +107,8 @@ export const theme = {
   },
   height: {
     header: '88px',
-    mobileHeader: '77px'
+    mobileHeader: '77px',
+    footer: '60px'
   },
   shape: {
     borderRadius: 10

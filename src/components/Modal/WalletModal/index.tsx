@@ -4,7 +4,7 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { isMobile } from 'react-device-detect'
 import { Typography, Box } from '@material-ui/core'
-import MetamaskIcon from 'assets/wallet/metamask.png'
+import MetamaskIcon from 'assets/walletIcon/metamask.png'
 import { fortmatic, injected, portis } from 'connectors'
 import { OVERLAY_READY } from 'connectors/Fortmatic'
 import { SUPPORTED_WALLETS } from 'constants/index'
@@ -126,7 +126,7 @@ export default function WalletModal({
               active={option.connector && option.connector === connector}
               link={option.href}
               header={option.name}
-              icon={require('../../../assets/wallet/' + option.iconName)?.default}
+              icon={require('../../../assets/walletIcon/' + option.iconName)?.default}
             />
           )
         }
@@ -176,7 +176,7 @@ export default function WalletModal({
             active={option.connector === connector}
             link={option.href}
             header={option.name}
-            icon={require('../../../assets/wallet/' + option.iconName)?.default}
+            icon={require('../../../assets/walletIcon/' + option.iconName)?.default}
           />
         )
       )

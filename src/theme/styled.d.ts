@@ -79,5 +79,6 @@ declare module 'styled-components' {
     desktop: FlattenSimpleInterpolation
     mobileHeaderHeight: string
     headerHeight: string
+    footerHeight: string
   }
 }

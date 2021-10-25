@@ -100,6 +100,7 @@ export function theme(): DefaultTheme {
     `,
     mobileHeaderHeight: '90px',
     headerHeight: '82px',
+    footerHeight: '60px',
 
     // css snippets
     flexColumnNoWrap: css`
