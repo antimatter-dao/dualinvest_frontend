@@ -62,7 +62,9 @@ export default function TransacitonPendingModal({
           </Typography>
           {children}
 
-          <Button onClick={onConfirm}>Confirm</Button>
+          <Button onClick={onConfirm} disabled={!isStep3Active}>
+            Confirm
+          </Button>
         </Box>
       </Box>
     </Modal>

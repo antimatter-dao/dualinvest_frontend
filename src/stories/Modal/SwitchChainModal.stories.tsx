@@ -34,7 +34,7 @@ export const Default = () => {
       }}
       variant="contained"
     >
-      Click to Open Warning Modal
+      Click to Open Switch Chain Modal
     </Button>
   )
 }
