@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import styled from 'styled-components'
+import { styled } from '@material-ui/core'
 import Header from '../components/Header'
 import Polling from '../components/essential/Polling'
 import Popups from '../components/essential/Popups'
@@ -9,55 +9,39 @@ import WarningModal from '../components/Modal/WarningModal'
 import ComingSoon from './ComingSoon'
 import { ModalProvider } from 'context/ModalContext'
 
-const AppWrapper = styled.div`
-  display: flex;
-  align-items: flex-start;
-  overflow-x: hidden;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  flex-direction: column;
-  height: 100vh;
-  `}
-`
-const ContentWrapper = styled.div`
-  width: 100%;
-  max-height: 100vh;
-  overflow: auto;
-  align-items: center;
-`
+const AppWrapper = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'flex-start',
+  overflowX: 'hidden',
+  [theme.breakpoints.down('sm')]: {
+    flexDirection: 'column',
+    height: '100vh'
+  }
+}))
 
-const HeaderWrapper = styled.div`
-  width: 100%;
-  justify-content: space-between;
-  flex-direction: column;
-  ${({ theme }) => theme.flexRowNoWrap}
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  height:0;
-  overflow: hidden
-  `}
-`
+const ContentWrapper = styled('div')({
+  width: '100%',
+  maxHeight: '100vh',
+  overflow: 'auto',
+  alignItems: 'center'
+})
 
-const BodyWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: calc(100vh - ${({ theme }) => theme.headerHeight});
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  position: relative;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-  margin-bottom: ${({ theme }) => theme.headerHeight}
-  `}
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  margin-top: ${({ theme }) => theme.mobileHeaderHeight}
-  `};
-`
-
-export const Marginer = styled.div`
-  ${({ theme }) => theme.desktop}
-`
+const BodyWrapper = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  minHeight: `calc(100vh - ${theme.height.header})`,
+  justifyContent: 'center',
+  alignItems: 'center',
+  flex: 1,
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  position: 'relative',
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.height.header,
+    minHeight: `calc(100vh - ${theme.height.header} - ${theme.height.mobileHeader})`
+  }
+}))
 
 export default function App() {
   return (
@@ -65,9 +49,7 @@ export default function App() {
       <ModalProvider>
         <AppWrapper id="app">
           <ContentWrapper>
-            <HeaderWrapper id="header">
-              <Header />
-            </HeaderWrapper>
+            <Header />
             <BodyWrapper id="body">
               <Popups />
               <Polling />
@@ -77,7 +59,6 @@ export default function App() {
                   <Route exact strict path="/test1" component={ComingSoon} />
                 </Switch>
               </Web3ReactManager>
-              {/* <Marginer /> */}
             </BodyWrapper>
           </ContentWrapper>
         </AppWrapper>

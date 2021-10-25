@@ -1,15 +1,14 @@
 import { NavLink } from 'react-router-dom'
-import styled from 'styled-components'
 import { Typography, useTheme, AppBar, Box, MenuItem, styled as muiStyled, makeStyles } from '@material-ui/core'
 import { ExternalLink } from '../../theme'
 import Web3Status from './Web3Status'
 import SelectedIcon from '../../assets/componentsIcon/selected_icon.svg'
 import { HideOnMobile } from 'theme/muiTheme'
 import PlainSelect from 'components/Select/PlainSelect'
-
 import Image from 'components/Image'
 import ChainSwap from '../../assets/svg/chain_swap.svg'
 import { routes } from 'constants/routes'
+import MobileHeader from './MobileHeader'
 
 interface TabContent {
   title: string
@@ -22,7 +21,7 @@ interface Tab extends TabContent {
   subTab?: TabContent[]
 }
 
-const Tabs: Tab[] = [
+export const Tabs: Tab[] = [
   { title: 'Test1', route: routes.test1 },
   { title: 'Test2', route: routes.test2 },
   { title: 'Test3', route: routes.test3 },
@@ -41,35 +40,6 @@ const Tabs: Tab[] = [
   }
 ]
 
-export const StyledMenuButton = styled.button`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
-  margin-left: 8px;
-  padding: 0.15rem 0.5rem;
-  border-radius: 0.5rem;
-
-  :hover,
-  :focus {
-    cursor: pointer;
-    outline: none;
-    background-color: ${({ theme }) => theme.bg4};
-  }
-
-  svg {
-    margin-top: 2px;
-  }
-  > * {
-    stroke: ${({ theme }) => theme.text1};
-  }
-`
-
 const useStyles = makeStyles(theme => ({
   root: {
     position: 'relative',
@@ -80,7 +50,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-between',
     boxShadow: 'none',
     padding: '0 60px 00 40px',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       position: 'fixed',
       bottom: 0,
       left: 0,
@@ -90,7 +60,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   actionButton: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       maxWidth: 320,
       width: '100%',
       borderRadius: 49,
@@ -144,47 +114,50 @@ const LinksWrapper = muiStyled('div')({
 export default function Header() {
   const classes = useStyles()
   return (
-    <AppBar className={classes.root}>
-      <HideOnMobile>
-        <Box display="flex" alignItems="center">
-          <NavLink id={'chainswap'} to={'/'} className={classes.mainLogo}>
-            <Image src={ChainSwap} alt={'chainswap'} />
-          </NavLink>
-          <LinksWrapper>
-            {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
-              subTab ? (
-                <PlainSelect placeholder="about" key={title + idx}>
-                  {subTab.map((sub, idx) =>
-                    sub.link ? (
-                      <MenuItem key={sub.link + idx}>
-                        <ExternalLink href={sub.link} className={classes.navLink}>
-                          {sub.titleContent ?? sub.title}
-                        </ExternalLink>
-                      </MenuItem>
-                    ) : (
-                      <MenuItem key={sub.title + idx}>
-                        <NavLink to={sub.route ?? ''} className={classes.navLink}>
-                          {sub.titleContent ?? sub.title}
-                        </NavLink>
-                      </MenuItem>
-                    )
-                  )}
-                </PlainSelect>
-              ) : link ? (
-                <ExternalLink href={link} className={classes.navLink} key={link + idx}>
-                  {titleContent ?? title}
-                </ExternalLink>
-              ) : (
-                <NavLink key={title + idx} id={`${route}-nav-link`} to={route ?? ''} className={classes.navLink}>
-                  {titleContent ?? title}
-                </NavLink>
-              )
-            )}
-          </LinksWrapper>
-        </Box>
-      </HideOnMobile>
-      <Web3Status />
-    </AppBar>
+    <>
+      <MobileHeader />
+      <AppBar className={classes.root}>
+        <HideOnMobile>
+          <Box display="flex" alignItems="center">
+            <NavLink id={'chainswap'} to={'/'} className={classes.mainLogo}>
+              <Image src={ChainSwap} alt={'chainswap'} />
+            </NavLink>
+            <LinksWrapper>
+              {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
+                subTab ? (
+                  <PlainSelect placeholder="about" key={title + idx}>
+                    {subTab.map((sub, idx) =>
+                      sub.link ? (
+                        <MenuItem key={sub.link + idx}>
+                          <ExternalLink href={sub.link} className={classes.navLink}>
+                            {sub.titleContent ?? sub.title}
+                          </ExternalLink>
+                        </MenuItem>
+                      ) : (
+                        <MenuItem key={sub.title + idx}>
+                          <NavLink to={sub.route ?? ''} className={classes.navLink}>
+                            {sub.titleContent ?? sub.title}
+                          </NavLink>
+                        </MenuItem>
+                      )
+                    )}
+                  </PlainSelect>
+                ) : link ? (
+                  <ExternalLink href={link} className={classes.navLink} key={link + idx}>
+                    {titleContent ?? title}
+                  </ExternalLink>
+                ) : (
+                  <NavLink key={title + idx} id={`${route}-nav-link`} to={route ?? ''} className={classes.navLink}>
+                    {titleContent ?? title}
+                  </NavLink>
+                )
+              )}
+            </LinksWrapper>
+          </Box>
+        </HideOnMobile>
+        <Web3Status />
+      </AppBar>
+    </>
   )
 }
 

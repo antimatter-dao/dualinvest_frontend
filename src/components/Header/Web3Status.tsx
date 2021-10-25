@@ -23,7 +23,7 @@ import Button from 'components/Button/Button'
 
 const useStyles = makeStyles(theme => ({
   actionButton: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       maxWidth: 320,
       width: '100%',
       borderRadius: 49,
