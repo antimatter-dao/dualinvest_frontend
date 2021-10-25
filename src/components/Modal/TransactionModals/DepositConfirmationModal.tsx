@@ -10,12 +10,14 @@ export default function TransacitonPendingModal({
   children,
   toChain,
   fromChain,
-  destinationAddress
+  destinationAddress,
+  onConfirm
 }: {
   children: React.ReactNode
   toChain: Chain | null
   fromChain: Chain | null
   destinationAddress: string | undefined | null
+  onConfirm?: () => void
 }) {
   return (
     <Modal closeIcon>
@@ -24,7 +26,9 @@ export default function TransacitonPendingModal({
         <Box justifySelf="start" width="100%">
           {fromChain && toChain && <SwapChain to={toChain} from={fromChain} />}
           <DestinationAddress address={destinationAddress ?? ''} />
-          <Button>Confirm</Button>
+          <Button onClick={onConfirm} style={{ marginTop: 32 }}>
+            Confirm
+          </Button>
         </Box>
       </Box>
     </Modal>

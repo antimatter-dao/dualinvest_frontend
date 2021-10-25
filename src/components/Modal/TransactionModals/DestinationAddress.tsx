@@ -36,14 +36,14 @@ function StatusIcon(connector: AbstractConnector | undefined) {
   return null
 }
 
-export default function DestinationAddress({ address }: { address: string }) {
+export default function DestinationAddress({ address, margin }: { address: string; margin?: string }) {
   const { connector } = useActiveWeb3React()
   const theme = useTheme()
 
   return (
     <>
       {address && (
-        <Box display="flex" margin="16px  0 32px" fontSize="14px">
+        <Box display="flex" margin={margin || '12px 0 0'} fontSize="14px">
           <Text marginRight="10px" color={theme.textColor.text4}>
             Destination:
           </Text>

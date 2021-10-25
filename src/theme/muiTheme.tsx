@@ -123,7 +123,7 @@ export const theme = {
 export const override: any = {
   MuiCssBaseline: {
     '@global': {
-      body: { backgroundColor: '#1C1C1F' },
+      body: { backgroundColor: '#1C1C1F', fontSize: 16 },
       'html, input, textarea, button': {
         fontFamily: 'Roboto, sans-serif',
         fontDisplay: 'fallback'

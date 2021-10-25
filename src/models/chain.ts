@@ -3,4 +3,5 @@ export interface Chain {
   symbol: string
   id: string
   address: string
+  name: string
 }
