@@ -15,8 +15,12 @@ export default function TransacitonPendingModal({
   onConfirm,
   step1,
   step2,
-  isStep3Active
+  isStep3Active,
+  isOpen,
+  onDismiss
 }: {
+  isOpen: boolean
+  onDismiss: () => void
   step1: React.ReactNode
   step2: React.ReactNode
   isStep3Active: boolean
@@ -27,7 +31,7 @@ export default function TransacitonPendingModal({
   onConfirm?: () => void
 }) {
   return (
-    <Modal closeIcon>
+    <Modal closeIcon customIsOpen={isOpen} customOnDismiss={onDismiss}>
       <Box display="grid" padding="40px" gridGap="24px" justifyItems="center" width="100%">
         <Box
           style={{

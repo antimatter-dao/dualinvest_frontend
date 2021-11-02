@@ -9,6 +9,7 @@ import WalletConnectIcon from 'assets/walletIcon/walletConnectIcon.svg'
 import Matamask from 'assets/walletIcon/metamask.png'
 import { fortmatic, injected, portis, walletconnect, walletlink } from 'connectors'
 import { useActiveWeb3React } from 'hooks'
+import { shortenAddress } from 'utils'
 
 const Dot = styled('span')({
   width: 16,
@@ -19,7 +20,7 @@ const Dot = styled('span')({
 })
 
 function StatusIcon(connector: AbstractConnector | undefined) {
-  const style = { height: 16, width: 16, objectFit: 'contain' as const, margin: '0 15px' }
+  const style = { height: 16, width: 16, objectFit: 'contain' as const }
   if (connector === injected) {
     const { ethereum } = window
     const isMetaMask = !!(ethereum && ethereum.isMetaMask)
@@ -43,14 +44,14 @@ export default function DestinationAddress({ address, margin }: { address: strin
   return (
     <>
       {address && (
-        <Box display="flex" margin={margin || '12px 0 0'} fontSize="14px">
+        <Box display="flex" margin={margin || '16px 0 0'} fontSize="14px">
           <Text marginRight="10px" color={theme.textColor.text4}>
             Destination:
           </Text>
           <Box display="flex" alignItems={'center'}>
             {StatusIcon(connector)}
             <Text marginLeft="8px" color={theme.textColor.text3}>
-              {address}
+              {shortenAddress(address, 10)}
             </Text>
           </Box>
         </Box>

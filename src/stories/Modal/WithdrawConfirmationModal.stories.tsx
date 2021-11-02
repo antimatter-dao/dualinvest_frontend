@@ -1,6 +1,5 @@
 import SwapChain from 'components/Modal/TransactionModals/SwapChain'
 import WithdrawConfirmationModal from 'components/Modal/TransactionModals/WithdrawConfirmationModal'
-import useModal from 'hooks/useModal'
 import DummyLogo from 'assets/images/ethereum-logo.png'
 import { Box } from '@material-ui/core'
 import { Text } from 'rebass'
@@ -8,6 +7,7 @@ import LogoText from 'components/LogoText'
 import DestinationAddress from 'components/Modal/TransactionModals/DestinationAddress'
 import { ComponentStory } from '@storybook/react'
 import Button from 'components/Button/Button'
+import { useState } from 'react'
 
 export default {
   title: 'Modal/WithdrawConfirmationModal',
@@ -30,43 +30,48 @@ const fromChain = {
   }
 
 const DefaultTemplate: ComponentStory<typeof WithdrawConfirmationModal> = ({ isStep3Active }: any) => {
-  const { showModal } = useModal()
+  const [isOpen, setIsOpen] = useState(false)
   return (
-    <Button
-      onClick={() => {
-        showModal(
-          <WithdrawConfirmationModal
-            isStep3Active={isStep3Active}
-            fromChain={fromChain}
-            toChain={toChain}
-            destinationAddress="0xKos369cd6vwd94wq1gt4hr87ujv"
-            step1={
-              <>
-                Please switch your wallet network
-                <br /> to BSC to complete token swap.
-              </>
-            }
-            step2={
-              <>
-                Please make your connected wallet address is the address where you wish to receive your bridged NFT and
-                the correct destination chain.
-              </>
-            }
-          >
-            <Box display="grid" gridGap="15px" justifyItems="center">
-              <Text fontSize={40} fontWeight={500} textAlign="center">
-                1 ETH
-              </Text>
-              <Box display="flex" justifyContent="center" marginTop="16px">
-                <LogoText logo={DummyLogo} text={'ETH'} fontWeight={500} />
-              </Box>
-            </Box>
-          </WithdrawConfirmationModal>
-        )
-      }}
-    >
-      Click to open Withdraw Confirmation isStep3Active={isStep3Active.toString()}
-    </Button>
+    <>
+      <Button
+        onClick={() => {
+          setIsOpen(true)
+        }}
+      >
+        Click to open Withdraw Confirmation isStep3Active={isStep3Active.toString()}
+      </Button>
+      <WithdrawConfirmationModal
+        isOpen={isOpen}
+        onDismiss={() => {
+          setIsOpen(false)
+        }}
+        isStep3Active={isStep3Active}
+        fromChain={fromChain}
+        toChain={toChain}
+        destinationAddress="0xKos369cd6vwd94wq1gt4hr87ujv"
+        step1={
+          <>
+            Please switch your wallet network
+            <br /> to BSC to complete token swap.
+          </>
+        }
+        step2={
+          <>
+            Please make your connected wallet address is the address where you wish to receive your bridged NFT and the
+            correct destination chain.
+          </>
+        }
+      >
+        <Box display="grid" gridGap="15px" justifyItems="center">
+          <Text fontSize={40} fontWeight={500} textAlign="center">
+            1 ETH
+          </Text>
+          <Box display="flex" justifyContent="center" marginTop="16px">
+            <LogoText logo={DummyLogo} text={'ETH'} fontWeight={500} />
+          </Box>
+        </Box>
+      </WithdrawConfirmationModal>
+    </>
   )
 }
 
