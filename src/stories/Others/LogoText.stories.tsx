@@ -8,7 +8,7 @@ export default {
   component: LogoText
 } as ComponentMeta<typeof LogoText>
 
-const DefaultTemplate: ComponentStory<typeof LogoText> = (args) => <LogoText {...args} />
+const DefaultTemplate: ComponentStory<typeof LogoText> = args => <LogoText {...args} />
 
 export const LogoIsString = DefaultTemplate.bind({})
 LogoIsString.args = {

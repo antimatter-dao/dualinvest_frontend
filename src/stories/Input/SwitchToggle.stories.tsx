@@ -10,5 +10,5 @@ export default {
 
 export const Default = () => {
   const [checked, setChecked] = useState(false)
-  return <SwitchToggle checked={checked} onChange={() => setChecked((prev) => !prev)} />
+  return <SwitchToggle checked={checked} onChange={() => setChecked(prev => !prev)} />
 }

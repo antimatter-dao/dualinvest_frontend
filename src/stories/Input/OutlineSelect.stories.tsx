@@ -8,7 +8,7 @@ export default {
   component: OutlineSelect
 } as ComponentMeta<typeof OutlineSelect>
 
-const DefaultTemplate: ComponentStory<typeof OutlineSelect> = (args) => (
+const DefaultTemplate: ComponentStory<typeof OutlineSelect> = args => (
   <OutlineSelect {...args}>
     <MenuItem key={'ETH'} value={'ETH'}>
       ETH

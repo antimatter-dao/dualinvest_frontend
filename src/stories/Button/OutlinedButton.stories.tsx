@@ -10,7 +10,7 @@ export default {
   // },
 } as ComponentMeta<typeof OutlineButton>
 
-const DefaultTemplate: ComponentStory<typeof OutlineButton> = (args) => (
+const DefaultTemplate: ComponentStory<typeof OutlineButton> = args => (
   <OutlineButton {...args}>OutlineButon</OutlineButton>
 )
 

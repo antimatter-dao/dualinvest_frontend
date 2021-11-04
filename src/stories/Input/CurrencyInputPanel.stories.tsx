@@ -17,8 +17,8 @@ export const Default = () => {
     <CurrencyInputPanel
       currency={currency}
       value={value}
-      onChange={(val) => setValue(val.target.value)}
-      onSelectCurrency={(cur) => {
+      onChange={val => setValue(val.target.value)}
+      onSelectCurrency={cur => {
         setCurrency(cur)
       }}
     />

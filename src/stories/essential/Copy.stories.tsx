@@ -7,7 +7,7 @@ export default {
   component: Copy
 } as ComponentMeta<typeof Copy>
 
-const DefaultTemplate: ComponentStory<typeof Copy> = (args) => <Copy {...args} />
+const DefaultTemplate: ComponentStory<typeof Copy> = args => <Copy {...args} />
 
 export const Default = DefaultTemplate.bind({})
 Default.args = {
