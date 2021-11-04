@@ -1,7 +1,7 @@
 import React from 'react'
-import { Theme, ButtonBase } from '@material-ui/core'
-import { makeStyles, createStyles } from '@material-ui/styles'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import { Theme, ButtonBase } from '@mui/material'
+import { makeStyles, createStyles } from '@mui/styles'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 interface Props {
   onClick?: () => void
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       display: 'flex',
       justifyContent: 'space-between',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         position: 'unset',
         right: 'unset',
         top: 'unset',

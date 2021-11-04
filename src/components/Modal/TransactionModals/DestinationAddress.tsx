@@ -1,4 +1,4 @@
-import { Box, useTheme, styled } from '@material-ui/core'
+import { Box, useTheme, styled } from '@mui/material'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Text } from 'rebass'
 import Image from 'components/Image'

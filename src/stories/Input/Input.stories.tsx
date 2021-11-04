@@ -8,9 +8,9 @@ export default {
   component: Input
 } as ComponentMeta<typeof Input>
 
-const DefaultTemplate: ComponentStory<typeof Input> = args => {
+const DefaultTemplate: ComponentStory<typeof Input> = (args) => {
   const [val, setVal] = useState('')
-  return <Input {...args} value={val} onChange={e => setVal(e.target.value)} />
+  return <Input {...args} value={val} onChange={(e) => setVal(e.target.value)} />
 }
 
 export const Default = DefaultTemplate.bind({})

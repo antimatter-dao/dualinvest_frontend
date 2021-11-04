@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ComponentMeta } from '@storybook/react'
-import { MenuItem, makeStyles } from '@material-ui/core'
+import { MenuItem } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import SelectedIcon from 'assets/componentsIcon/selected_icon.svg'
 import DummyIcon from 'assets/images/ethereum-logo.png'
 import LogoText from 'components/LogoText'

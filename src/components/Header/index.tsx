@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
-import { Typography, useTheme, AppBar, Box, MenuItem, styled as muiStyled, makeStyles } from '@material-ui/core'
+import { Typography, useTheme, AppBar, Box, MenuItem, styled as muiStyled } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import { ExternalLink } from '../../theme'
 import Web3Status from './Web3Status'
 import SelectedIcon from '../../assets/componentsIcon/selected_icon.svg'
@@ -50,7 +51,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-between',
     boxShadow: 'none',
     padding: '0 60px 00 40px',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       position: 'fixed',
       bottom: 0,
       left: 0,
@@ -60,7 +61,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   actionButton: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       maxWidth: 320,
       width: '100%',
       borderRadius: 49,

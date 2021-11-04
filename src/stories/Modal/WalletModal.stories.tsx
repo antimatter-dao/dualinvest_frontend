@@ -1,5 +1,5 @@
 import { ComponentMeta } from '@storybook/react'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 import { useWalletModalToggle } from 'state/application/hooks'
 import WalletModal from 'components/Modal/WalletModal'
 

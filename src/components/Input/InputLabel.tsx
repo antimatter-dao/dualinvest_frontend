@@ -1,6 +1,6 @@
 import React from 'react'
-import { InputLabel as MuiInputLabel } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { InputLabel as MuiInputLabel } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { ReactComponent as InfoIcon } from '../../assets/componentsIcon/info_icon.svg'
 
 interface Props {

@@ -11,7 +11,7 @@ export default {
   title: 'Header/Header',
   component: HeaderComponent,
   decorators: [
-    Story => {
+    (Story) => {
       return (
         <Web3ReactProvider getLibrary={getLibrary}>
           <Web3ProviderNetwork getLibrary={getLibrary}>

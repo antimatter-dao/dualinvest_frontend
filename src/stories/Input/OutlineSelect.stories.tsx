@@ -1,4 +1,4 @@
-import { MenuItem } from '@material-ui/core'
+import { MenuItem } from '@mui/material'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import OutlineSelect from 'components/Select/OutlineSelect'
@@ -8,7 +8,7 @@ export default {
   component: OutlineSelect
 } as ComponentMeta<typeof OutlineSelect>
 
-const DefaultTemplate: ComponentStory<typeof OutlineSelect> = args => (
+const DefaultTemplate: ComponentStory<typeof OutlineSelect> = (args) => (
   <OutlineSelect {...args}>
     <MenuItem key={'ETH'} value={'ETH'}>
       ETH

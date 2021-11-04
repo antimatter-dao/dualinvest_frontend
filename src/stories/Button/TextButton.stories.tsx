@@ -7,6 +7,6 @@ export default {
   component: TextButton
 } as ComponentMeta<typeof TextButton>
 
-const DefaultTemplate: ComponentStory<typeof TextButton> = args => <TextButton {...args}>Default</TextButton>
+const DefaultTemplate: ComponentStory<typeof TextButton> = (args) => <TextButton {...args}>Default</TextButton>
 
 export const Default = DefaultTemplate.bind({})

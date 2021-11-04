@@ -33,7 +33,7 @@ const DefaultTemplate: ComponentStory<typeof ChainMultiSelect> = () => {
     <ChainMultiSelect
       chainList={ChainList}
       selectedChains={selectedChains}
-      onChainSelect={chains => {
+      onChainSelect={(chains) => {
         setSelectedChains(chains)
       }}
     />

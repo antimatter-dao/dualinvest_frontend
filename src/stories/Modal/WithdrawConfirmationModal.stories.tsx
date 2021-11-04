@@ -1,7 +1,7 @@
 import SwapChain from 'components/Modal/TransactionModals/SwapChain'
 import WithdrawConfirmationModal from 'components/Modal/TransactionModals/WithdrawConfirmationModal'
 import DummyLogo from 'assets/images/ethereum-logo.png'
-import { Box } from '@material-ui/core'
+import { Box } from '@mui/material'
 import { Text } from 'rebass'
 import LogoText from 'components/LogoText'
 import DestinationAddress from 'components/Modal/TransactionModals/DestinationAddress'
@@ -62,7 +62,7 @@ const DefaultTemplate: ComponentStory<typeof WithdrawConfirmationModal> = ({ isS
           </>
         }
       >
-        <Box display="grid" gridGap="15px" justifyItems="center">
+        <Box display="grid" gap="15px" justifyItems="center">
           <Text fontSize={40} fontWeight={500} textAlign="center">
             1 ETH
           </Text>

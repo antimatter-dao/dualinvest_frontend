@@ -10,7 +10,7 @@ export const Default = () => (
     <HoverSelect
       selectedDisplay={1111}
       list={[111, 222, 333, 444]}
-      onClickGenerator={item => {
+      onClickGenerator={(item) => {
         return () => {
           console.log(item)
         }

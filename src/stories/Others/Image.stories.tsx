@@ -7,6 +7,6 @@ export default {
   component: Image
 } as ComponentMeta<typeof Image>
 
-const DefaultTemplate: ComponentStory<typeof Image> = args => <Image {...args} src="./favicon.png" />
+const DefaultTemplate: ComponentStory<typeof Image> = (args) => <Image {...args} src="./favicon.png" />
 
 export const Default = DefaultTemplate.bind({})

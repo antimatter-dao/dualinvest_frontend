@@ -1,9 +1,10 @@
-import theme, { ThemeProvider as MuiThemeProvider } from '../src/theme/muiTheme'
+import theme, { ThemeProvider as MuiThemeProvider, } from '../src/theme/muiTheme'
 import ThemeProvider from '../src/theme'
 import { ModalProvider } from '../src/context/ModalContext'
 import { Provider } from 'react-redux'
 import store from '../src/state'
 import { CssBaseline } from '@mui/material'
+
 
 export const parameters = {
   backgrounds: {
@@ -11,17 +12,17 @@ export const parameters = {
     values: [
       {
         name: 'default',
-        value: theme.palette.background.default,
+        value: theme.palette.background.default
       }
-    ],
+    ]
   },
-  actions: { argTypesRegex: "^on[A-Z].*" },
+  actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
     matchers: {
       color: /(background|color)$/i,
-      date: /Date$/,
-    },
-  },
+      date: /Date$/
+    }
+  }
 }
 
 export const decorators = [
@@ -36,5 +37,5 @@ export const decorators = [
         </MuiThemeProvider>
       </ThemeProvider>
     </Provider>
-  ),
-];
+  )
+]

@@ -1,4 +1,6 @@
-import { Divider as MuiDivider, makeStyles, Theme } from '@material-ui/core'
+import { Divider as MuiDivider, Theme } from '@mui/material'
+
+import makeStyles from '@mui/styles/makeStyles'
 
 interface Props {
   orientation?: 'horizontal' | 'vertical'

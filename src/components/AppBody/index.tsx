@@ -1,6 +1,7 @@
 import React from 'react'
-import { IconButton, makeStyles } from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close'
+import { IconButton } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface Props {
   children: React.ReactNode
@@ -22,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     border: '1px solid rgba(255, 255, 255, 0.2)',
     boxSizing: 'border-box',
     overflow: 'auto',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: '100%!important',
       maxWidth: 'unset'
     }
@@ -47,7 +48,7 @@ export default function AppBody({ children, closeIcon, onReturnClick, ...props }
   return (
     <div className={classes.root}>
       {closeIcon && (
-        <IconButton className={classes.closeIconContainer} onClick={onReturnClick}>
+        <IconButton className={classes.closeIconContainer} onClick={onReturnClick} size="large">
           <CloseIcon className={classes.closeIcon} />
         </IconButton>
       )}

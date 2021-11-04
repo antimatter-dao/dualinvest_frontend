@@ -1,6 +1,8 @@
 import React from 'react'
-import { Select as MuiSelect, makeStyles, createStyles, Theme } from '@material-ui/core'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import { Select as MuiSelect, Theme } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
+import createStyles from '@mui/styles/createStyles'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 interface Props {
   children?: React.ReactNode
@@ -92,8 +94,8 @@ export default function Select(props: Props) {
         transformOrigin: {
           vertical: 'top',
           horizontal: 'left'
-        },
-        getContentAnchorEl: null
+        }
+        // getContentAnchorEl: null
       }}
       IconComponent={ExpandMoreIcon}
     >

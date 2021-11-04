@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core'
+import { Box } from '@mui/material'
 import Button from 'components/Button/Button'
 import { Chain } from 'models/chain'
 import React from 'react'
@@ -21,7 +21,7 @@ export default function DepositConfirmationModal({
 }) {
   return (
     <Modal closeIcon>
-      <Box display="grid" padding="40px" gridGap="28px" justifyItems="center" width="100%">
+      <Box display="grid" padding="40px" gap="28px" justifyItems="center" width="100%">
         {children}
         <Box justifySelf="start" width="100%">
           {fromChain && toChain && <SwapChain to={toChain} from={fromChain} />}

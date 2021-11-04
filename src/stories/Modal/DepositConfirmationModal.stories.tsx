@@ -3,7 +3,7 @@ import SwapChain from 'components/Modal/TransactionModals/SwapChain'
 import DepositConfirmationModal from 'components/Modal/TransactionModals/DepositConfirmationModal'
 import useModal from 'hooks/useModal'
 import DummyLogo from 'assets/images/ethereum-logo.png'
-import { Typography, Box } from '@material-ui/core'
+import { Typography, Box } from '@mui/material'
 import { Text } from 'rebass'
 import LogoText from 'components/LogoText'
 import DestinationAddress from 'components/Modal/TransactionModals/DestinationAddress'
@@ -40,7 +40,7 @@ export const Default = () => {
             toChain={toChain}
             destinationAddress="0xKos369cd6vwd94wq1gt4hr87ujv"
           >
-            <Box display="grid" gridGap="15px" justifyItems="center">
+            <Box display="grid" gap="15px" justifyItems="center">
               <Typography variant="h6">Test</Typography>
               <Text fontSize={40} fontWeight={500} textAlign="center">
                 1 ETH

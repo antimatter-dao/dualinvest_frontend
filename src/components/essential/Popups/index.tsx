@@ -1,15 +1,15 @@
-import { styled, Theme } from '@material-ui/core'
+import { styled } from '@mui/material/styles'
 import { useActivePopups } from 'state/application/hooks'
 import PopupItem from './PopupItem'
 
-const MobilePopupWrapper = styled('div')(({ height, theme }: { height: string | number; theme: Theme }) => ({
+const MobilePopupWrapper = styled('div')(({ height, theme }: any) => ({
   position: 'relative',
   maxWidth: '100%',
   height: height,
   margin: height ? '0 auto;' : 0,
   marginBottom: height ? '20px' : 0,
   display: 'none',
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     display: 'block'
   }
 }))
@@ -35,7 +35,7 @@ const FixedPopupColumn = styled('div')(({ theme }) => ({
   zIndex: 3,
   display: 'grid',
   gridRowGap: 20,
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     display: 'none'
   }
 }))

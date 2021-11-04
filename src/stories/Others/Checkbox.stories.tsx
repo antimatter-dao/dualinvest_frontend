@@ -7,7 +7,7 @@ export default {
   component: Checkbox
 } as ComponentMeta<typeof Checkbox>
 
-const DefaultTemplate: ComponentStory<typeof Checkbox> = args => <Checkbox {...args} />
+const DefaultTemplate: ComponentStory<typeof Checkbox> = (args) => <Checkbox {...args} />
 
 export const Default = DefaultTemplate.bind({})
 Default.args = {

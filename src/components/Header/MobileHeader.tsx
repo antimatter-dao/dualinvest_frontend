@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react'
 import { X, ChevronUp, Menu } from 'react-feather'
 import { NavLink } from 'react-router-dom'
-import { Box, makeStyles, MenuItem, AppBar } from '@material-ui/core'
+import { Box, MenuItem, AppBar } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import Modal from 'components/Modal'
 import ChainSwap from '../../assets/svg/chain_swap.svg'
 import { ExternalLink } from '../../theme'
@@ -62,7 +63,7 @@ export default function MobileHeader() {
   const MobileMenu = useCallback(
     ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => (
       <Modal isCardOnMobile customOnDismiss={onDismiss} customIsOpen={isOpen} maxWidth="100%">
-        <Box display="grid" gridGap="15px">
+        <Box display="grid" gap="15px">
           {Tabs.map(({ title, route, link, titleContent, subTab }) => {
             const content = titleContent ?? title
             return subTab ? (
@@ -135,7 +136,7 @@ function Accordion({ children, placeholder }: { children: React.ReactNode; place
   }, [])
   return (
     <>
-      <Box className={classes.navLink} display="flex" alignItems="center" gridGap={12} onClick={handleClick}>
+      <Box className={classes.navLink} display="flex" alignItems="center" gap={12} onClick={handleClick}>
         {placeholder} <ChevronUp style={isOpen ? {} : { transform: 'rotate(180deg)' }} />
       </Box>
       <Box padding="0 15px"> {isOpen && children}</Box>

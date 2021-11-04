@@ -1,5 +1,5 @@
-import { Checkbox, FormControlLabel } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { Checkbox, FormControlLabel } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { ReactComponent as CheckboxIcon } from '../../assets/componentsIcon/checkbox.svg'
 import { ReactComponent as CheckboxCheckedIcon } from '../../assets/componentsIcon/checkbox_checked.svg'
 

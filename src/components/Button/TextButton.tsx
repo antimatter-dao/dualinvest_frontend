@@ -1,6 +1,6 @@
 import React from 'react'
-import { makeStyles, createStyles } from '@material-ui/styles'
-import { ButtonBase, Theme } from '@material-ui/core'
+import { makeStyles, createStyles } from '@mui/styles'
+import { ButtonBase, Theme } from '@mui/material'
 interface Props {
   onClick?: (e?: any) => void
   children: React.ReactNode

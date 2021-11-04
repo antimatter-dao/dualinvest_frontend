@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import { styled } from '@material-ui/core'
+import { styled } from '@mui/material'
 import Header from '../components/Header'
 import Polling from '../components/essential/Polling'
 import Popups from '../components/essential/Popups'
@@ -14,7 +14,7 @@ const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
   overflowX: 'hidden',
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     flexDirection: 'column',
     height: '100vh'
   }
@@ -39,7 +39,7 @@ const BodyWrapper = styled('div')(({ theme }) => ({
   overflowY: 'auto',
   overflowX: 'hidden',
   position: 'relative',
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     minHeight: `calc(100vh - ${theme.height.header} - ${theme.height.mobileHeader})`,
     paddingTop: 20
   }

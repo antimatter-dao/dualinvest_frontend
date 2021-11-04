@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react'
-import { styled, Box, useTheme } from '@material-ui/core'
+import { styled, Box, useTheme } from '@mui/material'
 import { Text } from 'rebass'
 import InputNumerical from 'components/Input/InputNumerical'
 import OutlineButton from 'components/Button/OutlineButton'
@@ -62,7 +62,7 @@ const ButtonWrapper = styled('div')(({ theme }) => ({
   height: '100%',
   display: 'flex',
   alignItems: 'center',
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     right: 20
   }
 }))
@@ -93,7 +93,7 @@ export default function CurrencyInputPanel({
   }, [disableCurrencySelect, onSelectCurrency, showModal])
 
   return (
-    <Box display="grid" gridGap="24px">
+    <Box display="grid" gap="24px">
       <ShowOnMobile breakpoint={'sm'}>
         <InputLabel>Token</InputLabel>
         <SelectButton width={'180px'} onClick={showCurrencySearch} disabled={disabled} primary={selectActive}>

@@ -1,6 +1,8 @@
 import React from 'react'
-import { Dialog, makeStyles, Theme, IconButton, createStyles } from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/Close'
+import { Dialog, Theme, IconButton } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
+import createStyles from '@mui/styles/createStyles'
+import CloseIcon from '@mui/icons-material/Close'
 import useModal from 'hooks/useModal'
 import { useRef } from 'react'
 import clsx from 'clsx'
@@ -24,14 +26,14 @@ const useStyles = makeStyles((theme: Theme) =>
         boxSizing: 'border-box'
       },
       paddingTop: theme.height.header,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         height: `calc(100% - ${theme.height.mobileHeader})`,
         marginTop: 'auto'
       }
     },
     mobileRoot: {
       '& .MuiDialog-scrollPaper': {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
           alignItems: 'flex-end'
         }
       }
@@ -49,14 +51,14 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'absolute',
       overflowY: 'auto',
       maxHeight: `calc(100vh - ${theme.height.header})`,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         maxHeight: `calc(100vh - ${theme.height.header} - ${theme.height.mobileHeader})`,
         width: 'calc(100% - 32px)!important',
         marginBottom: '32px'
       }
     },
     mobilePaper: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         border: 'none',
         borderTop: '1px solid ' + theme.palette.grey.A200,
         width: '100%!important',
@@ -73,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
       opacity: 0.4
     },
     mobileBackdrop: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         background: 'none'
       }
     },
@@ -109,7 +111,7 @@ export default function Modal(props: Props) {
         onClose={hide}
       >
         {closeIcon && (
-          <IconButton className={classes.closeIconContainer} onClick={hide}>
+          <IconButton className={classes.closeIconContainer} onClick={hide} size="large">
             <CloseIcon className={classes.closeIcon} />
           </IconButton>
         )}

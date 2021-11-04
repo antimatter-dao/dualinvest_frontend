@@ -1,8 +1,8 @@
 import React from 'react'
-import { Box } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { Box } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { ReactComponent as CopyIcon } from 'assets/componentsIcon/copy_icon.svg'
-import CheckIcon from '@material-ui/icons/Check'
+import CheckIcon from '@mui/icons-material/Check'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 
 interface Props {

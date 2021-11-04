@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { MenuItem } from '@material-ui/core'
+import { MenuItem } from '@mui/material'
 import Select from 'components/Select/Select'
 
 export default {
@@ -7,7 +7,7 @@ export default {
   component: Select
 } as ComponentMeta<typeof Select>
 
-const DefaultTemplate: ComponentStory<typeof Select> = args => (
+const DefaultTemplate: ComponentStory<typeof Select> = (args) => (
   <Select {...args} placeholder="select">
     <MenuItem key={'ETH'} value={'ETH'}>
       ETH

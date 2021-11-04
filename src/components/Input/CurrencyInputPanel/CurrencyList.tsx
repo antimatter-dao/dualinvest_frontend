@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { FixedSizeList } from 'react-window'
-import { Box, Typography, styled } from '@material-ui/core'
+import { Box, Typography, styled } from '@mui/material'
 import { Currency } from 'constants/token'
 import { Mode } from './SelectCurrencyModal'
 import useModal from 'hooks/useModal'

@@ -7,6 +7,6 @@ export default {
   component: Spinner
 } as ComponentMeta<typeof Spinner>
 
-const DefaultTemplate: ComponentStory<typeof Spinner> = args => <Spinner {...args} />
+const DefaultTemplate: ComponentStory<typeof Spinner> = (args) => <Spinner {...args} />
 
 export const Default = DefaultTemplate.bind({})

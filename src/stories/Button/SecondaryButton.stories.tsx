@@ -7,7 +7,7 @@ export default {
   component: SecondaryButton
 } as ComponentMeta<typeof SecondaryButton>
 
-const DefaultTemplate: ComponentStory<typeof SecondaryButton> = args => (
+const DefaultTemplate: ComponentStory<typeof SecondaryButton> = (args) => (
   <SecondaryButton {...args}>Default</SecondaryButton>
 )
 

@@ -4,7 +4,7 @@ import ChainSwap from 'components/Select/ChainSwap'
 import DummyLogo from 'assets/images/ethereum-logo.png'
 import ChainSelect from 'components/Select/ChainSelect'
 import { Chain } from 'models/chain'
-import { Box } from '@material-ui/core'
+import { Box } from '@mui/material'
 import TextButton from 'components/Button/TextButton'
 import SwitchButton from 'components/Select/ChainSwap/SwitcherButton'
 
@@ -30,7 +30,7 @@ const ChainList = [
   }
 ]
 
-const DefaultTemplate: ComponentStory<typeof ChainSwap> = function({
+const DefaultTemplate: ComponentStory<typeof ChainSwap> = function ({
   disabledFrom,
   disabledTo,
   activeFrom,
@@ -70,7 +70,7 @@ const DefaultTemplate: ComponentStory<typeof ChainSwap> = function({
           label={'From'}
           selectedChain={fromChain}
           chainList={ChainList}
-          onChange={chain => setFromChain(chain)}
+          onChange={(chain) => setFromChain(chain)}
           width={'49%'}
           disabled={disabledFrom}
           active={activeFrom}
@@ -84,7 +84,7 @@ const DefaultTemplate: ComponentStory<typeof ChainSwap> = function({
           label={'To'}
           selectedChain={toChain}
           chainList={ChainList}
-          onChange={chain => setToChain(chain)}
+          onChange={(chain) => setToChain(chain)}
           width={'49%'}
           disabled={disabledTo}
           active={activeTo}

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Box, Button } from '@material-ui/core'
+import { Box, Button } from '@mui/material'
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import Modal from 'components/Modal'
 import AccountDetails from 'components/Modal/WalletModal/AccountDetails'
@@ -31,7 +31,7 @@ const DefaultTemplate: ComponentStory<typeof AccountDetails> = (args: any) => {
       onClick={() => {
         showModal(
           <Modal customIsOpen={true} customOnDismiss={() => {}} maxWidth="560px" closeIcon={true}>
-            <Box width={'100%'} padding="32px" display="flex" flexDirection="column" alignItems="center" gridGap={20}>
+            <Box width={'100%'} padding="32px" display="flex" flexDirection="column" alignItems="center" gap={20}>
               <AccountDetails
                 {...args}
                 toggleWalletModal={() => {}}

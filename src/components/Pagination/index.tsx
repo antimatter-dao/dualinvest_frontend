@@ -1,29 +1,38 @@
-import MuiPagination from '@material-ui/lab/Pagination'
+import MuiPagination from '@mui/material/Pagination'
 import styled from 'styled-components'
-import Pagination from '@material-ui/lab/Pagination'
-import { ThemeProvider as MaterialThemeProvider } from '@material-ui/core/styles'
-import { createTheme } from '@material-ui/core/styles'
+import Pagination from '@mui/material/Pagination'
+import { ThemeProvider as MaterialThemeProvider, Theme, adaptV4Theme } from '@mui/material/styles'
+import { createTheme } from '@mui/material/styles'
 import { theme } from 'theme/muiTheme'
 
-const materialTheme = createTheme({
-  palette: {
-    type: 'dark'
-  },
-  textColor: theme.textColor,
-  bgColor: theme.bgColor,
-  gradient: theme.gradient,
-  height: theme.height
-})
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
-const materialThemeLight = createTheme({
-  palette: {
-    type: 'light'
-  },
-  textColor: theme.textColor,
-  bgColor: theme.bgColor,
-  gradient: theme.gradient,
-  height: theme.height
-})
+const materialTheme = createTheme(
+  adaptV4Theme({
+    palette: {
+      mode: 'dark'
+    },
+    textColor: theme.textColor,
+    bgColor: theme.bgColor,
+    gradient: theme.gradient,
+    height: theme.height
+  })
+)
+
+const materialThemeLight = createTheme(
+  adaptV4Theme({
+    palette: {
+      mode: 'light'
+    },
+    textColor: theme.textColor,
+    bgColor: theme.bgColor,
+    gradient: theme.gradient,
+    height: theme.height
+  })
+)
 
 export const StyledPagination = styled(Pagination)`
   margin: auto;

@@ -13,7 +13,7 @@ const DefaultTemplate: ComponentStory<typeof InputNumerical> = (args: any) => {
     <InputNumerical
       {...args}
       value={val}
-      onChange={e => {
+      onChange={(e) => {
         setVal(e.target.value)
       }}
     />

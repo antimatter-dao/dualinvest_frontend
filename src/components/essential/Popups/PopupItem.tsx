@@ -1,8 +1,10 @@
 import { useCallback, useEffect } from 'react'
 import { useSpring } from 'react-spring/web'
 import styled from 'styled-components'
-import CloseIcon from '@material-ui/icons/Close'
-import { createStyles, IconButton, makeStyles, Theme } from '@material-ui/core'
+import CloseIcon from '@mui/icons-material/Close'
+import { IconButton, Theme } from '@mui/material'
+import createStyles from '@mui/styles/createStyles'
+import makeStyles from '@mui/styles/makeStyles'
 import { animated } from 'react-spring'
 import { useRemovePopup } from 'state/application/hooks'
 import TransactionPopup from './TransactionPopup'
@@ -93,7 +95,7 @@ export default function PopupItem({
 
   return (
     <Popup>
-      <IconButton className={classes.closeIconContainer} onClick={removeThisPopup}>
+      <IconButton className={classes.closeIconContainer} onClick={removeThisPopup} size="large">
         <CloseIcon className={classes.closeIcon} />
       </IconButton>
       {popupContent}

@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { Button as MuiButton } from '@material-ui/core'
+import { Button as MuiButton } from '@mui/material'
 
 function Button(args: any) {
   return <MuiButton {...args} />
@@ -10,7 +10,9 @@ export default {
   component: Button
 } as ComponentMeta<typeof Button>
 
-const DefaultTemplate: ComponentStory<typeof Button> = args => <Button {...args}>Mui Button</Button>
+const DefaultTemplate: ComponentStory<typeof Button> = args => {
+  return <Button {...args}>Mui Button</Button>
+}
 
 export const Default = DefaultTemplate.bind({})
 
