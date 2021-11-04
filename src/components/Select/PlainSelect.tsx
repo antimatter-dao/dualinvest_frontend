@@ -57,7 +57,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     base: {
       width: 'inherit',
-      // borderRadius: theme.shape.borderRadius,
       '&.Mui-focused': {
         color: 'white',
         '& .MuiSelect-root:before': {

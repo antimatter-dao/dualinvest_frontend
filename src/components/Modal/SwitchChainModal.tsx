@@ -6,7 +6,7 @@ import Image from 'components/Image'
 import { Chain } from 'models/chain'
 import Modal from '.'
 
-export default function SwitchChain({
+export default function SwitchChainModal({
   fromChain,
   toChain,
   onConfirm
@@ -29,6 +29,7 @@ export default function SwitchChain({
                 gridGap="20px"
                 margin="0 auto"
                 padding="30px 20px 40px"
+                height="168px"
                 maxHeight="168px"
                 maxWidth="168px"
               >
@@ -47,6 +48,7 @@ export default function SwitchChain({
                 margin="0 auto"
                 padding="30px 20px 40px"
                 maxHeight="168px"
+                height="168px"
                 maxWidth="168px"
               >
                 <Image src={toChain.logo} style={{ height: 44, width: 44, objectFit: 'contain' }} />

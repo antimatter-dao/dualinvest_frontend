@@ -11,6 +11,7 @@ interface Props {
   opacity?: number
   style?: React.CSSProperties
   disabled?: boolean
+  classname?: string
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -30,10 +31,10 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export default function TextButton(props: Props) {
-  const { onClick, style, disabled } = props
+  const { onClick, style, disabled, classname } = props
   const classes = useStyles(props)
   return (
-    <ButtonBase classes={{ ...classes }} onClick={onClick} style={style} disabled={disabled}>
+    <ButtonBase classes={{ ...classes }} onClick={onClick} style={style} disabled={disabled} className={classname}>
       {props.children}
     </ButtonBase>
   )

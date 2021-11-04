@@ -6,7 +6,7 @@ import { Link } from '@material-ui/core'
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
   > * {
-    stroke: ${({ theme }) => theme.text3};
+    stroke: ${({ theme }) => theme.text5};
   }
 `
 

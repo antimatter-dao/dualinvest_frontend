@@ -29,7 +29,7 @@ export default function SwapChain(props: Props) {
         </Box>
         <LogoText logo={from.logo} text={from.symbol} />
       </Box>
-      <Box color={'#FFFFFF'}>
+      <Box color={'#FFFFFF'} style={{ marginBottom: -5 }}>
         <ArrowForwardIcon />
       </Box>
       <Box display="flex">

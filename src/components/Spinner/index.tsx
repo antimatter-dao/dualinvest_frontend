@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme =>
     },
     top: {
       color: (props: Props) => props.color ?? theme.palette.primary.main,
-      animationDuration: '550ms',
+      animationDuration: '850ms',
       position: 'absolute',
       left: 0,
       top: 0

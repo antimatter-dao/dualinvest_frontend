@@ -11,7 +11,7 @@ interface Props {
   disabled?: boolean
   chainList: Chain[]
   selectedChain: Chain | null
-  onChange: (chain: Chain | null) => void
+  onChange?: (chain: Chain | null) => void
   width?: string
   active?: boolean
   placeholder?: string
@@ -51,7 +51,7 @@ export default function ChainSelect({
   const handleChange = useCallback(
     e => {
       const chain = chainList.find(chain => chain.symbol === e.target.value) ?? null
-      onChange(chain)
+      onChange && onChange(chain)
     },
     [chainList, onChange]
   )

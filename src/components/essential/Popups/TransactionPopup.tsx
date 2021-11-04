@@ -22,15 +22,19 @@ export default function TransactionPopup({
       <Box display="flex" alignItems="flex-start" flexWrap="nowrap">
         <div style={{ paddingRight: 16 }}>
           {success ? (
-            <CheckCircle color={theme.palette.success.main} size={24} />
+            <CheckCircle color={theme.palette.success.main} size={20} />
           ) : (
-            <AlertCircle color={theme.palette.error.main} size={24} />
+            <AlertCircle color={theme.palette.error.main} size={20} />
           )}
         </div>
-        <Typography>{summary ?? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}</Typography>{' '}
+        <Typography variant="inherit">{summary ?? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}</Typography>{' '}
       </Box>
       {chainId && (
-        <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')} style={{ margin: '9px 32px' }}>
+        <ExternalLink
+          underline="always"
+          href={getEtherscanLink(chainId, hash, 'transaction')}
+          style={{ margin: '9px 32px', color: '#ffffff' }}
+        >
           View on Etherscan
         </ExternalLink>
       )}

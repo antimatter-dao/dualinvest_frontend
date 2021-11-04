@@ -1,21 +1,21 @@
 import React from 'react'
-import { X } from 'react-feather'
-import { Box, makeStyles, Typography } from '@material-ui/core'
-import TextButton from 'components/Button/TextButton'
-import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
-import useBreakpoint from 'hooks/useBreakpoint'
+import { IconButton, makeStyles } from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close'
 
 interface Props {
   children: React.ReactNode
-  width?: number
+  width?: number | string
   onReturnClick?: () => void
   title?: string
+  maxWidth?: string
+  closeIcon?: boolean
 }
 
 const useStyles = makeStyles(theme => ({
   root: {
     position: 'relative',
-    width: (props: { width?: number }) => props.width || 560,
+    width: (props: Partial<Props>) => props.width || 560,
+    maxWidth: (props: Partial<Props>) => props.maxWidth || 560,
     borderRadius: 20,
     background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%), #000000',
     justifyContent: 'center',
@@ -23,41 +23,33 @@ const useStyles = makeStyles(theme => ({
     boxSizing: 'border-box',
     overflow: 'auto',
     [theme.breakpoints.down('sm')]: {
-      width: '100%!important'
+      width: '100%!important',
+      maxWidth: 'unset'
     }
   },
-  box: {
-    padding: '20px 40px',
-    [theme.breakpoints.down('sm')]: {
-      padding: 20
+  closeIconContainer: {
+    padding: 0,
+    position: 'absolute',
+    top: 24,
+    right: 24,
+    '&:hover $closeIcon': {
+      color: theme.palette.text.primary
     }
+  },
+  closeIcon: {
+    color: theme.palette.grey[500]
   }
 }))
 
-export default function AppBody({ onReturnClick, title, children, ...props }: Props) {
+export default function AppBody({ children, closeIcon, onReturnClick, ...props }: Props) {
   const classes = useStyles(props)
-  const matches = useBreakpoint()
 
   return (
     <div className={classes.root}>
-      {(onReturnClick || title) && (
-        <Box display="flex" justifyContent="space-between" className={classes.box}>
-          {onReturnClick && !matches && (
-            <TextButton onClick={onReturnClick}>
-              <ArrowLeft />
-            </TextButton>
-          )}
-
-          {title && <Typography variant="h6">{title}</Typography>}
-
-          {onReturnClick && matches ? (
-            <TextButton onClick={onReturnClick}>
-              <X />
-            </TextButton>
-          ) : (
-            <div />
-          )}
-        </Box>
+      {closeIcon && (
+        <IconButton className={classes.closeIconContainer} onClick={onReturnClick}>
+          <CloseIcon className={classes.closeIcon} />
+        </IconButton>
       )}
       {children}
     </div>

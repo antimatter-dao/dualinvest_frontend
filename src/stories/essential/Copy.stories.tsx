@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
-import Copy from 'components/Copy'
+import Copy from 'components/essential/Copy'
 
 export default {
   title: 'Others/Copy',

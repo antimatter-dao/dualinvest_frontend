@@ -6,7 +6,7 @@ import Modal from '../index'
 import DestinationAddress from './DestinationAddress'
 import SwapChain from './SwapChain'
 
-export default function TransacitonPendingModal({
+export default function DepositConfirmationModal({
   children,
   toChain,
   fromChain,

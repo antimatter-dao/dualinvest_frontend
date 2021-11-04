@@ -28,9 +28,9 @@ const MobilePopupInner = styled('div')({
 
 const FixedPopupColumn = styled('div')(({ theme }) => ({
   position: 'fixed',
-  top: 38,
-  right: 16,
-  maxWidth: 340,
+  top: `calc(${theme.height.header} + 10px)`,
+  right: 60,
+  maxWidth: 320,
   width: '100%',
   zIndex: 3,
   display: 'grid',

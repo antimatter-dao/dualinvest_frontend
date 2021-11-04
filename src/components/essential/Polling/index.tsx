@@ -13,6 +13,7 @@ const StyledPolling = styled.div`
   right: 0;
   bottom: 0;
   padding: 0.5rem;
+  padding-right: 25px;
   color: white;
   transition: opacity 0.25s ease;
   color: ${({ theme }) => theme.green1};

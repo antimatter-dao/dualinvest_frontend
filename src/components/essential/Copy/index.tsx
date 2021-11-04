@@ -1,9 +1,9 @@
 import React from 'react'
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import { ReactComponent as CopyIcon } from '../../assets/componentsIcon/copy_icon.svg'
+import { ReactComponent as CopyIcon } from 'assets/componentsIcon/copy_icon.svg'
 import CheckIcon from '@material-ui/icons/Check'
-import useCopyClipboard from '../../hooks/useCopyClipboard'
+import useCopyClipboard from 'hooks/useCopyClipboard'
 
 interface Props {
   toCopy: string
@@ -14,7 +14,6 @@ const useStyles = makeStyles({
   root: {
     display: 'flex',
     cursor: 'pointer',
-    gap: 8,
     height: 17,
     '& svg': {
       width: 14

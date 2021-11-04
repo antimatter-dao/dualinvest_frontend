@@ -1,5 +1,5 @@
 import { Box, Typography } from '@material-ui/core'
-import Button from 'components/Button/Button'
+import ActionButton from 'components/Button/ActionButton'
 import Divider from 'components/Divider'
 import { Chain } from 'models/chain'
 import React from 'react'
@@ -17,7 +17,8 @@ export default function TransacitonPendingModal({
   step2,
   isStep3Active,
   isOpen,
-  onDismiss
+  onDismiss,
+  error
 }: {
   isOpen: boolean
   onDismiss: () => void
@@ -29,6 +30,7 @@ export default function TransacitonPendingModal({
   fromChain: Chain | null
   destinationAddress: string | undefined | null
   onConfirm?: () => void
+  error?: string
 }) {
   return (
     <Modal closeIcon customIsOpen={isOpen} customOnDismiss={onDismiss}>
@@ -65,10 +67,7 @@ export default function TransacitonPendingModal({
             3. Confirm Withdraw
           </Typography>
           {children}
-
-          <Button onClick={onConfirm} disabled={!isStep3Active}>
-            Confirm
-          </Button>
+          <ActionButton error={error} onAction={onConfirm} disableAction={!isStep3Active} actionText="Confirm" />
         </Box>
       </Box>
     </Modal>

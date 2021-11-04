@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme: Theme) =>
       }
     },
     disabled: {
-      opacity: theme.palette.action.disabledOpacity,
-      backgroundColor: theme.palette.primary.light,
+      opacity: 0.24,
+      backgroundColor: theme.palette.primary.dark,
       color: '#464647'
     }
   })
