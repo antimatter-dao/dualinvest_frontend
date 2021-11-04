@@ -1,4 +1,4 @@
-import theme, { ThemeProvider as MuiThemeProvider, ThemeProvider5 } from '../src/theme/muiTheme'
+import theme, { ThemeProvider as MuiThemeProvider } from '../src/theme/muiTheme'
 import ThemeProvider from '../src/theme'
 import { ModalProvider } from '../src/context/ModalContext'
 import { Provider } from 'react-redux'
@@ -28,14 +28,12 @@ export const decorators = [
   (Story) => (
     <Provider store={store}>
       <ThemeProvider>
-        <ThemeProvider5>
-          <MuiThemeProvider theme={theme}>
-            <CssBaseline />
-            <ModalProvider>
-              <Story />
-            </ModalProvider>
-          </MuiThemeProvider>
-        </ThemeProvider5>
+        <MuiThemeProvider theme={theme}>
+          <CssBaseline />
+          <ModalProvider>
+            <Story />
+          </ModalProvider>
+        </MuiThemeProvider>
       </ThemeProvider>
     </Provider>
   ),
