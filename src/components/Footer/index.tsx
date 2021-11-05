@@ -1,4 +1,5 @@
-import { Box, makeStyles } from '@material-ui/core'
+import { Box } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import { HideOnMobile } from 'theme/muiTheme'
 import { ReactComponent as Medium } from 'assets/socialLinksIcon/medium.svg'
 import { ReactComponent as Twitter } from 'assets/socialLinksIcon/twitter.svg'
@@ -24,7 +25,7 @@ export default function Footer() {
           justifyContent="flex-end"
           width="100%"
           padding="9px 60px 28px"
-          gridGap="40px"
+          gap="40px"
         >
           <TextButton>
             <ExternalLink href="">

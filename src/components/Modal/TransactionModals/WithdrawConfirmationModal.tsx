@@ -1,4 +1,4 @@
-import { Box, Typography } from '@material-ui/core'
+import { Box, Typography } from '@mui/material'
 import ActionButton from 'components/Button/ActionButton'
 import Divider from 'components/Divider'
 import { Chain } from 'models/chain'
@@ -34,13 +34,13 @@ export default function TransacitonPendingModal({
 }) {
   return (
     <Modal closeIcon customIsOpen={isOpen} customOnDismiss={onDismiss}>
-      <Box display="grid" padding="40px" gridGap="24px" justifyItems="center" width="100%">
+      <Box display="grid" padding="40px" gap="24px" justifyItems="center" width="100%">
         <Box
           style={{
             opacity: isStep3Active ? 0.5 : 1
           }}
           display="grid"
-          gridGap="12px"
+          gap="12px"
           width="100%"
         >
           <Typography component="div" align="center" variant="inherit">
@@ -60,7 +60,7 @@ export default function TransacitonPendingModal({
             opacity: isStep3Active ? 1 : 0.5
           }}
           display="grid"
-          gridGap="24px"
+          gap="24px"
           width="100%"
         >
           <Typography component="div" align="center" variant="inherit">

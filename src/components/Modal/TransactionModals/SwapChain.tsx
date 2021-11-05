@@ -1,5 +1,5 @@
-import { Box } from '@material-ui/core'
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+import { Box } from '@mui/material'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import { Chain } from 'models/chain'
 import { Text } from 'rebass'
 import LogoText from 'components/LogoText'

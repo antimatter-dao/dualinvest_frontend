@@ -1,4 +1,4 @@
-import { styled, useTheme } from '@material-ui/core'
+import { styled, useTheme } from '@mui/material'
 import { useActiveWeb3React } from 'hooks/'
 import { getEtherscanLink } from 'utils'
 import { ExternalLink } from 'theme'

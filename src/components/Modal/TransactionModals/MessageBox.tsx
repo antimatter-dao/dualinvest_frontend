@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Typography } from '@material-ui/core'
+import { Box, Typography } from '@mui/material'
 import Modal from 'components/Modal'
 import { ReactComponent as SuccessIcon } from 'assets/componentsIcon/statusIcon/success_icon.svg'
 import { ReactComponent as FailureIcon } from 'assets/componentsIcon/statusIcon/failure_icon.svg'
@@ -36,7 +36,7 @@ export default function MessageBox({ type, children, width = '480px', header, ac
 
   return (
     <Modal width={width}>
-      <Box display={'grid'} alignItems={'center'} padding={'40px'} justifyItems="center" gridGap="20px">
+      <Box display={'grid'} alignItems={'center'} padding={'40px'} justifyItems="center" gap="20px">
         <Box>{icon}</Box>
         {header && <Typography variant="h6">{header}</Typography>}
         <Box fontSize="18px" textAlign="center" display="grid" justifyItems="center" width="100%">

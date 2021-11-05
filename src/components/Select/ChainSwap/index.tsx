@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core'
+import { Box } from '@mui/material'
 import TextButton from 'components/Button/TextButton'
 import ChainSelect from '../ChainSelect'
 import { Chain } from 'models/chain'

@@ -3,7 +3,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { isMobile } from 'react-device-detect'
-import { Typography, Box } from '@material-ui/core'
+import { Typography, Box } from '@mui/material'
 import MetamaskIcon from 'assets/walletIcon/metamask.png'
 import { fortmatic, injected, portis } from 'connectors'
 import { OVERLAY_READY } from 'connectors/Fortmatic'
@@ -232,7 +232,7 @@ export default function WalletModal({
             </OutlineButton>
           </PendingView>
         ) : (
-          <Box display="grid" gridGap="10px" width="100%" justifyContent="center">
+          <Box display="grid" gap="10px" width="100%" justifyContent="center">
             {getOptions()}
           </Box>
         )}
@@ -242,7 +242,7 @@ export default function WalletModal({
 
   return (
     <Modal customIsOpen={walletModalOpen} customOnDismiss={toggleWalletModal} maxWidth="560px" closeIcon={true}>
-      <Box width={'100%'} padding="32px" display="flex" flexDirection="column" alignItems="center" gridGap={20}>
+      <Box width={'100%'} padding="32px" display="flex" flexDirection="column" alignItems="center" gap={20}>
         {getModalContent()}
       </Box>
     </Modal>

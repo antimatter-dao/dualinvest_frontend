@@ -1,6 +1,5 @@
 import React from 'react'
-import { makeStyles, createStyles } from '@material-ui/styles'
-import { ButtonBase, Theme } from '@material-ui/core'
+import { ButtonBase, useTheme } from '@mui/material'
 
 interface Props {
   onClick?: () => void
@@ -10,40 +9,39 @@ interface Props {
   disabled?: boolean
   color?: string
   children?: React.ReactNode
-  fontSize?: string
+  fontSize?: string | number
   classname?: string
   style?: React.CSSProperties
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: (props: Props) => props.width || '100%',
-      height: (props: Props) => props.height || 60,
-      fontSize: (props: Props) => props.fontSize || 16,
-      backgroundColor: (props: Props) => props.backgroundColor || theme.palette.primary.main,
-      color: (props: Props) => props.color || theme.palette.primary.contrastText,
-      fontWeight: 500,
-      borderRadius: theme.shape.borderRadius,
-      transition: '.3s',
-      '&:hover': {
-        background: theme.palette.primary.dark
-      }
-    },
-    disabled: {
-      opacity: 0.24,
-      backgroundColor: theme.palette.primary.dark,
-      color: '#464647'
-    }
-  })
-)
-
 export default function Button(props: Props) {
-  const { onClick, disabled, classname, style } = props
-  const classes = useStyles(props)
+  const { onClick, disabled, style, width, height, fontSize, backgroundColor, color } = props
+  const theme = useTheme()
 
   return (
-    <ButtonBase classes={{ ...classes }} onClick={onClick} disabled={disabled} className={classname} style={style}>
+    <ButtonBase
+      onClick={onClick}
+      disabled={disabled}
+      sx={{
+        ...style,
+        width: width || '100%',
+        height: height || 60,
+        fontSize: fontSize || 16,
+        fontWeight: 500,
+        transition: '.3s',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: backgroundColor || theme.palette.primary.main,
+        color: color || theme.palette.primary.contrastText,
+        '&:hover': {
+          background: theme.palette.primary.dark
+        },
+        '&:disabled': {
+          opacity: 0.24,
+          backgroundColor: theme.palette.primary.dark,
+          color: '#464647'
+        }
+      }}
+    >
       {props.children}
     </ButtonBase>
   )

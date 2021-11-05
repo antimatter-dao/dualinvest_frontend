@@ -1,4 +1,4 @@
-import { Paper, useTheme } from '@material-ui/core'
+import { Paper, useTheme } from '@mui/material'
 import React from 'react'
 
 export function OutlinedCard({

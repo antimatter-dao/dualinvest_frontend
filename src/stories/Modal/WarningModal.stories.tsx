@@ -1,5 +1,5 @@
 import { ComponentMeta } from '@storybook/react'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 import WarningModal, { WarningModalContent } from 'components/Modal/WarningModal'
 import useModal from 'hooks/useModal'
 

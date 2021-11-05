@@ -1,4 +1,7 @@
-import { CircularProgress, makeStyles, createStyles } from '@material-ui/core'
+import { CircularProgress } from '@mui/material'
+
+import makeStyles from '@mui/styles/makeStyles'
+import createStyles from '@mui/styles/createStyles'
 
 interface Props {
   size?: string | number

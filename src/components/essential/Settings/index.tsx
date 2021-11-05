@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useTheme, Box, Typography } from '@material-ui/core'
+import { useTheme, Box, Typography } from '@mui/material'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { ApplicationModal } from '../../../state/application/actions'
@@ -81,13 +81,13 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
         maxWidth="500px"
         closeIcon
       >
-        <Box display="grid" gridGap="8px" padding="24px">
+        <Box display="grid" gap="8px" padding="24px">
           <Box display="flex" alignItems="center" justifyContent="space-between" padding="0 24px">
             <Text fontWeight={500} fontSize={18}>
               Are you sure?
             </Text>
           </Box>
-          <Box display="grid" gridGap="8px" style={{ padding: '0 1rem' }}>
+          <Box display="grid" gap="8px" style={{ padding: '0 1rem' }}>
             <Text fontWeight={500} fontSize={14}>
               Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in
               bad rates and lost funds.
@@ -112,7 +112,7 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
       <Modal customIsOpen={open} customOnDismiss={toggle} closeIcon>
         <Box
           display="grid"
-          gridGap="28px"
+          gap="28px"
           padding="30px 30px 48px"
           justifyContent="center"
           style={{ background: theme.gradient.gradient1 }}

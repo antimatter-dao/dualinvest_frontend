@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, useCallback, useEffect } from 'react'
-import { Box, Typography } from '@material-ui/core'
+import { Box, Typography } from '@mui/material'
 import Modal from 'components/Modal'
 import CurrencyList from './CurrencyList'
 import TextButton from 'components/Button/TextButton'

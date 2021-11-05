@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react'
-import { makeStyles } from '@material-ui/styles'
-import { Select, Box, Typography } from '@material-ui/core'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import { makeStyles } from '@mui/styles'
+import { Select, Box, Typography } from '@mui/material'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 interface Props {
   children: React.ReactNode
   defaultValue: any
@@ -73,8 +73,8 @@ export default function OutlineSelect(props: Props) {
         transformOrigin: {
           vertical: 'top',
           horizontal: 'left'
-        },
-        getContentAnchorEl: null
+        }
+        // getContentAnchorEl: null
       }}
       IconComponent={ExpandMoreIcon}
       displayEmpty={true}

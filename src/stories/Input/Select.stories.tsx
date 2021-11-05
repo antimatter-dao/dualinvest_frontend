@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { MenuItem } from '@material-ui/core'
+import { MenuItem } from '@mui/material'
 import Select from 'components/Select/Select'
 
 export default {

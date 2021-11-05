@@ -4,7 +4,7 @@ import ChainSwap from 'components/Select/ChainSwap'
 import DummyLogo from 'assets/images/ethereum-logo.png'
 import ChainSelect from 'components/Select/ChainSelect'
 import { Chain } from 'models/chain'
-import { Box } from '@material-ui/core'
+import { Box } from '@mui/material'
 import TextButton from 'components/Button/TextButton'
 import SwitchButton from 'components/Select/ChainSwap/SwitcherButton'
 

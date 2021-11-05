@@ -1,5 +1,5 @@
 import { AlertCircle, CheckCircle } from 'react-feather'
-import { Typography, useTheme, Box } from '@material-ui/core'
+import { Typography, useTheme, Box } from '@mui/material'
 import { useActiveWeb3React } from 'hooks/'
 import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils'
@@ -18,7 +18,7 @@ export default function TransactionPopup({
   const theme = useTheme()
 
   return (
-    <Box display="grid" gridGap="8px">
+    <Box display="grid" gap="8px">
       <Box display="flex" alignItems="flex-start" flexWrap="nowrap">
         <div style={{ paddingRight: 16 }}>
           {success ? (

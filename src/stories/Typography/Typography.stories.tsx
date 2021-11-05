@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { Typography as MuiTypography } from '@material-ui/core'
+import { Typography as MuiTypography } from '@mui/material'
 
 function Typography(args: any) {
   return <MuiTypography {...args} />

@@ -1,5 +1,5 @@
 import { ComponentMeta } from '@storybook/react'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 import SwitchChainModal from 'components/Modal/SwitchChainModal'
 import useModal from 'hooks/useModal'
 import DummyLogo from 'assets/images/ethereum-logo.png'

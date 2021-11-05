@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { useTheme, Box, makeStyles } from '@material-ui/core'
+import { useTheme, Box } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import { CountUp } from 'use-count-up'
 import { Activity } from 'react-feather'
 import Copy from 'components/essential/Copy'
@@ -23,7 +24,7 @@ import Button from 'components/Button/Button'
 
 const useStyles = makeStyles(theme => ({
   actionButton: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       maxWidth: 320,
       width: '100%',
       borderRadius: 49,
@@ -81,13 +82,13 @@ function Web3StatusInner() {
         height={'32px'}
         display={'flex'}
         border={'1px solid #FFFFFF'}
-        borderRadius={'4px'}
+        borderRadius="4pxpx"
         alignItems={'center'}
         style={{ fontSize: 14 }}
       >
         {!!account && aggregateBalance && (
           <>
-            <Box padding={isDownMD ? '0 8px' : '0 10px 0 12px'} gridGap={10}>
+            <Box padding={isDownMD ? '0 8px' : '0 10px 0 12px'} gap={10}>
               <CountUp
                 key={countUpValue}
                 isCounting
@@ -102,7 +103,7 @@ function Web3StatusInner() {
             <Divider orientation={'vertical'} />
           </>
         )}
-        <Box display="flex" alignItems="center" padding={isDownMD ? '0 8px' : '0 12px 0 10px'} gridGap={10}>
+        <Box display="flex" alignItems="center" padding={isDownMD ? '0 8px' : '0 12px 0 10px'} gap={10}>
           {hasPendingTransactions ? (
             <>
               <Spinner color={theme.textColor.text1} size="16px" />

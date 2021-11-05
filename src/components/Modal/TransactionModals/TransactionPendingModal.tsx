@@ -1,4 +1,4 @@
-import { useTheme, Box } from '@material-ui/core'
+import { useTheme, Box } from '@mui/material'
 import { Text } from 'rebass'
 import Spinner from 'components/Spinner'
 import Modal from '../index'
@@ -7,7 +7,7 @@ export default function TransacitonPendingModal({ pendingText }: { pendingText?:
   const theme = useTheme()
   return (
     <Modal closeIcon>
-      <Box display="grid" padding="40px 24px" gridGap="24px" justifyItems="center">
+      <Box display="grid" padding="40px 24px" gap="24px" justifyItems="center">
         <Spinner size="40px" />
         <Text fontWeight={400} fontSize={18}>
           Waiting For Confirmation

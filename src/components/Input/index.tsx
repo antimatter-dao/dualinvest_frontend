@@ -1,6 +1,6 @@
 import React, { ChangeEvent, InputHTMLAttributes } from 'react'
-import { InputBase, Theme } from '@material-ui/core'
-import { createStyles, makeStyles } from '@material-ui/styles'
+import { InputBase, Theme } from '@mui/material'
+import { createStyles, makeStyles } from '@mui/styles'
 import InputLabel from './InputLabel'
 
 export interface InputProps {
@@ -52,7 +52,9 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export default function Input(props: InputProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'color' | 'outline'>) {
+export default function Input(
+  props: InputProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'color' | 'outline' | 'size'>
+) {
   const classes = useStyles(props)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { focused, placeholder, onChange, value, disabled, type, outlined, endAdornment, maxWidth, ...rest } = props

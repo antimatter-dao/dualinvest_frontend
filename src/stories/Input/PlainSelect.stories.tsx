@@ -1,4 +1,4 @@
-import { MenuItem } from '@material-ui/core'
+import { MenuItem } from '@mui/material'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 import PlainSelect from 'components/Select/PlainSelect'

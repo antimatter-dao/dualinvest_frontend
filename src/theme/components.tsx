@@ -1,7 +1,7 @@
 import React, { HTMLProps, useCallback } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { X } from 'react-feather'
-import { Link } from '@material-ui/core'
+import { Link } from '@mui/material'
 
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;

@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { Typography, Box, useTheme, styled } from '@material-ui/core'
+import { Typography, Box, useTheme, styled } from '@mui/material'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from 'hooks/'
 import { AppDispatch } from 'state/'
@@ -76,14 +76,7 @@ export default function AccountDetails({
 
   return (
     <>
-      <Box
-        display="grid"
-        width="100%"
-        padding="16px"
-        gridTemplateRows="50px 20px 20px"
-        gridGap="12px"
-        marginBottom="20px"
-      >
+      <Box display="grid" width="100%" padding="16px" gridTemplateRows="50px 20px 20px" gap="12px" marginBottom="20px">
         <Box
           display="flex"
           justifyContent="center"
@@ -108,7 +101,7 @@ export default function AccountDetails({
           display="flex"
           fontSize={24}
           fontWeight={500}
-          gridGap="16px"
+          gap="16px"
           alignItems="center"
           width="100%"
           justifyContent="center"
@@ -126,7 +119,7 @@ export default function AccountDetails({
           )}
         </Box>
       </Box>
-      <Box display="flex" gridGap="10px" width="100%" justifyContent="center">
+      <Box display="flex" gap="10px" width="100%" justifyContent="center">
         <OutlineButton onClick={toggleWalletModal} primary>
           Close
         </OutlineButton>
@@ -140,7 +133,7 @@ export default function AccountDetails({
       </Box>
       <OutlinedCard width="100%" padding="20px">
         {!!pendingTransactions.length || !!confirmedTransactions.length ? (
-          <Box display="grid" gridGap="16px" width="100%">
+          <Box display="grid" gap="16px" width="100%">
             <Box display="flex" justifyContent="space-between" width="100%" fontWeight={500}>
               <Typography variant="inherit">Recent Transactions</Typography>
               <TextButton onClick={clearAllTransactionsCallback}>(clear all)</TextButton>

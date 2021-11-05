@@ -1,14 +1,6 @@
 import styled from 'styled-components'
-import {
-  TableContainer,
-  TableHead,
-  TableCell,
-  TableRow,
-  TableBody,
-  makeStyles,
-  Box,
-  Typography
-} from '@material-ui/core'
+import { TableContainer, TableHead, TableCell, TableRow, TableBody, Box, Typography } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import useBreakpoint from '../../hooks/useBreakpoint'
 
 const Profile = styled.div`
@@ -123,7 +115,7 @@ export default function Table({ header, rows }: { header: string[]; rows: (strin
         <>
           {rows.map((data, index) => (
             <Card key={index}>
-              <Box display="flex" flexDirection="column" gridGap="16px">
+              <Box display="flex" flexDirection="column" gap="16px">
                 {header.map((headerString, index) => (
                   <CardRow key={index}>
                     <Typography variant="inherit">{headerString}</Typography>

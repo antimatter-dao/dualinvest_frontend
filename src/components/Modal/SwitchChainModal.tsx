@@ -1,5 +1,5 @@
-import { Typography, Box, useTheme } from '@material-ui/core'
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+import { Typography, Box, useTheme } from '@mui/material'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import Button from 'components/Button/Button'
 import { OutlinedCard } from 'components/Card'
 import Image from 'components/Image'
@@ -18,7 +18,7 @@ export default function SwitchChainModal({
   const theme = useTheme()
   return (
     <Modal>
-      <Box padding="40px" display="grid" gridGap="32px" justifyItems="center" width="100%">
+      <Box padding="40px" display="grid" gap="32px" justifyItems="center" width="100%">
         <Typography variant="h6">Switch Chain</Typography>
         {fromChain && toChain && (
           <Box display="flex" justifyContent="space-between" width="100%" alignItems="center">
@@ -26,7 +26,7 @@ export default function SwitchChainModal({
               <Box
                 display="grid"
                 justifyItems="center"
-                gridGap="20px"
+                gap="20px"
                 margin="0 auto"
                 padding="30px 20px 40px"
                 height="168px"
@@ -44,7 +44,7 @@ export default function SwitchChainModal({
               <Box
                 display="grid"
                 justifyItems="center"
-                gridGap="20px"
+                gap="20px"
                 margin="0 auto"
                 padding="30px 20px 40px"
                 maxHeight="168px"

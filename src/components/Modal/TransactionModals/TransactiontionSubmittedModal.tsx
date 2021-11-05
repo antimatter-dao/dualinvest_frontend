@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core'
+import { Box } from '@mui/material'
 import { useActiveWeb3React } from 'hooks'
 import React from 'react'
 import { ExternalLink } from 'theme'
@@ -10,7 +10,7 @@ export default function TransactionSubmittedModal({ children, hash }: { hash?: s
 
   return (
     <MessageBox type={'success'} header={'Transaction Submitted'}>
-      <Box display="grid" gridGap="20px" justifyContent="center">
+      <Box display="grid" gap="20px" justifyContent="center">
         {children}
         {chainId && hash && (
           <ExternalLink

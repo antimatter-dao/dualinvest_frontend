@@ -1,5 +1,5 @@
 import { ComponentMeta } from '@storybook/react'
-import { styled } from '@material-ui/core'
+import { styled } from '@mui/material'
 import { Provider } from 'react-redux'
 import { Web3ReactProvider } from '@web3-react/core'
 import Polling from 'components/essential/Polling'

@@ -5,7 +5,7 @@ import { ExternalLink } from '../../../theme'
 import { useBlockNumber } from '../../../state/application/hooks'
 import { getEtherscanLink } from '../../../utils'
 import { useActiveWeb3React } from '../../../hooks'
-import { Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
 
 const StyledPolling = styled.div`
   position: fixed;

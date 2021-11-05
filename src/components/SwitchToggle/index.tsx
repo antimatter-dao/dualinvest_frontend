@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
-import { Switch, Theme } from '@material-ui/core'
-import { makeStyles, createStyles } from '@material-ui/styles'
+import { Switch, Theme } from '@mui/material'
+import { makeStyles, createStyles } from '@mui/styles'
 
 interface Props {
   checked: boolean

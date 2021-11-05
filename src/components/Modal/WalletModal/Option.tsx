@@ -1,5 +1,5 @@
 import React from 'react'
-import { styled } from '@material-ui/core'
+import { styled } from '@mui/material'
 import OutlineButton from 'components/Button/OutlineButton'
 import { ExternalLink } from 'theme/index'
 import LogoText from 'components/LogoText'

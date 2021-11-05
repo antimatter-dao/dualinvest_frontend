@@ -1,4 +1,5 @@
-import { MenuItem, makeStyles } from '@material-ui/core'
+import { MenuItem } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import Select from 'components/Select/Select'
 import LogoText from 'components/LogoText'
 import InputLabel from 'components/Input/InputLabel'

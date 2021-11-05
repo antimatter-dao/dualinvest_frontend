@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { styled, Theme } from '@material-ui/core'
+import { styled } from '@mui/material/styles'
 
 // import useHttpLocations from '../../../hooks/useHttpLocations'
 import Logo from './LogoBase'
@@ -9,7 +9,7 @@ import { Token } from '../../../constants/token/token'
 export const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
-const StyledLogo = styled(Logo)(({ theme, size }: { size?: string; theme: Theme }) => ({
+const StyledLogo = styled(Logo)(({ theme, size }: any) => ({
   width: size,
   height: size,
   borderRadius: size,

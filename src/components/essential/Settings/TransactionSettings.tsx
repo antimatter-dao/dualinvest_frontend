@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { Text } from 'rebass'
-import { useTheme, Box } from '@material-ui/core'
+import { useTheme, Box } from '@mui/material'
 import QuestionHelper from 'components/essential/QuestionHelper'
 
 enum SlippageError {
@@ -148,8 +148,8 @@ export default function TransactionSettings({
   }
 
   return (
-    <Box display="grid" gridGap="24px">
-      <Box display="grid" gridGap="8px">
+    <Box display="grid" gap="24px">
+      <Box display="grid" gap="8px">
         <Box display="flex" alignItems="center">
           <Text fontWeight={400} fontSize={14} color={theme.textColor.text2}>
             Slippage tolerance
@@ -231,7 +231,7 @@ export default function TransactionSettings({
       </Box>
 
       {!onlySlippage && (
-        <Box display="grid" gridGap="8px">
+        <Box display="grid" gap="8px">
           <Box display="flex" alignItems="center">
             <Text fontSize={14} fontWeight={400} color={theme.textColor.text2}>
               Transaction deadline
