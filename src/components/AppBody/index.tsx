@@ -1,14 +1,12 @@
 import React from 'react'
 import { styled } from '@mui/material/styles'
-import { IconButton } from '@mui/material'
+import { IconButton, useTheme } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 
 const PREFIX = 'index'
 
 const classes = {
-  root: `${PREFIX}-root`,
-  closeIconContainer: `${PREFIX}-closeIconContainer`,
-  closeIcon: `${PREFIX}-closeIcon`
+  root: `${PREFIX}-root`
 }
 
 const Root = styled('div')(({ theme }) => ({
@@ -24,20 +22,6 @@ const Root = styled('div')(({ theme }) => ({
       width: '100%!important',
       maxWidth: 'unset'
     }
-  },
-
-  [`& .${classes.closeIconContainer}`]: {
-    padding: 0,
-    position: 'absolute',
-    top: 24,
-    right: 24,
-    '&:hover $closeIcon': {
-      color: theme.palette.text.primary
-    }
-  },
-
-  [`& .${classes.closeIcon}`]: {
-    color: theme.palette.grey[500]
   }
 }))
 
@@ -52,6 +36,7 @@ interface Props {
 
 export default function AppBody(props: Props) {
   const { children, closeIcon, onReturnClick, width, maxWidth } = props
+  const theme = useTheme()
 
   return (
     <Root
@@ -62,8 +47,24 @@ export default function AppBody(props: Props) {
       }}
     >
       {closeIcon && (
-        <IconButton className={classes.closeIconContainer} onClick={onReturnClick} size="large">
-          <CloseIcon className={classes.closeIcon} />
+        <IconButton
+          onClick={onReturnClick}
+          size="large"
+          sx={{
+            padding: 0,
+            position: 'absolute',
+            top: 24,
+            right: 24
+          }}
+        >
+          <CloseIcon
+            sx={{
+              color: theme.palette.grey[500],
+              '&:hover': {
+                color: theme.palette.text.primary
+              }
+            }}
+          />
         </IconButton>
       )}
       {children}
