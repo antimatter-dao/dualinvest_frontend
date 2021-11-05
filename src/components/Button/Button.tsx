@@ -9,7 +9,7 @@ interface Props {
   disabled?: boolean
   color?: string
   children?: React.ReactNode
-  fontSize?: string
+  fontSize?: string | number
   style?: React.CSSProperties
 }
 

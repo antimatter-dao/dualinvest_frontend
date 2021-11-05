@@ -7,7 +7,7 @@ interface Props {
   children: React.ReactNode
   width?: string | number
   height?: string | number
-  fontSize?: number
+  fontSize?: string | number
   disabled?: boolean
   color?: string
   borderRadius?: string

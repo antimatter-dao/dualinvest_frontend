@@ -3,7 +3,7 @@ import { ButtonBase, useTheme } from '@mui/material'
 interface Props {
   onClick?: (e?: any) => void
   children: React.ReactNode
-  fontSize?: number | string
+  fontSize?: string | number
   fontWeight?: number
   primary?: boolean
   underline?: boolean
