@@ -14,7 +14,7 @@ export const Default = () => {
     <Pagination
       count={20}
       page={curPage}
-      setPage={(num) => {
+      setPage={num => {
         setCurPage(num)
       }}
     />

@@ -7,6 +7,6 @@ export default {
   component: SelectButton
 } as ComponentMeta<typeof SelectButton>
 
-const DefaultTemplate: ComponentStory<typeof SelectButton> = (args) => <SelectButton {...args}>Default</SelectButton>
+const DefaultTemplate: ComponentStory<typeof SelectButton> = args => <SelectButton {...args}>Default</SelectButton>
 
 export const Default = DefaultTemplate.bind({})

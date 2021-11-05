@@ -29,8 +29,6 @@ const ChainList = [
 const DefaultTemplate: ComponentStory<typeof ChainSelect> = () => {
   const [selectedChain, setSelectedChain] = useState<Chain | null>(null)
 
-  return (
-    <ChainSelect chainList={ChainList} selectedChain={selectedChain} onChange={(chain) => setSelectedChain(chain)} />
-  )
+  return <ChainSelect chainList={ChainList} selectedChain={selectedChain} onChange={chain => setSelectedChain(chain)} />
 }
 export const Default = DefaultTemplate.bind({})

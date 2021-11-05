@@ -70,7 +70,8 @@
     "workbox-expiration": "^6.3.0",
     "workbox-precaching": "^6.3.0",
     "workbox-routing": "^6.3.0",
-    "workbox-strategies": "^6.3.0"
+    "workbox-strategies": "^6.3.0",
+    "@babel/plugin-syntax-typescript": "^7.16.0"
   },
   "scripts": {
     "start": "react-scripts start",

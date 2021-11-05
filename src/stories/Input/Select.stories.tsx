@@ -7,7 +7,7 @@ export default {
   component: Select
 } as ComponentMeta<typeof Select>
 
-const DefaultTemplate: ComponentStory<typeof Select> = (args) => (
+const DefaultTemplate: ComponentStory<typeof Select> = args => (
   <Select {...args} placeholder="select">
     <MenuItem key={'ETH'} value={'ETH'}>
       ETH

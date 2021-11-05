@@ -1,10 +1,9 @@
 import React from 'react'
-import { makeStyles, createStyles } from '@mui/styles'
-import { ButtonBase, Theme } from '@mui/material'
+import { ButtonBase, useTheme } from '@mui/material'
 interface Props {
   onClick?: (e?: any) => void
   children: React.ReactNode
-  fontSize?: number | string
+  fontSize?: string | number
   fontWeight?: number
   primary?: boolean
   underline?: boolean
@@ -14,27 +13,27 @@ interface Props {
   classname?: string
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      textDecoration: (props: Props) => (props.underline ? 'underline' : 'none'),
-      color: (props: Props) => (props.primary ? theme.palette.primary.main : theme.palette.primary.contrastText),
-      fontSize: (props: Props) => props.fontSize || 16,
-      fontWeight: (props: Props) => props.fontWeight || 500,
-      opacity: (props: Props) => props.opacity || 1,
-      '&:hover': {
-        opacity: 1,
-        color: (props: Props) => (props.primary ? theme.palette.primary.dark : theme.palette.primary.main)
-      }
-    }
-  })
-)
-
 export default function TextButton(props: Props) {
-  const { onClick, style, disabled, classname } = props
-  const classes = useStyles(props)
+  const { onClick, style, disabled, underline, primary, fontSize, fontWeight, opacity } = props
+  const theme = useTheme()
+
   return (
-    <ButtonBase classes={{ ...classes }} onClick={onClick} style={style} disabled={disabled} className={classname}>
+    <ButtonBase
+      onClick={onClick}
+      style={style}
+      disabled={disabled}
+      sx={{
+        textDecoration: underline ? 'underline' : 'none',
+        color: primary ? theme.palette.primary.main : theme.palette.primary.contrastText,
+        fontSize: fontSize || 16,
+        fontWeight: fontWeight || 500,
+        opacity: opacity || 1,
+        '&:hover': {
+          opacity: 1,
+          color: primary ? theme.palette.primary.dark : theme.palette.primary.main
+        }
+      }}
+    >
       {props.children}
     </ButtonBase>
   )

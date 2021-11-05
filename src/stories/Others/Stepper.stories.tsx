@@ -10,5 +10,5 @@ export default {
 
 export const Default = () => {
   const [currentStep, setCurrentStep] = useState(1)
-  return <Stepper activeStep={currentStep} steps={[1, 2, 3]} onStep={(step) => setCurrentStep(step)} />
+  return <Stepper activeStep={currentStep} steps={[1, 2, 3]} onStep={step => setCurrentStep(step)} />
 }

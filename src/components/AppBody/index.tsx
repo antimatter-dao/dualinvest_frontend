@@ -1,22 +1,17 @@
 import React from 'react'
-import { IconButton } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
+import { styled } from '@mui/material/styles'
+import { IconButton, useTheme } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 
-interface Props {
-  children: React.ReactNode
-  width?: number | string
-  onReturnClick?: () => void
-  title?: string
-  maxWidth?: string
-  closeIcon?: boolean
+const PREFIX = 'index'
+
+const classes = {
+  root: `${PREFIX}-root`
 }
 
-const useStyles = makeStyles(theme => ({
-  root: {
+const Root = styled('div')(({ theme }) => ({
+  [`&.${classes.root}`]: {
     position: 'relative',
-    width: (props: Partial<Props>) => props.width || 560,
-    maxWidth: (props: Partial<Props>) => props.maxWidth || 560,
     borderRadius: 20,
     background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%), #000000',
     justifyContent: 'center',
@@ -27,32 +22,52 @@ const useStyles = makeStyles(theme => ({
       width: '100%!important',
       maxWidth: 'unset'
     }
-  },
-  closeIconContainer: {
-    padding: 0,
-    position: 'absolute',
-    top: 24,
-    right: 24,
-    '&:hover $closeIcon': {
-      color: theme.palette.text.primary
-    }
-  },
-  closeIcon: {
-    color: theme.palette.grey[500]
   }
 }))
 
-export default function AppBody({ children, closeIcon, onReturnClick, ...props }: Props) {
-  const classes = useStyles(props)
+interface Props {
+  children: React.ReactNode
+  width?: number | string
+  onReturnClick?: () => void
+  title?: string
+  maxWidth?: string
+  closeIcon?: boolean
+}
+
+export default function AppBody(props: Props) {
+  const { children, closeIcon, onReturnClick, width, maxWidth } = props
+  const theme = useTheme()
 
   return (
-    <div className={classes.root}>
+    <Root
+      className={classes.root}
+      sx={{
+        width: width || 560,
+        maxWidth: maxWidth || 560
+      }}
+    >
       {closeIcon && (
-        <IconButton className={classes.closeIconContainer} onClick={onReturnClick} size="large">
-          <CloseIcon className={classes.closeIcon} />
+        <IconButton
+          onClick={onReturnClick}
+          size="large"
+          sx={{
+            padding: 0,
+            position: 'absolute',
+            top: 24,
+            right: 24
+          }}
+        >
+          <CloseIcon
+            sx={{
+              color: theme.palette.grey[500],
+              '&:hover': {
+                color: theme.palette.text.primary
+              }
+            }}
+          />
         </IconButton>
       )}
       {children}
-    </div>
+    </Root>
   )
 }

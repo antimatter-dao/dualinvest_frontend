@@ -7,7 +7,7 @@ export default {
   component: InputLabel
 } as ComponentMeta<typeof InputLabel>
 
-const DefaultTemplate: ComponentStory<typeof InputLabel> = (args) => <InputLabel {...args}>Default</InputLabel>
+const DefaultTemplate: ComponentStory<typeof InputLabel> = args => <InputLabel {...args}>Default</InputLabel>
 
 export const Default = DefaultTemplate.bind({})
 Default.args = {
