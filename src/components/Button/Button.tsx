@@ -10,6 +10,7 @@ interface Props {
   color?: string
   children?: React.ReactNode
   fontSize?: string | number
+  classname?: string
   style?: React.CSSProperties
 }
 
