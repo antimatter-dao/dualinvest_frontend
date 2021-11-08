@@ -9,12 +9,13 @@ interface Props {
   value?: string | string[]
   disabled?: boolean
   selected?: React.ReactNode
-  placeholder: string
+  placeholder?: string
   width?: string | number
   height?: string | number
   multiple?: boolean
   primary?: boolean
   label?: string
+  renderValue?: any
 }
 
 const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
@@ -24,7 +25,7 @@ const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
 }))
 
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: '10px',
   border: '1px solid transparent',
   position: 'relative',
   padding: '10px',
@@ -38,7 +39,19 @@ const StyledSelect = styled(MuiSelect)(({ theme }) => ({
 }))
 
 export default function Select(props: Props) {
-  const { disabled, onChange, children, width, height, label, primary, value, defaultValue, placeholder } = props
+  const {
+    disabled,
+    onChange,
+    children,
+    width,
+    height,
+    label,
+    primary,
+    value,
+    defaultValue,
+    placeholder,
+    renderValue
+  } = props
   const theme = useTheme()
 
   return (
@@ -53,7 +66,7 @@ export default function Select(props: Props) {
             content: (value || defaultValue) ?? `'${placeholder}'`,
             position: 'absolute',
             left: 24,
-            top: 14,
+            top: 12,
             zIndex: 999,
             fontSize: 16,
             fontWeight: 400
@@ -71,7 +84,7 @@ export default function Select(props: Props) {
           sx: {
             '& .MuiPaper-root': {
               width: '100%',
-              borderRadius: theme.shape.borderRadius,
+              borderRadius: '10px',
               mt: '12px',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               '& li': {
@@ -119,6 +132,7 @@ export default function Select(props: Props) {
         input={<InputBase />}
         IconComponent={ExpandMoreIcon}
         onChange={onChange}
+        renderValue={renderValue}
       >
         {children}
       </StyledSelect>
