@@ -8,7 +8,7 @@ export default {
 } as ComponentMeta<typeof Select>
 
 const DefaultTemplate: ComponentStory<typeof Select> = args => (
-  <Select {...args} placeholder="select">
+  <Select {...args} placeholder="select" label="label">
     <MenuItem key={'ETH'} value={'ETH'}>
       ETH
     </MenuItem>
