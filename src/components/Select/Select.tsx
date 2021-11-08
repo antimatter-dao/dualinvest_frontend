@@ -1,4 +1,4 @@
-import { Select as MuiSelect, InputLabel as MuiInputLabel, styled } from '@mui/material'
+import { Select as MuiSelect, InputLabel as MuiInputLabel, styled, InputBase } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 // import TextButon from 'components/Button/TextButton'
 // import SelectedIcon from 'assets/componentsIcon/selected_icon.svg'
@@ -18,6 +18,12 @@ interface Props {
   label?: string
 }
 
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  '& .MuiInputBase-input': {
+    border: '1px solid transparent'
+  }
+}))
+
 const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
   opacity: 0.6,
   color: theme.palette.primary.contrastText,
@@ -27,9 +33,14 @@ const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   backgroundColor: theme.palette.grey.A400,
   borderRadius: theme.shape.borderRadius,
+  border: `1px solid transparent`,
   position: 'relative',
+  '&:hover': {
+    backgroundColor: theme.palette.primary.main
+  },
   '& .MuiSelect-icon': {
-    color: '#FFFFFF'
+    color: theme.palette.primary.contrastText,
+    right: '10px'
   }
 }))
 
@@ -62,6 +73,7 @@ export default function Select(props: Props) {
             horizontal: 'left'
           }
         }}
+        input={<StyledInputBase />}
         IconComponent={ExpandMoreIcon}
         onChange={onChange}
         renderValue={(selected: any) => {
