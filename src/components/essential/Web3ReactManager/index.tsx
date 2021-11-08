@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { Typography } from '@mui/material'
-import styled from 'styled-components'
+import { styled } from '@mui/material'
 import { network } from '../../../connectors'
 import { useEagerConnect, useInactiveListener } from '../../../hooks'
 import { NetworkContextName } from '../../../constants'
 import Spinner from 'components/Spinner'
 
-const MessageWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 20rem;
-`
+const MessageWrapper = styled('div')(`
+display: flex;
+align-items: center;
+justify-content: center;
+height: 20rem;
+`)
 
 export default function Web3ReactManager({ children }: { children: JSX.Element }) {
   const { active } = useWeb3React()

@@ -1,21 +1,23 @@
-import styled from 'styled-components'
+import { styled } from '@mui/material'
 import { TableContainer, TableHead, TableCell, TableRow, TableBody, Box, Typography } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import useBreakpoint from '../../hooks/useBreakpoint'
 
-const Profile = styled.div`
+const Profile = styled('div')(`
   display: flex;
   align-items: center;
-`
+`)
 
-export const TableProfileImg = styled.div<{ url?: string }>`
-  height: 24px;
-  width: 24px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 8px;
-  background: #000000 ${({ url }) => (url ? `url(${url})` : '')};
-`
+export const TableProfileImg = styled('div', {
+  shouldForwardProp: () => true
+})(({ url }: { url?: string }) => ({
+  height: '24px',
+  width: '24px',
+  borderRadius: '50%',
+  objectFit: 'cover',
+  marginRight: '8px',
+  background: `#000000 ${url ? `url(${url})` : ''}`
+}))
 
 export function OwnerCell({ url, name }: { url?: string; name: string }) {
   return (
@@ -82,16 +84,16 @@ const useStyles = makeStyles({
   }
 })
 
-const Card = styled.div`
+const Card = styled('div')(`
   background-color: rgba(255, 255, 255, 0.08);
   border-radius: 30px;
   padding: 24px;
   > div {
     width: 100%;
   }
-`
+`)
 
-const CardRow = styled.div`
+const CardRow = styled('div')(`
   display: flex;
   justify-content: space-between;
   grid-template-columns: auto 100%;
@@ -104,7 +106,7 @@ const CardRow = styled.div`
     justify-content: flex-end;
     align-items: center;
   }
-`
+`)
 
 export default function Table({ header, rows }: { header: string[]; rows: (string | number | JSX.Element)[][] }) {
   const classes = useStyles()

@@ -1,7 +1,6 @@
 import React, { HTMLProps, useCallback } from 'react'
-import styled, { keyframes } from 'styled-components'
 import MuiCloseIcon from '@mui/icons-material/Close'
-import { Link, IconButton } from '@mui/material'
+import { Link, IconButton, keyframes, styled } from '@mui/material'
 import { SxProps } from '@mui/system'
 
 export function CloseIcon({ onClick }: { onClick?: () => void }) {
@@ -69,18 +68,39 @@ const pulse = keyframes`
   100% { transform: scale(1); }
 `
 
-export const AnimatedWrapper = styled.div`
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-`
+export const AnimatedWrapper = styled('div')(`
+pointer-events: none;
+display: flex;
+align-items: center;
+justify-content: center;
+height: 100%;
+width: 100%;
+`)
 
-export const AnimatedImg = styled.div`
-  animation: ${pulse} 800ms linear infinite;
-  & > * {
-    width: 72px;
+export const AnimatedImg = styled('div')(`
+animation: ${pulse} 800ms linear infinite;
+& > * {
+  width: 72px;
+})
+`)
+
+export const Dots = styled('span')(`
+  &::after {
+    display: inline-block;
+    animation: ellipsis 1.25s infinite;
+    content: '.';
+    width: 1em;
+    text-align: left;
   }
-`
+  @keyframes ellipsis {
+    0% {
+      content: '.';
+    }
+    33% {
+      content: '..';
+    }
+    66% {
+      content: '...';
+    }
+  }
+`)

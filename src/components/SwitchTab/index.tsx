@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import { styled } from '@mui/material'
 
 export const SwitchTabWrapper = styled('div')({
   borderBottom: '1px solid rgb(255,255,255, 0.1)',
