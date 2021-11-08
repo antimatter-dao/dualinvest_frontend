@@ -24,3 +24,8 @@ export const Primary = DefaultTemplate.bind({})
 Primary.args = {
   primary: true
 }
+
+export const Disabled = DefaultTemplate.bind({})
+Disabled.args = {
+  disabled: true
+}

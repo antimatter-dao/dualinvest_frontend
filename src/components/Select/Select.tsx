@@ -28,9 +28,6 @@ const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   border: '1px solid transparent',
   position: 'relative',
   padding: '10px',
-  '&:hover': {
-    backgroundColor: theme.palette.primary.main
-  },
   '& .MuiSelect-icon': {
     color: theme.palette.primary.contrastText,
     right: '10px'
@@ -60,6 +57,12 @@ export default function Select(props: Props) {
             zIndex: 999,
             fontSize: 16,
             fontWeight: 400
+          },
+          '&:hover': {
+            backgroundColor: disabled ? theme.palette.grey.A400 : theme.palette.primary.main
+          },
+          '& .MuiSelect-icon': {
+            display: disabled ? 'none' : 'block'
           }
         }}
         displayEmpty
