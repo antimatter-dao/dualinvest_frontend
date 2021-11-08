@@ -1,14 +1,14 @@
 import { useCallback, useState } from 'react'
-import styled from 'styled-components'
+import { styled } from '@mui/material'
 import Popover, { PopoverProps } from './Popover'
 
-const TooltipContainer = styled.div`
-  width: 228px;
-  padding: 0.6rem 1rem;
-  line-height: 150%;
-  font-weight: 400;
-  white-space: pre-line;
-`
+const TooltipContainer = styled('div')({
+  width: '228px',
+  padding: '0.6rem 1rem',
+  lineHeight: '150%',
+  fontWeight: 400,
+  whiteSpace: 'pre-line'
+})
 
 interface TooltipProps extends Omit<PopoverProps, 'content'> {
   text: string

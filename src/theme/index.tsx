@@ -2,8 +2,6 @@ import React from 'react'
 import { ThemeProvider as StyledComponentsThemeProvider, css, DefaultTheme } from 'styled-components'
 import { Colors } from './styled'
 
-export * from './components'
-
 const MEDIA_WIDTHS = {
   upToExtraSmall: 600,
   upToSmall: 900,

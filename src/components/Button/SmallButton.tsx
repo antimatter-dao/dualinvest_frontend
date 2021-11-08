@@ -26,7 +26,7 @@ export default function SmallButton(props: Props) {
         backgroundColor: theme.palette.grey.A200,
         color: theme.palette.primary.contrastText,
         fontWeight: 500,
-        borderRadius: 14,
+        borderRadius: '14px',
         transition: '.3s',
         '&:hover': {
           color: theme.palette.primary.main

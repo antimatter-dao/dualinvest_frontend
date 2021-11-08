@@ -1,27 +1,41 @@
 import React, { HTMLProps, useCallback } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { X } from 'react-feather'
-import { Link } from '@mui/material'
+import MuiCloseIcon from '@mui/icons-material/Close'
+import { Link, IconButton } from '@mui/material'
+import { SxProps } from '@mui/system'
 
-export const CloseIcon = styled(X)<{ onClick: () => void }>`
-  cursor: pointer;
-  > * {
-    stroke: ${({ theme }) => theme.text5};
-  }
-`
+export function CloseIcon({ onClick }: { onClick?: () => void }) {
+  return (
+    <IconButton
+      onClick={onClick}
+      size="large"
+      sx={{
+        padding: 0,
+        position: 'absolute',
+        top: '24px',
+        right: '24px',
+        '&:hover $closeIcon': {
+          color: theme => theme.palette.text.primary
+        }
+      }}
+    >
+      <MuiCloseIcon sx={{ color: theme => theme.palette.grey[500] }} />
+    </IconButton>
+  )
+}
 
 export function ExternalLink({
   target = '_blank',
   href,
   rel = 'noopener noreferrer',
   style,
-  className,
+  sx,
   children,
   underline
 }: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & {
   href: string
   style?: React.CSSProperties
-  className?: string
+  sx?: SxProps
   underline?: 'always' | 'hover' | 'none'
 }) {
   const handleClick = useCallback(
@@ -41,7 +55,7 @@ export function ExternalLink({
       href={href}
       onClick={handleClick}
       style={style}
-      className={className}
+      sx={sx}
       underline={underline ?? 'none'}
     >
       {children}

@@ -28,7 +28,7 @@ export default function SecondaryButton(props: Props) {
         color: theme.palette.primary.main,
         border: `1px solid ${theme.palette.secondary.main}`,
         backgroundColor: theme.palette.secondary.main,
-        borderRadius: theme.shape.borderRadius,
+        borderRadius: 1,
         '&:hover': {
           backgroundColor: theme.palette.secondary.dark,
           borderColor: theme.palette.secondary.dark

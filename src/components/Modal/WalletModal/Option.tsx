@@ -1,7 +1,7 @@
 import React from 'react'
 import { styled } from '@mui/material'
 import OutlineButton from 'components/Button/OutlineButton'
-import { ExternalLink } from 'theme/index'
+import { ExternalLink } from 'theme/components'
 import LogoText from 'components/LogoText'
 
 const GreenCircle = styled('div')(({ theme }) => ({

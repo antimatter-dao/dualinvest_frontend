@@ -1,41 +1,11 @@
 import { useState, useEffect } from 'react'
-import styled, { keyframes } from 'styled-components'
-import { ExternalLink } from '../../../theme'
-
-import { useBlockNumber } from '../../../state/application/hooks'
-import { getEtherscanLink } from '../../../utils'
-import { useActiveWeb3React } from '../../../hooks'
 import { Typography } from '@mui/material'
-
-const StyledPolling = styled.div`
-  position: fixed;
-  display: flex;
-  right: 0;
-  bottom: 0;
-  padding: 0.5rem;
-  padding-right: 25px;
-  color: white;
-  transition: opacity 0.25s ease;
-  color: ${({ theme }) => theme.green1};
-  :hover {
-    opacity: 1;
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
-  `}
-`
-const StyledPollingDot = styled.div`
-  width: 8px;
-  height: 8px;
-  min-height: 8px;
-  min-width: 8px;
-  margin-left: 0.5rem;
-  margin-top: 3px;
-  border-radius: 50%;
-  position: relative;
-  background-color: ${({ theme }) => theme.green1};
-`
+import { styled } from '@mui/material/styles'
+import { keyframes } from '@mui/system'
+import { ExternalLink } from 'theme/components'
+import { useBlockNumber } from 'state/application/hooks'
+import { getEtherscanLink } from 'utils'
+import { useActiveWeb3React } from 'hooks'
 
 const rotate360 = keyframes`
   from {
@@ -46,23 +16,50 @@ const rotate360 = keyframes`
   }
 `
 
-const Spinner = styled.div`
-  animation: ${rotate360} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
-  transform: translateZ(0);
+const StyledPolling = styled('div')(({ theme }) => ({
+  position: 'fixed',
+  display: 'flex',
+  right: 0,
+  bottom: 0,
+  padding: '0.5rem',
+  paddingRight: '25px',
+  transition: 'opacity 0.25s ease',
+  color: theme.palette.success.main,
+  '& :hover': {
+    opacity: 1
+  },
+  [theme.breakpoints.down('md')]: {
+    display: 'none'
+  }
+}))
 
-  border-top: 1px solid transparent;
-  border-right: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-  border-left: 2px solid ${({ theme }) => theme.green1};
-  background: transparent;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  position: relative;
+const StyledPollingDot = styled('div')(({ theme }) => ({
+  width: '8px',
+  height: '8px',
+  minHeight: '8px',
+  minWidth: '8px',
+  marginLeft: '0.5rem',
+  marginTop: '3px',
+  borderRadius: '50%',
+  position: 'relative',
+  backgroundColor: theme.palette.success.main
+}))
 
-  left: -3px;
-  top: -3px;
-`
+const Spinner = styled('div')(({ theme }) => ({
+  animation: `${rotate360} 1s cubic-bezier(0.83, 0, 0.17, 1) infinite`,
+  transform: 'translateZ(0)',
+  borderTop: '1px solid transparent',
+  borderRight: '1px solid transparent',
+  borderBottom: '1px solid transparent',
+  borderLeft: `2px solid ${theme.palette.success.main}`,
+  background: 'transparent',
+  width: '14px',
+  height: '14px',
+  borderRadius: '50%',
+  position: 'relative',
+  left: '-3px',
+  top: '-3px'
+}))
 
 export default function Polling() {
   const { chainId } = useActiveWeb3React()
@@ -88,7 +85,7 @@ export default function Polling() {
   return (
     <ExternalLink href={chainId && blockNumber ? getEtherscanLink(chainId, blockNumber.toString(), 'block') : ''}>
       <StyledPolling>
-        <Typography variant="body2" style={{ opacity: isMounted ? '0.2' : '0.6' }}>
+        <Typography variant="body2" sx={{ opacity: isMounted ? '0.2' : '0.6' }}>
           {blockNumber}
         </Typography>
         <StyledPollingDot>{!isMounted && <Spinner />}</StyledPollingDot>

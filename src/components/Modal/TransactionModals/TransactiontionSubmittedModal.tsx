@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { useActiveWeb3React } from 'hooks'
 import React from 'react'
-import { ExternalLink } from 'theme'
+import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils'
 import MessageBox from './MessageBox'
 

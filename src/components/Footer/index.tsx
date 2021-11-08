@@ -4,7 +4,7 @@ import { HideOnMobile } from 'theme/muiTheme'
 import { ReactComponent as Medium } from 'assets/socialLinksIcon/medium.svg'
 import { ReactComponent as Twitter } from 'assets/socialLinksIcon/twitter.svg'
 import { ReactComponent as Telegram } from 'assets/socialLinksIcon/telegram.svg'
-import { ExternalLink } from 'theme'
+import { ExternalLink } from 'theme/components'
 import TextButton from 'components/Button/TextButton'
 
 const useStyles = makeStyles(theme => ({

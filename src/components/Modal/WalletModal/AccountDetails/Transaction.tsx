@@ -1,7 +1,7 @@
 import { styled, useTheme } from '@mui/material'
 import { useActiveWeb3React } from 'hooks/'
 import { getEtherscanLink } from 'utils'
-import { ExternalLink } from 'theme'
+import { ExternalLink } from 'theme/components'
 import { useAllTransactions } from 'state/transactions/hooks'
 import Spinner from 'components/Spinner'
 import { ReactComponent as SuccessIcon } from 'assets/componentsIcon/statusIcon/success_icon.svg'

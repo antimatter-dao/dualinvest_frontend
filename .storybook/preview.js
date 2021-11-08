@@ -1,18 +1,23 @@
-import theme, { ThemeProvider as MuiThemeProvider, } from '../src/theme/muiTheme'
+import theme, { ThemeProvider as MuiThemeProvider, theme as themeColor } from '../src/theme/muiTheme'
 import ThemeProvider from '../src/theme'
 import { ModalProvider } from '../src/context/ModalContext'
 import { Provider } from 'react-redux'
 import store from '../src/state'
 import { CssBaseline } from '@mui/material'
+import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
+import getLibrary from 'utils/getLibrary'
+import { NetworkContextName } from 'constants/index'
+import Web3ReactManager from 'components/essential/Web3ReactManager'
+
 
 
 export const parameters = {
   backgrounds: {
-    default: 'default',
+    default: 'dark',
     values: [
       {
-        name: 'default',
-        value: theme.palette.background.default
+        name: 'dark',
+        value: themeColor.palette.background.default
       }
     ]
   },
@@ -25,17 +30,25 @@ export const parameters = {
   }
 }
 
+export const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
+
 export const decorators = [
   (Story) => (
-    <Provider store={store}>
-      <ThemeProvider>
-        <MuiThemeProvider theme={theme}>
-          <CssBaseline />
-          <ModalProvider>
-            <Story />
-          </ModalProvider>
-        </MuiThemeProvider>
-      </ThemeProvider>
-    </Provider>
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <Web3ProviderNetwork getLibrary={getLibrary}>
+        <Web3ReactManager>
+          <Provider store={store}>
+            <ThemeProvider>
+              <MuiThemeProvider theme={theme}>
+                <CssBaseline />
+                <ModalProvider>
+                  <Story />
+                </ModalProvider>
+              </MuiThemeProvider>
+            </ThemeProvider>
+          </Provider>
+        </Web3ReactManager>
+      </Web3ProviderNetwork>
+    </Web3ReactProvider>
   )
 ]

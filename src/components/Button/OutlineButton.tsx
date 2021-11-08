@@ -30,7 +30,7 @@ export default function OutlineButton(props: Props) {
         fontWeight: primary ? '500' : '400',
         height: height || 60,
         color: primary ? theme.palette.primary.main : theme.palette.primary.contrastText,
-        borderRadius: borderRadius ?? theme.shape.borderRadius,
+        borderRadius: borderRadius ?? 1,
         '&:hover': {
           color: primary ? theme.palette.primary.dark : theme.palette.primary.contrastText,
           borderColor: primary ? theme.palette.primary.dark : theme.palette.primary.main

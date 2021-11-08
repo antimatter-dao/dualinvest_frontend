@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { Typography, useTheme, AppBar, Box, MenuItem, styled as muiStyled } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
-import { ExternalLink } from '../../theme'
+import { ExternalLink } from 'theme/components'
 import Web3Status from './Web3Status'
 import SelectedIcon from '../../assets/componentsIcon/selected_icon.svg'
 import { HideOnMobile } from 'theme/muiTheme'

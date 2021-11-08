@@ -138,9 +138,9 @@ export const theme = {
     footer: '60px'
   },
   shape: {
+    border: '1px solid',
     borderRadius: 10
   }
-
   // gray: {
   //   main: '#333333',
   //   dark: '#262626',

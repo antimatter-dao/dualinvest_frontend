@@ -17,7 +17,6 @@ interface Props {
 export default function Button(props: Props) {
   const { onClick, disabled, style, width, height, fontSize, backgroundColor, color } = props
   const theme = useTheme()
-
   return (
     <ButtonBase
       onClick={onClick}
@@ -29,7 +28,7 @@ export default function Button(props: Props) {
         fontSize: fontSize || 16,
         fontWeight: 500,
         transition: '.3s',
-        borderRadius: theme.shape.borderRadius,
+        borderRadius: 1,
         backgroundColor: backgroundColor || theme.palette.primary.main,
         color: color || theme.palette.primary.contrastText,
         '&:hover': {

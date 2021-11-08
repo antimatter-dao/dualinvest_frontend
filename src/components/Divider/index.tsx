@@ -1,6 +1,4 @@
-import { Divider as MuiDivider, Theme } from '@mui/material'
-
-import makeStyles from '@mui/styles/makeStyles'
+import { Divider as MuiDivider, DividerProps, useTheme } from '@mui/material'
 
 interface Props {
   orientation?: 'horizontal' | 'vertical'
@@ -8,24 +6,18 @@ interface Props {
   extension?: number
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    border: 'none',
-    height: (props: Props) => (props.orientation === 'vertical' ? '100%' : '1px'),
-    backgroundColor: (props: Props) => (props.orientation === 'vertical' ? theme.textColor.text1 : theme.bgColor.bg4),
-    margin: (props: Props) => (props.extension ? `0 -${props.extension}px` : '0')
-  }
-}))
-
-export default function Divider(props: Props) {
-  const classes = useStyles(props)
+export default function Divider({ extension, orientation, ...props }: Props & DividerProps) {
+  const theme = useTheme()
 
   return (
     <MuiDivider
-      className={classes.root}
       {...props}
-      style={{
-        width: props.extension ? `calc(100% + ${props.extension * 2}px` : props.orientation === 'vertical' ? 1 : '100%'
+      sx={{
+        width: extension ? `calc(100% + ${extension * 2}px` : orientation === 'vertical' ? 1 : '100%',
+        border: 'none',
+        height: orientation === 'vertical' ? '100%' : '1px',
+        backgroundColor: orientation === 'vertical' ? theme.textColor.text1 : theme.bgColor.bg4,
+        margin: extension ? `0 -${extension}px` : '0'
       }}
     />
   )

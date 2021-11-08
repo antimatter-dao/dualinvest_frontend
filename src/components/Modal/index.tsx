@@ -1,11 +1,11 @@
 import React from 'react'
-import { Dialog, Theme, IconButton } from '@mui/material'
+import { Dialog, Theme } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 import createStyles from '@mui/styles/createStyles'
-import CloseIcon from '@mui/icons-material/Close'
 import useModal from 'hooks/useModal'
 import { useRef } from 'react'
 import clsx from 'clsx'
+import { CloseIcon } from 'theme/components'
 
 interface Props {
   children?: React.ReactNode
@@ -110,11 +110,7 @@ export default function Modal(props: Props) {
         BackdropProps={{ className: clsx(classes.backdrop, !isCardOnMobile && classes.mobileBackdrop) }}
         onClose={hide}
       >
-        {closeIcon && (
-          <IconButton className={classes.closeIconContainer} onClick={hide} size="large">
-            <CloseIcon className={classes.closeIcon} />
-          </IconButton>
-        )}
+        {closeIcon && <CloseIcon onClick={hide} />}
         {children}
       </Dialog>
     </>

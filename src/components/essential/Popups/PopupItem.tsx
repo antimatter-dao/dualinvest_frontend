@@ -1,59 +1,38 @@
 import { useCallback, useEffect } from 'react'
 import { useSpring } from 'react-spring/web'
-import styled from 'styled-components'
-import CloseIcon from '@mui/icons-material/Close'
-import { IconButton, Theme } from '@mui/material'
-import createStyles from '@mui/styles/createStyles'
-import makeStyles from '@mui/styles/makeStyles'
+import { styled } from '@mui/material'
 import { animated } from 'react-spring'
 import { useRemovePopup } from 'state/application/hooks'
 import TransactionPopup from './TransactionPopup'
+import { CloseIcon } from 'theme/components'
 
-export const Popup = styled.div`
-  display: inline-block;
-  width: 100%;
-  padding: 1em;
-  background-color: ${({ theme }) => theme.bg1};
-  position: relative;
-  border-radius: 4px;
-  padding: 20px;
-  padding-right: 35px;
-  overflow: hidden;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    min-width: 290px;
-    &:not(:last-of-type) {
-      margin-right: 20px;
+export const Popup = styled('div')(({ theme }) => ({
+  display: 'inlineBlock',
+  width: '100%',
+  backgroundColor: theme.bgColor.bg1,
+  position: 'relative',
+  borderRadius: '4px',
+  padding: '20px',
+  paddingRight: '35px',
+  overflow: 'hidden',
+  [theme.breakpoints.down('sm')]: {
+    minWidth: '290px',
+    '&:not(:last-of-type)': {
+      marginRight: '20px'
     }
-  `}
-`
-const Fader = styled.div`
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  height: 2px;
-  background-color: ${({ theme }) => theme.bg5};
-`
+  }
+}))
+
+const Fader = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  bottom: '0px',
+  left: '0px',
+  width: '100%',
+  height: '2px',
+  backgroundColor: theme.bgColor.bg5
+}))
 
 const AnimatedFader = animated(Fader)
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    closeIconContainer: {
-      padding: 0,
-      position: 'absolute',
-      top: 24,
-      right: 24,
-      '&:hover $closeIcon': {
-        color: theme.palette.text.primary
-      }
-    },
-    closeIcon: {
-      color: theme.palette.grey[500]
-    }
-  })
-)
 
 export default function PopupItem({
   removeAfterMs,
@@ -64,7 +43,6 @@ export default function PopupItem({
   content: any
   popKey: string
 }) {
-  const classes = useStyles()
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
   useEffect(() => {
@@ -95,9 +73,7 @@ export default function PopupItem({
 
   return (
     <Popup>
-      <IconButton className={classes.closeIconContainer} onClick={removeThisPopup} size="large">
-        <CloseIcon className={classes.closeIcon} />
-      </IconButton>
+      <CloseIcon onClick={removeThisPopup} />
       {popupContent}
       {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
     </Popup>

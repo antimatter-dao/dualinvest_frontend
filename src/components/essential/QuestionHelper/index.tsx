@@ -1,51 +1,47 @@
 import { useCallback, useState } from 'react'
-import { HelpCircle as Question } from 'react-feather'
-import styled from 'styled-components'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import { styled } from '@mui/material'
 import Tooltip from './Tooltip'
 
-const QuestionWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.2rem;
-  border: none;
-  background: none;
-  outline: none;
-  cursor: default;
-  border-radius: 36px;
-  background-color: ${({ theme }) => theme.bg2};
-  color: ${({ theme }) => theme.text2};
-
-  :hover,
-  :focus {
-    opacity: 0.7;
+const QuestionWrapper = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '0.2rem',
+  border: 'none',
+  background: 'none',
+  outline: 'none',
+  cursor: 'default',
+  borderRadius: '36px',
+  backgroundColor: theme.bgColor.bg2,
+  color: theme.textColor.text2,
+  '&:hover, :focus': {
+    opacity: 0.7
   }
-`
+}))
 
-const LightQuestionWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.2rem;
-  border: none;
-  background: none;
-  outline: none;
-  cursor: default;
-  border-radius: 36px;
-  width: 12px;
-  height: 12px;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: ${({ theme }) => theme.white};
-
-  :hover,
-  :focus {
-    opacity: 0.7;
+const LightQuestionWrapper = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '0.2rem',
+  border: 'none',
+  background: 'none',
+  outline: 'none',
+  cursor: 'default',
+  borderRadius: '36px',
+  width: '12px',
+  height: '12px',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  color: '#ffffff',
+  '&:hover, :focus': {
+    opacity: 0.7
   }
-`
+})
 
-const QuestionMark = styled.span`
-  font-size: 1rem;
-`
+const QuestionMark = styled('span')({
+  fontSize: '1rem'
+})
 
 export default function QuestionHelper({ text, size = 14 }: { text: string; size?: number }) {
   const [show, setShow] = useState<boolean>(false)
@@ -57,7 +53,7 @@ export default function QuestionHelper({ text, size = 14 }: { text: string; size
     <span style={{ marginLeft: 4 }}>
       <Tooltip text={text} show={show}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <Question size={size} />
+          <HelpOutlineOutlinedIcon sx={{ height: size, width: size }} />
         </QuestionWrapper>
       </Tooltip>
     </span>
