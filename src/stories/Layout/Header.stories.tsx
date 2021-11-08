@@ -3,7 +3,7 @@ import { HashRouter } from 'react-router-dom'
 import HeaderComponent from 'components/Header'
 
 export default {
-  title: 'Header/Header',
+  title: 'Layout/Header',
   component: HeaderComponent,
   decorators: [
     Story => {
@@ -16,6 +16,6 @@ export default {
   ]
 } as ComponentMeta<typeof HeaderComponent>
 
-export const Default = () => {
+export const Header = () => {
   return <HeaderComponent />
 }

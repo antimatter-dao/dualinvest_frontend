@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { Typography, Box, useTheme, styled } from '@mui/material'
-import { Text } from 'rebass'
 import { useActiveWeb3React } from 'hooks/'
 import { AppDispatch } from 'state/'
 import { clearAllTransactions } from 'state/transactions/actions'
@@ -64,9 +63,9 @@ export default function AccountDetails({
       )
       .map(k => SUPPORTED_WALLETS[k].name)[0]
     return (
-      <Text fontSize=" 0.825rem" fontWeight={500}>
+      <Typography fontSize="0.825rem" fontWeight={500}>
         Connected with {name}
-      </Text>
+      </Typography>
     )
   }
 

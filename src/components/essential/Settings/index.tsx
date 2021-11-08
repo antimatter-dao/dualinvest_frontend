@@ -60,7 +60,6 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
-  console.log(999, theme)
 
   return (
     <>

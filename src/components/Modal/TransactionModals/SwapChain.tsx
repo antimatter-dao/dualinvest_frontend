@@ -1,7 +1,6 @@
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import { Chain } from 'models/chain'
-import { Text } from 'rebass'
 import LogoText from 'components/LogoText'
 
 interface Props {
@@ -25,7 +24,7 @@ export default function SwapChain(props: Props) {
     >
       <Box display="flex">
         <Box marginRight={'12px'}>
-          <Text opacity={0.6}>From: </Text>
+          <Typography sx={{ opacity: 0.6 }}>From: </Typography>
         </Box>
         <LogoText logo={from.logo} text={from.symbol} />
       </Box>
@@ -34,7 +33,7 @@ export default function SwapChain(props: Props) {
       </Box>
       <Box display="flex">
         <Box marginRight={'12px'}>
-          <Text opacity={0.6}>To: </Text>
+          <Typography sx={{ opacity: 0.6 }}>To: </Typography>
         </Box>
         <LogoText logo={to.logo} text={to.symbol} />
       </Box>

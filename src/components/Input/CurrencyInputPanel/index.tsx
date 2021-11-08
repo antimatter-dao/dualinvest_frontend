@@ -1,6 +1,5 @@
 import { ChangeEvent } from 'react'
-import { styled, Box, useTheme } from '@mui/material'
-import { Text } from 'rebass'
+import { styled, Box, useTheme, Typography } from '@mui/material'
 import InputNumerical from 'components/Input/InputNumerical'
 import OutlineButton from 'components/Button/OutlineButton'
 import InputLabel from 'components/Input/InputLabel'
@@ -38,7 +37,7 @@ const InputRow = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
   '& .Mui-focused': {
     '&:before': {
-      content: "''",
+      content: '""',
       position: 'absolute',
       top: 0,
       left: 0,
@@ -108,11 +107,11 @@ export default function CurrencyInputPanel({
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <InputLabel>Amount</InputLabel>
           {currency && (
-            <Text color={theme.textColor.text3} fontWeight={500} fontSize={14}>
+            <Typography color={theme.textColor.text3} fontWeight={500} fontSize={14}>
               {!hideBalance && !!currency && selectedCurrencyBalance
                 ? (customBalanceText ?? 'Your balance: ') + selectedCurrencyBalance?.toSignificant(6)
                 : ' -'}
-            </Text>
+            </Typography>
           )}
         </Box>
         <InputRow>

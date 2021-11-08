@@ -1,6 +1,5 @@
-import { Box, useTheme, styled } from '@mui/material'
+import { Box, useTheme, styled, Typography } from '@mui/material'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { Text } from 'rebass'
 import Image from 'components/Image'
 import CoinbaseWalletIcon from 'assets/walletIcon/coinbaseWalletIcon.svg'
 import FortmaticIcon from 'assets/walletIcon/fortmaticIcon.png'
@@ -45,14 +44,14 @@ export default function DestinationAddress({ address, margin }: { address: strin
     <>
       {address && (
         <Box display="flex" margin={margin || '16px 0 0'} fontSize="14px">
-          <Text marginRight="10px" color={theme.textColor.text4}>
+          <Typography marginRight="10px" color={theme.textColor.text4}>
             Destination:
-          </Text>
+          </Typography>
           <Box display="flex" alignItems={'center'}>
             {StatusIcon(connector)}
-            <Text marginLeft="8px" color={theme.textColor.text3}>
+            <Typography marginLeft="8px" color={theme.textColor.text3}>
               {shortenAddress(address, 10)}
-            </Text>
+            </Typography>
           </Box>
         </Box>
       )}

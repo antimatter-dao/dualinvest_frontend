@@ -1,8 +1,7 @@
 import { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
-import { Text } from 'rebass'
-import { useTheme, Box } from '@mui/material'
+import { useTheme, Box, Typography } from '@mui/material'
 import QuestionHelper from 'components/essential/QuestionHelper'
 
 enum SlippageError {
@@ -151,9 +150,9 @@ export default function TransactionSettings({
     <Box display="grid" gap="24px">
       <Box display="grid" gap="8px">
         <Box display="flex" alignItems="center">
-          <Text fontWeight={400} fontSize={14} color={theme.textColor.text2}>
+          <Typography fontWeight={400} fontSize={14} color={theme.textColor.text2}>
             Slippage tolerance
-          </Text>
+          </Typography>
           <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
         </Box>
         <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
@@ -233,9 +232,9 @@ export default function TransactionSettings({
       {!onlySlippage && (
         <Box display="grid" gap="8px">
           <Box display="flex" alignItems="center">
-            <Text fontSize={14} fontWeight={400} color={theme.textColor.text2}>
+            <Typography fontSize={14} fontWeight={400} color={theme.textColor.text2}>
               Transaction deadline
-            </Text>
+            </Typography>
             <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />
           </Box>
           <Box display="flex" alignItems="center">
@@ -250,9 +249,9 @@ export default function TransactionSettings({
                 onChange={e => parseCustomDeadline(e.target.value)}
               />
             </OptionCustom>
-            <Text style={{ paddingLeft: '8px' }} fontSize={14}>
+            <Typography style={{ paddingLeft: '8px' }} fontSize={14}>
               minutes
-            </Text>
+            </Typography>
           </Box>
         </Box>
       )}

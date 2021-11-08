@@ -1,8 +1,7 @@
 import SwapChain from 'components/Modal/TransactionModals/SwapChain'
 import WithdrawConfirmationModal from 'components/Modal/TransactionModals/WithdrawConfirmationModal'
 import DummyLogo from 'assets/images/ethereum-logo.png'
-import { Box } from '@mui/material'
-import { Text } from 'rebass'
+import { Box, Typography } from '@mui/material'
 import LogoText from 'components/LogoText'
 import DestinationAddress from 'components/Modal/TransactionModals/DestinationAddress'
 import { ComponentStory } from '@storybook/react'
@@ -48,7 +47,7 @@ const DefaultTemplate: ComponentStory<typeof WithdrawConfirmationModal> = ({ isS
         isStep3Active={isStep3Active}
         fromChain={fromChain}
         toChain={toChain}
-        destinationAddress="0xKos369cd6vwd94wq1gt4hr87ujv"
+        destinationAddress="0xEc269687bcD28B1d52Fa88f9d2d3D97A987Ae146"
         step1={
           <>
             Please switch your wallet network
@@ -63,9 +62,9 @@ const DefaultTemplate: ComponentStory<typeof WithdrawConfirmationModal> = ({ isS
         }
       >
         <Box display="grid" gap="15px" justifyItems="center">
-          <Text fontSize={40} fontWeight={500} textAlign="center">
+          <Typography fontSize={40} fontWeight={500} textAlign="center">
             1 ETH
-          </Text>
+          </Typography>
           <Box display="flex" justifyContent="center" marginTop="16px">
             <LogoText logo={DummyLogo} text={'ETH'} fontWeight={500} />
           </Box>
@@ -89,5 +88,5 @@ export const SwapChainComponent: ComponentStory<typeof SwapChain> = () => {
 }
 
 export const DestimationAddressComponent: ComponentStory<typeof DestinationAddress> = () => {
-  return <DestinationAddress address="0xKos369cd6vwd94wq1gt4hr87ujv" />
+  return <DestinationAddress address="0xEc269687bcD28B1d52Fa88f9d2d3D97A987Ae146" />
 }

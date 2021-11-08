@@ -140,7 +140,8 @@ export const theme = {
   shape: {
     border: '1px solid',
     borderRadius: 10
-  }
+  },
+  spacing: (factor: number) => `${1 * factor}px`
   // gray: {
   //   main: '#333333',
   //   dark: '#262626',

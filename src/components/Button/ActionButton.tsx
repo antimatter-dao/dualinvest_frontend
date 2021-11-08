@@ -1,7 +1,7 @@
 import Button from './Button'
 import OutlineButton from './OutlineButton'
 import Spinner from 'components/Spinner'
-import { Text } from 'rebass'
+import { Typography } from '@mui/material'
 
 export default function ActionButton({
   error,
@@ -41,7 +41,7 @@ export default function ActionButton({
         </OutlineButton>
       ) : success ? (
         <Button disabled height={height} width={width}>
-          <Text>{successText ?? actionText}</Text>
+          <Typography variant="inherit">{successText ?? actionText}</Typography>
         </Button>
       ) : (
         <Button height={height} width={width} onClick={onAction} disabled={disableAction}>
