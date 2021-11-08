@@ -8,7 +8,7 @@ import LogoText from 'components/LogoText'
 import Select from 'components/Select/Select'
 
 export default {
-  title: 'Header/NetworkSelect',
+  title: 'Layout/NetworkSelect',
   component: Select
 } as ComponentMeta<typeof Select>
 

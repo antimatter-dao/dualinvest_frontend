@@ -1,5 +1,4 @@
-import { useTheme, Box } from '@mui/material'
-import { Text } from 'rebass'
+import { useTheme, Box, Typography } from '@mui/material'
 import Spinner from 'components/Spinner'
 import Modal from '../index'
 
@@ -9,12 +8,12 @@ export default function TransacitonPendingModal({ pendingText }: { pendingText?:
     <Modal closeIcon>
       <Box display="grid" padding="40px 24px" gap="24px" justifyItems="center">
         <Spinner size="40px" />
-        <Text fontWeight={400} fontSize={18}>
+        <Typography fontWeight={400} fontSize={18}>
           Waiting For Confirmation
-        </Text>
-        <Text fontWeight={400} fontSize={14} textAlign="center" color={theme.textColor.text3}>
+        </Typography>
+        <Typography fontWeight={400} fontSize={14} textAlign="center" color={theme.textColor.text3}>
           {pendingText || 'Please initiate transaction in your wallet'}
-        </Text>
+        </Typography>
       </Box>
     </Modal>
   )
