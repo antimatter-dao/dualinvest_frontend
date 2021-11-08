@@ -1,4 +1,4 @@
-import { Select as MuiSelect, InputLabel as MuiInputLabel, styled, InputBase } from '@mui/material'
+import { Select as MuiSelect, InputLabel as MuiInputLabel, styled, InputBase, useTheme } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 // import TextButon from 'components/Button/TextButton'
 // import SelectedIcon from 'assets/componentsIcon/selected_icon.svg'
@@ -31,7 +31,7 @@ const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
 }))
 
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
-  backgroundColor: theme.palette.grey.A400,
+  // backgroundColor: theme.palette.grey.A400,
   borderRadius: theme.shape.borderRadius,
   border: `1px solid transparent`,
   position: 'relative',
@@ -45,13 +45,15 @@ const StyledSelect = styled(MuiSelect)(({ theme }) => ({
 }))
 
 export default function Select(props: Props) {
-  const { disabled, onChange, children, placeholder, width, height, label } = props
+  const { disabled, onChange, children, placeholder, width, height, label, primary } = props
+  const theme = useTheme()
 
   return (
     <>
       {label && <StyledInputLabel>{label}</StyledInputLabel>}
       <StyledSelect
         sx={{
+          backgroundColor: primary ? theme.palette.primary.main : theme.palette.grey.A400,
           padding: '10px',
           width: width || '100%',
           height: height || '48px'

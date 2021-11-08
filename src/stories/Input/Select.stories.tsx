@@ -18,3 +18,7 @@ const DefaultTemplate: ComponentStory<typeof Select> = args => (
   </Select>
 )
 export const Default = DefaultTemplate.bind({})
+export const Primary = DefaultTemplate.bind({})
+Primary.args = {
+  primary: true
+}
