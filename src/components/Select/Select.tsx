@@ -25,7 +25,7 @@ const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
 
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  border: `1px solid transparent`,
+  border: '1px solid transparent',
   position: 'relative',
   padding: '10px',
   '&:hover': {
@@ -41,7 +41,7 @@ const StyledSelect = styled(MuiSelect)(({ theme }) => ({
 }))
 
 export default function Select(props: Props) {
-  const { disabled, onChange, children, placeholder, width, height, label, primary } = props
+  const { disabled, onChange, children, width, height, label, primary, value, defaultValue, placeholder } = props
   const theme = useTheme()
 
   return (
@@ -51,7 +51,16 @@ export default function Select(props: Props) {
         sx={{
           backgroundColor: primary ? theme.palette.primary.main : theme.palette.grey.A400,
           width: width || '100%',
-          height: height || '48px'
+          height: height || '48px',
+          '&::before': {
+            content: (value || defaultValue) ?? `'${placeholder}'`,
+            position: 'absolute',
+            left: 24,
+            top: 14,
+            zIndex: 999,
+            fontSize: 16,
+            fontWeight: 400
+          }
         }}
         displayEmpty
         disabled={disabled}
@@ -107,9 +116,6 @@ export default function Select(props: Props) {
         input={<InputBase />}
         IconComponent={ExpandMoreIcon}
         onChange={onChange}
-        renderValue={(selected: any) => {
-          return selected ?? <>{placeholder}</>
-        }}
       >
         {children}
       </StyledSelect>
