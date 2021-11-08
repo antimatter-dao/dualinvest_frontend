@@ -139,7 +139,7 @@ export const theme = {
   },
   shape: {
     border: '1px solid',
-    borderRadius: 10
+    borderRadius: '10px'
   }
   // gray: {
   //   main: '#333333',

@@ -1,6 +1,8 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import { MenuItem } from '@mui/material'
 import Select from 'components/Select/Select'
+import { ReactComponent as CurrencyLogo } from 'assets/svg/eth_logo.svg'
+import LogoText from 'components/LogoText/index'
 
 export default {
   title: 'Input/Select',
@@ -10,10 +12,10 @@ export default {
 const DefaultTemplate: ComponentStory<typeof Select> = args => (
   <Select {...args} placeholder="select" label="label">
     <MenuItem key={'ETH'} value={'ETH'}>
-      ETH
+      <LogoText logo={<CurrencyLogo />} text="ETH" />
     </MenuItem>
     <MenuItem key={'BSC'} value={'BSC'}>
-      BSC
+      <LogoText logo={<CurrencyLogo />} text="BSC" />
     </MenuItem>
   </Select>
 )
