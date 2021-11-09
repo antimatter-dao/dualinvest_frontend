@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react'
-import styled from 'styled-components'
 import { darken } from 'polished'
-import { useTheme, Box, Typography } from '@mui/material'
+import { useTheme, Box, Typography, styled } from '@mui/material'
 import QuestionHelper from 'components/essential/QuestionHelper'
 
 enum SlippageError {
@@ -14,71 +13,75 @@ enum DeadlineError {
   InvalidInput = 'InvalidInput'
 }
 
-const FancyButton = styled.button`
-  color: ${({ theme }) => theme.text1};
-  align-items: center;
-  height: 3rem;
-  border-radius: 14px;
-  font-size: 1rem;
-  width: auto;
-  min-width: 3.5rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  outline: none;
-  padding: 14px;
-  background: ${({ theme }) => theme.translucent};
-  :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
+const FancyButton = styled('button')(({ theme }) => ({
+  color: theme.textColor.text1,
+  alignItems: 'center',
+  height: '3rem',
+  borderRadius: '14px',
+  fontSize: '1rem',
+  width: 'auto',
+  minWidth: '3.5rem',
+  border: `1px solid ${theme.bgColor.bg3}`,
+  outline: 'none',
+  padding: '14px',
+  '&:hover': {
+    border: `1px solid ${theme.bgColor.bg4}`
+  },
+  '&:focus': {
+    border: `1px solid ${theme.bgColor.bg1}`
   }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
-  }
-`
+}))
 
-const Option = styled(FancyButton)<{ active: boolean }>`
-  margin-right: 8px;
-  :hover {
-    cursor: pointer;
-  }
-  border: 1px solid ${({ active, theme }) => (active ? theme.primary1 : 'transparent')};
-  color: ${({ active, theme }) => (active ? theme.white : theme.text1)};
-`
+const Option = styled(FancyButton, {
+  shouldForwardProp: prop => prop !== 'active'
+})<{ active?: boolean }>(({ theme, active }) => ({
+  marginRight: '8px',
+  '&:hover': {
+    cursor: 'pointer'
+  },
+  border: `1px solid ${active ? theme.palette.primary.main : 'transparent'}`,
+  color: active ? theme.bgColor.bg1 : theme.textColor.text1
+}))
 
-const Input = styled.input`
-  background: transparent;
-  font-size: 16px;
-  width: auto;
-  outline: none;
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
-  color: ${({ theme, color }) => (color === 'red' ? theme.red1 : theme.text1)};
-  text-align: left;
-`
+const Input = styled('input', {
+  shouldForwardProp: prop => prop !== 'color'
+})<{ color?: string }>(({ theme, color }) => ({
+  color: color === 'red' ? theme.palette.error.main : theme.textColor.text1,
+  background: 'transparent',
+  fontSize: '16px',
+  width: 'auto',
+  outline: 'none',
+  '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
+    '-webkit-appearance': 'none'
+  },
+  textAlign: 'left'
+}))
 
-const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }>`
-  position: relative;
-  flex: 1;
-  border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1}`};
-  :hover {
-    border: ${({ theme, active, warning }) =>
-      active && `1px solid ${warning ? darken(0.1, theme.red1) : darken(0.1, theme.primary1)}`};
+const OptionCustom = styled(FancyButton, {
+  shouldForwardProp: prop => prop !== 'active' && prop !== 'warning'
+})<{ active?: boolean; warning?: boolean }>(({ theme, active, warning }) => ({
+  position: 'relative',
+  flex: 1,
+  border: active ? `1px solid ${warning ? theme.palette.error : theme.palette.primary.main}` : 'none',
+  '&:hover': {
+    border: active
+      ? `1px solid ${warning ? darken(0.1, theme.palette.error.main) : darken(0.1, theme.palette.primary.main)}`
+      : 'none'
+  },
+  '& input': {
+    width: '100%',
+    height: '100%',
+    border: '0px',
+    borderRadius: '2rem'
   }
+}))
 
-  input {
-    width: 100%;
-    height: 100%;
-    border: 0px;
-    border-radius: 2rem;
+const SlippageEmojiContainer = styled('span')(({ theme }) => ({
+  color: '#f3841e',
+  [theme.breakpoints.down('sm')]: {
+    display: 'none'
   }
-`
-
-const SlippageEmojiContainer = styled.span`
-  color: #f3841e;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;  
-  `}
-`
+}))
 
 export interface SlippageTabsProps {
   rawSlippage: number
