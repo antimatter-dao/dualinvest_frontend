@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { X } from 'react-feather'
+import { Close } from '@mui/icons-material'
 import Button from 'components/Button/Button'
 import Modal from './index'
 import { Typography, Box } from '@mui/material'
@@ -27,7 +27,7 @@ export function WarningModalContent({ onDismiss }: { onDismiss: () => void }) {
           <Typography variant="h6" style={{ textAlign: 'center' }}>
             Warning!
           </Typography>
-          <X onClick={onDismiss} style={{ cursor: 'pointer' }} />
+          <Close onClick={onDismiss} sx={{ cursor: 'pointer' }} />
         </Box>
 
         <Typography variant="inherit">
