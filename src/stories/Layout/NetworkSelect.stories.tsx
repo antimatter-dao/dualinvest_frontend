@@ -55,7 +55,7 @@ export const Network = () => {
     setChain(chain)
   }
   return (
-    <Select defaultValue={chain.symbol} value={chain.symbol} size={'small'} onChange={onChangeChain} width="88px">
+    <Select defaultValue={chain.symbol} value={chain.symbol} onChange={onChangeChain} width="88px">
       {ChainList.map(option => (
         <MenuItem
           className={classes.menuItem}
