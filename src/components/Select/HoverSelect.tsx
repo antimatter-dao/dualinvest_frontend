@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from 'styled-components'
-import { ChevronDown } from 'react-feather'
+import { styled } from '@mui/material'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 const Wrapper = styled('div')({
   display: 'flex',
@@ -83,7 +83,7 @@ export default function HoverSelect({
   return (
     <Wrapper>
       {selectedDisplay}
-      <ChevronDown size="18" />
+      <ExpandMoreIcon sx={{ fontSize: '18px' }} />
       <div className="dropdown_wrapper">
         <Dropdown>
           {list.map((item, idx) => (
