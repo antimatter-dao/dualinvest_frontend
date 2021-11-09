@@ -1,33 +1,26 @@
 import { ChangeEvent, useCallback } from 'react'
 import { MenuItem } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
 import Select from 'components/Select/Select'
 import LogoText from 'components/LogoText'
 import { Chain } from 'models/chain'
 import InputLabel from 'components/Input/InputLabel'
 import Checkbox from 'components/Checkbox'
 
-interface Props {
+export default function ChainMultiSelect({
+  label,
+  disabled,
+  chainList,
+  onChainSelect,
+  selectedChains,
+  width
+}: {
   label?: string
   disabled?: boolean
   chainList: Chain[]
   selectedChains: Chain[]
   onChainSelect?: (chains: Chain[]) => void
   width?: string
-}
-
-const useStyles = makeStyles({
-  menuItem: {
-    '& label': {
-      marginLeft: 20
-    }
-  }
-})
-
-export default function ChainMultiSelect(props: Props) {
-  const classes = useStyles(props)
-  const { label, disabled, chainList, onChainSelect, selectedChains, width } = props
-
+}) {
   const isSelected = useCallback(
     (chain: Chain) => {
       return !!selectedChains.find(el => el.symbol === chain.symbol)
@@ -72,7 +65,11 @@ export default function ChainMultiSelect(props: Props) {
       >
         {chainList.map(chain => (
           <MenuItem
-            className={classes.menuItem}
+            sx={{
+              '& label': {
+                marginLeft: 20
+              }
+            }}
             value={chain.symbol}
             key={chain.symbol}
             selected={!!selectedChains.find(el => el.symbol === chain.symbol)}

@@ -1,10 +1,4 @@
-import {
-  createTheme,
-  styled,
-  ThemeProvider as MuiThemeProvider,
-  StyledEngineProvider,
-  Theme
-} from '@mui/material/styles'
+import { createTheme, styled, ThemeProvider as MuiThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 
 interface Gradient {
   gradient1: string
@@ -273,20 +267,22 @@ export const override: any = {
   }
 }
 
-export const HideOnMobile = styled('div')(({ theme, breakpoint }: any & { breakpoint?: 'sm' | 'md' }) => ({
+export const HideOnMobile = styled('div', {
+  shouldForwardProp: () => true
+})<{ breakpoint?: 'sm' | 'md' }>(({ theme, breakpoint }) => ({
   [theme.breakpoints.down(breakpoint ?? 'sm')]: {
     display: 'none'
   }
 }))
 
-export const ShowOnMobile = styled('div')(
-  ({ theme, breakpoint }: any & { theme: Theme; breakpoint?: 'sm' | 'md' }) => ({
-    display: 'none',
-    [theme.breakpoints.down(breakpoint ?? 'sm')]: {
-      display: 'block'
-    }
-  })
-)
+export const ShowOnMobile = styled('div', {
+  shouldForwardProp: () => true
+})<{ breakpoint?: 'sm' | 'md' }>(({ theme, breakpoint }) => ({
+  display: 'none',
+  [theme.breakpoints.down(breakpoint ?? 'sm')]: {
+    display: 'block'
+  }
+}))
 
 export default createTheme({
   ...theme,

@@ -1,6 +1,4 @@
-import { styled } from '@mui/material'
-import { TableContainer, TableHead, TableCell, TableRow, TableBody, Box, Typography } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
+import { TableContainer, TableHead, TableCell, TableRow, TableBody, Box, Typography, styled } from '@mui/material'
 import useBreakpoint from '../../hooks/useBreakpoint'
 
 const Profile = styled('div')(`
@@ -28,59 +26,59 @@ export function OwnerCell({ url, name }: { url?: string; name: string }) {
   )
 }
 
-const useStyles = makeStyles({
-  root: {
-    display: 'table',
-    // backgroundColor: '#ffffff',
-    borderRadius: '40px',
-    '& .MuiTableCell-root': {
-      fontSize: '16px',
-      borderBottom: 'none',
-      fontWeight: 400,
-      padding: '14px 20px',
-      '& svg': {
-        marginRight: 8
-      },
-      '&:first-child': {
-        paddingLeft: 50
-      },
-      '&:last-child': {
-        paddingRight: 50
-      }
+const StyledTableContainer = styled(TableContainer)({
+  display: 'table',
+  // backgroundColor: '#ffffff',
+  borderRadius: '40px',
+  '& .MuiTableCell-root': {
+    fontSize: '16px',
+    borderBottom: 'none',
+    fontWeight: 400,
+    padding: '14px 20px',
+    '& svg': {
+      marginRight: 8
     },
-    '& table': {
-      width: '100%',
-      borderCollapse: 'separate',
-      borderSpacing: 0
+    '&:first-child': {
+      paddingLeft: 50
+    },
+    '&:last-child': {
+      paddingRight: 50
     }
   },
-  tableHeader: {
-    borderRadius: 8,
-    overflow: 'hidden',
-    '& .MuiTableCell-root': {
-      background: 'rgba(255, 255, 255, 0.08)',
-      padding: '12px 20px',
-      fontSize: '12px',
-      color: 'rgba(255,255,255,0.5)',
-      borderBottom: 'none',
-      '&:first-child': {
-        paddingLeft: 50,
-        borderTopLeftRadius: 8
-      },
-      '&:last-child': {
-        paddingRight: 50,
-        borderTopRightRadius: 8
-      }
-    }
-  },
-  tableRow: {
-    height: 72,
-    '& .MuiTableCell-root': {
-      borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+  '& table': {
+    width: '100%',
+    borderCollapse: 'separate',
+    borderSpacing: 0
+  }
+})
+
+const StyledTableHead = styled(TableHead)({
+  borderRadius: 8,
+  overflow: 'hidden',
+  '& .MuiTableCell-root': {
+    background: 'rgba(255, 255, 255, 0.08)',
+    padding: '12px 20px',
+    fontSize: '12px',
+    color: 'rgba(255,255,255,0.5)',
+    borderBottom: 'none',
+    '&:first-child': {
+      paddingLeft: 50,
+      borderTopLeftRadius: 8
     },
-    '&:hover': {
-      backgroundColor: ' rgba(255, 255, 255, 0.02)'
+    '&:last-child': {
+      paddingRight: 50,
+      borderTopRightRadius: 8
     }
+  }
+})
+
+const StyledTableRow = styled(TableRow)({
+  height: 72,
+  '& .MuiTableCell-root': {
+    borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+  },
+  '&:hover': {
+    backgroundColor: ' rgba(255, 255, 255, 0.02)'
   }
 })
 
@@ -109,7 +107,6 @@ const CardRow = styled('div')(`
 `)
 
 export default function Table({ header, rows }: { header: string[]; rows: (string | number | JSX.Element)[][] }) {
-  const classes = useStyles()
   const matches = useBreakpoint()
   return (
     <>
@@ -129,26 +126,26 @@ export default function Table({ header, rows }: { header: string[]; rows: (strin
           ))}
         </>
       ) : (
-        <TableContainer className={classes.root}>
+        <StyledTableContainer>
           <table>
-            <TableHead className={classes.tableHeader}>
+            <StyledTableHead>
               <TableRow>
                 {header.map((string, idx) => (
                   <TableCell key={idx}>{string}</TableCell>
                 ))}
               </TableRow>
-            </TableHead>
+            </StyledTableHead>
             <TableBody>
               {rows.map((row, idx) => (
-                <TableRow key={row[0].toString() + idx} className={classes.tableRow}>
+                <StyledTableRow key={row[0].toString() + idx}>
                   {row.map((data, idx) => (
                     <TableCell key={idx}>{data}</TableCell>
                   ))}
-                </TableRow>
+                </StyledTableRow>
               ))}
             </TableBody>
           </table>
-        </TableContainer>
+        </StyledTableContainer>
       )}
     </>
   )

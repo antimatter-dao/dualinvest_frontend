@@ -1,9 +1,7 @@
 import { NavLink } from 'react-router-dom'
-import { Typography, useTheme, AppBar, Box, MenuItem, styled as muiStyled } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
+import { Typography, useTheme, AppBar, Box, MenuItem, styled as muiStyled, styled } from '@mui/material'
 import { ExternalLink } from 'theme/components'
 import Web3Status from './Web3Status'
-import SelectedIcon from '../../assets/componentsIcon/selected_icon.svg'
 import { HideOnMobile } from 'theme/muiTheme'
 import PlainSelect from 'components/Select/PlainSelect'
 import Image from 'components/Image'
@@ -41,43 +39,24 @@ export const Tabs: Tab[] = [
   }
 ]
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    position: 'relative',
-    height: theme.height.header,
-    backgroundColor: theme.palette.background.default,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    boxShadow: 'none',
-    padding: '0 60px 00 40px',
-    [theme.breakpoints.down('md')]: {
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      top: 'unset',
-      borderTop: '1px solid ' + theme.bgColor.bg4,
-      justifyContent: 'center'
-    }
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  position: 'relative',
+  height: theme.height.header,
+  backgroundColor: theme.palette.background.default,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  boxShadow: 'none',
+  padding: '0 60px 00 40px',
+  [theme.breakpoints.down('md')]: {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    top: 'unset',
+    borderTop: '1px solid ' + theme.bgColor.bg4,
+    justifyContent: 'center'
   },
-  actionButton: {
-    [theme.breakpoints.down('md')]: {
-      maxWidth: 320,
-      width: '100%',
-      borderRadius: 49,
-      height: 40
-    }
-  },
-  mainLogo: {
-    '& img': {
-      width: 180.8,
-      height: 34.7
-    },
-    '&:hover': {
-      cursor: 'pointer'
-    }
-  },
-  navLink: {
+  '& .link': {
     textDecoration: 'none',
     fontSize: 14,
     color: '#FFFFFF',
@@ -89,40 +68,33 @@ const useStyles = makeStyles(theme => ({
     '&:hover': {
       opacity: 1
     }
-  },
-  menuItem: {
-    '&::before': {
-      content: '""',
-      width: 30,
-      height: 20,
-      display: 'flex',
-      justifyContent: 'center'
-    },
-    '&.Mui-selected::before': {
-      content: `url(${SelectedIcon})`,
-      width: 30,
-      height: 20,
-      display: 'flex',
-      justifyContent: 'center'
-    }
   }
 }))
+
+const MainLogo = styled(NavLink)({
+  '& img': {
+    width: 180.8,
+    height: 34.7
+  },
+  '&:hover': {
+    cursor: 'pointer'
+  }
+})
 
 const LinksWrapper = muiStyled('div')({
   marginLeft: 60.2
 })
 
 export default function Header() {
-  const classes = useStyles()
   return (
     <>
       <MobileHeader />
-      <AppBar className={classes.root}>
-        <HideOnMobile>
+      <StyledAppBar>
+        <HideOnMobile breakpoint="md">
           <Box display="flex" alignItems="center">
-            <NavLink id={'chainswap'} to={'/'} className={classes.mainLogo}>
+            <MainLogo id={'chainswap'} to={'/'}>
               <Image src={ChainSwap} alt={'chainswap'} />
-            </NavLink>
+            </MainLogo>
             <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
                 subTab ? (
@@ -130,13 +102,13 @@ export default function Header() {
                     {subTab.map((sub, idx) =>
                       sub.link ? (
                         <MenuItem key={sub.link + idx}>
-                          <ExternalLink href={sub.link} className={classes.navLink}>
+                          <ExternalLink href={sub.link} className={'link'}>
                             {sub.titleContent ?? sub.title}
                           </ExternalLink>
                         </MenuItem>
                       ) : (
                         <MenuItem key={sub.title + idx}>
-                          <NavLink to={sub.route ?? ''} className={classes.navLink}>
+                          <NavLink to={sub.route ?? ''} className={'link'}>
                             {sub.titleContent ?? sub.title}
                           </NavLink>
                         </MenuItem>
@@ -144,11 +116,11 @@ export default function Header() {
                     )}
                   </PlainSelect>
                 ) : link ? (
-                  <ExternalLink href={link} className={classes.navLink} key={link + idx}>
+                  <ExternalLink href={link} className={'link'} key={link + idx}>
                     {titleContent ?? title}
                   </ExternalLink>
                 ) : (
-                  <NavLink key={title + idx} id={`${route}-nav-link`} to={route ?? ''} className={classes.navLink}>
+                  <NavLink key={title + idx} id={`${route}-nav-link`} to={route ?? ''} className={'link'}>
                     {titleContent ?? title}
                   </NavLink>
                 )
@@ -157,7 +129,7 @@ export default function Header() {
           </Box>
         </HideOnMobile>
         <Web3Status />
-      </AppBar>
+      </StyledAppBar>
     </>
   )
 }

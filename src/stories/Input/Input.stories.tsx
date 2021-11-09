@@ -10,7 +10,7 @@ export default {
 
 const DefaultTemplate: ComponentStory<typeof Input> = args => {
   const [val, setVal] = useState('')
-  return <Input {...args} value={val} onChange={e => setVal(e.target.value)} />
+  return <Input {...args} value={val} onChange={e => setVal(e.target.value)} placeholder="placeholder" />
 }
 
 export const Default = DefaultTemplate.bind({})
@@ -22,7 +22,7 @@ export const Outlined = DefaultTemplate.bind({})
 Outlined.args = { outlined: true }
 
 export const Disabled = DefaultTemplate.bind({})
-Outlined.args = { disabled: true }
+Disabled.args = { disabled: true }
 
 export const Focused = DefaultTemplate.bind({})
-Outlined.args = { focused: true }
+Focused.args = { focused: true }

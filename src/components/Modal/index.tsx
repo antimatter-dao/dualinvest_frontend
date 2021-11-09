@@ -1,10 +1,7 @@
 import React from 'react'
-import { Dialog, Theme } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
-import createStyles from '@mui/styles/createStyles'
+import { Dialog, useTheme } from '@mui/material'
 import useModal from 'hooks/useModal'
 import { useRef } from 'react'
-import clsx from 'clsx'
 import { CloseIcon } from 'theme/components'
 
 interface Props {
@@ -19,95 +16,87 @@ interface Props {
   hasBorder?: boolean
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      '& *': {
-        boxSizing: 'border-box'
-      },
-      paddingTop: theme.height.header,
-      [theme.breakpoints.down('md')]: {
-        height: `calc(100% - ${theme.height.mobileHeader})`,
-        marginTop: 'auto'
-      }
-    },
-    mobileRoot: {
-      '& .MuiDialog-scrollPaper': {
-        [theme.breakpoints.down('md')]: {
-          alignItems: 'flex-end'
-        }
-      }
-    },
-    paper: {
-      width: (props: Props) => props.width || 480,
-      maxWidth: (props: Props) => props.maxWidth || 480,
-      background: theme.gradient.gradient1,
-      border: (props: Props) => (props.hasBorder ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid transparent'),
-      padding: (props: Props) => props.padding || 0,
-      boxSizing: 'border-box',
-      borderRadius: 20,
-      marginBottom: 100,
-      overflowX: 'hidden',
-      position: 'absolute',
-      overflowY: 'auto',
-      maxHeight: `calc(100vh - ${theme.height.header})`,
-      [theme.breakpoints.down('md')]: {
-        maxHeight: `calc(100vh - ${theme.height.header} - ${theme.height.mobileHeader})`,
-        width: 'calc(100% - 32px)!important',
-        marginBottom: '32px'
-      }
-    },
-    mobilePaper: {
-      [theme.breakpoints.down('md')]: {
-        border: 'none',
-        borderTop: '1px solid ' + theme.palette.grey.A200,
-        width: '100%!important',
-        maxWidth: 'unset!important',
-        maxHeight: 'unset',
-        height: `calc(100vh - ${theme.height.mobileHeader})`,
-        margin: 0,
-        borderRadius: '20px 20px 0 0',
-        paddingBottom: theme.height.header
-      }
-    },
-    backdrop: {
-      backgroundColor: 'rgba(0,0,0,0.7)',
-      opacity: 0.4
-    },
-    mobileBackdrop: {
-      [theme.breakpoints.down('md')]: {
-        background: 'none'
-      }
-    },
-    closeIconContainer: {
-      padding: 0,
-      position: 'absolute',
-      top: 24,
-      right: 24,
-      '&:hover $closeIcon': {
-        color: theme.palette.text.primary
-      }
-    },
-    closeIcon: {
-      color: theme.palette.grey[500]
-    }
-  })
-)
-
 export default function Modal(props: Props) {
-  const { children, closeIcon, isCardOnMobile, customIsOpen, customOnDismiss, hasBorder = true } = props
-  const classes = useStyles({ ...props, hasBorder })
+  const {
+    children,
+    closeIcon,
+    isCardOnMobile,
+    customIsOpen,
+    customOnDismiss,
+    hasBorder = true,
+    width,
+    maxWidth,
+    padding
+  } = props
   const { isOpen, hideModal } = useModal()
   const node = useRef<any>()
+  const theme = useTheme()
   const hide = customOnDismiss ? customOnDismiss : hideModal
 
   return (
     <>
       <Dialog
         open={customIsOpen !== undefined ? !!customIsOpen : isOpen}
-        className={clsx(classes.root, !isCardOnMobile && classes.mobileRoot)}
-        PaperProps={{ className: clsx(classes.paper, !isCardOnMobile && classes.mobilePaper), ref: node }}
-        BackdropProps={{ className: clsx(classes.backdrop, !isCardOnMobile && classes.mobileBackdrop) }}
+        sx={{
+          '& *': {
+            boxSizing: 'border-box',
+            '& .MuiDialog-scrollPaper': {
+              alignItems: !isCardOnMobile ? { mdDown: 'flex-end' } : {}
+            }
+          }
+        }}
+        PaperProps={{
+          ref: node,
+          sx: {
+            ...{
+              width: { xs: 'calc(100vw - 32px)!important', md: width || 480 },
+              maxWidth: maxWidth || 480,
+              background: theme => theme.gradient.gradient1,
+              border: hasBorder ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid transparent',
+              padding: padding || 0,
+              boxSizing: 'border-box',
+              borderRadius: 2,
+              marginBottom: { xs: '32px', md: 100 },
+              overflowX: 'hidden',
+              position: 'absolute',
+              overflowY: 'auto',
+              maxHeight: theme => ({
+                xs: `calc(100vh - ${theme.height.header} - ${theme.height.mobileHeader})`,
+                md: `calc(100vh - ${theme.height.header})`
+              })
+            },
+            ...(!isCardOnMobile
+              ? {
+                  [theme.breakpoints.down('md')]: {
+                    border: 'none',
+                    borderTop: '1px solid ' + theme.palette.grey.A200,
+                    borderBottom: '1px solid ' + theme.palette.grey.A200,
+                    width: '100%!important',
+                    maxWidth: 'unset!important',
+                    maxHeight: 'unset',
+                    height: `calc(100vh - ${theme.height.mobileHeader} - ${theme.height.header})`,
+                    margin: theme.height.header,
+                    borderRadius: '20px 20px 0 0'
+                  }
+                }
+              : {})
+          }
+        }}
+        BackdropProps={{
+          sx: {
+            ...{
+              backgroundColor: 'rgba(0,0,0,0.7)',
+              opacity: 0.4
+            },
+            ...(!isCardOnMobile
+              ? {
+                  [theme.breakpoints.down('md')]: {
+                    background: 'none'
+                  }
+                }
+              : {})
+          }
+        }}
         onClose={hide}
       >
         {closeIcon && <CloseIcon onClick={hide} />}

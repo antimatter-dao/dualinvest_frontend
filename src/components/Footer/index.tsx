@@ -1,5 +1,4 @@
-import { Box } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
+import { Box, useTheme } from '@mui/material'
 import { HideOnMobile } from 'theme/muiTheme'
 import { ReactComponent as Medium } from 'assets/socialLinksIcon/medium.svg'
 import { ReactComponent as Twitter } from 'assets/socialLinksIcon/twitter.svg'
@@ -7,18 +6,16 @@ import { ReactComponent as Telegram } from 'assets/socialLinksIcon/telegram.svg'
 import { ExternalLink } from 'theme/components'
 import TextButton from 'components/Button/TextButton'
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    height: theme.height.footer
-  }
-}))
-
 export default function Footer() {
-  const classes = useStyles()
+  const theme = useTheme()
 
   return (
     <HideOnMobile>
-      <footer className={classes.root}>
+      <footer
+        style={{
+          height: theme.height.footer
+        }}
+      >
         <Box
           display="flex"
           alignItems="center"

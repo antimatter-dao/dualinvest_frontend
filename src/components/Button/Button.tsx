@@ -1,5 +1,6 @@
 import React from 'react'
-import { ButtonBase, useTheme } from '@mui/material'
+import { ButtonBase, Theme, useTheme } from '@mui/material'
+import { SxProps } from '@mui/system'
 
 interface Props {
   onClick?: () => void
@@ -11,7 +12,7 @@ interface Props {
   children?: React.ReactNode
   fontSize?: string | number
   classname?: string
-  style?: React.CSSProperties
+  style?: React.CSSProperties & SxProps<Theme>
 }
 
 export default function Button(props: Props) {

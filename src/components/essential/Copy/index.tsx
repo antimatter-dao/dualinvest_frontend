@@ -20,7 +20,8 @@ export default function Copy(props: Props) {
         cursor: 'pointer',
         height: 17,
         '& svg': {
-          width: 14
+          width: 14,
+          mr: '10px'
         }
       }}
       onClick={() => setCopied(toCopy)}

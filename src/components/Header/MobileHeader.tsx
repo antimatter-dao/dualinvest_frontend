@@ -1,8 +1,7 @@
 import { useState, useCallback } from 'react'
 import { X, ChevronUp, Menu } from 'react-feather'
 import { NavLink } from 'react-router-dom'
-import { Box, MenuItem, AppBar } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
+import { Box, MenuItem, AppBar, styled, Theme } from '@mui/material'
 import Modal from 'components/Modal'
 import ChainSwap from '../../assets/svg/chain_swap.svg'
 import { ExternalLink } from 'theme/components'
@@ -11,45 +10,48 @@ import Image from 'components/Image'
 import TextButton from 'components/Button/TextButton'
 import { Tabs } from './'
 
-const useMobileStyle = makeStyles(theme => ({
-  root: {
-    position: 'relative',
-    height: theme.height.mobileHeader,
-    backgroundColor: theme.palette.background.default,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    boxShadow: 'none',
-    padding: '28px 24px'
-  },
-  mainLogo: {
-    '& img': {
-      width: 136,
-      height: 34.7
-    },
-    '&:hover': {
-      cursor: 'pointer'
-    }
-  },
-  navLink: {
-    cursor: 'pointer',
-    textDecoration: 'none',
-    fontSize: 24,
-    color: theme.textColor.text1,
-    padding: '13px 24px',
-    width: '100%',
-    textAlign: 'left',
-    '&.active': {
-      color: theme.palette.primary.main
-    },
-    '&:hover': {
-      color: theme.palette.primary.main
-    }
-  }
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  position: 'relative',
+  height: theme.height.mobileHeader,
+  backgroundColor: theme.palette.background.default,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  boxShadow: 'none',
+  padding: '28px 24px'
 }))
 
+const MainLogo = styled(NavLink)({
+  '& img': {
+    width: 136,
+    height: 34.7
+  },
+  '&:hover': {
+    cursor: 'pointer'
+  }
+})
+
+const StyledNavLink = styled(NavLink)({})
+
+const navLinkSx = {
+  cursor: 'pointer',
+  textDecoration: 'none',
+  fontSize: 24,
+  color: (theme: Theme) => theme.textColor.text1,
+  padding: '13px 24px',
+  width: '100%',
+  textAlign: 'left',
+  display: 'flex',
+  justifyContent: 'flex-start',
+  '&.active': {
+    color: (theme: Theme) => theme.palette.primary.main
+  },
+  '&:hover': {
+    color: (theme: Theme) => theme.palette.primary.main
+  }
+} as const
+
 export default function MobileHeader() {
-  const classes = useMobileStyle()
   const [isOpen, setIsOpen] = useState(false)
 
   const handleClick = useCallback(() => {
@@ -62,7 +64,7 @@ export default function MobileHeader() {
 
   const MobileMenu = useCallback(
     ({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) => (
-      <Modal isCardOnMobile customOnDismiss={onDismiss} customIsOpen={isOpen} maxWidth="100%">
+      <Modal isCardOnMobile customOnDismiss={onDismiss} customIsOpen={isOpen} maxWidth="900px">
         <Box display="grid" gap="15px">
           {Tabs.map(({ title, route, link, titleContent, subTab }) => {
             const content = titleContent ?? title
@@ -72,71 +74,66 @@ export default function MobileHeader() {
                   const subContent = sub.titleContent ?? sub.title
                   return sub.link ? (
                     <MenuItem key={sub.link}>
-                      <ExternalLink href={sub.link} className={classes.navLink}>
+                      <ExternalLink href={sub.link} sx={navLinkSx}>
                         {subContent}
                       </ExternalLink>
                     </MenuItem>
                   ) : (
-                    <MenuItem key={sub.title} onClick={onDismiss} className={classes.navLink}>
-                      {subContent}
+                    <MenuItem key={sub.title} onClick={onDismiss}>
+                      <StyledNavLink to={sub.route ?? ''} className={'link'} sx={navLinkSx}>
+                        {subContent}
+                      </StyledNavLink>
                     </MenuItem>
                   )
                 })}
               </Accordion>
             ) : link ? (
-              <ExternalLink href={link} className={classes.navLink} key={link}>
+              <ExternalLink href={link} sx={navLinkSx} key={link}>
                 {content}
               </ExternalLink>
             ) : (
               route && (
-                <NavLink
-                  key={title}
-                  id={`${route}-nav-link`}
-                  to={route}
-                  className={classes.navLink}
-                  onClick={onDismiss}
-                >
+                <StyledNavLink key={title} id={`${route}-nav-link`} to={route} sx={navLinkSx} onClick={onDismiss}>
                   {content}
-                </NavLink>
+                </StyledNavLink>
               )
             )
           })}
         </Box>
       </Modal>
     ),
-    [classes.navLink]
+    []
   )
 
   return (
     <>
       <MobileMenu isOpen={isOpen} onDismiss={handleDismiss} />
-      <ShowOnMobile>
-        <AppBar className={classes.root}>
+      <ShowOnMobile breakpoint="md">
+        <StyledAppBar>
           <Box display="flex" alignItems="center">
-            <NavLink id={'chainswap'} to={'/'} className={classes.mainLogo}>
+            <MainLogo id={'chainswap'} to={'/'}>
               <Image src={ChainSwap} alt={'chainswap'} />
-            </NavLink>
+            </MainLogo>
           </Box>
           {isOpen ? (
             <TextButton onClick={handleDismiss}>{<X />}</TextButton>
           ) : (
             <TextButton onClick={handleClick}>{<Menu />}</TextButton>
           )}
-        </AppBar>
+        </StyledAppBar>
       </ShowOnMobile>
     </>
   )
 }
 
 function Accordion({ children, placeholder }: { children: React.ReactNode; placeholder: string }) {
-  const classes = useMobileStyle()
   const [isOpen, setIsOpen] = useState(false)
   const handleClick = useCallback(() => {
     setIsOpen(state => !state)
   }, [])
   return (
     <>
-      <Box className={classes.navLink} display="flex" alignItems="center" gap={12} onClick={handleClick}>
+      <Box sx={navLinkSx} display="flex" alignItems="center" gap={12} onClick={handleClick}>
         {placeholder} <ChevronUp style={isOpen ? {} : { transform: 'rotate(180deg)' }} />
       </Box>
       <Box padding="0 15px"> {isOpen && children}</Box>

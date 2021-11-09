@@ -1,14 +1,9 @@
 import MuiPagination from '@mui/material/Pagination'
 import styled from 'styled-components'
 import Pagination from '@mui/material/Pagination'
-import { ThemeProvider as MaterialThemeProvider, Theme } from '@mui/material/styles'
+import { ThemeProvider as MaterialThemeProvider } from '@mui/material/styles'
 import { createTheme } from '@mui/material/styles'
 import { theme } from 'theme/muiTheme'
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 const materialTheme = createTheme({
   palette: {

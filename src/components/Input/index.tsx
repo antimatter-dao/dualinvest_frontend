@@ -1,6 +1,6 @@
 import React, { ChangeEvent, InputHTMLAttributes } from 'react'
-import { InputBase, Theme } from '@mui/material'
-import { createStyles, makeStyles } from '@mui/styles'
+import { InputBase, styled } from '@mui/material'
+import { inputBaseClasses } from '@mui/material/InputBase'
 import InputLabel from './InputLabel'
 
 export interface InputProps {
@@ -16,56 +16,57 @@ export interface InputProps {
   maxWidth?: string | number
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      fontSize: 16,
-      color: '#FFFFFF',
-      fontFamily: 'Roboto',
-      fontWeight: 400,
-      backgroundColor: 'rgba(255, 255, 255, 0.08)',
-      height: 48,
-      paddingLeft: 20,
-      borderRadius: 14,
-      border: (props: InputProps) => `1px solid ${props.outlined ? 'rgba(255,255,255,.4)' : 'transparent'}`
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  [`&.${inputBaseClasses.root}`]: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    fontFamily: 'Roboto',
+    fontWeight: 400,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    height: 48,
+    paddingLeft: 20,
+    borderRadius: 14
+  },
+  [`&.${inputBaseClasses.focused}`]: { border: `1px solid ${theme.palette.primary.main} !important` },
+  [`& .${inputBaseClasses.input}`]: {
+    '&::-webkit-outer-spin-button': {
+      '-webkit-appearance': 'none'
     },
-    focused: {
-      border: `1px solid ${theme.palette.primary.main} !important`
-    },
-    input: {
-      '&::-webkit-outer-spin-button': {
-        '-webkit-appearance': 'none'
-      },
-      '&::-webkit-inner-spin-button': {
-        '-webkit-appearance': 'none'
-      }
-    },
-    disabled: {
-      color: 'rgba(255,255,255,0.24)',
-      cursor: 'not-allowed',
-      backgroundColor: theme.palette.grey.A400
-    },
-    formControl: {
-      width: '100%',
-      maxWidth: (props: InputProps) => props.maxWidth || 'unset'
+    '&::-webkit-inner-spin-button': {
+      '-webkit-appearance': 'none'
     }
-  })
-)
+  },
+  [`&.${inputBaseClasses.disabled}`]: {
+    color: 'rgba(255,255,255,0.24)',
+    cursor: 'not-allowed',
+    backgroundColor: theme.palette.grey.A400
+  }
+}))
 
-export default function Input(
-  props: InputProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'color' | 'outline' | 'size'>
-) {
-  const classes = useStyles(props)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { focused, placeholder, onChange, value, disabled, type, outlined, endAdornment, maxWidth, ...rest } = props
-
+export default function Input({
+  focused,
+  placeholder,
+  onChange,
+  value,
+  disabled,
+  type,
+  outlined,
+  endAdornment,
+  maxWidth,
+  label,
+  ...rest
+}: InputProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'color' | 'outline' | 'size'>) {
   return (
-    <div className={classes.formControl}>
-      {props.label && <InputLabel>{props.label}</InputLabel>}
-      <InputBase
+    <div style={{ width: '100%', maxWidth: maxWidth || 'unset' }}>
+      {label && <InputLabel>{label}</InputLabel>}
+      <StyledInputBase
+        sx={{
+          [`&.${inputBaseClasses.root}`]: {
+            border: `1px solid ${outlined ? 'rgba(255,255,255,.4)' : 'transparent'}`
+          }
+        }}
         fullWidth={true}
         placeholder={placeholder}
-        classes={{ ...classes }}
         inputRef={input => input && focused && input.focus()}
         onChange={onChange}
         value={value}

@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { useTheme, Box } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
+import { useTheme, Box, styled } from '@mui/material'
 import { CountUp } from 'use-count-up'
 import { Activity } from 'react-feather'
 import Copy from 'components/essential/Copy'
@@ -22,22 +21,21 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import TextButton from 'components/Button/TextButton'
 import Button from 'components/Button/Button'
 
-const useStyles = makeStyles(theme => ({
-  actionButton: {
-    [theme.breakpoints.down('md')]: {
-      maxWidth: 320,
-      width: '100%',
-      borderRadius: 49,
-      height: 40
-    }
-  },
-  dot: {
-    width: 12,
-    height: 12,
-    background: `linear-gradient(135deg, #ffffff 4.17%, rgba(255, 255, 255, 0) 75%)`,
-    border: '0.6px solid #ffffff',
-    boxSizing: 'border-box',
-    borderRadius: '50%'
+const Dot = styled('span')({
+  width: 12,
+  height: 12,
+  background: `linear-gradient(135deg, #ffffff 4.17%, rgba(255, 255, 255, 0) 75%)`,
+  border: '0.6px solid #ffffff',
+  boxSizing: 'border-box',
+  borderRadius: '50%'
+})
+
+const ActionButton = styled(Button)(({ theme }) => ({
+  [theme.breakpoints.down('md')]: {
+    maxWidth: 320,
+    width: '100%',
+    borderRadius: 49,
+    height: 40
   }
 }))
 
@@ -55,7 +53,6 @@ const SOCK = (
 function Web3StatusInner() {
   const { account, connector, error } = useWeb3React()
   const isDownMD = useBreakpoint('md')
-  const classes = useStyles()
   const aggregateBalance: TokenAmount | undefined = useAggregateUniBalance()
 
   const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
@@ -82,7 +79,7 @@ function Web3StatusInner() {
         height={'32px'}
         display={'flex'}
         border={'1px solid #FFFFFF'}
-        borderRadius="4pxpx"
+        borderRadius="4px"
         alignItems={'center'}
         style={{ fontSize: 14 }}
       >
@@ -112,7 +109,7 @@ function Web3StatusInner() {
           ) : (
             <>
               {hasSocks ? SOCK : null}
-              {!hasPendingTransactions && connector && <span className={classes.dot} />}
+              {!hasPendingTransactions && connector && <Dot />}
               <TextButton onClick={toggleWalletModal} fontSize={12} opacity={0.6}>
                 {ENSName || shortenAddress(account)}
               </TextButton>
@@ -124,9 +121,8 @@ function Web3StatusInner() {
     )
   } else if (error) {
     return (
-      <Button
+      <ActionButton
         backgroundColor={theme.palette.error.main}
-        classname={classes.actionButton}
         fontSize={'14px'}
         width={'140px'}
         height={'32px'}
@@ -134,19 +130,13 @@ function Web3StatusInner() {
       >
         <Activity size={16} style={{ marginRight: 10 }} />
         {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}
-      </Button>
+      </ActionButton>
     )
   } else {
     return (
-      <Button
-        classname={classes.actionButton}
-        fontSize={'14px'}
-        width={'140px'}
-        height={'32px'}
-        onClick={toggleWalletModal}
-      >
+      <ActionButton fontSize={'14px'} width={'140px'} height={'32px'} onClick={toggleWalletModal}>
         Connect Wallet
-      </Button>
+      </ActionButton>
     )
   }
 }

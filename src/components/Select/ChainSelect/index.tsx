@@ -1,41 +1,10 @@
 import { MenuItem } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
 import Select from 'components/Select/Select'
 import LogoText from 'components/LogoText'
 import InputLabel from 'components/Input/InputLabel'
 import SelectedIcon from 'assets/componentsIcon/selected_icon.svg'
 import { useCallback } from 'react'
 import { Chain } from 'models/chain'
-
-interface Props {
-  label?: string
-  disabled?: boolean
-  chainList: Chain[]
-  selectedChain: Chain | null
-  onChange?: (chain: Chain | null) => void
-  width?: string
-  active?: boolean
-  placeholder?: string
-}
-
-const useStyles = makeStyles({
-  menuItem: {
-    '&::before': {
-      content: '""',
-      width: 30,
-      height: 20,
-      display: 'flex',
-      justifyContent: 'center'
-    },
-    '&.Mui-selected::before': {
-      content: `url(${SelectedIcon})`,
-      width: 30,
-      height: 20,
-      display: 'flex',
-      justifyContent: 'center'
-    }
-  }
-})
 
 export default function ChainSelect({
   label,
@@ -46,9 +15,16 @@ export default function ChainSelect({
   width,
   active,
   placeholder
-}: Props) {
-  const classes = useStyles()
-
+}: {
+  label?: string
+  disabled?: boolean
+  chainList: Chain[]
+  selectedChain: Chain | null
+  onChange?: (chain: Chain | null) => void
+  width?: string
+  active?: boolean
+  placeholder?: string
+}) {
   const handleChange = useCallback(
     e => {
       const chain = chainList.find(chain => chain.symbol === e.target.value) ?? null
@@ -71,7 +47,22 @@ export default function ChainSelect({
       >
         {chainList.map(option => (
           <MenuItem
-            className={classes.menuItem}
+            sx={{
+              '&::before': {
+                content: '""',
+                width: 30,
+                height: 20,
+                display: 'flex',
+                justifyContent: 'center'
+              },
+              '&.Mui-selected::before': {
+                content: `url(${SelectedIcon})`,
+                width: 30,
+                height: 20,
+                display: 'flex',
+                justifyContent: 'center'
+              }
+            }}
             value={option.symbol}
             key={option.symbol}
             selected={selectedChain?.symbol === option.symbol}

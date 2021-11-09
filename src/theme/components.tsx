@@ -1,6 +1,6 @@
 import React, { HTMLProps, useCallback } from 'react'
 import MuiCloseIcon from '@mui/icons-material/Close'
-import { Link, IconButton, keyframes, styled } from '@mui/material'
+import { Link, IconButton, keyframes, styled, Theme } from '@mui/material'
 import { SxProps } from '@mui/system'
 
 export function CloseIcon({ onClick }: { onClick?: () => void }) {
@@ -34,7 +34,7 @@ export function ExternalLink({
 }: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & {
   href: string
   style?: React.CSSProperties
-  sx?: SxProps
+  sx?: SxProps<Theme>
   underline?: 'always' | 'hover' | 'none'
 }) {
   const handleClick = useCallback(

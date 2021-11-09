@@ -62,11 +62,11 @@ export default function Select(props: Props) {
           backgroundColor: primary ? theme.palette.primary.main : theme.palette.grey.A400,
           width: width || '100%',
           height: height || '48px',
-          '&::before': {
-            content: (value || defaultValue) ?? `'${placeholder}'`,
+          '&:before': {
+            content: value || defaultValue ? "''" : `"${placeholder}"`,
             position: 'absolute',
             left: 24,
-            top: 12,
+            top: 10,
             zIndex: 999,
             fontSize: 16,
             fontWeight: 400
@@ -78,6 +78,7 @@ export default function Select(props: Props) {
             display: disabled ? 'none' : 'block'
           }
         }}
+        value={value}
         displayEmpty
         disabled={disabled}
         MenuProps={{

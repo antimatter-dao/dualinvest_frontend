@@ -36,13 +36,13 @@ const StyledSelect = styled(MuiSelect, {
       }
     }
   },
-  [`&.${selectClasses.icon}`]: {
+  [`& .${selectClasses.icon}`]: {
     color: 'rgba(255, 255, 255, 0.5)',
     fontSize: 16,
     right: 0,
     top: 8
   },
-  [`&.${selectClasses.iconOpen}`]: {
+  [`& .${selectClasses.iconOpen}`]: {
     color: '#FFFFFF'
   }
 }))

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { ComponentMeta } from '@storybook/react'
 import { MenuItem } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
 import SelectedIcon from 'assets/componentsIcon/selected_icon.svg'
 import DummyIcon from 'assets/images/ethereum-logo.png'
 import LogoText from 'components/LogoText'
@@ -27,28 +26,8 @@ const ChainList = [
   }
 ]
 
-const useStyles = makeStyles(() => ({
-  menuItem: {
-    '&::before': {
-      content: '""',
-      width: 30,
-      height: 20,
-      display: 'flex',
-      justifyContent: 'center'
-    },
-    '&.Mui-selected::before': {
-      content: `url(${SelectedIcon})`,
-      width: 30,
-      height: 20,
-      display: 'flex',
-      justifyContent: 'center'
-    }
-  }
-}))
-
 export const Network = () => {
   const [chain, setChain] = useState(ChainList[0])
-  const classes = useStyles()
 
   function onChangeChain(e: any) {
     const chain = ChainList.filter(el => el.symbol === e.target.value)[0]
@@ -58,7 +37,22 @@ export const Network = () => {
     <Select defaultValue={chain.symbol} value={chain.symbol} onChange={onChangeChain} width="88px">
       {ChainList.map(option => (
         <MenuItem
-          className={classes.menuItem}
+          sx={{
+            '&::before': {
+              content: '""',
+              width: 30,
+              height: 20,
+              display: 'flex',
+              justifyContent: 'center'
+            },
+            '&.Mui-selected::before': {
+              content: `url(${SelectedIcon})`,
+              width: 30,
+              height: 20,
+              display: 'flex',
+              justifyContent: 'center'
+            }
+          }}
           value={option.symbol}
           key={option.symbol}
           selected={chain.symbol === option.symbol}
