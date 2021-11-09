@@ -1,5 +1,4 @@
 import theme, { ThemeProvider as MuiThemeProvider, theme as themeColor } from '../src/theme/muiTheme'
-import ThemeProvider from '../src/theme'
 import { ModalProvider } from '../src/context/ModalContext'
 import { Provider } from 'react-redux'
 import store from '../src/state'
@@ -8,8 +7,6 @@ import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import getLibrary from 'utils/getLibrary'
 import { NetworkContextName } from 'constants/index'
 import Web3ReactManager from 'components/essential/Web3ReactManager'
-
-
 
 export const parameters = {
   backgrounds: {
@@ -33,19 +30,17 @@ export const parameters = {
 export const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
 export const decorators = [
-  (Story) => (
+  Story => (
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
         <Web3ReactManager>
           <Provider store={store}>
-            <ThemeProvider>
-              <MuiThemeProvider theme={theme}>
-                <CssBaseline />
-                <ModalProvider>
-                  <Story />
-                </ModalProvider>
-              </MuiThemeProvider>
-            </ThemeProvider>
+            <MuiThemeProvider theme={theme}>
+              <CssBaseline />
+              <ModalProvider>
+                <Story />
+              </ModalProvider>
+            </MuiThemeProvider>
           </Provider>
         </Web3ReactManager>
       </Web3ProviderNetwork>
