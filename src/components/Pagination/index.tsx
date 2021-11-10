@@ -1,6 +1,4 @@
-import MuiPagination from '@mui/material/Pagination'
-import styled from 'styled-components'
-import Pagination from '@mui/material/Pagination'
+import { styled, Pagination as MuiPagination, Pagination } from '@mui/material'
 import { ThemeProvider as MaterialThemeProvider } from '@mui/material/styles'
 import { createTheme } from '@mui/material/styles'
 import { theme } from 'theme/muiTheme'
@@ -15,25 +13,25 @@ const materialTheme = createTheme({
   height: theme.height
 })
 
-export const StyledPagination = styled(Pagination)`
-  margin: auto;
-  color: ${({ theme }) => theme.text1};
-  .MuiPaginationItem-page.Mui-selected {
-    background-color: ${({ theme }) => theme.primary2};
-    color: ${({ theme }) => theme.text4};
-    &:hover {
-      background-color: ${({ theme }) => theme.primary3};
+export const StyledPagination = styled(Pagination)(({ theme }) => ({
+  margin: 'auto',
+  color: theme.textColor.text1,
+  '.MuiPaginationItem-page.Mui-selected': {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.textColor.text4,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark
     }
   }
-`
+}))
 
-const StyledPaginationLayout = styled.div`
-  display: flex;
-  justify-content: center;
-  & > * {
-    margin-bottom: 20px;
+const StyledPaginationLayout = styled('div')({
+  display: 'flex',
+  justifyContent: 'center',
+  '& > *': {
+    marginBottom: '20px'
   }
-`
+})
 
 interface PaginationProps {
   count: number

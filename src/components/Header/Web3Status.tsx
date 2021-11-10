@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { useTheme, Box, styled } from '@mui/material'
 import { CountUp } from 'use-count-up'
-import { Activity } from 'react-feather'
+import { Warning } from '@mui/icons-material'
 import Copy from 'components/essential/Copy'
 import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
@@ -128,7 +128,7 @@ function Web3StatusInner() {
         height={'32px'}
         onClick={toggleWalletModal}
       >
-        <Activity size={16} style={{ marginRight: 10 }} />
+        <Warning sx={{ fontSize: 16, mr: 10 }} />
         {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}
       </ActionButton>
     )

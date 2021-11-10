@@ -14,7 +14,6 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import ApplicationUpdater from './state/application/updater'
 import MulticallUpdater from './state/multicall/updater'
 import TransactionUpdater from './state/transactions/updater'
-import ThemeProvider from './theme'
 import getLibrary from './utils/getLibrary'
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
@@ -39,16 +38,14 @@ ReactDOM.render(
         <Blocklist>
           <Provider store={store}>
             <Updaters />
-            <ThemeProvider>
-              <StyledEngineProvider injectFirst>
-                <MuiThemeProvider theme={theme}>
-                  <CssBaseline />
-                  <HashRouter>
-                    <App />
-                  </HashRouter>
-                </MuiThemeProvider>
-              </StyledEngineProvider>
-            </ThemeProvider>
+            <StyledEngineProvider injectFirst>
+              <MuiThemeProvider theme={theme}>
+                <CssBaseline />
+                <HashRouter>
+                  <App />
+                </HashRouter>
+              </MuiThemeProvider>
+            </StyledEngineProvider>
           </Provider>
         </Blocklist>
       </Web3ProviderNetwork>

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { X, ChevronUp, Menu } from 'react-feather'
+import { ExpandMore, Menu, Close } from '@mui/icons-material'
 import { NavLink } from 'react-router-dom'
 import { Box, MenuItem, AppBar, styled, Theme } from '@mui/material'
 import Modal from 'components/Modal'
@@ -116,7 +116,7 @@ export default function MobileHeader() {
             </MainLogo>
           </Box>
           {isOpen ? (
-            <TextButton onClick={handleDismiss}>{<X />}</TextButton>
+            <TextButton onClick={handleDismiss}>{<Close />}</TextButton>
           ) : (
             <TextButton onClick={handleClick}>{<Menu />}</TextButton>
           )}
@@ -134,7 +134,12 @@ function Accordion({ children, placeholder }: { children: React.ReactNode; place
   return (
     <>
       <Box sx={navLinkSx} display="flex" alignItems="center" gap={12} onClick={handleClick}>
-        {placeholder} <ChevronUp style={isOpen ? {} : { transform: 'rotate(180deg)' }} />
+        {placeholder}{' '}
+        <ExpandMore
+          sx={{
+            transform: isOpen ? 'rotate(180deg)' : ''
+          }}
+        />
       </Box>
       <Box padding="0 15px"> {isOpen && children}</Box>
     </>
