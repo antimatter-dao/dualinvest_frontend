@@ -1,4 +1,4 @@
-import theme, { ThemeProvider as MuiThemeProvider, theme as themeColor } from '../src/theme/muiTheme'
+import theme, { ThemeProvider as MuiThemeProvider, theme as themeColor } from '../src/theme/index'
 import { ModalProvider } from '../src/context/ModalContext'
 import { Provider } from 'react-redux'
 import store from '../src/state'

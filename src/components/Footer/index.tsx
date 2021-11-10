@@ -1,5 +1,5 @@
 import { Box, useTheme } from '@mui/material'
-import { HideOnMobile } from 'theme/muiTheme'
+import { HideOnMobile } from 'theme/index'
 import { ReactComponent as Medium } from 'assets/socialLinksIcon/medium.svg'
 import { ReactComponent as Twitter } from 'assets/socialLinksIcon/twitter.svg'
 import { ReactComponent as Telegram } from 'assets/socialLinksIcon/telegram.svg'

@@ -1,7 +1,7 @@
 import { styled, Pagination as MuiPagination, Pagination } from '@mui/material'
 import { ThemeProvider as MaterialThemeProvider } from '@mui/material/styles'
 import { createTheme } from '@mui/material/styles'
-import { theme } from 'theme/muiTheme'
+import { theme } from 'theme/index'
 
 const materialTheme = createTheme({
   palette: {
