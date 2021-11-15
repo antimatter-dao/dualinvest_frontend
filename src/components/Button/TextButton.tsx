@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function TextButton(props: Props) {
-  const { onClick, style, disabled, underline, primary, fontSize, fontWeight, opacity } = props
+  const { onClick, style, disabled, underline, primary, fontSize, fontWeight, opacity, children } = props
   const theme = useTheme()
 
   return (
@@ -34,7 +34,7 @@ export default function TextButton(props: Props) {
         }
       }}
     >
-      {props.children}
+      {children}
     </ButtonBase>
   )
 }

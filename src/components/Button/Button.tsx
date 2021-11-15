@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function Button(props: Props) {
-  const { onClick, disabled, style, width, height, fontSize, backgroundColor, color } = props
+  const { onClick, disabled, style, width, height, fontSize, backgroundColor, color, children } = props
   const theme = useTheme()
   return (
     <ButtonBase
@@ -37,12 +37,11 @@ export default function Button(props: Props) {
         },
         '&:disabled': {
           opacity: 0.24,
-          backgroundColor: theme.palette.primary.dark,
-          color: '#464647'
+          backgroundColor: theme.palette.primary.dark
         }
       }}
     >
-      {props.children}
+      {children}
     </ButtonBase>
   )
 }
