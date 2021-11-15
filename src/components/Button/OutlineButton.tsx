@@ -26,7 +26,7 @@ export default function OutlineButton(props: Props) {
         width: width || '100%',
         border: theme =>
           `1px solid ${color ? color : primary ? theme.palette.primary.main : theme.palette.text.secondary}`,
-        fontSize: fontSize,
+        fontSize,
         fontWeight: primary ? '500' : '400',
         height: height || 60,
         color: primary ? theme.palette.primary.main : theme.palette.primary.contrastText,
