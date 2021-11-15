@@ -7,4 +7,4 @@ export default {
   component: Tabs
 } as ComponentMeta<typeof Tabs>
 
-export const Default = () => <Tabs tabContents={['Content 1', 'Content 2']} />
+export const Default = () => <Tabs titles={['Tab 1', 'Tab2']} contents={['Content 1', 'Content 2']} />
