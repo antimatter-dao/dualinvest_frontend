@@ -3,7 +3,7 @@ import { Box, Typography, useTheme } from '@mui/material'
 import Card from 'components/Card/Card'
 
 interface Props {
-  title: string
+  title?: string
   primary?: boolean
   width?: string | number
   height?: string | number
@@ -15,14 +15,34 @@ interface Props {
   rate?: string
   actions?: React.ReactNode
   children?: React.ReactNode
+  border?: boolean
 }
 
 export default function NumericalCard(props: Props) {
-  const { title, primary, value, subValue, unit, fontSize, gray, width, height, rate, actions, children } = props
+  const {
+    title,
+    primary,
+    value,
+    subValue,
+    unit,
+    fontSize,
+    gray,
+    width,
+    height,
+    rate,
+    actions,
+    children,
+    border
+  } = props
   const theme = useTheme()
 
   return (
-    <Card primary={primary} gray={gray} width={width || '100%'} style={{ position: 'relative' }}>
+    <Card
+      primary={primary}
+      gray={gray}
+      width={width || '100%'}
+      style={{ position: 'relative', border: border ? '1px solid #00000010' : undefined }}
+    >
       {children}
       <Box
         sx={{
@@ -35,12 +55,14 @@ export default function NumericalCard(props: Props) {
         }}
       >
         <Box display="flex">
-          <Typography
-            variant="inherit"
-            color={primary ? theme.palette.primary.contrastText : theme.palette.text.secondary}
-          >
-            {title}
-          </Typography>
+          {title && (
+            <Typography
+              variant="inherit"
+              color={primary ? theme.palette.primary.contrastText : theme.palette.text.secondary}
+            >
+              {title}
+            </Typography>
+          )}
           {rate && (
             <Box
               sx={{

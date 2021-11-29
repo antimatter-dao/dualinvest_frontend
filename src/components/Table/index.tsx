@@ -62,37 +62,44 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
     color: theme.palette.text.secondary,
     borderBottom: 'none',
     '&:first-child': {
-      paddingLeft: 20,
+      paddingLeft: 30,
       borderTopLeftRadius: 8
     },
     '&:last-child': {
-      paddingRight: 20,
+      paddingRight: 30,
       borderTopRightRadius: 8
     }
   }
 }))
 
 const StyledTableRow = styled(TableRow)({
-  height: 72,
-  backgroundColor: '#F2F5FA',
+  height: 80,
+  backgroundColor: 'transparent',
   borderRadius: '16px',
   marginTop: '8px',
   overflow: 'hidden',
+  position: 'relative',
   '& .MuiTableCell-root': {
     justifyContent: 'flex-start',
+    border: '1px solid #00000010',
+    borderRight: 'none',
+    borderLeft: 'none',
+    paddingLeft: 0,
     '&:first-child': {
-      padding: '14px 20px',
-      borderTopLeftRadius: 8,
-      borderBottomLeftRadius: 8
+      borderLeft: '1px solid #00000010',
+      paddingLeft: '30px',
+      borderTopLeftRadius: 16,
+      borderBottomLeftRadius: 16
     },
     '&:last-child': {
-      padding: '14px 20px',
-      borderTopRightRadius: 8,
-      borderBottomRightRadius: 8
+      borderRight: '1px solid #00000010',
+      paddingRight: '30px',
+      borderTopRightRadius: 16,
+      borderBottomRightRadius: 16
     }
   },
   '&:hover': {
-    backgroundColor: ' #E2E7F0'
+    backgroundColor: ' #E2E7F020'
   }
 })
 

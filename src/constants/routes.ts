@@ -1,5 +1,5 @@
 export const routes = {
-  test1: '/test1',
-  test2: '/test2',
-  test3: '/test3'
+  dualInvest: '/dual_invest',
+  account: '/account',
+  dao: '/dao'
 }

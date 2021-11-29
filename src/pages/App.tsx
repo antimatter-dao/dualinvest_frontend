@@ -8,6 +8,8 @@ import Web3ReactManager from '../components/essential/Web3ReactManager'
 import WarningModal from '../components/Modal/WarningModal'
 import ComingSoon from './ComingSoon'
 import { ModalProvider } from 'context/ModalContext'
+import { routes } from 'constants/routes'
+import DualInvest from './DualInvest'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -31,7 +33,7 @@ const BodyWrapper = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   width: '100%',
   minHeight: `calc(100vh - ${theme.height.header})`,
-  padding: '50px 0 80px',
+  padding: '0 0 80px',
   justifyContent: 'center',
   alignItems: 'center',
   flex: 1,
@@ -39,8 +41,7 @@ const BodyWrapper = styled('div')(({ theme }) => ({
   overflowX: 'hidden',
   position: 'relative',
   [theme.breakpoints.down('md')]: {
-    minHeight: `calc(100vh - ${theme.height.header} - ${theme.height.mobileHeader})`,
-    paddingTop: 20
+    minHeight: `calc(100vh - ${theme.height.header} - ${theme.height.mobileHeader})`
   }
 }))
 
@@ -57,7 +58,7 @@ export default function App() {
               <WarningModal />
               <Web3ReactManager>
                 <Switch>
-                  <Route exact strict path="/test1" component={ComingSoon} />
+                  <Route exact strict path={routes.dualInvest} component={DualInvest} />
                 </Switch>
               </Web3ReactManager>
             </BodyWrapper>

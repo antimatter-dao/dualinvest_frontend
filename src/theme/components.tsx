@@ -30,7 +30,8 @@ export function ExternalLink({
   style,
   sx,
   children,
-  underline
+  underline,
+  className
 }: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & {
   href: string
   style?: React.CSSProperties
@@ -56,6 +57,7 @@ export function ExternalLink({
       style={style}
       sx={sx}
       underline={underline ?? 'none'}
+      className={className}
     >
       {children}
     </Link>

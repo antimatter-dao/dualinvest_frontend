@@ -21,10 +21,10 @@ interface Tab extends TabContent {
 }
 
 export const Tabs: Tab[] = [
-  { title: 'Test1', route: routes.test1 },
-  { title: 'Test2', route: routes.test2 },
-  { title: 'Test3', route: routes.test3 },
-  { title: 'Test4', link: 'https://www.google.com/' }
+  { title: 'Dual Investment', route: routes.dualInvest },
+  { title: 'Account', route: routes.account },
+  { title: 'DAO', route: routes.dao },
+  { title: 'Docs', link: 'https://docs.antimatter.finance/' }
 ]
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -50,7 +50,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
     fontSize: 14,
     color: theme.palette.text.primary,
     opacity: 0.5,
-    marginRight: 28,
+    marginRight: 48,
     paddingBottom: '30px',
     borderBottom: '2px solid transparent',
     '&.active': {
