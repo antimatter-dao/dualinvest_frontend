@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { darken } from 'polished'
+import { darken } from '@mui/system'
 import { useTheme, Box, Typography, styled } from '@mui/material'
 import QuestionHelper from 'components/essential/QuestionHelper'
 
@@ -65,7 +65,7 @@ const OptionCustom = styled(FancyButton, {
   border: active ? `1px solid ${warning ? theme.palette.error : theme.palette.primary.main}` : 'none',
   '&:hover': {
     border: active
-      ? `1px solid ${warning ? darken(0.1, theme.palette.error.main) : darken(0.1, theme.palette.primary.main)}`
+      ? `1px solid ${warning ? darken(theme.palette.error.main, 0.1) : darken(theme.palette.primary.main, 0.1)}`
       : 'none'
   },
   '& input': {

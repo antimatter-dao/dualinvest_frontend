@@ -48,37 +48,51 @@ const StyledTableContainer = styled(TableContainer)({
   '& table': {
     width: '100%',
     borderCollapse: 'separate',
-    borderSpacing: 0
+    borderSpacing: '0 8px'
   }
 })
 
-const StyledTableHead = styled(TableHead)({
+const StyledTableHead = styled(TableHead)(({ theme }) => ({
   borderRadius: 8,
   overflow: 'hidden',
   '& .MuiTableCell-root': {
     background: 'rgba(255, 255, 255, 0.08)',
-    padding: '12px 20px',
+    padding: '12px 20px 12px 0',
     fontSize: '12px',
-    color: 'rgba(255,255,255,0.5)',
+    color: theme.palette.text.secondary,
     borderBottom: 'none',
     '&:first-child': {
-      paddingLeft: 50,
+      paddingLeft: 20,
       borderTopLeftRadius: 8
     },
     '&:last-child': {
-      paddingRight: 50,
+      paddingRight: 20,
       borderTopRightRadius: 8
     }
   }
-})
+}))
 
 const StyledTableRow = styled(TableRow)({
   height: 72,
+  backgroundColor: '#F2F5FA',
+  borderRadius: '16px',
+  marginTop: '8px',
+  overflow: 'hidden',
   '& .MuiTableCell-root': {
-    borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+    justifyContent: 'flex-start',
+    '&:first-child': {
+      padding: '14px 20px',
+      borderTopLeftRadius: 8,
+      borderBottomLeftRadius: 8
+    },
+    '&:last-child': {
+      padding: '14px 20px',
+      borderTopRightRadius: 8,
+      borderBottomRightRadius: 8
+    }
   },
   '&:hover': {
-    backgroundColor: ' rgba(255, 255, 255, 0.02)'
+    backgroundColor: ' #E2E7F0'
   }
 })
 
@@ -118,7 +132,10 @@ export default function Table({ header, rows }: { header: string[]; rows: (strin
                 {header.map((headerString, index) => (
                   <CardRow key={index}>
                     <Typography variant="inherit">{headerString}</Typography>
-                    <Typography style={{ color: '#fff' }}> {data[index] ?? null}</Typography>
+                    <Typography sx={{ color: theme => theme.palette.text.secondary }}>
+                      {' '}
+                      {data[index] ?? null}
+                    </Typography>
                   </CardRow>
                 ))}
               </Box>

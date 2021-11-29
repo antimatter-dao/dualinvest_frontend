@@ -14,27 +14,27 @@ interface Props {
 }
 
 export default function TextButton(props: Props) {
-  const { onClick, style, disabled, underline, primary, fontSize, fontWeight, opacity, children } = props
+  const { onClick, style, disabled, underline, primary, fontSize, fontWeight, opacity } = props
   const theme = useTheme()
 
   return (
     <ButtonBase
       onClick={onClick}
-      style={style}
       disabled={disabled}
       sx={{
         textDecoration: underline ? 'underline' : 'none',
-        color: primary ? theme.palette.primary.main : theme.palette.primary.contrastText,
+        color: primary ? theme.palette.primary.main : theme.palette.text.primary,
         fontSize: fontSize || 16,
         fontWeight: fontWeight || 500,
         opacity: opacity || 1,
         '&:hover': {
           opacity: 1,
-          color: primary ? theme.palette.primary.dark : theme.palette.primary.main
-        }
+          color: primary ? theme.palette.primary.light : theme.palette.primary.main
+        },
+        ...style
       }}
     >
-      {children}
+      {props.children}
     </ButtonBase>
   )
 }

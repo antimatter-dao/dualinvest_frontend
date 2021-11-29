@@ -31,7 +31,7 @@ interface Props {
 const InputRow = styled('div')(({ theme }) => ({
   position: 'relative',
   width: '100%',
-  height: '48px',
+  height: '44px',
   display: 'flex',
   justifyContent: 'flex-end',
   '& .Mui-focused': {

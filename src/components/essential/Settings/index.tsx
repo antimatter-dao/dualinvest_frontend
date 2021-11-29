@@ -111,7 +111,7 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
           gap="28px"
           padding="30px 30px 48px"
           justifyContent="center"
-          style={{ background: theme.gradient.gradient1 }}
+          style={{ background: theme.palette.background.paper }}
         >
           <Typography variant="h6">Transaction Settings</Typography>
           <TransactionSettings

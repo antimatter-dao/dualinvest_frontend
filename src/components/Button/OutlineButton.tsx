@@ -24,16 +24,14 @@ export default function OutlineButton(props: Props) {
       disabled={disabled}
       sx={{
         width: width || '100%',
-        border: theme =>
-          `1px solid ${color ? color : primary ? theme.palette.primary.main : theme.palette.text.secondary}`,
-        fontSize,
-        fontWeight: primary ? '500' : '400',
+        border: theme => `1px solid ${color ? color : primary ? theme.palette.primary.main : 'rgba(0, 0, 0, 0.1)'}`,
+        fontSize: fontSize,
         height: height || 60,
-        color: primary ? theme.palette.primary.main : theme.palette.primary.contrastText,
+        color: primary ? theme.palette.primary.main : theme.palette.text.primary,
         borderRadius: borderRadius ?? 1,
         '&:hover': {
-          color: primary ? theme.palette.primary.dark : theme.palette.primary.contrastText,
-          borderColor: primary ? theme.palette.primary.dark : theme.palette.primary.main
+          color: primary ? '#6FC87E' : theme.palette.text.primary,
+          borderColor: primary ? '#6FC87E' : theme.palette.text.secondary
         },
         '&:disabled': {
           opacity: theme.palette.action.disabledOpacity

@@ -10,7 +10,8 @@ const materialTheme = createTheme({
   textColor: theme.textColor,
   bgColor: theme.bgColor,
   gradient: theme.gradient,
-  height: theme.height
+  height: theme.height,
+  width: theme.width
 })
 
 export const StyledPagination = styled(Pagination)(({ theme }) => ({

@@ -9,7 +9,8 @@ import { CloseIcon } from 'theme/components'
 export const Popup = styled('div')(({ theme }) => ({
   display: 'inlineBlock',
   width: '100%',
-  backgroundColor: theme.bgColor.bg1,
+  backgroundColor: theme.palette.background.paper,
+  border: '1px solid ' + theme.palette.primary.main,
   position: 'relative',
   borderRadius: '4px',
   padding: '20px',
@@ -29,7 +30,7 @@ const Fader = styled('div')(({ theme }) => ({
   left: '0px',
   width: '100%',
   height: '2px',
-  backgroundColor: theme.bgColor.bg5
+  backgroundColor: theme.palette.primary.main
 }))
 
 const AnimatedFader = animated(Fader)

@@ -3,7 +3,7 @@ import { ExpandMore, Menu, Close } from '@mui/icons-material'
 import { NavLink } from 'react-router-dom'
 import { Box, MenuItem, AppBar, styled, Theme } from '@mui/material'
 import Modal from 'components/Modal'
-import ChainSwap from '../../assets/svg/chain_swap.svg'
+import Antimatter from '../../assets/svg/antimatter.svg'
 import { ExternalLink } from 'theme/components'
 import { ShowOnMobile } from 'theme/index'
 import Image from 'components/Image'
@@ -111,8 +111,8 @@ export default function MobileHeader() {
       <ShowOnMobile breakpoint="md">
         <StyledAppBar>
           <Box display="flex" alignItems="center">
-            <MainLogo id={'chainswap'} to={'/'}>
-              <Image src={ChainSwap} alt={'chainswap'} />
+            <MainLogo id={'antimatter'} to={'/'}>
+              <Image src={Antimatter} alt={'antimatter'} />
             </MainLogo>
           </Box>
           {isOpen ? (

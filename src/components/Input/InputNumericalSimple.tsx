@@ -2,7 +2,7 @@ import { InputHTMLAttributes, useCallback } from 'react'
 import { Box } from '@mui/material'
 import Input, { InputProps } from './index'
 import { escapeRegExp } from 'utils'
-import SecondaryButton from 'components/Button/SecondaryButton'
+import TextButton from 'components/Button/TextButton'
 import InputLabel from './InputLabel'
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
@@ -14,9 +14,8 @@ export default function NumericalInput({
   onMax,
   balance,
   label,
-  unit,
   ...props
-}: InputProps & InputHTMLAttributes<HTMLInputElement> & { onMax?: () => void; balance?: string; unit?: string }) {
+}: InputProps & InputHTMLAttributes<HTMLInputElement> & { onMax?: () => void; balance?: string }) {
   const enforcer = (nextUserInput: string) => {
     const fixed = nextUserInput.replace(/,/g, '.')
     if (fixed === '' || inputRegex.test(escapeRegExp(fixed))) {
@@ -42,15 +41,12 @@ export default function NumericalInput({
       {(label || balance) && (
         <Box display="flex" justifyContent="space-between">
           <InputLabel>{label}</InputLabel>
-          {!!balance && (
-            <InputLabel style={{ fontSize: '12px' }}>
-              Available: {balance} {unit ?? 'MATTER'}
-            </InputLabel>
-          )}
+          {!!balance && <InputLabel style={{ fontSize: '12px' }}>Available: {balance} MATTER</InputLabel>}
         </Box>
       )}
       <Input
         {...props} // universal input options
+        height={44}
         maxWidth={maxWidth}
         onChange={handleChange}
         inputMode="decimal"
@@ -67,8 +63,7 @@ export default function NumericalInput({
         endAdornment={
           onMax && (
             <Box gap="20px" display="flex" alignItems="center" paddingLeft="20px" paddingBottom="2px">
-              <span>{unit ?? 'MATTER'}</span>
-              <SecondaryButton
+              <TextButton
                 primary
                 onClick={onMax}
                 style={{
@@ -77,7 +72,7 @@ export default function NumericalInput({
                 }}
               >
                 MAX
-              </SecondaryButton>
+              </TextButton>
             </Box>
           )
         }

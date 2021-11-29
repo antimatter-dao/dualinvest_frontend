@@ -2,12 +2,20 @@ import React from 'react'
 import { InputLabel as MuiInputLabel } from '@mui/material'
 import { ReactComponent as InfoIcon } from '../../assets/componentsIcon/info_icon.svg'
 
-export default function InputLabel({ children, infoIcon }: { children?: React.ReactNode; infoIcon?: boolean }) {
+export default function InputLabel({
+  children,
+  infoIcon,
+  style
+}: {
+  children?: React.ReactNode
+  infoIcon?: boolean
+  style?: React.CSSProperties
+}) {
   return (
     <MuiInputLabel
       sx={{
-        color: '#FFFFFF',
-        marginBottom: '12px',
+        color: theme => theme.palette.text.secondary,
+        marginBottom: '8px',
         display: 'flex',
         alignItems: 'center'
       }}
@@ -15,9 +23,10 @@ export default function InputLabel({ children, infoIcon }: { children?: React.Re
       <div
         style={{
           opacity: 0.6,
-          fontSize: 14,
+          fontSize: 12,
           fontWeight: 500,
-          lineHeight: '148.69%'
+          lineHeight: '148.69%',
+          ...style
         }}
       >
         {children}

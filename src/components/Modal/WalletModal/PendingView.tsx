@@ -3,7 +3,7 @@ import React from 'react'
 import { Box, useTheme } from '@mui/material'
 import Button from 'components/Button/Button'
 import { ReactComponent as CrossCircle } from 'assets/componentsIcon/statusIcon/error_icon.svg'
-import { OutlinedCard } from 'components/Card'
+import { OutlinedCard } from 'components/Card/Card'
 import Spinner from 'components/Spinner'
 
 export default function PendingView({
@@ -31,7 +31,7 @@ export default function PendingView({
       ) : (
         <>
           <OutlinedCard color={theme.palette.primary.main} style={{ margin: '20px' }} padding="16px" width="80%">
-            <Box display="flex" gap="16px" width="100%">
+            <Box display="flex" gap="16px" width="100%" alignItems="center">
               <Spinner />
               Initializing...
             </Box>

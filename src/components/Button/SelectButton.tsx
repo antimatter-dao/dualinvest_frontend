@@ -22,8 +22,11 @@ export default function SelectButton(props: Props) {
       disabled={disabled}
       sx={{
         ...style,
-        width: width || '100%',
-        height: height || 60,
+        width: {
+          xs: '100%',
+          md: width || 160
+        },
+        height: height || 44,
         backgroundColor: primary ? theme.palette.primary.main : theme.palette.text.secondary,
         color: theme.palette.text.primary,
         borderRadius: 1,

@@ -21,7 +21,6 @@ export default function SecondaryButton(props: Props) {
       onClick={onClick}
       disabled={disabled}
       sx={{
-        ...style,
         width: width || '100%',
         fontSize: fontSize || 16,
         height: height || 60,
@@ -30,14 +29,16 @@ export default function SecondaryButton(props: Props) {
         backgroundColor: theme.palette.secondary.main,
         borderRadius: 1,
         '&:hover': {
-          backgroundColor: theme.palette.secondary.dark,
-          borderColor: theme.palette.secondary.dark
+          backgroundColor: theme.palette.secondary.light,
+          borderColor: theme.palette.secondary.light,
+          color: theme.palette.secondary.contrastText
         },
         '&:disabled': {
           opacity: theme.palette.action.disabledOpacity,
           backgroundColor: theme.palette.secondary.light,
           borderColor: theme.palette.secondary.light
-        }
+        },
+        ...style
       }}
     >
       {children}

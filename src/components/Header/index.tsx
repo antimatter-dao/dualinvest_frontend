@@ -5,7 +5,7 @@ import Web3Status from './Web3Status'
 import { HideOnMobile } from 'theme/index'
 import PlainSelect from 'components/Select/PlainSelect'
 import Image from 'components/Image'
-import ChainSwap from '../../assets/svg/chain_swap.svg'
+import antimatter from '../../assets/svg/antimatter.svg'
 import { routes } from 'constants/routes'
 import MobileHeader from './MobileHeader'
 
@@ -24,30 +24,19 @@ export const Tabs: Tab[] = [
   { title: 'Test1', route: routes.test1 },
   { title: 'Test2', route: routes.test2 },
   { title: 'Test3', route: routes.test3 },
-  { title: 'Test4', link: 'https://www.google.com/' },
-  {
-    title: 'About',
-    subTab: [
-      { title: 'About1', link: 'https://www.google.com/' },
-      { title: 'About2', link: 'https://www.google.com/' },
-      {
-        title: 'faq',
-        titleContent: <FAQButton />,
-        route: 'faq'
-      }
-    ]
-  }
+  { title: 'Test4', link: 'https://www.google.com/' }
 ]
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   position: 'relative',
   height: theme.height.header,
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.background.paper,
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
   boxShadow: 'none',
-  padding: '0 60px 00 40px',
+  padding: '0 60px 0 0',
+  borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
   [theme.breakpoints.down('md')]: {
     position: 'fixed',
     bottom: 0,
@@ -59,11 +48,14 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   '& .link': {
     textDecoration: 'none',
     fontSize: 14,
-    color: '#FFFFFF',
+    color: theme.palette.text.primary,
     opacity: 0.5,
     marginRight: 28,
+    paddingBottom: '30px',
+    borderBottom: '2px solid transparent',
     '&.active': {
-      opacity: 1
+      opacity: 1,
+      borderColor: theme.palette.text.primary
     },
     '&:hover': {
       opacity: 1
@@ -92,8 +84,8 @@ export default function Header() {
       <StyledAppBar>
         <HideOnMobile breakpoint="md">
           <Box display="flex" alignItems="center">
-            <MainLogo id={'chainswap'} to={'/'}>
-              <Image src={ChainSwap} alt={'chainswap'} />
+            <MainLogo id={'antimatter'} to={'/'}>
+              <Image src={antimatter} alt={'antimatter'} />
             </MainLogo>
             <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
@@ -116,7 +108,7 @@ export default function Header() {
                     )}
                   </PlainSelect>
                 ) : link ? (
-                  <ExternalLink href={link} className={'link'} key={link + idx}>
+                  <ExternalLink href={link} className={'link'} key={link + idx} style={{ fontSize: 14 }}>
                     {titleContent ?? title}
                   </ExternalLink>
                 ) : (
@@ -131,29 +123,5 @@ export default function Header() {
         <Web3Status />
       </StyledAppBar>
     </>
-  )
-}
-
-function FAQButton() {
-  const theme = useTheme()
-  return (
-    <Box display="flex" alignItems="center" justifyContent="center">
-      <span
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: '50%',
-          border: `1px solid ${theme.palette.success.main}`,
-          width: '18px',
-          height: '18px',
-          marginRight: '12px',
-          color: theme.palette.success.main
-        }}
-      >
-        <Typography variant="body1">?</Typography>
-      </span>
-      FAQ
-    </Box>
   )
 }

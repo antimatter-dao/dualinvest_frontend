@@ -8,7 +8,6 @@ import Web3ReactManager from '../components/essential/Web3ReactManager'
 import WarningModal from '../components/Modal/WarningModal'
 import ComingSoon from './ComingSoon'
 import { ModalProvider } from 'context/ModalContext'
-import Footer from 'components/Footer'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -31,7 +30,7 @@ const BodyWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
-  minHeight: `calc(100vh - ${theme.height.header} - ${theme.height.footer})`,
+  minHeight: `calc(100vh - ${theme.height.header})`,
   padding: '50px 0 80px',
   justifyContent: 'center',
   alignItems: 'center',
@@ -62,7 +61,6 @@ export default function App() {
                 </Switch>
               </Web3ReactManager>
             </BodyWrapper>
-            <Footer />
           </ContentWrapper>
         </AppWrapper>
       </ModalProvider>

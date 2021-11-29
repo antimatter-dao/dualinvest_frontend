@@ -16,17 +16,6 @@ const TransactionStatusText = styled('div')({
   }
 })
 
-const TransactionState = styled(ExternalLink)(() => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  textDecoration: 'none !important',
-  borderRadius: '0.5rem',
-  padding: '0.25rem 0rem',
-  fontWeight: 500,
-  fontSize: '0.825rem'
-}))
-
 export default function Transaction({ hash }: { hash: string }) {
   const { chainId } = useActiveWeb3React()
   const allTransactions = useAllTransactions()
@@ -41,7 +30,19 @@ export default function Transaction({ hash }: { hash: string }) {
 
   return (
     <div>
-      <TransactionState href={chainId ? getEtherscanLink(chainId, hash, 'transaction') : ''}>
+      <ExternalLink
+        href={chainId ? getEtherscanLink(chainId, hash, 'transaction') : ''}
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          textDecoration: 'none !important',
+          borderRadius: '0.5rem',
+          padding: '0.25rem 0rem',
+          fontWeight: 500,
+          fontSize: '0.825rem'
+        }}
+      >
         <TransactionStatusText>{summary ?? hash} ↗</TransactionStatusText>
         {pending ? (
           <Spinner />
@@ -50,7 +51,7 @@ export default function Transaction({ hash }: { hash: string }) {
         ) : (
           <Error height={16} width={16} />
         )}
-      </TransactionState>
+      </ExternalLink>
     </div>
   )
 }

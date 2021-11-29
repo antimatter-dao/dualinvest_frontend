@@ -9,6 +9,9 @@ interface Height {
   mobileHeader: string
   footer: string
 }
+interface Width {
+  sidebar: string
+}
 
 interface TextColor {
   text1: string
@@ -33,70 +36,62 @@ declare module '@mui/material/styles' {
     bgColor: BgColor
     gradient: Gradient
     height: Height
-  }
-  interface DeprecatedThemeOptions {
-    textColor: TextColor
-    bgColor: BgColor
-    gradient: Gradient
-    height: Height
+    width: Width
   }
 }
 
 declare module '@mui/material/styles/createTheme' {
-  interface DeprecatedThemeOptions {
-    textColor: TextColor
-    bgColor: BgColor
-    gradient: Gradient
-    height: Height
-  }
   interface ThemeOptions {
     textColor: TextColor
     bgColor: BgColor
     gradient: Gradient
     height: Height
+    width: Width
   }
   interface Theme {
     textColor: TextColor
     bgColor: BgColor
     gradient: Gradient
     height: Height
+    width: Width
   }
 }
 
 export const theme = {
   palette: {
     primary: {
-      light: '#2E2247',
-      main: '#9867FF',
-      dark: '#7433FF',
-      contrastText: '#FFFFFF'
+      light: '#ADDFB5',
+      main: '#31B047',
+      dark: '#129026',
+      contrastText: '#ffffff'
     },
     secondary: {
-      light: '#1D152D',
-      main: '#211735',
-      dark: '#3E276B',
-      contrastText: '#9867FF'
+      light: '#31B047',
+      main: '#D4F3D8',
+      dark: '#129026',
+      contrastText: '#ffffff'
     },
     error: {
-      main: '#F53030'
+      main: '#FF0000',
+      light: '#FFD7D7'
     },
     warning: {
-      main: '#9867FF'
+      main: '#F0B90B'
     },
     info: {
-      main: '#9867FF'
+      main: '#F0B90B'
     },
     success: {
-      main: '#2DAB50'
+      main: '#31B047'
     },
     background: {
-      default: '#1C1C1F',
-      paper: '#191919'
+      default: '#F2F5FA',
+      paper: '#FFFFFF'
     },
     text: {
-      primary: '#FFFFFF',
-      secondary: '#333333',
-      disabled: '#999999'
+      primary: '#252525',
+      secondary: 'rgba(0, 0, 0, 0.6)',
+      disabled: '#F2F5FA'
     },
     action: {
       disabledOpacity: 0.8
@@ -109,12 +104,12 @@ export const theme = {
     }
   },
   textColor: {
-    text1: '#FFFFFF',
-    text2: '#CCCCCC',
-    text3: '#999999',
-    text4: '#727272',
-    text5: '#333333',
-    primary: '#9867FF'
+    text1: '#252525',
+    text2: '#333333',
+    text3: '#727272',
+    text4: '#999999',
+    text5: '#CCCCCC',
+    primary: '#31B047'
   },
   bgColor: {
     bg1: '#000000',
@@ -124,12 +119,15 @@ export const theme = {
     bg5: '#A1A1A1'
   },
   gradient: {
-    gradient1: '#000000 linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%)'
+    gradient1: '#ffffff linear-gradient(154.62deg, #77C803 9.44%, #28A03E 59.25%);'
   },
   height: {
-    header: '88px',
+    header: '80px',
     mobileHeader: '77px',
     footer: '60px'
+  },
+  width: {
+    sidebar: '250px'
   },
   shape: {
     border: '1px solid',
@@ -145,16 +143,24 @@ export const theme = {
 export const override: any = {
   MuiCssBaseline: {
     styleOverrides: {
-      body: { backgroundColor: '#1C1C1F', fontSize: 16 },
-      'html, input, textarea, button': {
-        fontFamily: 'Roboto, sans-serif',
+      body: { backgroundColor: theme.palette.background.default, fontSize: 16 },
+      'html, input, textarea, button, body': {
+        fontFamily: 'SF Pro, sans-serif',
         fontDisplay: 'fallback'
       },
       '@supports (font-variation-settings: normal)': {
-        'html, input, textarea, button ': {
-          fontFamily: 'Roboto, sans-serif',
+        'html, input, textarea, button, body': {
+          fontFamily: 'SF Pro, sans-serif',
           fontDisplay: 'fallback'
         }
+      }
+    }
+  },
+  MuiButtonBase: {
+    styleOverrides: {
+      root: {
+        fontSize: 16,
+        fontWeight: 500
       }
     }
   },
@@ -241,7 +247,7 @@ export const override: any = {
   MuiTypography: {
     styleOverrides: {
       root: {
-        fontFamily: 'Roboto'
+        fontFamily: 'SF Pro'
       },
       body1: {
         fontSize: 14
@@ -250,12 +256,12 @@ export const override: any = {
         fontSize: 12
       },
       h5: {
-        fontFamily: 'Futura PT',
-        fontSize: 28
+        fontSize: 28,
+        fontWeight: 500
       },
       h6: {
-        fontFamily: 'Futura PT',
-        fontSize: 22
+        fontSize: 22,
+        fontWeight: 500
       },
       caption: {
         fontSize: 12,

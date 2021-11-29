@@ -1,7 +1,7 @@
 import Button from './Button'
 import OutlineButton from './OutlineButton'
 import Spinner from 'components/Spinner'
-import { Typography } from '@mui/material'
+import { Typography, useTheme } from '@mui/material'
 
 export default function ActionButton({
   error,
@@ -26,19 +26,23 @@ export default function ActionButton({
   width?: string
   disableAction?: boolean
 }) {
+  const theme = useTheme()
   return (
     <>
-      {error || pending ? (
+      {error ? (
         <OutlineButton primary disabled height={height} width={width}>
-          {pending ? (
-            <>
-              <Spinner marginRight={16} />
-              {pendingText || 'Waiting Confirmation'}
-            </>
-          ) : (
-            error
-          )}
+          {error}
         </OutlineButton>
+      ) : pending ? (
+        <Button
+          disabled
+          height={height}
+          width={width}
+          style={{ backgroundColor: theme.palette.primary.main + '!important' }}
+        >
+          <Spinner marginRight={16} color="#ffffff" />
+          {pendingText || 'Waiting Confirmation'}
+        </Button>
       ) : success ? (
         <Button disabled height={height} width={width}>
           <Typography variant="inherit">{successText ?? actionText}</Typography>

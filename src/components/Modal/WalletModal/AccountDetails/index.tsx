@@ -14,7 +14,7 @@ import Button from 'components/Button/Button'
 
 import SecondaryButton from 'components/Button/SecondaryButton'
 import TextButton from 'components/Button/TextButton'
-import { OutlinedCard } from 'components/Card'
+import { OutlinedCard } from 'components/Card/Card'
 
 const Dot = styled('span')({
   width: 24,

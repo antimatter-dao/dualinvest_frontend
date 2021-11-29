@@ -1,7 +1,7 @@
 import { Typography, Box, useTheme } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import Button from 'components/Button/Button'
-import { OutlinedCard } from 'components/Card'
+import { OutlinedCard } from 'components/Card/Card'
 import Image from 'components/Image'
 import { Chain } from 'models/chain'
 import Modal from '.'
