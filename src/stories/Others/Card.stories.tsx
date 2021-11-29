@@ -1,6 +1,6 @@
 import { ComponentMeta } from '@storybook/react'
 
-import { OutlinedCard } from 'components/Card'
+import { OutlinedCard } from 'components/Card/Card'
 
 export default {
   title: 'Others/OutlinedCard',

@@ -6,10 +6,11 @@ import Polling from '../components/essential/Polling'
 import Popups from '../components/essential/Popups'
 import Web3ReactManager from '../components/essential/Web3ReactManager'
 import WarningModal from '../components/Modal/WarningModal'
-import ComingSoon from './ComingSoon'
+// import ComingSoon from './ComingSoon'
 import { ModalProvider } from 'context/ModalContext'
 import { routes } from 'constants/routes'
 import DualInvest from './DualInvest'
+import DualInvestMgmt from './DualInvestMgmt'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -59,6 +60,7 @@ export default function App() {
               <Web3ReactManager>
                 <Switch>
                   <Route exact strict path={routes.dualInvest} component={DualInvest} />
+                  <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
                 </Switch>
               </Web3ReactManager>
             </BodyWrapper>
