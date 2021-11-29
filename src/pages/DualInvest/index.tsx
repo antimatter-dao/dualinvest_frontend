@@ -28,33 +28,34 @@ export default function DualInvest() {
       <Box
         display="flex"
         justifyContent="center"
-        alignItems="center"
         sx={{ width: '100%', background: theme => theme.palette.background.paper, padding: '44px 61px' }}
       >
-        <Box display="grid" sx={{ maxWidth: 1440 }} gap={12}>
-          <Typography component="h1" sx={{ fontSize: { xs: 44 }, fontWeight: 700 }}>
-            Antimatter Dual Investment
-          </Typography>
-          <Box display="flex" gap={32}>
-            <LogoText
-              logo={<Image src={checkUrl} />}
-              text={<Typography sx={{ fontSize: 18, opacity: 0.8 }}>Earn both ups and downs</Typography>}
-            />
-            <LogoText
-              logo={<Image src={checkUrl} />}
-              text={<Typography sx={{ fontSize: 18, opacity: 0.8 }}>More control</Typography>}
-            />
+        <Box maxWidth={1100} width="100%" display="flex" justifyContent="space-between" alignItems="center">
+          <Box display="grid" gap={12}>
+            <Typography component="h1" sx={{ fontSize: { xs: 44 }, fontWeight: 700 }}>
+              Antimatter Dual Investment
+            </Typography>
+            <Box display="flex" gap={32}>
+              <LogoText
+                logo={<Image src={checkUrl} />}
+                text={<Typography sx={{ fontSize: 18, opacity: 0.8 }}>Earn both ups and downs</Typography>}
+              />
+              <LogoText
+                logo={<Image src={checkUrl} />}
+                text={<Typography sx={{ fontSize: 18, opacity: 0.8 }}>More control</Typography>}
+              />
+            </Box>
+            <Grid container spacing={20}>
+              <Grid item xs={6}>
+                <NumericalCard value="9,657,321" unit="USDT" border subValue="Total investment amount" />
+              </Grid>
+              <Grid item xs={6}>
+                <NumericalCard value="168,640" unit="USDT" border subValue="Amount of investment in progress" />
+              </Grid>
+            </Grid>
           </Box>
-          <Grid container spacing={20}>
-            <Grid item xs={6}>
-              <NumericalCard value="9,657,321" unit="USDT" border subValue="Total investment amount" />
-            </Grid>
-            <Grid item xs={6}>
-              <NumericalCard value="168,640" unit="USDT" border subValue="Amount of investment in progress" />
-            </Grid>
-          </Grid>
+          <StyledDualInvestGuide />
         </Box>
-        <StyledDualInvestGuide />
       </Box>
       <Box display="grid" gap={36} width="100%" justifyItems="center" maxWidth={1110}>
         <Box display="flex" gap={20} width="100%">
