@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Box, Typography, Grid } from '@mui/material'
+import { Box, Typography, Grid, styled } from '@mui/material'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
 import { ReactComponent as RiskStatementIcon } from 'assets/svg/risk_statement.svg'
 import { ReactComponent as Faq } from 'assets/svg/faq.svg'
@@ -23,6 +23,17 @@ const data = {
   minAmount: '0.0001',
   maxAmount: '2.00'
 }
+
+const StyledUnorderList = styled('ul')({
+  paddingLeft: '18px',
+  color: '#808080',
+  '& li span': {
+    color: '#252525'
+  },
+  '& li::marker': {
+    color: '#31B047'
+  }
+})
 
 export default function DualInvestMgmt() {
   const [amount, setAmount] = useState('')
@@ -107,14 +118,20 @@ export default function DualInvestMgmt() {
                 <Typography fontSize={16} color={theme.palette.text.primary}>
                   Return on investment:
                 </Typography>
-                <ul style={{ color: '#808080' }}>
-                  <li>When the final settlement price ≥ 62,800 USDT, you will receive 56,750.61 USDT.</li>
-                  <li>When the settlement price is &lt; 62,800 USDT, you will receive 1.682655 BTC.</li>
+                <StyledUnorderList>
+                  <li>
+                    When the final settlement price ≥ 62,800 USDT, you will receive{' '}
+                    <span style={{ color: theme.palette.text.primary }}>56,750.61 USDT</span>.
+                  </li>
+                  <li>
+                    When the settlement price is &lt; 62,800 USDT, you will receive{' '}
+                    <span style={{ color: theme.palette.text.primary }}>1.682655 BTC</span>.
+                  </li>
                   <li>
                     APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully
                     complete the subscription.
                   </li>
-                </ul>
+                </StyledUnorderList>
               </OutlinedCard>
             </Card>
           </Grid>
