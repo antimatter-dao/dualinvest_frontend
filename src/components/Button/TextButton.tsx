@@ -11,10 +11,11 @@ interface Props {
   style?: React.CSSProperties
   disabled?: boolean
   classname?: string
+  color?: string
 }
 
 export default function TextButton(props: Props) {
-  const { onClick, style, disabled, underline, primary, fontSize, fontWeight, opacity } = props
+  const { onClick, style, disabled, underline, primary, fontSize, fontWeight, opacity, color } = props
   const theme = useTheme()
 
   return (
@@ -23,7 +24,7 @@ export default function TextButton(props: Props) {
       disabled={disabled}
       sx={{
         textDecoration: underline ? 'underline' : 'none',
-        color: primary ? theme.palette.primary.main : theme.palette.text.primary,
+        color: color ?? primary ? theme.palette.primary.main : theme.palette.text.primary,
         fontSize: fontSize || 16,
         fontWeight: fontWeight || 500,
         opacity: opacity || 1,
