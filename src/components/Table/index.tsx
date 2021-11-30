@@ -62,46 +62,51 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
     color: theme.palette.text.secondary,
     borderBottom: 'none',
     '&:first-child': {
-      paddingLeft: 30,
+      paddingLeft: 20,
       borderTopLeftRadius: 8
     },
     '&:last-child': {
-      paddingRight: 30,
+      paddingRight: 20,
       borderTopRightRadius: 8
     }
   }
 }))
 
-const StyledTableRow = styled(TableRow)({
-  height: 80,
-  backgroundColor: 'transparent',
-  borderRadius: '16px',
-  marginTop: '8px',
-  overflow: 'hidden',
-  position: 'relative',
-  '& .MuiTableCell-root': {
-    justifyContent: 'flex-start',
-    border: '1px solid #00000010',
-    borderRight: 'none',
-    borderLeft: 'none',
-    paddingLeft: 0,
-    '&:first-child': {
-      borderLeft: '1px solid #00000010',
-      paddingLeft: '30px',
-      borderTopLeftRadius: 16,
-      borderBottomLeftRadius: 16
+const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{ variant: 'outlined' | 'grey' }>(
+  ({ variant, theme }) => ({
+    height: 80,
+    borderRadius: '16px',
+    marginTop: '8px',
+    overflow: 'hidden',
+    position: 'relative',
+    background: variant === 'outlined' ? 'transparent' : theme.palette.background.default,
+    '& .MuiTableCell-root': {
+      justifyContent: 'flex-start',
+      paddingLeft: 0,
+      border: '1px solid',
+      borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
+      borderRight: 'none',
+      borderLeft: 'none',
+      '&:first-child': {
+        borderLeft: '1px solid',
+        borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
+        paddingLeft: '20px',
+        borderTopLeftRadius: 16,
+        borderBottomLeftRadius: 16
+      },
+      '&:last-child': {
+        borderRight: '1px solid',
+        borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
+        paddingRight: '20px',
+        borderTopRightRadius: 16,
+        borderBottomRightRadius: 16
+      }
     },
-    '&:last-child': {
-      borderRight: '1px solid #00000010',
-      paddingRight: '30px',
-      borderTopRightRadius: 16,
-      borderBottomRightRadius: 16
+    '&:hover': {
+      backgroundColor: variant === 'outlined' ? '#E2E7F020' : '#E2E7F0'
     }
-  },
-  '&:hover': {
-    backgroundColor: ' #E2E7F020'
-  }
-})
+  })
+)
 
 const Card = styled('div')(`
   background-color: rgba(255, 255, 255, 0.08);
@@ -127,7 +132,15 @@ const CardRow = styled('div')(`
   }
 `)
 
-export default function Table({ header, rows }: { header: string[]; rows: (string | number | JSX.Element)[][] }) {
+export default function Table({
+  header,
+  rows,
+  variant = 'grey'
+}: {
+  header: string[]
+  rows: (string | number | JSX.Element)[][]
+  variant?: 'outlined' | 'grey'
+}) {
   const matches = useBreakpoint()
   return (
     <>
@@ -161,7 +174,7 @@ export default function Table({ header, rows }: { header: string[]; rows: (strin
             </StyledTableHead>
             <TableBody>
               {rows.map((row, idx) => (
-                <StyledTableRow key={row[0].toString() + idx}>
+                <StyledTableRow key={row[0].toString() + idx} variant={variant}>
                   {row.map((data, idx) => (
                     <TableCell key={idx}>{data}</TableCell>
                   ))}

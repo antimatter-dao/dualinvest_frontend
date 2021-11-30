@@ -130,6 +130,7 @@ export default function DualInvest() {
           </Box>
         </Box>
         <Table
+          variant="outlined"
           header={['Exercise Price', 'APY', 'Delivery Date', 'Holding Days', 'Cast/All', '']}
           rows={[
             [
@@ -202,6 +203,7 @@ export default function DualInvest() {
           </Box>
         </Box>
         <Table
+          variant="outlined"
           header={['Exercise Price', 'APY', 'Delivery Date', 'Holding Days', 'Cast/All', '']}
           rows={[
             [

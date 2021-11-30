@@ -16,6 +16,7 @@ interface Props {
   actions?: React.ReactNode
   children?: React.ReactNode
   border?: boolean
+  padding?: string
 }
 
 export default function NumericalCard(props: Props) {
@@ -32,7 +33,8 @@ export default function NumericalCard(props: Props) {
     rate,
     actions,
     children,
-    border
+    border,
+    padding
   } = props
   const theme = useTheme()
 
@@ -46,7 +48,7 @@ export default function NumericalCard(props: Props) {
       {children}
       <Box
         sx={{
-          padding: '20px',
+          padding: padding ?? '20px',
           gap: '15px',
           height: height || 'auto',
           display: 'flex',
@@ -54,41 +56,40 @@ export default function NumericalCard(props: Props) {
           justifyContent: 'space-between'
         }}
       >
-        {title ||
-          (rate && (
-            <Box display="flex">
-              {title && (
+        {(title || rate) && (
+          <Box display="flex">
+            {title && (
+              <Typography
+                variant="inherit"
+                color={primary ? theme.palette.primary.contrastText : theme.palette.text.secondary}
+              >
+                {title}
+              </Typography>
+            )}
+            {rate && (
+              <Box
+                sx={{
+                  ml: 15,
+                  backgroundColor: 'rgba(17, 191, 45, 0.16)',
+                  width: '56px',
+                  height: '24px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '12px'
+                }}
+              >
                 <Typography
-                  variant="inherit"
-                  color={primary ? theme.palette.primary.contrastText : theme.palette.text.secondary}
-                >
-                  {title}
-                </Typography>
-              )}
-              {rate && (
-                <Box
                   sx={{
-                    ml: 15,
-                    backgroundColor: 'rgba(17, 191, 45, 0.16)',
-                    width: '56px',
-                    height: '24px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: '12px'
+                    color: '#11BF2D'
                   }}
                 >
-                  <Typography
-                    sx={{
-                      color: '#11BF2D'
-                    }}
-                  >
-                    +{rate}%
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-          ))}
+                  +{rate}%
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        )}
 
         <Box
           sx={{

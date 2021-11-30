@@ -1,28 +1,14 @@
-import { styled, Pagination as MuiPagination, Pagination } from '@mui/material'
-import { ThemeProvider as MaterialThemeProvider } from '@mui/material/styles'
-import { createTheme } from '@mui/material/styles'
-import { theme } from 'theme/index'
-
-const materialTheme = createTheme({
-  palette: {
-    mode: 'dark'
-  },
-  textColor: theme.textColor,
-  bgColor: theme.bgColor,
-  gradient: theme.gradient,
-  height: theme.height,
-  width: theme.width
-})
+import { styled, Pagination } from '@mui/material'
 
 export const StyledPagination = styled(Pagination)(({ theme }) => ({
-  margin: 'auto',
-  color: theme.textColor.text1,
-  '.MuiPaginationItem-page.Mui-selected': {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.textColor.text4,
-    '&:hover': {
-      backgroundColor: theme.palette.primary.dark
-    }
+  margin: '0 0 0 auto',
+  color: theme.palette.text.secondary,
+  '& .MuiPaginationItem-root': { opacity: 0.5 },
+  '& .MuiPaginationItem-page.Mui-selected': {
+    backgroundColor: 'transparent',
+    opacity: 1,
+    color: theme.palette.text.primary,
+    borderColor: theme.palette.text.primary
   }
 }))
 
@@ -52,10 +38,10 @@ export default function PaginationView({
   boundaryCount
 }: PaginationProps) {
   return (
-    <MaterialThemeProvider theme={materialTheme}>
+    <>
       {count > 0 && (
         <StyledPaginationLayout>
-          <MuiPagination
+          <StyledPagination
             count={count}
             page={page}
             siblingCount={siblingCount || 1}
@@ -69,6 +55,6 @@ export default function PaginationView({
           />
         </StyledPaginationLayout>
       )}
-    </MaterialThemeProvider>
+    </>
   )
 }

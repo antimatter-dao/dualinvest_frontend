@@ -14,6 +14,7 @@ import DualInvestMgmt from './DualInvestMgmt'
 import NoService from './NoService'
 import Spinner from 'components/Spinner'
 import { fetchLocation } from 'utils/location'
+import Account from './Account'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -66,6 +67,7 @@ export default function App() {
                 <LocatoinVerification resource={resource}>
                   <Switch>
                     <Route exact strict path={routes.noService} component={NoService} />
+                    <Route exact strict path={routes.account} component={Account} />
                     <Route exact strict path={routes.dualInvest} component={DualInvest} />
                     <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
                     <Route path="/">
