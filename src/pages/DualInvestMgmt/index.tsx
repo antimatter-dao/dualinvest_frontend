@@ -201,7 +201,18 @@ export default function DualInvestMgmt() {
                   FAQ
                 </Typography>
               </Box>
-              <Accordion />
+              <Accordion
+                items={[
+                  {
+                    summary: 'accordion1',
+                    details: '123'
+                  },
+                  {
+                    summary: 'accordion2',
+                    details: '123'
+                  }
+                ]}
+              />
             </Card>
           </Grid>
         </Grid>

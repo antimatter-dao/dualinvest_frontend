@@ -1,39 +1,50 @@
+import { useState, useRef } from 'react'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Typography from '@mui/material/Typography'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import AddIcon from '@mui/icons-material/Add'
+import RemoveIcon from '@mui/icons-material/Remove'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+interface Props {
+  items: {
+    summary: string
+    details: string | JSX.Element
+  }[]
+}
 
-export default function _Accordion() {
+export default function _Accordion(props: Props) {
+  const { items } = props
+  const [expanded, setExpanded] = useState<number | null>(null)
+  const node = useRef<any>()
+  useOnClickOutside(node, () => setExpanded(null))
+
   return (
     <div>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-          <Typography>Accordion 1</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit
-            leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel2a-content" id="panel2a-header">
-          <Typography>Accordion 2</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit
-            leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion disabled>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel3a-content" id="panel3a-header">
-          <Typography>Disabled Accordion</Typography>
-        </AccordionSummary>
-      </Accordion>
+      {items.map((item, idx) => (
+        <Accordion
+          key={idx}
+          expanded={expanded === idx}
+          onChange={() => setExpanded(idx)}
+          sx={{
+            boxShadow: 'none',
+            '& .MuiAccordionSummary-content': {
+              margin: '20px 0'
+            }
+          }}
+        >
+          <AccordionSummary
+            expandIcon={
+              expanded === idx ? <RemoveIcon sx={{ color: '#929292' }} /> : <AddIcon sx={{ color: '#929292' }} />
+            }
+          >
+            <Typography fontSize={16} sx={{ opacity: 0.8 }}>
+              {item.summary}
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>{item.details}</AccordionDetails>
+        </Accordion>
+      ))}
     </div>
   )
 }
