@@ -56,7 +56,7 @@ export function OutlinedCard({
       variant="outlined"
       sx={{
         backgroundColor: 'transparent',
-        border: `1px solid ${color ?? theme.palette.grey.A400}`,
+        border: `1px solid ${color ?? 'rgba(0, 0, 0, 0.1)'}`,
         padding,
         width,
         ...style

@@ -61,7 +61,7 @@ function Web3StatusInner() {
             <Box sx={{ display: 'flex', alignItems: 'center', mr: 17, ml: 20 }}>
               <Spinner color={theme.palette.text.primary} size="16px" />
               <Box component="span" sx={{ ml: 3 }}>
-                <Typography sx={{ fontSize: 14, ml: 8, color: theme.palettel.text.primary }}>
+                <Typography sx={{ fontSize: 14, ml: 8, color: theme.palette.text.primary }}>
                   {pending?.length} Pending
                 </Typography>
               </Box>
