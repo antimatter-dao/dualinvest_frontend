@@ -1,4 +1,4 @@
-import { Paper, useTheme, Theme } from '@mui/material'
+import { Paper, Theme } from '@mui/material'
 import { SxProps } from '@mui/system'
 import React from 'react'
 
@@ -49,8 +49,6 @@ export function OutlinedCard({
   width?: string | number
   style?: React.CSSProperties & SxProps<Theme>
 }) {
-  const theme = useTheme()
-
   return (
     <Paper
       variant="outlined"

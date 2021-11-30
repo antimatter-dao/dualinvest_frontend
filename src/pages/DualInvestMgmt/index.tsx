@@ -21,7 +21,7 @@ const data = {
 
 export default function DualInvestMgmt() {
   return (
-    <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto">
+    <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto" justifyItems="center">
       <Box
         display="flex"
         alignItems="center"
@@ -34,7 +34,7 @@ export default function DualInvestMgmt() {
           </Typography>
         </NavLink>
       </Box>
-      <Box padding="60px 165px">
+      <Box padding="60px 0" sx={{ maxWidth: theme.width.maxContent }} width="100%">
         <Box mb={60}>
           <Typography fontSize={44} fontWeight={700} component="span">
             BTC Financial Management

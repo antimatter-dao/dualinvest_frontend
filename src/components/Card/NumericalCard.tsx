@@ -46,68 +46,70 @@ export default function NumericalCard(props: Props) {
       {children}
       <Box
         sx={{
-          padding: '20px 24px 28px',
-          gap: '28px',
-          height: height || '132px',
+          padding: '20px',
+          gap: '15px',
+          height: height || 'auto',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between'
         }}
       >
-        <Box display="flex">
-          {title && (
-            <Typography
-              variant="inherit"
-              color={primary ? theme.palette.primary.contrastText : theme.palette.text.secondary}
-            >
-              {title}
-            </Typography>
-          )}
-          {rate && (
-            <Box
-              sx={{
-                ml: 15,
-                backgroundColor: 'rgba(17, 191, 45, 0.16)',
-                width: '56px',
-                height: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '12px'
-              }}
-            >
-              <Typography
-                sx={{
-                  color: '#11BF2D'
-                }}
-              >
-                +{rate}%
-              </Typography>
+        {title ||
+          (rate && (
+            <Box display="flex">
+              {title && (
+                <Typography
+                  variant="inherit"
+                  color={primary ? theme.palette.primary.contrastText : theme.palette.text.secondary}
+                >
+                  {title}
+                </Typography>
+              )}
+              {rate && (
+                <Box
+                  sx={{
+                    ml: 15,
+                    backgroundColor: 'rgba(17, 191, 45, 0.16)',
+                    width: '56px',
+                    height: '24px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '12px'
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: '#11BF2D'
+                    }}
+                  >
+                    +{rate}%
+                  </Typography>
+                </Box>
+              )}
             </Box>
-          )}
-        </Box>
-        <Box>
-          <Box
+          ))}
+
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            color: primary ? theme.palette.primary.contrastText : theme.palette.text.primary
+          }}
+        >
+          <Typography
             sx={{
-              display: 'flex',
-              alignItems: 'flex-end',
-              color: primary ? theme.palette.primary.contrastText : theme.palette.text.primary
+              fontSize: fontSize || 24,
+              fontWeight: 700,
+              lineHeight: 1
             }}
           >
-            <Typography
-              sx={{
-                fontSize: fontSize || 24,
-                fontWeight: 700,
-                lineHeight: 1
-              }}
-            >
-              {value}
-            </Typography>
-            {unit && <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>{unit}</Typography>}
-          </Box>
-          {subValue && <Typography sx={{ fontSize: 12, fontWeight: 400, opacity: 0.5 }}>{subValue}</Typography>}
-          <Box mt={20}>{actions}</Box>
+            {value}
+          </Typography>
+          {unit && <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>{unit}</Typography>}
         </Box>
+        {subValue && <Typography sx={{ fontSize: 12, fontWeight: 400, opacity: 0.5 }}>{subValue}</Typography>}
+        {actions && <Box mt={20}>{actions}</Box>}
       </Box>
     </Card>
   )

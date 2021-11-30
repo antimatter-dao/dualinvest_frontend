@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import { styled } from '@mui/material'
 import Header from '../components/Header'
 import Polling from '../components/essential/Polling'
@@ -11,6 +11,9 @@ import { ModalProvider } from 'context/ModalContext'
 import { routes } from 'constants/routes'
 import DualInvest from './DualInvest'
 import DualInvestMgmt from './DualInvestMgmt'
+import NoService from './NoService'
+import Spinner from 'components/Spinner'
+import { fetchLocation } from 'utils/location'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -46,6 +49,8 @@ const BodyWrapper = styled('div')(({ theme }) => ({
   }
 }))
 
+const resource = fetchLocation()
+
 export default function App() {
   return (
     <Suspense fallback={null}>
@@ -58,15 +63,31 @@ export default function App() {
               <Polling />
               <WarningModal />
               <Web3ReactManager>
-                <Switch>
-                  <Route exact strict path={routes.dualInvest} component={DualInvest} />
-                  <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
-                </Switch>
+                <LocatoinVerification resource={resource}>
+                  <Switch>
+                    <Route exact strict path={routes.noService} component={NoService} />
+                    <Route exact strict path={routes.dualInvest} component={DualInvest} />
+                    <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
+                    <Route path="/">
+                      <Redirect to={routes.dualInvest} />
+                    </Route>
+                  </Switch>
+                </LocatoinVerification>
               </Web3ReactManager>
             </BodyWrapper>
           </ContentWrapper>
         </AppWrapper>
       </ModalProvider>
+    </Suspense>
+  )
+}
+
+function LocatoinVerification({ resource, children }: { resource: { read(): any }; children: React.ReactNode }) {
+  const location = resource.read()
+
+  return (
+    <Suspense fallback={<Spinner size={100} />}>
+      {location === 'US' || location === 'CN' ? <NoService /> : children}
     </Suspense>
   )
 }

@@ -11,6 +11,7 @@ interface Height {
 }
 interface Width {
   sidebar: string
+  maxContent: string
 }
 
 interface TextColor {
@@ -127,7 +128,8 @@ export const theme = {
     footer: '60px'
   },
   width: {
-    sidebar: '250px'
+    sidebar: '250px',
+    maxContent: '1110px'
   },
   shape: {
     border: '1px solid',
@@ -247,6 +249,7 @@ export const override: any = {
   MuiTypography: {
     styleOverrides: {
       root: {
+        lineHeight: 1.2,
         fontFamily: 'SF Pro'
       },
       body1: {
