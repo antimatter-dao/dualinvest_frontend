@@ -24,16 +24,41 @@ const data = {
   maxAmount: '2.00'
 }
 
-const StyledUnorderList = styled('ul')({
+const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '18px',
   color: '#808080',
   '& li span': {
     color: '#252525'
   },
   '& li::marker': {
-    color: '#31B047'
+    color: theme.palette.primary.main
   }
-})
+}))
+
+const StyledOrderList = styled('ol')(({ theme }) => ({
+  display: 'block',
+  listStyle: 'none',
+  counterReset: 'counterReset',
+  position: 'relative',
+  paddingLeft: 36,
+  '& li': {
+    paddingBottom: '24px'
+  },
+  '& li:before': {
+    counterIncrement: 'counterReset',
+    content: 'counter(counterReset)',
+    color: theme.palette.primary.main,
+    width: '24px',
+    height: '24px',
+    borderRadius: '50%',
+    border: '1px solid #31B047',
+    float: 'left',
+    textAlign: 'center',
+    marginRight: 12,
+    position: 'absolute',
+    left: '-1px'
+  }
+}))
 
 export default function DualInvestMgmt() {
   const [amount, setAmount] = useState('')
@@ -71,7 +96,7 @@ export default function DualInvestMgmt() {
                     {key === 'Current Progress' ? (
                       <SimpleProgress key={1} val={0.16} total={1} />
                     ) : (
-                      <Typography color={key === 'APY' ? '#31B047' : theme.palette.text.primary}>
+                      <Typography color={key === 'APY' ? theme.palette.primary.main : theme.palette.text.primary}>
                         {data[key as keyof typeof data]}
                       </Typography>
                     )}
@@ -143,7 +168,7 @@ export default function DualInvestMgmt() {
                   Risk statement
                 </Typography>
               </Box>
-              <ol>
+              <StyledOrderList>
                 <li>
                   This product is a non-principal-guaranteed wealth management product. Market fluctuations may result
                   in a loss of principal. Please invest with caution.
@@ -165,7 +190,7 @@ export default function DualInvestMgmt() {
                   After the product is purchased, you can view it on my currency holding page, and the payment will be
                   automatically issued to the Account after the delivery.
                 </li>
-              </ol>
+              </StyledOrderList>
             </Card>
           </Grid>
           <Grid xs={12} item>
