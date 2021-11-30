@@ -10,6 +10,7 @@ import Accordion from 'components/Accordion'
 import Divider from 'components/Divider'
 import InputNumerical from 'components/Input/InputNumerical'
 import Button from 'components/Button/Button'
+import { SimpleProgress } from 'components/Progress'
 
 const data = {
   ['Spot Price']: '59,000 USDT',
@@ -48,9 +49,14 @@ export default function DualInvestMgmt() {
             <Card width="100%" padding="36px 24px">
               <Box display="flex" flexDirection="column" gap={32}>
                 {Object.keys(data).map((key, idx) => {
-                  return (
+                  return key === 'Current Progress' ? (
                     <Box key={idx} display="flex" justifyContent="space-between">
-                      <Typography>{key}</Typography>
+                      <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
+                      <SimpleProgress key={1} val={0.16} total={1} />
+                    </Box>
+                  ) : (
+                    <Box key={idx} display="flex" justifyContent="space-between">
+                      <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
                       <Typography>{data[key as keyof typeof data]}</Typography>
                     </Box>
                   )
