@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Box, Typography, Grid, styled } from '@mui/material'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
@@ -13,6 +13,7 @@ import InputNumerical from 'components/Input/InputNumerical'
 import Button from 'components/Button/Button'
 import { SimpleProgress } from 'components/Progress'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 
 const data = {
   ['Spot Price']: '59,000 USDT',
@@ -62,6 +63,9 @@ const StyledOrderList = styled('ol')(({ theme }) => ({
 
 export default function DualInvestMgmt() {
   const [amount, setAmount] = useState('')
+  const [expanded, setExpanded] = useState<number | null>(null)
+  const node = useRef<any>()
+  useOnClickOutside(node, () => setExpanded(null))
 
   return (
     <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto" justifyItems="center">
@@ -201,8 +205,8 @@ export default function DualInvestMgmt() {
                   FAQ
                 </Typography>
               </Box>
-              <Accordion
-                items={[
+              <Box mt={28}>
+                {[
                   {
                     summary: 'accordion1',
                     details: '123'
@@ -211,8 +215,16 @@ export default function DualInvestMgmt() {
                     summary: 'accordion2',
                     details: '123'
                   }
-                ]}
-              />
+                ].map(({ summary, details }, idx) => (
+                  <Accordion
+                    key={idx}
+                    summary={summary}
+                    details={details}
+                    expanded={expanded === idx}
+                    onChange={() => setExpanded(idx)}
+                  />
+                ))}
+              </Box>
             </Card>
           </Grid>
         </Grid>
