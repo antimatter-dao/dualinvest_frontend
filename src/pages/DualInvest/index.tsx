@@ -12,6 +12,8 @@ import securityUrl from 'assets/images/security.png'
 import highReturnUrl from 'assets/images/high_return.png'
 import flexibleUrl from 'assets/images/flexible.png'
 import Progress from 'components/Progress'
+import { routes } from 'constants/routes'
+import { useHistory } from 'react-router'
 
 const StyledDualInvestGuide = styled(DualInvestGuide)({
   '& #dualInvestGuide': {
@@ -24,6 +26,8 @@ const StyledDualInvestGuide = styled(DualInvestGuide)({
 })
 
 export default function DualInvest() {
+  const history = useHistory()
+
   return (
     <Box display="grid" justifyItems="center" width="100%" alignContent="flex-start" marginBottom="auto" gap={48}>
       <Box
@@ -130,7 +134,14 @@ export default function DualInvest() {
               '7 Days',
               <Progress key={1} unit="BTC" val={15.08} total={50} />,
               <Box width="100%" display="flex" alignItems="center" justifyContent="center" key="1">
-                <Button height="36px" width="120px" style={{ borderRadius: 50, fontSize: 14 }}>
+                <Button
+                  height="36px"
+                  width="120px"
+                  style={{ borderRadius: 50, fontSize: 14 }}
+                  onClick={() => {
+                    history.push(routes.dualInvestMgmt)
+                  }}
+                >
                   Subscribe now
                 </Button>
               </Box>

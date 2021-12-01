@@ -7,7 +7,8 @@ import {
   Box,
   Typography,
   styled,
-  IconButton
+  IconButton,
+  Collapse
 } from '@mui/material'
 import { useState } from 'react'
 import useBreakpoint from '../../hooks/useBreakpoint'
@@ -41,21 +42,16 @@ export function OwnerCell({ url, name }: { url?: string; name: string }) {
 
 const StyledTableContainer = styled(TableContainer)({
   display: 'table',
-  // backgroundColor: '#ffffff',
   borderRadius: '40px',
   '& .MuiTableCell-root': {
-    fontSize: '16px',
     borderBottom: 'none',
     fontWeight: 400,
     padding: '14px 20px',
-    '& svg': {
-      marginRight: 8
-    },
-    '&:first-child': {
-      paddingLeft: 50
+    '&:first-of-type': {
+      paddingLeft: 20
     },
     '&:last-child': {
-      paddingRight: 50
+      paddingRight: 20
     }
   },
   '& table': {
@@ -69,12 +65,13 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
   borderRadius: 8,
   overflow: 'hidden',
   '& .MuiTableCell-root': {
+    fontSize: '12px',
+    whiteSpace: 'nowrap',
     background: 'rgba(255, 255, 255, 0.08)',
     padding: '12px 20px 12px 0',
-    fontSize: '12px',
     color: theme.palette.text.secondary,
     borderBottom: 'none',
-    '&:first-child': {
+    '&:first-of-type': {
       paddingLeft: 20,
       borderTopLeftRadius: 8
     },
@@ -89,18 +86,21 @@ const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{ var
   ({ variant, theme }) => ({
     height: 80,
     borderRadius: '16px',
-    marginTop: '8px',
     overflow: 'hidden',
     position: 'relative',
     background: variant === 'outlined' ? 'transparent' : theme.palette.background.default,
+    '& + tr .MuiCollapse-root': {
+      background: variant === 'outlined' ? 'transparent' : theme.palette.background.default
+    },
     '& .MuiTableCell-root': {
+      fontSize: '16px',
       justifyContent: 'flex-start',
       paddingLeft: 0,
       border: '1px solid',
       borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
       borderRight: 'none',
       borderLeft: 'none',
-      '&:first-child': {
+      '&:first-of-type': {
         borderLeft: '1px solid',
         borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
         paddingLeft: '20px',
@@ -116,6 +116,9 @@ const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{ var
       }
     },
     '&:hover': {
+      '& + tr .MuiCollapse-root': {
+        backgroundColor: variant === 'outlined' ? '#E2E7F020' : '#E2E7F0'
+      },
       backgroundColor: variant === 'outlined' ? '#E2E7F020' : '#E2E7F0'
     }
   })
@@ -134,7 +137,7 @@ const CardRow = styled('div')(`
   display: flex;
   justify-content: space-between;
   grid-template-columns: auto 100%;
-  > div:first-child {
+  > div:first-of-type {
     white-space: nowrap;
   }
   > div:last-child {
@@ -219,23 +222,74 @@ function Row({
   collapsible?: boolean
   hiddenPart?: JSX.Element
 }) {
-  const [open, setOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <>
-      <StyledTableRow variant={variant}>
+      <StyledTableRow
+        variant={variant}
+        sx={
+          isOpen
+            ? {
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+                '& .MuiTableCell-root': {
+                  '&:first-of-type': { borderBottomLeftRadius: 0 },
+                  '&:last-child': { borderBottomRightRadius: 0 }
+                }
+              }
+            : undefined
+        }
+      >
         {row.map((data, idx) => (
           <TableCell key={idx}>{data}</TableCell>
         ))}
         {collapsible && (
           <TableCell>
-            <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setIsOpen(open => !open)}
+              sx={{ flexGrow: 0 }}
+            >
+              {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
         )}
       </StyledTableRow>
-      {collapsible && open && <StyledTableRow variant={variant}>{hiddenPart}</StyledTableRow>}
+      {collapsible && (
+        <TableRow>
+          <TableCell style={{ padding: 0 }} colSpan={row.length + 5}>
+            <Collapse
+              in={isOpen}
+              timeout="auto"
+              sx={{
+                borderBottomRightRadius: 16,
+                borderBottomLeftRadius: 16,
+                width: '100%',
+                marginTop: -8
+              }}
+            >
+              <Box
+                sx={{
+                  // backgroundColor: '#E2E7F0',
+                  padding: 20,
+                  borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+                  transition: '.5s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+                // display="flex"
+                // alignItems="center"
+                // justifyContent="space-between"
+              >
+                {hiddenPart}
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      )}
     </>
   )
 }

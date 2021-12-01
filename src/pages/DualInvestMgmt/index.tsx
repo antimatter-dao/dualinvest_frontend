@@ -14,6 +14,7 @@ import Button from 'components/Button/Button'
 import { SimpleProgress } from 'components/Progress'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import LineChart from 'components/Chart'
 
 const data = {
   ['Spot Price']: '59,000 USDT',
@@ -64,9 +65,10 @@ const StyledOrderList = styled('ol')(({ theme }) => ({
 export default function DualInvestMgmt() {
   const [amount, setAmount] = useState('')
   const [expanded, setExpanded] = useState<number | null>(null)
+  const graphContainer = useRef<HTMLDivElement>(null)
   const node = useRef<any>()
   useOnClickOutside(node, () => setExpanded(null))
-
+  console.log(graphContainer.current)
   return (
     <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto" justifyItems="center">
       <Box
@@ -93,7 +95,7 @@ export default function DualInvestMgmt() {
         <Grid container spacing={20}>
           <Grid xs={12} md={4} item>
             <Card width="100%" padding="36px 24px">
-              <Box display="flex" flexDirection="column" gap={32}>
+              <Box display="flex" flexDirection="column" gap={20}>
                 {Object.keys(data).map((key, idx) => (
                   <Box key={idx} display="flex" justifyContent="space-between">
                     <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
@@ -117,12 +119,20 @@ export default function DualInvestMgmt() {
                     unit="BTC"
                     onDeposit={() => {}}
                   />
-                  <Box display="flex" alignItems="center" justifyContent="space-between" mt={12}>
-                    <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-                      Min investment: {data.minAmount} BTC
+                  <Box display="grid" mt={12}>
+                    <Typography
+                      fontSize={12}
+                      sx={{ opacity: 0.5, display: 'flex', justifyContent: 'space-between', width: '100%' }}
+                    >
+                      <span>Min investment:</span>
+                      <span>{data.minAmount} BTC</span>
                     </Typography>
-                    <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-                      Max investment: {data.maxAmount} BTC
+                    <Typography
+                      fontSize={12}
+                      sx={{ opacity: 0.5, display: 'flex', justifyContent: 'space-between', width: '100%' }}
+                    >
+                      <span>Max investment:</span>
+                      <span>{data.maxAmount} BTC</span>
                     </Typography>
                   </Box>
                 </Box>
@@ -137,31 +147,48 @@ export default function DualInvestMgmt() {
             </Card>
           </Grid>
           <Grid xs={12} md={8} item>
-            <Card width="100%" padding="32px 24px">
-              <Box display="flex" justifyContent="space-between">
-                <Typography fontSize={24} fontWeight={700} mb={36}>
-                  Purchase expected income graph
-                </Typography>
+            <Card width="100%" padding="32px 24px" style={{ height: '100%' }}>
+              <Box display="flex" flexDirection="column" gap="20px" maxWidth={'100%'} height="100%">
+                <Box display="flex" justifyContent="space-between">
+                  <Typography fontSize={24} fontWeight={700}>
+                    Purchase expected income graph
+                  </Typography>
+                </Box>
+                <Box sx={{ maxWidth: '100vw', height: '100%', flexGrow: 1 }} ref={graphContainer}>
+                  <LineChart
+                    lineColor="#18A0FB"
+                    lineSeriesData={[
+                      { time: '2019-04-11', value: 80.01 },
+                      { time: '2019-04-12', value: 96.63 },
+                      { time: '2019-04-13', value: 76.64 },
+                      { time: '2019-04-14', value: 81.89 },
+                      { time: '2019-04-15', value: 74.43 }
+                    ]}
+                    unit="usdt"
+                    id="incomeGraph"
+                    height={graphContainer?.current?.offsetHeight ?? 280}
+                  />
+                </Box>
+                <OutlinedCard padding="16px 20px">
+                  <Typography fontSize={16} color={theme.palette.text.primary}>
+                    Return on investment:
+                  </Typography>
+                  <StyledUnorderList>
+                    <li>
+                      When the final settlement price ≥ 62,800 USDT, you will receive{' '}
+                      <span style={{ color: theme.palette.text.primary }}>56,750.61 USDT</span>.
+                    </li>
+                    <li>
+                      When the settlement price is &lt; 62,800 USDT, you will receive{' '}
+                      <span style={{ color: theme.palette.text.primary }}>1.682655 BTC</span>.
+                    </li>
+                    <li>
+                      APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully
+                      complete the subscription.
+                    </li>
+                  </StyledUnorderList>
+                </OutlinedCard>
               </Box>
-              <OutlinedCard padding="16px 20px">
-                <Typography fontSize={16} color={theme.palette.text.primary}>
-                  Return on investment:
-                </Typography>
-                <StyledUnorderList>
-                  <li>
-                    When the final settlement price ≥ 62,800 USDT, you will receive{' '}
-                    <span style={{ color: theme.palette.text.primary }}>56,750.61 USDT</span>.
-                  </li>
-                  <li>
-                    When the settlement price is &lt; 62,800 USDT, you will receive{' '}
-                    <span style={{ color: theme.palette.text.primary }}>1.682655 BTC</span>.
-                  </li>
-                  <li>
-                    APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully
-                    complete the subscription.
-                  </li>
-                </StyledUnorderList>
-              </OutlinedCard>
             </Card>
           </Grid>
           <Grid xs={12} item>

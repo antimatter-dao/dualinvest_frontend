@@ -8,7 +8,7 @@ import History from './History'
 
 export default function Account() {
   return (
-    <Box sx={{ maxWidth: theme => theme.width.maxContent, padding: '62px 24px', margin: '0 0 auto', width: '100%' }}>
+    <Box sx={{ maxWidth: theme => theme.width.maxContent, margin: '62px 24px auto', width: '100%' }}>
       <Tabs
         titles={['Dashboard', 'Position', 'History']}
         contents={[

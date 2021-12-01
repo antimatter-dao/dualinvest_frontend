@@ -81,7 +81,8 @@ export default function LineChart({
   lineColor,
   unit,
   unit2,
-  id
+  id,
+  width
 }: {
   style?: React.CSSProperties
   lineSeriesData: LineSeriesData
@@ -91,6 +92,7 @@ export default function LineChart({
   unit: string
   unit2?: string
   id: string
+  width?: number
 }) {
   const theme = useTheme()
   const toolTipRef = useRef<HTMLDivElement>(null)
@@ -103,7 +105,7 @@ export default function LineChart({
     const chartElement = (document.getElementById(id + '-chart') as HTMLDivElement) ?? ''
     if (!chartElement) return
     const chart = createChart(chartElement, {
-      width: chartElement ? chartElement.offsetWidth : 556,
+      width: width ? width : chartElement ? chartElement.offsetWidth : 556,
       height: height,
       layout: {
         backgroundColor: 'transparent',
@@ -179,16 +181,18 @@ export default function LineChart({
       }
     })
     setLineSeries(lineSeries)
+  }, [height, id, lineColor, theme])
 
+  useEffect(() => {
     const resizeFunction = () => {
       const chartEl = document.getElementById(id + '-chart')
       if (!chartEl || !chart) return
-      chart.resize(chartEl.getBoundingClientRect().width, height || 174)
+      chart.resize(width ? width : chartEl.getBoundingClientRect().width, height || 174)
     }
     window.addEventListener('resize', resizeFunction)
 
     return () => window.removeEventListener('resize', resizeFunction)
-  }, [height, id, lineColor, theme])
+  }, [chart, height, id, width])
 
   useEffect(() => {
     if (!chart) return
