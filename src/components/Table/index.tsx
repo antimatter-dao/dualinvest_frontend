@@ -1,5 +1,18 @@
-import { TableContainer, TableHead, TableCell, TableRow, TableBody, Box, Typography, styled } from '@mui/material'
+import {
+  TableContainer,
+  TableHead,
+  TableCell,
+  TableRow,
+  TableBody,
+  Box,
+  Typography,
+  styled,
+  IconButton
+} from '@mui/material'
+import { useState } from 'react'
 import useBreakpoint from '../../hooks/useBreakpoint'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
 const Profile = styled('div')(`
   display: flex;
@@ -135,13 +148,18 @@ const CardRow = styled('div')(`
 export default function Table({
   header,
   rows,
-  variant = 'grey'
+  variant = 'grey',
+  collapsible,
+  hiddenParts
 }: {
   header: string[]
   rows: (string | number | JSX.Element)[][]
   variant?: 'outlined' | 'grey'
+  collapsible?: boolean
+  hiddenParts?: JSX.Element[]
 }) {
   const matches = useBreakpoint()
+
   return (
     <>
       {matches ? (
@@ -174,16 +192,50 @@ export default function Table({
             </StyledTableHead>
             <TableBody>
               {rows.map((row, idx) => (
-                <StyledTableRow key={row[0].toString() + idx} variant={variant}>
-                  {row.map((data, idx) => (
-                    <TableCell key={idx}>{data}</TableCell>
-                  ))}
-                </StyledTableRow>
+                <Row
+                  row={row}
+                  collapsible={collapsible}
+                  key={row[0].toString() + idx}
+                  variant={variant}
+                  hiddenPart={hiddenParts && hiddenParts[idx]}
+                />
               ))}
             </TableBody>
           </table>
         </StyledTableContainer>
       )}
+    </>
+  )
+}
+
+function Row({
+  row,
+  variant,
+  collapsible,
+  hiddenPart
+}: {
+  row: (string | number | JSX.Element)[]
+  variant: 'outlined' | 'grey'
+  collapsible?: boolean
+  hiddenPart?: JSX.Element
+}) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <StyledTableRow variant={variant}>
+        {row.map((data, idx) => (
+          <TableCell key={idx}>{data}</TableCell>
+        ))}
+        {collapsible && (
+          <TableCell>
+            <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+        )}
+      </StyledTableRow>
+      {collapsible && open && <StyledTableRow variant={variant}>{hiddenPart}</StyledTableRow>}
     </>
   )
 }

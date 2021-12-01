@@ -1,5 +1,4 @@
 import { Box, Typography, styled, Grid } from '@mui/material'
-import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress'
 import { ReactComponent as DualInvestGuide } from 'assets/svg/dualInvestGuide.svg'
 import checkUrl from 'assets/images/check.png'
 import Image from 'components/Image'
@@ -12,6 +11,7 @@ import Card from 'components/Card/Card'
 import securityUrl from 'assets/images/security.png'
 import highReturnUrl from 'assets/images/high_return.png'
 import flexibleUrl from 'assets/images/flexible.png'
+import Progress from 'components/Progress'
 
 const StyledDualInvestGuide = styled(DualInvestGuide)({
   '& #dualInvestGuide': {
@@ -22,18 +22,6 @@ const StyledDualInvestGuide = styled(DualInvestGuide)({
     }
   }
 })
-
-const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  height: 10,
-  borderRadius: 5,
-  [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: 'rgba(37, 37, 37, 0.1)'
-  },
-  [`& .${linearProgressClasses.bar}`]: {
-    borderRadius: 5,
-    backgroundColor: theme.palette.primary.main
-  }
-}))
 
 export default function DualInvest() {
   return (
@@ -262,24 +250,5 @@ function FeatureCard({ icon, title, content }: { icon: JSX.Element; title: strin
         <Typography sx={{ color: theme => theme.palette.text.secondary, fontSize: 16 }}>{content}</Typography>
       </Box>
     </Card>
-  )
-}
-
-function Progress({ val, total, unit }: { val: number; total: number; unit: string }) {
-  const value = (val / total) * 100
-  return (
-    <Box display="grid" sx={{ width: 'max-content' }} columnGap={6} rowGap={4}>
-      <Typography
-        fontSize={12}
-        sx={{ gridRowStart: 1, gridRowEnd: 'span 2', textAlign: 'center', display: 'flex', alignItems: 'flex-end' }}
-      >
-        {value | 0}%
-      </Typography>
-      <Typography
-        fontSize={12}
-        sx={{ gridColumnStart: 2, gridColumnEnd: 'span 1', textAlign: 'center' }}
-      >{`${val} ${unit} / ${total} ${unit}`}</Typography>
-      <StyledLinearProgress variant="determinate" value={value} sx={{ width: 120 }} />
-    </Box>
   )
 }

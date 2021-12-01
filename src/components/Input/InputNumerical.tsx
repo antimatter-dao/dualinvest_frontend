@@ -4,6 +4,7 @@ import Input, { InputProps } from './index'
 import { escapeRegExp } from 'utils'
 import SecondaryButton from 'components/Button/SecondaryButton'
 import InputLabel from './InputLabel'
+import TextButton from 'components/Button/TextButton'
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
@@ -15,8 +16,15 @@ export default function NumericalInput({
   balance,
   label,
   unit,
+  onDeposit,
   ...props
-}: InputProps & InputHTMLAttributes<HTMLInputElement> & { onMax?: () => void; balance?: string; unit?: string }) {
+}: InputProps &
+  InputHTMLAttributes<HTMLInputElement> & {
+    onMax?: () => void
+    balance?: string
+    unit?: string
+    onDeposit?: () => void
+  }) {
   const enforcer = (nextUserInput: string) => {
     const fixed = nextUserInput.replace(/,/g, '.')
     if (fixed === '' || inputRegex.test(escapeRegExp(fixed))) {
@@ -42,11 +50,18 @@ export default function NumericalInput({
       {(label || balance) && (
         <Box display="flex" justifyContent="space-between">
           <InputLabel>{label}</InputLabel>
-          {!!balance && (
-            <InputLabel style={{ fontSize: '12px' }}>
-              Available: {balance} {unit ?? 'MATTER'}
-            </InputLabel>
-          )}
+          <Box display="flex" alignItems="flex-start">
+            {!!balance && (
+              <InputLabel style={{ fontSize: '12px' }}>
+                Available: {balance} {unit ?? 'MATTER'}
+              </InputLabel>
+            )}
+            {onDeposit && (
+              <TextButton fontSize={12} color="#11BF2D" style={{ marginLeft: 8 }}>
+                Deposit
+              </TextButton>
+            )}
+          </Box>
         </Box>
       )}
       <Input

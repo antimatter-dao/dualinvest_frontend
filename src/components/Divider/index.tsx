@@ -14,7 +14,7 @@ export default function Divider({ extension, orientation, color, ...props }: Pro
     <MuiDivider
       {...props}
       sx={{
-        width: extension ? `calc(100% + ${extension * 2}px` : orientation === 'vertical' ? '1px' : '100%',
+        width: extension ? `calc(100% + ${extension * 2}px)` : orientation === 'vertical' ? '1px' : '100%',
         // border: 'none',
         height: orientation === 'vertical' ? '100%' : '1px',
         backgroundColor: color ? color : orientation === 'vertical' ? theme.textColor.text1 : theme.bgColor.bg4,
