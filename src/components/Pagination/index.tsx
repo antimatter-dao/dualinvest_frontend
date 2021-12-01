@@ -1,7 +1,7 @@
-import { styled, Pagination } from '@mui/material'
+import { styled, Pagination, Typography } from '@mui/material'
 
 export const StyledPagination = styled(Pagination)(({ theme }) => ({
-  margin: '0 0 0 auto',
+  // margin: '0 0 0 auto',
   color: theme.palette.text.secondary,
   '& .MuiPaginationItem-root': { opacity: 0.5 },
   '& .MuiPaginationItem-page.Mui-selected': {
@@ -14,10 +14,11 @@ export const StyledPagination = styled(Pagination)(({ theme }) => ({
 
 const StyledPaginationLayout = styled('div')({
   display: 'flex',
-  justifyContent: 'center',
-  '& > *': {
-    marginBottom: '20px'
-  }
+  justifyContent: 'flex-end',
+  alignItems: 'center'
+  // '& > *': {
+  //   marginBottom: '20px'
+  // }
 })
 
 interface PaginationProps {
@@ -28,6 +29,7 @@ interface PaginationProps {
   setPage: (page: number) => void
   // eslint-disable-next-line @typescript-eslint/ban-types
   onChange?: (event: object, page: number) => void
+  perPage?: number
 }
 export default function PaginationView({
   count,
@@ -35,12 +37,18 @@ export default function PaginationView({
   onChange,
   setPage,
   siblingCount,
-  boundaryCount
+  boundaryCount,
+  perPage
 }: PaginationProps) {
   return (
     <>
       {count > 0 && (
         <StyledPaginationLayout>
+          {perPage && (
+            <Typography sx={{ opacity: 0.4 }} mr={26}>
+              {(page - 1) * perPage + 1} - {page * perPage} items of {count}
+            </Typography>
+          )}
           <StyledPagination
             count={count}
             page={page}
