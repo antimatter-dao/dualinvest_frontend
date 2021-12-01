@@ -1,7 +1,6 @@
 import { Select as MuiSelect, InputLabel as MuiInputLabel, styled, InputBase, useTheme } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import SelectedIcon from 'assets/componentsIcon/selected_icon.svg'
-
 interface Props {
   children?: React.ReactNode
   onChange?: (e: any) => void
@@ -20,7 +19,8 @@ interface Props {
 
 const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
   opacity: 0.6,
-  color: theme.palette.primary.contrastText,
+  fontSize: 12,
+  color: theme.palette.text.secondary,
   marginBottom: '8px'
 }))
 
@@ -56,13 +56,13 @@ export default function Select(props: Props) {
   const theme = useTheme()
 
   return (
-    <>
+    <div>
       {label && <StyledInputLabel>{label}</StyledInputLabel>}
       <StyledSelect
         sx={{
-          backgroundColor: primary ? theme.palette.primary.main : theme.palette.background.paper,
+          backgroundColor: primary ? theme.palette.primary.main : theme.palette.background.default,
           width: width || '100%',
-          height: height || '44px',
+          height: height || '60px',
           '&:before': {
             content: value || defaultValue ? "''" : `"${placeholder}"`,
             position: 'absolute',
@@ -88,13 +88,13 @@ export default function Select(props: Props) {
             '& .MuiPaper-root': {
               width: width ?? '100%',
               borderRadius: '10px',
-              mt: '12px',
+              mt: '20px',
               boxShadow: theme => theme.shadows[4],
               transform: width ? 'translateX(-12px)!important' : 'none',
               '& li': {
                 fontSize: 16,
                 fontWeight: 500,
-                borderBottom: '1px solid rgba(255,255,255,0.1)',
+                borderBottom: '1px solid rgba(0,0,0,0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 padding: '12px 0',
@@ -109,14 +109,17 @@ export default function Select(props: Props) {
                 borderBottom: 'none'
               },
               '& .MuiMenuItem-root': {
-                '&::before': {
+                display: 'flex',
+                justifyContent: 'space-between',
+                padding: 16,
+                '&::after': {
                   content: '""',
                   width: 30,
                   height: 20,
                   display: 'flex',
                   justifyContent: 'center'
                 },
-                '&.Mui-selected::before': {
+                '&.Mui-selected::after': {
                   content: `url(${SelectedIcon})`,
                   width: 30,
                   height: 20,
@@ -138,10 +141,10 @@ export default function Select(props: Props) {
         input={<InputBase />}
         IconComponent={ExpandMoreIcon}
         onChange={onChange}
-        renderValue={renderValue}
+        renderValue={renderValue || ''}
       >
         {children}
       </StyledSelect>
-    </>
+    </div>
   )
 }
