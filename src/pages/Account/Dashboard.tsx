@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { Container, Box, Typography } from '@mui/material'
+import { Container, Box, Typography, useTheme } from '@mui/material'
 import Card from 'components/Card/Card'
 import Table from 'components/Table'
 import NoDataCard from 'components/Card/NoDataCard'
@@ -9,12 +9,14 @@ import NumericalCard from 'components/Card/NumericalCard'
 import PaginationView from 'components/Pagination'
 import { useActiveWeb3React } from 'hooks'
 import ActionModal from './ActionModal'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 
 const accountDetailsData = [['Withdraw', 'BTC', '1.087062', 'Sep 21, 2021  10:42:21 AM ']]
 
 export default function Dashboard() {
   const { account } = useActiveWeb3React()
   const [isDepositOpen, setIsDepositOpen] = useState(false)
+  const theme = useTheme()
 
   const handleDepositOpen = useCallback(() => {
     setIsDepositOpen(true)
@@ -58,8 +60,13 @@ export default function Dashboard() {
   return (
     <>
       <ActionModal isOpen={isDepositOpen} onDismiss={handleDismiss} type="deposit" currencyInput>
-        Please make sure there is a certain amount of ETH in the wallet balance, otherwise the deposit will fail due to
-        insufficient handling fees.
+        <Box display="flex" mt={-20}>
+          <InfoOutlinedIcon sx={{ color: theme.palette.primary.main, height: 12 }} />
+          <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
+            Please make sure there is a certain amount of ETH in the wallet balance, otherwise the deposit will fail due
+            to insufficient handling fees.
+          </Typography>
+        </Box>
       </ActionModal>
       <Container sx={{ mt: 48 }}>
         <Box display="grid" gap={48}>

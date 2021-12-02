@@ -273,7 +273,7 @@ function Row({
               <Box
                 sx={{
                   // backgroundColor: '#E2E7F0',
-                  padding: 20,
+                  padding: 28,
                   borderTop: '1px solid rgba(0, 0, 0, 0.1)',
                   transition: '.5s',
                   display: 'flex',
