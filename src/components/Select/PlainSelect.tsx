@@ -13,8 +13,10 @@ const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   width: '72px',
   position: 'relative',
   border: 'none',
+  color: theme.palette.text.primary,
+  opacity: 0.5,
   '& .MuiSelect-icon': {
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.text.primary,
     right: '16px',
     fontSize: '16px'
   },
@@ -22,10 +24,13 @@ const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   //   backgroundColor: 'transparent'
   // },
   '&:hover': {
-    color: 'rgba(255, 255, 255, 1)',
+    opacity: 1,
     '& .MuiOutlinedInput-notchedOutline': {
       border: 'none'
     }
+  },
+  '&.Mui-focused': {
+    opacity: 1
   }
 }))
 
@@ -48,29 +53,30 @@ export default function Select(props: Props) {
       MenuProps={{
         sx: {
           '& .MuiPaper-root': {
+            boxShadow: theme => theme.shadows[3],
             width: 148,
             borderRadius: '14px',
             marginTop: 6,
             backgroundColor: 'transparent',
             '& ul': {
-              background: '#0F0F10',
+              background: theme => theme.palette.background.paper,
               padding: '10px 20px 18px 20px'
             },
             '& li': {
               fontSize: 13,
               fontWeight: 400,
-              color: 'rgba(255, 255, 255, 0.4)',
+              color: theme => theme.palette.text.secondary,
               padding: '8px 0',
               border: 'none',
               outline: 'none',
               backgroundColor: 'transparent'
             },
             '& li:hover': {
-              color: theme => theme.palette.primary.main,
+              color: theme => theme.palette.text.primary,
               backgroundColor: 'transparent'
             },
             '& .Mui-selected': {
-              color: theme => theme.palette.primary.main,
+              color: theme => theme.palette.text.primary,
               backgroundColor: 'transparent'
             }
           }

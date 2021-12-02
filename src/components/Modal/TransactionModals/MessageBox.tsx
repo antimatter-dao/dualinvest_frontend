@@ -10,7 +10,7 @@ import Button from 'components/Button/Button'
 import useModal from 'hooks/useModal'
 
 interface Props {
-  type: 'success' | 'failure' | 'support' | 'error' | 'warning'
+  type: 'success' | 'failure' | 'support' | 'error' | 'warning' | 'error' | JSX.Element
   children?: React.ReactNode
   width?: string
   header?: string
@@ -30,8 +30,10 @@ export default function MessageBox({ type, children, width = '480px', header, ac
       <SupportIcon />
     ) : type === 'warning' ? (
       <Warning />
-    ) : (
+    ) : type === 'error' ? (
       <Error />
+    ) : (
+      type
     )
 
   return (

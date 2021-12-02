@@ -3,7 +3,7 @@
   font-style: normal;
   font-weight: 300;
   font-display: swap;
-  src: url('../fonts/SFPRODISPLAYLIGHTITALIC.OTF');
+  src: local('SF Pro Light'), url('../fonts/SFPRODISPLAYLIGHTITALIC.OTF');
 }
 
 @font-face {
@@ -11,19 +11,19 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../fonts/SFPRODISPLAYREGULAR.OTF');
+  src: local('SF Pro Regular'), url('../fonts/SFPRODISPLAYREGULAR.OTF');
 }
 @font-face {
   font-family: 'SF Pro';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('../fonts/SFPRODISPLAYMEDIUM.OTF');
+  src: local('SF Pro Medium'), url('../fonts/SFPRODISPLAYMEDIUM.OTF');
 }
 @font-face {
   font-family: 'SF Pro';
   font-style: normal;
   font-weight: bold;
   font-display: swap;
-  src: url('../fonts/SFPRODISPLAYBOLD.OTF');
+  src: local('SF Pro Bold'), url('../fonts/SFPRODISPLAYBOLD.OTF');
 }

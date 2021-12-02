@@ -18,7 +18,7 @@ const Dot = styled('span')({
   borderRadius: '50%'
 })
 
-function StatusIcon(connector: AbstractConnector | undefined) {
+export function StatusIcon(connector: AbstractConnector | undefined) {
   const style = { height: 16, width: 16, objectFit: 'contain' as const }
   if (connector === injected) {
     const { ethereum } = window

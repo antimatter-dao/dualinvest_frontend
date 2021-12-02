@@ -8,6 +8,7 @@ import Image from 'components/Image'
 import antimatter from '../../assets/svg/antimatter.svg'
 import { routes } from 'constants/routes'
 import MobileHeader from './MobileHeader'
+import NetworkSelect from './NetworkSelect'
 
 interface TabContent {
   title: string
@@ -24,7 +25,11 @@ export const Tabs: Tab[] = [
   { title: 'Dual Investment', route: routes.dualInvest },
   { title: 'Account', route: routes.account },
   { title: 'DAO', route: routes.dao },
-  { title: 'Docs', link: 'https://docs.antimatter.finance/' }
+  { title: 'Docs', link: 'https://docs.antimatter.finance/' },
+  {
+    title: 'Labs',
+    subTab: [{ title: 'placeholder', route: routes.dualInvestMgmt }]
+  }
 ]
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -90,7 +95,7 @@ export default function Header() {
             <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
                 subTab ? (
-                  <PlainSelect placeholder="about" key={title + idx}>
+                  <PlainSelect placeholder={title} key={title + idx}>
                     {subTab.map((sub, idx) =>
                       sub.link ? (
                         <MenuItem key={sub.link + idx}>
@@ -120,7 +125,10 @@ export default function Header() {
             </LinksWrapper>
           </Box>
         </HideOnMobile>
-        <Web3Status />
+        <Box display="flex" alignItems="center" gap="20px">
+          <NetworkSelect />
+          <Web3Status />
+        </Box>
       </StyledAppBar>
     </>
   )

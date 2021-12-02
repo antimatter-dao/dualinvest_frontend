@@ -15,6 +15,7 @@ import { SimpleProgress } from 'components/Progress'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import LineChart from 'components/Chart'
+import { Time } from 'lightweight-charts'
 
 const data = {
   ['Spot Price']: '59,000 USDT',
@@ -68,7 +69,7 @@ export default function DualInvestMgmt() {
   const graphContainer = useRef<HTMLDivElement>(null)
   const node = useRef<any>()
   useOnClickOutside(node, () => setExpanded(null))
-  console.log(graphContainer.current)
+
   return (
     <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto" justifyItems="center">
       <Box
@@ -158,11 +159,11 @@ export default function DualInvestMgmt() {
                   <LineChart
                     lineColor="#18A0FB"
                     lineSeriesData={[
-                      { time: '2019-04-11', value: 80.01 },
-                      { time: '2019-04-12', value: 96.63 },
-                      { time: '2019-04-13', value: 76.64 },
-                      { time: '2019-04-14', value: 81.89 },
-                      { time: '2019-04-15', value: 74.43 }
+                      { time: 16059744000000 as Time, value: 80.01 },
+                      { time: 16060608000000 as Time, value: 96.63 },
+                      { time: 16061472000000 as Time, value: 76.64 },
+                      { time: 16062336000000 as Time, value: 81.89 },
+                      { time: 16063200000000 as Time, value: 74.43 }
                     ]}
                     unit="usdt"
                     id="incomeGraph"

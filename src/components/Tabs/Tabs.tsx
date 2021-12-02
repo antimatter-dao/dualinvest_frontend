@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { Tabs as MuiTabs, Tab, Box } from '@mui/material'
 
 interface Props {
-  titles: string[]
+  titles: string[] | JSX.Element[]
   contents: React.ReactNode[]
 }
 
@@ -21,13 +21,15 @@ export default function Tabs(props: Props) {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <MuiTabs value={value} onChange={onChange}>
-          {titles.map(tab => (
+        <MuiTabs value={value} onChange={onChange} sx={{ mb: -1 }}>
+          {titles.map((tab, idx) => (
             <Tab
-              key={tab}
+              disableRipple
+              key={idx}
               label={tab}
               sx={{
-                fontWeight: 700,
+                padding: '20px 10px 25px 0',
+                mr: 25,
                 textTransform: 'none',
                 color: theme => theme.palette.text.primary,
                 opacity: 0.4,

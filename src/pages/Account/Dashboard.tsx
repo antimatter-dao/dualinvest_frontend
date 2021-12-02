@@ -16,14 +16,20 @@ const accountDetailsData = [['Withdraw', 'BTC', '1.087062', 'Sep 21, 2021  10:42
 export default function Dashboard() {
   const { account } = useActiveWeb3React()
   const [isDepositOpen, setIsDepositOpen] = useState(false)
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
   const theme = useTheme()
 
   const handleDepositOpen = useCallback(() => {
     setIsDepositOpen(true)
   }, [])
 
+  const handleWithdrawOpen = useCallback(() => {
+    setIsWithdrawOpen(true)
+  }, [])
+
   const handleDismiss = useCallback(() => {
     setIsDepositOpen(false)
+    setIsWithdrawOpen(false)
   }, [])
 
   const balanceData = useMemo(
@@ -42,13 +48,14 @@ export default function Dashboard() {
             fontSize={14}
             style={{ maxWidth: 92, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
             primary
+            onClick={handleWithdrawOpen}
           >
             Withdraw
           </OutlineButton>
         </Box>
       ]
     ],
-    [handleDepositOpen]
+    [handleDepositOpen, handleWithdrawOpen]
   )
 
   if (!account)
@@ -68,6 +75,7 @@ export default function Dashboard() {
           </Typography>
         </Box>
       </ActionModal>
+      <ActionModal isOpen={isWithdrawOpen} onDismiss={handleDismiss} type="withdraw" />
       <Container sx={{ mt: 48 }}>
         <Box display="grid" gap={48}>
           <Card>

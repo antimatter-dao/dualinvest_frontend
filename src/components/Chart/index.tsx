@@ -102,9 +102,10 @@ export default function LineChart({
   const [lineSeries2, setLineSeries2] = useState<ISeriesApi<'Line'> | undefined>(undefined)
 
   useEffect(() => {
+    if (chart) return
     const chartElement = (document.getElementById(id + '-chart') as HTMLDivElement) ?? ''
     if (!chartElement) return
-    const chart = createChart(chartElement, {
+    const chartEl = createChart(chartElement, {
       width: width ? width : chartElement ? chartElement.offsetWidth : 556,
       height: height,
       layout: {
@@ -114,16 +115,16 @@ export default function LineChart({
         fontFamily: 'SF Pro, Roboto, san-serif'
       },
       grid: {
-        vertLines: {
+        horzLines: {
           visible: false
         },
-        horzLines: {
+        vertLines: {
           style: LineStyle.Dotted,
-          color: 'rgba(242, 245, 250, 1)'
+          color: 'rgba(0, 0, 0, 0.2)'
         }
       }
     })
-    chart.applyOptions({
+    chartEl.applyOptions({
       leftPriceScale: { autoScale: true, visible: true, drawTicks: false, borderColor: 'transparent' },
       rightPriceScale: { visible: false },
       timeScale: {
@@ -165,9 +166,9 @@ export default function LineChart({
         pinch: true
       }
     })
-    setChart(chart)
+    setChart(chartEl)
 
-    const lineSeries = chart.addLineSeries({
+    const lineSeries = chartEl.addLineSeries({
       color: lineColor ?? theme.palette.primary.main,
       lineWidth: 1,
       crosshairMarkerVisible: true,
@@ -181,7 +182,7 @@ export default function LineChart({
       }
     })
     setLineSeries(lineSeries)
-  }, [height, id, lineColor, theme])
+  }, [chart, height, id, lineColor, theme, width])
 
   useEffect(() => {
     const resizeFunction = () => {

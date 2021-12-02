@@ -10,7 +10,9 @@ import Pagination from 'components/Pagination'
 const positionData = [
   [
     '1.290909 BTC',
-    '140.21%',
+    <Typography color="primary" key="1" variant="inherit">
+      140.21%
+    </Typography>,
     'Sep 21,2021',
     '62800.00',
     '1.954241',
@@ -24,7 +26,9 @@ const positionData = [
   ],
   [
     '1.290909 BTC',
-    '140.21%',
+    <Typography color="primary" key="1" variant="inherit">
+      140.21%
+    </Typography>,
     'Sep 21,2021',
     '62800.00',
     '1.954241',
@@ -77,7 +81,7 @@ export default function Position() {
   const [page, setPage] = useState(1)
 
   const hiddenParts = useCallback(() => {
-    return hiddenData.map((data, idx) => (
+    return hiddenData.map(data => (
       <>
         {Object.keys(data).map((key, idx) => (
           <Box key={idx}>
@@ -89,7 +93,7 @@ export default function Position() {
         ))}
       </>
     ))
-  }, [])
+  }, [theme.palette.text.secondary])
 
   return (
     <>
@@ -115,7 +119,7 @@ export default function Position() {
                 collapsible
               />
             ) : (
-              <NoDataCard />
+              <NoDataCard height="20vh" />
             )}
 
             <Pagination count={10} page={page} setPage={setPage} perPage={12} boundaryCount={-1} />

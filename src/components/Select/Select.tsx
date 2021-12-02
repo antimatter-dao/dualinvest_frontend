@@ -1,11 +1,13 @@
-import { Select as MuiSelect, InputLabel as MuiInputLabel, styled, InputBase, useTheme } from '@mui/material'
+import { Select as MuiSelect, InputLabel as MuiInputLabel, styled, InputBase, useTheme, Theme } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import SelectedIcon from 'assets/componentsIcon/selected_icon.svg'
+import React from 'react'
+import { SxProps } from '@mui/system'
 interface Props {
   children?: React.ReactNode
   onChange?: (e: any) => void
   defaultValue?: any
-  value?: string | string[]
+  value?: string | string[] | number | number[]
   disabled?: boolean
   selected?: React.ReactNode
   placeholder?: string
@@ -15,6 +17,7 @@ interface Props {
   primary?: boolean
   label?: string
   renderValue?: any
+  style?: React.CSSProperties | SxProps<Theme>
 }
 
 const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
@@ -51,7 +54,8 @@ export default function Select(props: Props) {
     value,
     defaultValue,
     placeholder,
-    renderValue
+    renderValue,
+    style
   } = props
   const theme = useTheme()
 
@@ -78,7 +82,8 @@ export default function Select(props: Props) {
           '& .MuiSelect-icon': {
             display: disabled ? 'none' : 'block',
             color: theme.palette.text.secondary
-          }
+          },
+          ...style
         }}
         value={value}
         displayEmpty
@@ -111,14 +116,9 @@ export default function Select(props: Props) {
               '& .MuiMenuItem-root': {
                 display: 'flex',
                 justifyContent: 'space-between',
-                padding: 16,
-                '&::after': {
-                  content: '""',
-                  width: 30,
-                  height: 20,
-                  display: 'flex',
-                  justifyContent: 'center'
-                },
+                alignItems: 'center',
+                gap: 8,
+                padding: 15,
                 '&.Mui-selected::after': {
                   content: `url(${SelectedIcon})`,
                   width: 30,
@@ -141,7 +141,7 @@ export default function Select(props: Props) {
         input={<InputBase />}
         IconComponent={ExpandMoreIcon}
         onChange={onChange}
-        renderValue={renderValue || ''}
+        renderValue={renderValue || undefined}
       >
         {children}
       </StyledSelect>

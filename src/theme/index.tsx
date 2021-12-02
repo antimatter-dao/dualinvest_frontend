@@ -147,12 +147,12 @@ export const override: any = {
     styleOverrides: {
       body: { backgroundColor: theme.palette.background.default, fontSize: 16 },
       'html, input, textarea, button, body': {
-        fontFamily: 'SF Pro, sans-serif',
+        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif',
         fontDisplay: 'fallback'
       },
       '@supports (font-variation-settings: normal)': {
         'html, input, textarea, button, body': {
-          fontFamily: 'SF Pro, sans-serif',
+          fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif',
           fontDisplay: 'fallback'
         }
       }
@@ -162,7 +162,8 @@ export const override: any = {
     styleOverrides: {
       root: {
         fontSize: 16,
-        fontWeight: 500
+        fontWeight: 500,
+        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif'
       }
     }
   },
@@ -250,7 +251,7 @@ export const override: any = {
     styleOverrides: {
       root: {
         lineHeight: 1.2,
-        fontFamily: 'SF Pro'
+        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif'
       },
       body1: {
         fontSize: 14

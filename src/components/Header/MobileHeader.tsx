@@ -69,7 +69,7 @@ export default function MobileHeader() {
           {Tabs.map(({ title, route, link, titleContent, subTab }) => {
             const content = titleContent ?? title
             return subTab ? (
-              <Accordion placeholder="About">
+              <Accordion placeholder="About" key={title}>
                 {subTab.map(sub => {
                   const subContent = sub.titleContent ?? sub.title
                   return sub.link ? (
