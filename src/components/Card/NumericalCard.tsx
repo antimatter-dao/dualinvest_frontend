@@ -13,6 +13,7 @@ interface Props {
   fontSize?: string
   gray?: boolean
   rate?: string
+  dayChange?: string
   actions?: React.ReactNode
   children?: React.ReactNode
   border?: boolean
@@ -31,6 +32,7 @@ export default function NumericalCard(props: Props) {
     width,
     height,
     rate,
+    dayChange,
     actions,
     children,
     border,
@@ -94,7 +96,7 @@ export default function NumericalCard(props: Props) {
         <Box
           sx={{
             display: 'flex',
-            alignItems: 'flex-end',
+            alignItems: 'baseline',
             color: primary ? theme.palette.primary.contrastText : theme.palette.text.primary
           }}
         >
@@ -108,6 +110,30 @@ export default function NumericalCard(props: Props) {
             {value}
           </Typography>
           {unit && <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>{unit}</Typography>}
+          {dayChange && (
+            <Box
+              component="div"
+              borderRadius={22}
+              color="#31B047"
+              bgcolor="rgba(49, 176, 71, 0.16)"
+              fontSize={14}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              width={120}
+              height={24}
+              ml={10}
+            >
+              <Typography
+                sx={{
+                  color: '#11BF2D',
+                  fontSize: '12px'
+                }}
+              >
+                {dayChange}
+              </Typography>
+            </Box>
+          )}
         </Box>
         {subValue && <Typography sx={{ fontSize: 12, fontWeight: 400, opacity: 0.5 }}>{subValue}</Typography>}
         {actions && <Box mt={20}>{actions}</Box>}

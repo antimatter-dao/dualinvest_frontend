@@ -10,8 +10,11 @@ import PaginationView from 'components/Pagination'
 import { useActiveWeb3React } from 'hooks'
 import ActionModal from './ActionModal'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import StatusTag from 'components/Status/StatusTag'
 
-const accountDetailsData = [['Withdraw', 'BTC', '1.087062', 'Sep 21, 2021  10:42:21 AM ']]
+const accountDetailsData = [
+  ['Withdraw', 'BTC', '1.087062', 'Sep 21, 2021  10:42:21 AM ', <StatusTag key="status" status="completed" />]
+]
 
 export default function Dashboard() {
   const { account } = useActiveWeb3React()
@@ -95,6 +98,7 @@ export default function Dashboard() {
                 unit="$"
                 padding="20px 24px"
                 fontSize={'44px'}
+                dayChange="+ 8.91% / $350.28 "
               >
                 <Button
                   style={{ position: 'absolute', right: '24px', bottom: '20px', height: 44, fontSize: 14 }}
@@ -118,7 +122,7 @@ export default function Dashboard() {
               </Typography>
               {accountDetailsData ? (
                 <>
-                  <Table header={['Type', 'Token', 'Amount', 'Date', '']} rows={accountDetailsData} />
+                  <Table header={['Type', 'Token', 'Amount', 'Date', 'Status']} rows={accountDetailsData} />
                   <PaginationView count={4} page={1} setPage={() => {}} />
                 </>
               ) : (

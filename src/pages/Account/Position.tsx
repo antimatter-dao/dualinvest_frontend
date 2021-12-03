@@ -6,6 +6,7 @@ import Button from 'components/Button/Button'
 import Card from 'components/Card/Card'
 import NumericalCard from 'components/Card/NumericalCard'
 import Pagination from 'components/Pagination'
+import StatusTag from 'components/Status/StatusTag'
 
 const positionData = [
   [
@@ -56,25 +57,6 @@ const hiddenData = [
     'Settlement Price': '62091.35'
   }
 ]
-
-function StatusTag({ status }: { status: 'progressing' | 'recruited' }) {
-  return (
-    <Box
-      component="div"
-      borderRadius={22}
-      color={status === 'progressing' ? '#18A0FB' : '#31B047'}
-      bgcolor={status === 'progressing' ? 'rgba(24, 160, 251, 0.16)' : 'rgba(49, 176, 71, 0.16)'}
-      fontSize={14}
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      width={100}
-      height={36}
-    >
-      {status === 'progressing' ? 'Progressing' : 'Recruited'}
-    </Box>
-  )
-}
 
 export default function Position() {
   const theme = useTheme()
