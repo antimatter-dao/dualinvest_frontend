@@ -11,9 +11,23 @@ import { useActiveWeb3React } from 'hooks'
 import ActionModal from './ActionModal'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import StatusTag from 'components/Status/StatusTag'
+import TransactionType from 'components/Transaction/TransactionType'
 
 const accountDetailsData = [
-  ['Withdraw', 'BTC', '1.087062', 'Sep 21, 2021  10:42:21 AM ', <StatusTag key="status" status="completed" />]
+  [
+    <TransactionType key="type" type="withdraw" />,
+    'BTC',
+    '1.087062',
+    'Sep 21, 2021  10:42:21 AM ',
+    <StatusTag key="status" status="completed" />
+  ],
+  [
+    <TransactionType key="type" type="deposit" />,
+    'BTC',
+    '1.087062',
+    'Sep 21, 2021  10:42:21 AM ',
+    <StatusTag key="status" status="completed" />
+  ]
 ]
 
 export default function Dashboard() {
@@ -122,7 +136,7 @@ export default function Dashboard() {
               </Typography>
               {accountDetailsData ? (
                 <>
-                  <Table header={['Type', 'Token', 'Amount', 'Date', 'Status']} rows={accountDetailsData} />
+                  <Table header={['Type', 'Token', 'Amount', 'Date', '']} rows={accountDetailsData} />
                   <PaginationView count={4} page={1} setPage={() => {}} />
                 </>
               ) : (

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Box, Typography, useTheme } from '@mui/material'
+import { Box, Container, Typography, useTheme } from '@mui/material'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
 import Button from 'components/Button/Button'
@@ -7,6 +7,7 @@ import Card from 'components/Card/Card'
 import NumericalCard from 'components/Card/NumericalCard'
 import Pagination from 'components/Pagination'
 import StatusTag from 'components/Status/StatusTag'
+import { useActiveWeb3React } from 'hooks'
 
 const positionData = [
   [
@@ -61,6 +62,7 @@ const hiddenData = [
 export default function Position() {
   const theme = useTheme()
   const [page, setPage] = useState(1)
+  const { account } = useActiveWeb3React()
 
   const hiddenParts = useCallback(() => {
     return hiddenData.map(data => (
@@ -76,6 +78,13 @@ export default function Position() {
       </>
     ))
   }, [theme.palette.text.secondary])
+
+  if (!account)
+    return (
+      <Container sx={{ mt: 48 }}>
+        <NoDataCard />
+      </Container>
+    )
 
   return (
     <>
