@@ -13,16 +13,30 @@ interface Props {
   borderRadius?: string
   style?: React.CSSProperties
   href?: string
+  component?: 'a'
 }
 
 export default function OutlineButton(props: Props) {
-  const { onClick, disabled, style, width, fontSize, color, primary, height, borderRadius, children, href } = props
+  const {
+    onClick,
+    disabled,
+    style,
+    width,
+    fontSize,
+    color,
+    primary,
+    height,
+    borderRadius,
+    children,
+    href,
+    component = 'button'
+  } = props
   const theme = useTheme()
 
   return (
     <ButtonBase
-      component="a"
-      href={href}
+      component={component}
+      href={component ? href : undefined}
       onClick={onClick ?? undefined}
       disabled={disabled}
       sx={{

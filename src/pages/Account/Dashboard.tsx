@@ -15,18 +15,21 @@ import TransacitonPendingModal from 'components/Modal/TransactionModals/Transact
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useDualInvestCallback } from 'hooks/useDualInvest'
 import useModal from 'hooks/useModal'
+import { routes } from 'constants/routes'
+import { useHistory } from 'react-router'
 
 const accountDetailsData = [['Withdraw', 'BTC', '1.087062', 'Sep 21, 2021  10:42:21 AM ']]
 
 const BTC = new Token(3, '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93', 18, 'BTC', 'btc_token')
 
 export default function Dashboard() {
-  const { account } = useActiveWeb3React()
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
   const [currentCurrency, setCurrentCurrency] = useState<Token | undefined>(undefined)
 
+  const { account } = useActiveWeb3React()
   const theme = useTheme()
+  const history = useHistory()
   const { showModal, hideModal } = useModal()
   const { depositCallback, withdrawCallback } = useDualInvestCallback()
   const addTransaction = useTransactionAdder()
@@ -175,6 +178,9 @@ export default function Dashboard() {
                 fontSize={'44px'}
               >
                 <Button
+                  onClick={() => {
+                    history.push(routes.dualInvest)
+                  }}
                   style={{ position: 'absolute', right: '24px', bottom: '20px', height: 44, fontSize: 14 }}
                   width="148px"
                 >
