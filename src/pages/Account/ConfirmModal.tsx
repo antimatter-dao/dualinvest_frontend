@@ -3,20 +3,22 @@ import Button from 'components/Button/Button'
 import OutlineButton from 'components/Button/OutlineButton'
 import Modal from 'components/Modal'
 
-export default function ConfirmDepositModal({
+export default function ConfirmModal({
   onDismiss,
   isOpen,
-  children
+  children,
+  actionStr
 }: {
   onDismiss: () => void
   isOpen: boolean
   children: React.ReactNode
+  actionStr: string
 }) {
   return (
     <Modal closeIcon customIsOpen={isOpen} customOnDismiss={onDismiss}>
       <Box padding="22px 32px" display="grid" gap="32px">
         <Typography fontSize={20} sx={{ color: theme => theme.palette.text.secondary }}>
-          Confirm Deposit
+          Confirm {actionStr}
         </Typography>
         <Box>{children}</Box>
         <Box>

@@ -15,7 +15,7 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import ActionButton from 'components/Button/ActionButton'
 import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import { tryParseAmount } from 'utils/parseAmount'
-import ConfirmDepositModal from './ConfirmDepositModal'
+import ConfirmModal from './ConfirmModal'
 import { useTransaction } from 'state/transactions/hooks'
 import { OutlinedCard } from 'components/Card/Card'
 import { DUAL_INVEST_ADDRESS } from 'constants/index'
@@ -157,7 +157,8 @@ export default function ActionModal({
 
   return (
     <>
-      <ConfirmDepositModal
+      <ConfirmModal
+        actionStr={actionStr}
         isOpen={confirmModalOpen}
         onDismiss={() => {
           setIsConfrirmed(true)
@@ -165,7 +166,7 @@ export default function ActionModal({
         }}
       >
         Deposit {val} {token?.symbol}
-      </ConfirmDepositModal>
+      </ConfirmModal>
 
       <Modal customIsOpen={isOpen} customOnDismiss={handleDismiss} closeIcon>
         <Box display="grid" padding="20px 32px" gap="32px">

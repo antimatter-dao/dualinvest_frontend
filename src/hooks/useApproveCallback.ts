@@ -45,6 +45,8 @@ export function useApproveCallback(
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
 
+  console.log(currentAllowance?.raw.toString(), amountToApprove?.raw.toString())
+
   const approve = useCallback(async (): Promise<void> => {
     if (approvalState !== ApprovalState.NOT_APPROVED) {
       hideModal()
@@ -76,15 +78,13 @@ export function useApproveCallback(
       return
     }
 
-    let useExact = false
     const estimatedGas = await tokenContract.estimateGas.approve(spender, MaxUint256).catch(() => {
       // general fallback for tokens who restrict approval amounts
-      useExact = true
       return tokenContract.estimateGas.approve(spender, amountToApprove.raw.toString())
     })
 
     return tokenContract
-      .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256, {
+      .approve(spender, amountToApprove.raw.toString(), {
         gasLimit: calculateGasMargin(estimatedGas)
       })
       .then((response: TransactionResponse) => {

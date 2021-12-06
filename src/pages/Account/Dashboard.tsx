@@ -28,7 +28,7 @@ export default function Dashboard() {
 
   const theme = useTheme()
   const { showModal, hideModal } = useModal()
-  const { depositCallback } = useDualInvestCallback()
+  const { depositCallback, withdrawCallback } = useDualInvestCallback()
   const addTransaction = useTransactionAdder()
 
   const handleDepositOpen = useCallback(() => {
@@ -65,20 +65,20 @@ export default function Dashboard() {
 
   const handleWithdraw = useCallback(
     (val: string | undefined, token: Token, setHash: (hash: string) => void, onError: (e: Error) => void) => () => {
-      if (!depositCallback || !val || !account) return
+      if (!withdrawCallback || !val || !account) return
       showModal(<TransacitonPendingModal />)
-      depositCallback(val, token.address)
+      withdrawCallback()
         .then(r => {
           hideModal()
           setHash(r.hash)
           const tokenAmount = new TokenAmount(token, val)
           addTransaction(r, {
-            summary: `Stake ${tokenAmount.toExact()} ${token.symbol}`
+            summary: `Withdraw ${tokenAmount.toExact()} ${token.symbol}`
           })
         })
         .catch(onError)
     },
-    [depositCallback, account, showModal, hideModal, addTransaction]
+    [withdrawCallback, account, showModal, hideModal, addTransaction]
   )
 
   const balanceData = useMemo(
@@ -100,7 +100,14 @@ export default function Dashboard() {
           >
             Deposit
           </Button>
-          <Button fontSize={14} style={{ maxWidth: 92, borderRadius: 4, height: 36 }} onClick={handleWithdrawOpen}>
+          <Button
+            fontSize={14}
+            style={{ maxWidth: 92, borderRadius: 4, height: 36 }}
+            onClick={() => {
+              setCurrentCurrency(BTC)
+              handleWithdrawOpen()
+            }}
+          >
             Withdraw
           </Button>
           <OutlineButton
@@ -135,8 +142,8 @@ export default function Dashboard() {
         <Box display="flex" mt={-20}>
           <InfoOutlinedIcon sx={{ color: theme.palette.primary.main, height: 12 }} />
           <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
-            Please make sure there is a certain amount of ETH in the wallet balance, otherwise the deposit will fail due
-            to insufficient handling fees.
+            Please make sure there is a certain amount of {currentCurrency?.symbol ?? 'ETH'} in the wallet balance,
+            otherwise the deposit will fail due to insufficient handling fees.
           </Typography>
         </Box>
       </ActionModal>
@@ -144,6 +151,7 @@ export default function Dashboard() {
         isOpen={isWithdrawOpen}
         onDismiss={handleDismiss}
         type={ActionType.WITHDRAW}
+        token={currentCurrency}
         onAction={handleWithdraw}
       />
       <Container sx={{ mt: 48 }}>

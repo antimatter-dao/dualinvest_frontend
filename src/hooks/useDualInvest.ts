@@ -13,7 +13,7 @@ export function useDualInvestCallback(): {
     },
     [contract]
   )
-  const withdraw = useCallback((): Promise<any> => contract?.exit(), [contract])
+  const withdraw = useCallback((): Promise<any> => contract?.withdraw(), [contract])
 
   const res = useMemo(() => {
     return {
