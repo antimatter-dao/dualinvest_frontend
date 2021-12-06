@@ -16,12 +16,70 @@ export function isAddress(value: any): string | false {
   }
 }
 
-const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
-  1: '',
-  3: 'ropsten.',
-  4: 'rinkeby.',
-  5: 'goerli.',
-  42: 'kovan.'
+const explorers = {
+  etherscan: (link: string, data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
+    switch (type) {
+      case 'transaction':
+        return `${link}/tx/${data}`
+      default:
+        return `${link}/${type}/${data}`
+    }
+  },
+
+  blockscout: (link: string, data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
+    switch (type) {
+      case 'transaction':
+        return `${link}/tx/${data}`
+      case 'token':
+        return `${link}/tokens/${data}`
+      default:
+        return `${link}/${type}/${data}`
+    }
+  },
+
+  harmony: (link: string, data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
+    switch (type) {
+      case 'transaction':
+        return `${link}/tx/${data}`
+      case 'token':
+        return `${link}/address/${data}`
+      default:
+        return `${link}/${type}/${data}`
+    }
+  },
+
+  okex: (link: string, data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
+    switch (type) {
+      case 'transaction':
+        return `${link}/tx/${data}`
+      case 'token':
+        return `${link}/tokenAddr/${data}`
+      default:
+        return `${link}/${type}/${data}`
+    }
+  }
+}
+
+interface ChainObject {
+  [chainId: number]: {
+    link: string
+    builder: (chainName: string, data: string, type: 'transaction' | 'token' | 'address' | 'block') => string
+  }
+}
+
+const chains: ChainObject = {
+  // [ChainId.MAINNET]: {
+  //   link: 'https://etherscan.io',
+  //   builder: explorers.etherscan
+  // },
+  [ChainId.ROPSTEN]: {
+    link: 'https://ropsten.etherscan.io',
+    builder: explorers.etherscan
+  },
+  [ChainId.BSC]: {
+    link: 'https://bscscan.com',
+    builder: explorers.etherscan
+  }
 }
 
 export function getEtherscanLink(
@@ -29,23 +87,8 @@ export function getEtherscanLink(
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
-  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
-
-  switch (type) {
-    case 'transaction': {
-      return `${prefix}/tx/${data}`
-    }
-    case 'token': {
-      return `${prefix}/token/${data}`
-    }
-    case 'block': {
-      return `${prefix}/block/${data}`
-    }
-    case 'address':
-    default: {
-      return `${prefix}/address/${data}`
-    }
-  }
+  const chain = chains[chainId]
+  return chain.builder(chain.link, data, type)
 }
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end

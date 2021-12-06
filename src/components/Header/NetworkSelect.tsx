@@ -7,19 +7,30 @@ import { ChainId, ChainList, SUPPORTED_NETWORKS } from 'constants/chain'
 export default function NetworkSelect() {
   const { chainId, account, library } = useActiveWeb3React()
 
+  if (!chainId || !account) return null
+
   return (
     <div style={{ width: '130', margin: '8px 0 15px' }}>
       <Select
+        disabled
         defaultValue={chainId ?? 3}
         value={chainId ?? 3}
-        width="130px"
+        width="max-content"
         height="36px"
-        style={{ background: 'transparent', border: '1px solid rgba(0, 0, 0, 0.1)' }}
+        style={{
+          background: 'transparent',
+          border: '1px solid rgba(0, 0, 0, 0.1)',
+          '& .Mui-disabled.MuiInputBase-input': {
+            paddingRight: 10,
+            color: theme => theme.palette.text.primary,
+            WebkitTextFillColor: theme => theme.palette.text.primary
+          }
+        }}
       >
         {ChainList.map(option => (
           <MenuItem
             onClick={() => {
-              if ([ChainId.MAINNET, ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.KOVAN].includes(option.id)) {
+              if (Object.values(ChainId).includes(option.id)) {
                 library?.send('wallet_switchEthereumChain', [
                   { chainId: SUPPORTED_NETWORKS[option.id as ChainId]?.chainId },
                   account

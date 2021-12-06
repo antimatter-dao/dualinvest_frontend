@@ -43,10 +43,8 @@ export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contrac
   let address: string | undefined
   if (chainId) {
     switch (chainId) {
-      case ChainId.MAINNET:
-      case ChainId.GÖRLI:
+      // case ChainId.MAINNET:
       case ChainId.ROPSTEN:
-      case ChainId.RINKEBY:
         address = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
         break
     }
@@ -86,9 +84,10 @@ export function useCallOrPutContract(address: string): Contract | null {
 }
 
 export function useSocksController(): Contract | null {
-  const { chainId } = useActiveWeb3React()
+  // const { chainId } = useActiveWeb3React()
   return useContract(
-    chainId === ChainId.MAINNET ? '0x65770b5283117639760beA3F867b69b3697a91dd' : undefined,
+    undefined,
+    // chainId === ChainId.MAINNET ? '0x65770b5283117639760beA3F867b69b3697a91dd' : undefined,
     UNISOCKS_ABI,
     false
   )
