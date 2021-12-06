@@ -8,6 +8,7 @@ import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
 import { CurrencyAmount, TokenAmount } from '../constants/token/fractions'
 import { ETHER } from '../constants/token'
+import useModal from 'hooks/useModal'
 
 export enum ApprovalState {
   UNKNOWN,
@@ -22,6 +23,7 @@ export function useApproveCallback(
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
   const { account } = useActiveWeb3React()
+  const { hideModal } = useModal()
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
@@ -45,25 +47,31 @@ export function useApproveCallback(
 
   const approve = useCallback(async (): Promise<void> => {
     if (approvalState !== ApprovalState.NOT_APPROVED) {
+      hideModal()
       console.error('approve was called unnecessarily')
+
       return
     }
     if (!token) {
+      hideModal()
       console.error('no token')
       return
     }
 
     if (!tokenContract) {
+      hideModal()
       console.error('tokenContract is null')
       return
     }
 
     if (!amountToApprove) {
+      hideModal()
       console.error('missing amount to approve')
       return
     }
 
     if (!spender) {
+      hideModal()
       console.error('no spender')
       return
     }
@@ -84,12 +92,13 @@ export function useApproveCallback(
           summary: 'Approve ' + amountToApprove.currency.symbol,
           approval: { tokenAddress: token.address, spender: spender }
         })
+        hideModal()
       })
       .catch((error: Error) => {
+        hideModal()
         console.debug('Failed to approve token', error)
-        throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction, hideModal])
 
   return [approvalState, approve]
 }

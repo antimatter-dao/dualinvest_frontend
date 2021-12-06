@@ -12,14 +12,17 @@ interface Props {
   color?: string
   borderRadius?: string
   style?: React.CSSProperties
+  href?: string
 }
 
 export default function OutlineButton(props: Props) {
-  const { onClick, disabled, style, width, fontSize, color, primary, height, borderRadius, children } = props
+  const { onClick, disabled, style, width, fontSize, color, primary, height, borderRadius, children, href } = props
   const theme = useTheme()
 
   return (
     <ButtonBase
+      component="a"
+      href={href}
       onClick={onClick ?? undefined}
       disabled={disabled}
       sx={{

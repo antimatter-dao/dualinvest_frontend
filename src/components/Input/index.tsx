@@ -35,12 +35,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
     '&::-webkit-inner-spin-button': {
       WebkitAppearance: 'none'
+    },
+    '&.Mui-disabled': {
+      WebkitTextFillColor: theme.palette.text.secondary,
+      color: theme.palette.text.secondary
     }
   },
   [`&.${inputBaseClasses.disabled}`]: {
-    color: 'rgba(255,255,255,0.24)',
-    cursor: 'not-allowed',
-    backgroundColor: theme.palette.grey.A400
+    cursor: 'not-allowed'
   }
 }))
 

@@ -102,3 +102,11 @@ export function useUserHasSubmittedClaim(
 
   return { claimSubmitted: Boolean(claimTxn), claimTxn }
 }
+
+export function useTransaction(transactionHash?: string): TransactionDetails | undefined {
+  const transactions = useAllTransactions()
+
+  if (!transactionHash || !transactions[transactionHash]) return undefined
+
+  return transactions[transactionHash]
+}
