@@ -3,12 +3,13 @@ import { ReactComponent as WithdrawIcon } from 'assets/svg/withdraw.svg'
 import { ReactComponent as DepositIcon } from 'assets/svg/deposit.svg'
 
 interface Props {
-  type: string
+  txType: 'withdraw' | 'deposit'
 }
-export default function TransactionType(props: Props) {
-  const { type } = props
 
-  switch (type) {
+export default function TransactionTypeIcon(props: Props) {
+  const { txType } = props
+
+  switch (txType) {
     case 'withdraw':
       return (
         <Box>

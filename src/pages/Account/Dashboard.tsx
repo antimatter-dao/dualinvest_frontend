@@ -11,18 +11,18 @@ import { useActiveWeb3React } from 'hooks'
 import ActionModal from './ActionModal'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import StatusTag from 'components/Status/StatusTag'
-import TransactionType from 'components/Transaction/TransactionType'
+import TransactionTypeIcon from 'components/Icon/TransactionTypeIcon'
 
 const accountDetailsData = [
   [
-    <TransactionType key="type" type="withdraw" />,
+    <TransactionTypeIcon key="type" txType="withdraw" />,
     'BTC',
     '1.087062',
     'Sep 21, 2021  10:42:21 AM ',
     <StatusTag key="status" status="completed" />
   ],
   [
-    <TransactionType key="type" type="deposit" />,
+    <TransactionTypeIcon key="type" txType="deposit" />,
     'BTC',
     '1.087062',
     'Sep 21, 2021  10:42:21 AM ',
