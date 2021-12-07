@@ -1,11 +1,13 @@
 import { useCallback, useState } from 'react'
-import { Box, Typography, useTheme } from '@mui/material'
+import { Box, Container, Typography, useTheme } from '@mui/material'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
 import Button from 'components/Button/Button'
 import Card from 'components/Card/Card'
 import NumericalCard from 'components/Card/NumericalCard'
 import Pagination from 'components/Pagination'
+import StatusTag from 'components/Status/StatusTag'
+import { useActiveWeb3React } from 'hooks'
 
 const positionData = [
   [
@@ -57,28 +59,10 @@ const hiddenData = [
   }
 ]
 
-function StatusTag({ status }: { status: 'progressing' | 'recruited' }) {
-  return (
-    <Box
-      component="div"
-      borderRadius={22}
-      color={status === 'progressing' ? '#18A0FB' : '#31B047'}
-      bgcolor={status === 'progressing' ? 'rgba(24, 160, 251, 0.16)' : 'rgba(49, 176, 71, 0.16)'}
-      fontSize={14}
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      width={100}
-      height={36}
-    >
-      {status === 'progressing' ? 'Progressing' : 'Recruited'}
-    </Box>
-  )
-}
-
 export default function Position() {
   const theme = useTheme()
   const [page, setPage] = useState(1)
+  const { account } = useActiveWeb3React()
 
   const hiddenParts = useCallback(() => {
     return hiddenData.map(data => (
@@ -94,6 +78,13 @@ export default function Position() {
       </>
     ))
   }, [theme.palette.text.secondary])
+
+  if (!account)
+    return (
+      <Container disableGutters sx={{ mt: 48 }}>
+        <NoDataCard />
+      </Container>
+    )
 
   return (
     <>

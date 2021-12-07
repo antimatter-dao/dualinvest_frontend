@@ -1,8 +1,9 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, Container } from '@mui/material'
 import Card from 'components/Card/Card'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
 import PaginationView from 'components/Pagination'
+import { useActiveWeb3React } from 'hooks'
 
 const data = [
   [
@@ -20,6 +21,15 @@ const data = [
 ]
 
 export default function History() {
+  const { account } = useActiveWeb3React()
+
+  if (!account)
+    return (
+      <Container disableGutters sx={{ mt: 48 }}>
+        <NoDataCard />
+      </Container>
+    )
+
   return (
     <Box sx={{ mt: 48, width: '100%' }}>
       <Card>
