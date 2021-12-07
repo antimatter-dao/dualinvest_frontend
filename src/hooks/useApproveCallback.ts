@@ -45,8 +45,6 @@ export function useApproveCallback(
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
 
-  console.log(currentAllowance?.raw.toString(), amountToApprove?.raw.toString())
-
   const approve = useCallback(async (): Promise<void> => {
     if (approvalState !== ApprovalState.NOT_APPROVED) {
       hideModal()

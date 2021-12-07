@@ -10,7 +10,7 @@ import { shortenAddress } from '../../utils'
 import WalletModal from 'components/Modal/WalletModal/index'
 import Spinner from 'components/Spinner'
 import { BlackButton } from 'components/Button/Button'
-import { ReactComponent as Web3StatusIcon } from 'assets/svg/web3status_icon.svg'
+import { ReactComponent as Web3StatusIconSvg } from 'assets/svg/web3status_icon.svg'
 
 const ActionButton = styled(BlackButton)(({ theme }) => ({
   backgroundColor: theme.palette.error.main,
@@ -20,6 +20,13 @@ const ActionButton = styled(BlackButton)(({ theme }) => ({
     width: '100%',
     borderRadius: 49,
     height: '40px'
+  }
+}))
+
+const Web3StatusIcon = styled(Web3StatusIconSvg)(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    height: '24px',
+    width: '24px'
   }
 }))
 
@@ -43,31 +50,40 @@ function Web3StatusInner() {
 
   if (account) {
     return (
-      <Box sx={{ cursor: 'pointer' }} style={{ marginBottom: 15 }} onClick={toggleWalletModal}>
+      <Box
+        sx={{ cursor: 'pointer', marginBottom: { xs: 0, sm: 15 }, mt: { xs: 0, sm: 8 } }}
+        onClick={toggleWalletModal}
+      >
         <Box
           sx={{
-            height: 36,
-            width: 180,
+            height: { xs: 24, sm: 36 },
+            width: { xs: 100, sm: 180 },
             borderRadius: '46px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: theme.palette.background.default,
-            mt: 8
+            backgroundColor: theme.palette.background.default
           }}
         >
           <div />
           {hasPendingTransactions ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', mr: 17, ml: 20 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mr: { xs: 10, sm: 17 }, ml: { xs: 10, sm: 20 } }}>
               <Spinner color={theme.palette.text.primary} size="16px" />
               <Box component="span" sx={{ ml: 3 }}>
-                <Typography sx={{ fontSize: 14, ml: 8, color: theme.palette.text.primary }}>
+                <Typography sx={{ fontSize: { xs: 9, sm: 14 }, ml: 8, color: theme.palette.text.primary }}>
                   {pending?.length} Pending
                 </Typography>
               </Box>
             </Box>
           ) : (
-            <Typography sx={{ fontSize: 14, mr: 17, ml: 20, color: theme.palette.text.primary }}>
+            <Typography
+              sx={{
+                fontSize: { xs: 9, sm: 14 },
+                mr: { xs: 10, sm: 17 },
+                ml: { xs: 10, sm: 20 },
+                color: theme.palette.text.primary
+              }}
+            >
               {ENSName || shortenAddress(account)}
             </Typography>
           )}

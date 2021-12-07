@@ -124,7 +124,7 @@ export const theme = {
   },
   height: {
     header: '80px',
-    mobileHeader: '77px',
+    mobileHeader: '51px',
     footer: '60px'
   },
   width: {
