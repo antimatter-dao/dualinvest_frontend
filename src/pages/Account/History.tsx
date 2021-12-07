@@ -25,7 +25,7 @@ export default function History() {
 
   if (!account)
     return (
-      <Container sx={{ mt: 48 }}>
+      <Container disableGutters sx={{ mt: 48 }}>
         <NoDataCard />
       </Container>
     )
