@@ -11,7 +11,7 @@ export default function NoDataCard({ height = '40vh' }: { height?: string }) {
   const { account } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
   return (
-    <Card style={{ maxHeight: 350, height: height, width: '100%', maxWidth: theme.width.maxContent, margin: '0 auto' }}>
+    <Card style={{ maxHeight: 350, height: height, width: 1110, maxWidth: theme.width.maxContent, margin: '0 auto' }}>
       <Box display="flex" justifyContent="center" alignItems="center" height="100%">
         <Box display="grid" sx={{ color: theme => theme.palette.text.secondary, fontSize: 20 }} gap={4}>
           <Typography
