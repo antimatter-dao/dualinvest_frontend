@@ -19,7 +19,7 @@ import Account from './Account'
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
-  overflowX: 'hidden',
+  overflowX: 'auto',
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column',
     height: '100vh'
@@ -43,10 +43,10 @@ const BodyWrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',
   flex: 1,
   overflowY: 'auto',
-  overflowX: 'hidden',
+  overflowX: 'auto',
   position: 'relative',
   [theme.breakpoints.down('md')]: {
-    minHeight: `calc(100vh - ${theme.height.header} - ${theme.height.mobileHeader})`
+    minHeight: `calc(100vh  - ${theme.height.mobileHeader})`
   }
 }))
 

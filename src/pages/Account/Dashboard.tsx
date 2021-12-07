@@ -8,10 +8,17 @@ import OutlineButton from 'components/Button/OutlineButton'
 import NumericalCard from 'components/Card/NumericalCard'
 import PaginationView from 'components/Pagination'
 import { useActiveWeb3React } from 'hooks'
-import ActionModal from './ActionModal'
+import ActionModal, { ActionType } from './ActionModal'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import StatusTag from 'components/Status/StatusTag'
 import TransactionTypeIcon from 'components/Icon/TransactionTypeIcon'
+import { Token, TokenAmount } from 'constants/token'
+import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { useDualInvestCallback } from 'hooks/useDualInvest'
+import useModal from 'hooks/useModal'
+import { routes } from 'constants/routes'
+import { useHistory } from 'react-router'
 
 const accountDetailsData = [
   [
@@ -30,11 +37,19 @@ const accountDetailsData = [
   ]
 ]
 
+const BTC = new Token(3, '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93', 18, 'BTC', 'btc_token')
+
 export default function Dashboard() {
-  const { account } = useActiveWeb3React()
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
+  const [currentCurrency, setCurrentCurrency] = useState<Token | undefined>(undefined)
+
+  const { account } = useActiveWeb3React()
   const theme = useTheme()
+  const history = useHistory()
+  const { showModal, hideModal } = useModal()
+  const { depositCallback, withdrawCallback } = useDualInvestCallback()
+  const addTransaction = useTransactionAdder()
 
   const handleDepositOpen = useCallback(() => {
     setIsDepositOpen(true)
@@ -47,7 +62,44 @@ export default function Dashboard() {
   const handleDismiss = useCallback(() => {
     setIsDepositOpen(false)
     setIsWithdrawOpen(false)
+    setCurrentCurrency(undefined)
   }, [])
+
+  const handleDeposit = useCallback(
+    (val: string | undefined, token: Token, setHash: (hash: string) => void, onError: (e: Error) => void) => {
+      if (!depositCallback || !val || !account) return
+      showModal(<TransactionPendingModal />)
+      depositCallback(val, token.address, { gasLimit: 3000000 })
+        .then(r => {
+          hideModal()
+          setHash(r.hash)
+          const tokenAmount = new TokenAmount(token, val)
+          addTransaction(r, {
+            summary: `Deposit ${tokenAmount.toExact()} ${token.symbol}`
+          })
+        })
+        .catch(onError)
+    },
+    [depositCallback, account, showModal, hideModal, addTransaction]
+  )
+
+  const handleWithdraw = useCallback(
+    (val: string | undefined, token: Token, setHash: (hash: string) => void, onError: (e: Error) => void) => () => {
+      if (!withdrawCallback || !val || !account) return
+      showModal(<TransactionPendingModal />)
+      withdrawCallback()
+        .then(r => {
+          hideModal()
+          setHash(r.hash)
+          const tokenAmount = new TokenAmount(token, val)
+          addTransaction(r, {
+            summary: `Withdraw ${tokenAmount.toExact()} ${token.symbol}`
+          })
+        })
+        .catch(onError)
+    },
+    [withdrawCallback, account, showModal, hideModal, addTransaction]
+  )
 
   const balanceData = useMemo(
     () => [
@@ -58,16 +110,33 @@ export default function Dashboard() {
         '0.286952',
         '0.286952',
         <Box display="flex" key="action" gap={10}>
-          <Button fontSize={14} style={{ maxWidth: 92, borderRadius: 4, height: 36 }} onClick={handleDepositOpen}>
+          <Button
+            fontSize={14}
+            style={{ maxWidth: 92, borderRadius: 4, height: 36 }}
+            onClick={() => {
+              setCurrentCurrency(BTC)
+              handleDepositOpen()
+            }}
+          >
             Deposit
           </Button>
+          <Button
+            fontSize={14}
+            style={{ maxWidth: 92, borderRadius: 4, height: 36 }}
+            onClick={() => {
+              setCurrentCurrency(BTC)
+              handleWithdrawOpen()
+            }}
+          >
+            Withdraw
+          </Button>
           <OutlineButton
+            href=""
             fontSize={14}
             style={{ maxWidth: 92, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
             primary
-            onClick={handleWithdrawOpen}
           >
-            Withdraw
+            Buy
           </OutlineButton>
         </Box>
       ]
@@ -83,16 +152,28 @@ export default function Dashboard() {
     )
   return (
     <>
-      <ActionModal isOpen={isDepositOpen} onDismiss={handleDismiss} type="deposit" currencyInput>
+      <ActionModal
+        isOpen={isDepositOpen}
+        onDismiss={handleDismiss}
+        onAction={handleDeposit}
+        token={currentCurrency}
+        type={ActionType.DEPOSIT}
+      >
         <Box display="flex" mt={-20}>
           <InfoOutlinedIcon sx={{ color: theme.palette.primary.main, height: 12 }} />
           <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
-            Please make sure there is a certain amount of ETH in the wallet balance, otherwise the deposit will fail due
-            to insufficient handling fees.
+            Please make sure there is a certain amount of {currentCurrency?.symbol ?? 'ETH'} in the wallet balance,
+            otherwise the deposit will fail due to insufficient handling fees.
           </Typography>
         </Box>
       </ActionModal>
-      <ActionModal isOpen={isWithdrawOpen} onDismiss={handleDismiss} type="withdraw" />
+      <ActionModal
+        isOpen={isWithdrawOpen}
+        onDismiss={handleDismiss}
+        type={ActionType.WITHDRAW}
+        token={currentCurrency}
+        onAction={handleWithdraw}
+      />
       <Container sx={{ mt: 48 }}>
         <Box display="grid" gap={48}>
           <Card>
@@ -115,6 +196,9 @@ export default function Dashboard() {
                 dayChange="+ 8.91% / $350.28 "
               >
                 <Button
+                  onClick={() => {
+                    history.push(routes.dualInvest)
+                  }}
                   style={{ position: 'absolute', right: '24px', bottom: '20px', height: 44, fontSize: 14 }}
                   width="148px"
                 >

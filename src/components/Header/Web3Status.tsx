@@ -10,16 +10,25 @@ import { shortenAddress } from '../../utils'
 import WalletModal from 'components/Modal/WalletModal/index'
 import Spinner from 'components/Spinner'
 import { BlackButton } from 'components/Button/Button'
-import { ReactComponent as Web3StatusIcon } from 'assets/svg/web3status_icon.svg'
+import { ReactComponent as Web3StatusIconSvg } from 'assets/svg/web3status_icon.svg'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 const ActionButton = styled(BlackButton)(({ theme }) => ({
   backgroundColor: theme.palette.error.main,
   fontSize: '14px',
+  marginBottom: 15,
   [theme.breakpoints.down('sm')]: {
     maxWidth: 320,
     width: '100%',
     borderRadius: 49,
-    height: '40px'
+    marginBottom: 0
+  }
+}))
+
+const Web3StatusIcon = styled(Web3StatusIconSvg)(({ theme }) => ({
+  [theme.breakpoints.down('sm')]: {
+    height: '24px',
+    width: '24px'
   }
 }))
 
@@ -40,34 +49,44 @@ function Web3StatusInner() {
   const hasPendingTransactions = !!pending.length
   const toggleWalletModal = useWalletModalToggle()
   const theme = useTheme()
+  const isDownSm = useBreakpoint()
 
   if (account) {
     return (
-      <Box sx={{ cursor: 'pointer' }} style={{ marginBottom: 15 }} onClick={toggleWalletModal}>
+      <Box
+        sx={{ cursor: 'pointer', marginBottom: { xs: 0, sm: 15 }, mt: { xs: 0, sm: 8 } }}
+        onClick={toggleWalletModal}
+      >
         <Box
           sx={{
-            height: 36,
-            width: 180,
+            height: { xs: 24, sm: 36 },
+            width: { xs: 100, sm: 180 },
             borderRadius: '46px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: theme.palette.background.default,
-            mt: 8
+            backgroundColor: theme.palette.background.default
           }}
         >
           <div />
           {hasPendingTransactions ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', mr: 17, ml: 20 }}>
-              <Spinner color={theme.palette.text.primary} size="16px" />
+            <Box sx={{ display: 'flex', alignItems: 'center', mr: { xs: 10, sm: 17 }, ml: { xs: 10, sm: 20 } }}>
+              <Spinner color={theme.palette.text.primary} size={isDownSm ? '10px' : '16px'} />
               <Box component="span" sx={{ ml: 3 }}>
-                <Typography sx={{ fontSize: 14, ml: 8, color: theme.palette.text.primary }}>
+                <Typography sx={{ fontSize: { xs: 9, sm: 14 }, ml: 8, color: theme.palette.text.primary }} noWrap>
                   {pending?.length} Pending
                 </Typography>
               </Box>
             </Box>
           ) : (
-            <Typography sx={{ fontSize: 14, mr: 17, ml: 20, color: theme.palette.text.primary }}>
+            <Typography
+              sx={{
+                fontSize: { xs: 9, sm: 14 },
+                mr: { xs: 10, sm: 17 },
+                ml: { xs: 10, sm: 20 },
+                color: theme.palette.text.primary
+              }}
+            >
               {ENSName || shortenAddress(account)}
             </Typography>
           )}
@@ -77,13 +96,23 @@ function Web3StatusInner() {
     )
   } else if (error) {
     return (
-      <ActionButton width="140px" height="36px" style={{ marginBottom: 15 }} onClick={toggleWalletModal}>
+      <ActionButton
+        width={isDownSm ? '128px' : '140px'}
+        height={isDownSm ? '28px' : '36px'}
+        fontSize={isDownSm ? '12px' : '14px'}
+        onClick={toggleWalletModal}
+      >
         {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}
       </ActionButton>
     )
   } else {
     return (
-      <ActionButton width="140px" height="36px" style={{ marginBottom: 15 }} onClick={toggleWalletModal}>
+      <ActionButton
+        width={isDownSm ? '128px' : '140px'}
+        height={isDownSm ? '28px' : '36px'}
+        fontSize={isDownSm ? '12px' : '14px'}
+        onClick={toggleWalletModal}
+      >
         Connect Wallet
       </ActionButton>
     )

@@ -31,12 +31,14 @@ export function ExternalLink({
   sx,
   children,
   underline,
-  className
+  className,
+  color
 }: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & {
   href: string
   style?: React.CSSProperties
   sx?: SxProps<Theme>
   underline?: 'always' | 'hover' | 'none'
+  color?: string
 }) {
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -55,7 +57,11 @@ export function ExternalLink({
       href={href}
       onClick={handleClick}
       style={style}
-      sx={sx}
+      sx={{
+        color: color ? color + '!important' : undefined,
+
+        ...sx
+      }}
       underline={underline ?? 'none'}
       className={className}
     >

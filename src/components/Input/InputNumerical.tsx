@@ -84,6 +84,7 @@ export default function NumericalInput({
             <Box gap="20px" display="flex" alignItems="center" paddingLeft="20px" paddingBottom="2px">
               <span>{unit ?? 'MATTER'}</span>
               <SecondaryButton
+                disabled={props.disabled === true ? true : false}
                 primary
                 onClick={onMax}
                 style={{

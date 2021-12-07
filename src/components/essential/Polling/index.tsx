@@ -6,6 +6,7 @@ import { ExternalLink } from 'theme/components'
 import { useBlockNumber } from 'state/application/hooks'
 import { getEtherscanLink } from 'utils'
 import { useActiveWeb3React } from 'hooks'
+import { ChainId } from 'constants/chain'
 
 const rotate360 = keyframes`
   from {
@@ -83,7 +84,11 @@ export default function Polling() {
   )
 
   return (
-    <ExternalLink href={chainId && blockNumber ? getEtherscanLink(chainId, blockNumber.toString(), 'block') : ''}>
+    <ExternalLink
+      href={
+        chainId && ChainId[chainId] && blockNumber ? getEtherscanLink(chainId, blockNumber.toString(), 'block') : ''
+      }
+    >
       <StyledPolling>
         <Typography variant="body2" sx={{ opacity: isMounted ? '0.2' : '0.6' }}>
           {blockNumber}

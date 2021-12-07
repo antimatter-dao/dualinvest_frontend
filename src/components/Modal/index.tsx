@@ -39,17 +39,17 @@ export default function Modal(props: Props) {
         open={customIsOpen !== undefined ? !!customIsOpen : isOpen}
         sx={{
           '& *': {
-            boxSizing: 'border-box',
-            '& .MuiDialog-scrollPaper': {
-              alignItems: !isCardOnMobile ? { mdDown: 'flex-end' } : {}
-            }
+            boxSizing: 'border-box'
+          },
+          '& .MuiDialog-container ': {
+            alignItems: { xs: !isCardOnMobile ? 'flex-end' : 'center', sm: 'center' }
           }
         }}
         PaperProps={{
           ref: node,
           sx: {
             ...{
-              width: { xs: 'calc(100vw - 32px)!important', md: width || 488 },
+              width: { xs: 'calc(100vw - 32px)!important', sm: width || 488 },
               maxWidth: maxWidth || 488,
               background: theme => theme.palette.background.paper,
               border: hasBorder ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid transparent',
@@ -57,7 +57,7 @@ export default function Modal(props: Props) {
               padding: padding || 0,
               boxSizing: 'border-box',
               borderRadius: 2,
-              marginBottom: { xs: '32px', md: 100 },
+              marginBottom: { xs: 0, sm: 100 },
               overflowX: 'hidden',
               position: 'absolute',
               overflowY: 'auto',
@@ -65,15 +65,17 @@ export default function Modal(props: Props) {
             },
             ...(!isCardOnMobile
               ? {
-                  [theme.breakpoints.down('md')]: {
+                  [theme.breakpoints.down('sm')]: {
                     border: 'none',
                     width: '100%!important',
                     maxWidth: 'unset!important',
                     maxHeight: 'unset',
-                    height: `calc(100vh - ${theme.height.header})`,
-                    borderRadius: '20px 20px 0 0',
-                    marginTop: theme.height.header,
-                    marginBottom: 0
+                    height: 'auto',
+                    borderRadius: '0',
+                    marginTop: theme.height.mobileHeader,
+                    marginBottom: 0,
+                    pb: '20px',
+                    pt: '10px'
                   }
                 }
               : {})
@@ -82,15 +84,9 @@ export default function Modal(props: Props) {
         BackdropProps={{
           sx: {
             ...{
-              backgroundColor: 'rgba(0,0,0,0.6)'
-            },
-            ...(!isCardOnMobile
-              ? {
-                  [theme.breakpoints.down('md')]: {
-                    background: 'none'
-                  }
-                }
-              : {})
+              backgroundColor: 'rgba(0,0,0,0.6)',
+              [theme.breakpoints.down('sm')]: { top: theme.height.mobileHeader }
+            }
           }
         }}
         onClose={hide}

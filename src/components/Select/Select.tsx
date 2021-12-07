@@ -83,6 +83,10 @@ export default function Select(props: Props) {
             display: disabled ? 'none' : 'block',
             color: theme.palette.text.secondary
           },
+          '& .Mui-disabled.MuiInputBase-input': {
+            color: theme.palette.text.primary,
+            WebkitTextFillColor: theme.palette.text.primary
+          },
           ...style
         }}
         value={value}

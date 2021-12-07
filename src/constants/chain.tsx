@@ -1,13 +1,13 @@
 import { Chain } from 'models/chain'
 import { ReactComponent as ETH } from 'assets/svg/eth_logo.svg'
 import EthUrl from 'assets/svg/eth_logo.svg'
+import BSCUrl from 'assets/svg/binance.svg'
+import { ReactComponent as BSCInvert } from 'assets/svg/binance.svg'
 
 export enum ChainId {
-  MAINNET = 1,
+  // MAINNET = 1,
   ROPSTEN = 3,
-  RINKEBY = 4,
-  GÖRLI = 5,
-  KOVAN = 42
+  BSC = 56
 }
 
 export const ChainList = [
@@ -20,20 +20,12 @@ export const ChainList = [
     hex: '0x3'
   },
   {
-    icon: <ETH />,
-    logo: EthUrl,
-    symbol: 'Rinkeby',
-    name: 'Rinkeby Testnet',
-    id: ChainId.RINKEBY,
-    hex: '0x4'
-  },
-  {
-    icon: <ETH />,
-    logo: EthUrl,
-    symbol: 'Kovan',
-    name: 'Kovan Testnet',
-    id: ChainId.KOVAN,
-    hex: '0x2a'
+    icon: <BSCInvert height={20} width={20} />,
+    logo: BSCUrl,
+    symbol: 'BSC',
+    name: 'Binance Smart Chain',
+    id: ChainId.BSC,
+    hex: '0x38'
   }
 ]
 
@@ -57,17 +49,17 @@ export const SUPPORTED_NETWORKS: {
     blockExplorerUrls: string[]
   }
 } = {
-  [ChainId.MAINNET]: {
-    chainId: '0x1',
-    chainName: 'Ethereum',
-    nativeCurrency: {
-      name: 'Ethereum',
-      symbol: 'ETH',
-      decimals: 18
-    },
-    rpcUrls: ['https://mainnet.infura.io/v3'],
-    blockExplorerUrls: ['https://etherscan.com']
-  },
+  // [ChainId.MAINNET]: {
+  //   chainId: '0x1',
+  //   chainName: 'Ethereum',
+  //   nativeCurrency: {
+  //     name: 'Ethereum',
+  //     symbol: 'ETH',
+  //     decimals: 18
+  //   },
+  //   rpcUrls: ['https://mainnet.infura.io/v3'],
+  //   blockExplorerUrls: ['https://etherscan.com']
+  // },
   [ChainId.ROPSTEN]: {
     chainId: '0x3',
     chainName: 'Ropsten',
@@ -79,26 +71,15 @@ export const SUPPORTED_NETWORKS: {
     rpcUrls: ['https://ropsten.infura.io/v3/'],
     blockExplorerUrls: ['https://ropsten.etherscan.io/']
   },
-  [ChainId.RINKEBY]: {
-    chainId: '0x4',
-    chainName: 'Rinkeby',
+  [ChainId.BSC]: {
+    chainId: '0x38',
+    chainName: 'Binance Smart Chain',
     nativeCurrency: {
-      name: 'Rinkeby',
-      symbol: 'ETH',
+      name: 'Binance Coin',
+      symbol: 'BNB',
       decimals: 18
     },
-    rpcUrls: ['https://rinkeby.infura.io/v3/'],
-    blockExplorerUrls: ['https://rinkeby.etherscan.io/']
-  },
-  [ChainId.KOVAN]: {
-    chainId: '0x2a',
-    chainName: 'Kovan',
-    nativeCurrency: {
-      name: 'Kovan',
-      symbol: 'ETH',
-      decimals: 18
-    },
-    rpcUrls: ['https://kovan.infura.io/v3/'],
-    blockExplorerUrls: ['https://kovan.etherscan.io/']
+    rpcUrls: ['https://bsc-dataseed.binance.org'],
+    blockExplorerUrls: ['https://bscscan.com']
   }
 }

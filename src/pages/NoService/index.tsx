@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material'
 import Card from 'components/Card/Card'
 import Image from 'components/Image'
 import noServiceUrl from 'assets/images/no_service.png'
-import TextButton from 'components/Button/TextButton'
+import { ExternalLink } from 'theme/components'
 
 export default function NoService() {
   return (
@@ -15,16 +15,16 @@ export default function NoService() {
           <p> Sorry! For compliance reasons, this service is not accessible in your area.</p>
           <p>
             The dapp is only open to non-U.S. and non-China persons and entities. Use of VPN, Tor, proxies or other
-            means to circumvent this restriction is a violation of our
-            <TextButton primary fontSize={16}>
+            means to circumvent this restriction is a violation of our&nbsp;
+            <ExternalLink sx={{ fontSize: 16 }} href="https://docs.antimatter.finance/disclaimer/notice-and-disclaimer">
               Terms of Service.
-            </TextButton>
+            </ExternalLink>
           </p>
           <p>
-            For details, please see our
-            <TextButton primary fontSize={16}>
+            For details, please see our&nbsp;
+            <ExternalLink sx={{ fontSize: 16 }} href="https://docs.antimatter.finance/disclaimer/notice-and-disclaimer">
               Terms of Service
-            </TextButton>
+            </ExternalLink>
             .
           </p>
         </Box>

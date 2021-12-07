@@ -1,13 +1,14 @@
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { AppBar, Box, MenuItem, styled as muiStyled, styled } from '@mui/material'
+import { AppBar, Box, IconButton, MenuItem, styled as muiStyled, styled } from '@mui/material'
 import { ExternalLink } from 'theme/components'
 import Web3Status from './Web3Status'
-import { HideOnMobile } from 'theme/index'
+import { HideOnMobile, ShowOnMobile } from 'theme/index'
 import PlainSelect from 'components/Select/PlainSelect'
 import Image from 'components/Image'
 import antimatter from '../../assets/svg/antimatter.svg'
 import { routes } from 'constants/routes'
-import MobileHeader from './MobileHeader'
+import MobileMenu from './MobileMenu'
 import NetworkSelect from './NetworkSelect'
 
 interface TabContent {
@@ -28,7 +29,10 @@ export const Tabs: Tab[] = [
   { title: 'Docs', link: 'https://docs.antimatter.finance/' },
   {
     title: 'Labs',
-    subTab: [{ title: 'placeholder', route: routes.dualInvestMgmt }]
+    subTab: [
+      { title: 'BULL & BEAR Option', link: 'https://app.antimatter.finance/#/option_trading' },
+      { title: 'Nonfungible Finance', link: 'https://nonfungible.finance/#/' }
+    ]
   }
 ]
 
@@ -41,15 +45,16 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   justifyContent: 'space-between',
   boxShadow: 'none',
   padding: '0 60px 0 0',
+  zIndex: theme.zIndex.drawer,
   borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-  [theme.breakpoints.down('md')]: {
-    position: 'fixed',
-    bottom: 0,
-    left: 0,
-    top: 'unset',
-    borderTop: '1px solid ' + theme.bgColor.bg4,
-    justifyContent: 'center'
-  },
+  // [theme.breakpoints.down('md')]: {
+  //   position: 'fixed',
+  //   bottom: 0,
+  //   left: 0,
+  //   top: 'unset',
+  //   borderTop: '1px solid ' + theme.bgColor.bg4,
+  //   justifyContent: 'center'
+  // },
   '& .link': {
     textDecoration: 'none',
     fontSize: 14,
@@ -65,33 +70,56 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
     '&:hover': {
       opacity: 1
     }
+  },
+  [theme.breakpoints.down('lg')]: {
+    '& .link': { marginRight: 15 },
+    padding: '0 24px 0 0'
+  },
+  [theme.breakpoints.down('sm')]: {
+    height: theme.height.mobileHeader,
+    padding: '0 20px'
   }
 }))
 
-const MainLogo = styled(NavLink)({
+const MainLogo = styled(NavLink)(({ theme }) => ({
   '& img': {
     width: 180.8,
     height: 34.7
   },
   '&:hover': {
     cursor: 'pointer'
+  },
+  [theme.breakpoints.down('sm')]: {
+    '& img': { width: 100, height: 'auto' },
+    marginBottom: -10
   }
-})
+}))
 
-const LinksWrapper = muiStyled('div')({
-  marginLeft: 60.2
-})
+const LinksWrapper = muiStyled('div')(({ theme }) => ({
+  marginLeft: 60.2,
+  [theme.breakpoints.down('lg')]: {
+    marginLeft: 20
+  }
+}))
 
 export default function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   return (
     <>
-      <MobileHeader />
+      <MobileMenu
+        isOpen={mobileMenuOpen}
+        onDismiss={() => {
+          setMobileMenuOpen(false)
+        }}
+      />
+
       <StyledAppBar>
-        <HideOnMobile breakpoint="md">
-          <Box display="flex" alignItems="center">
-            <MainLogo id={'antimatter'} to={'/'}>
-              <Image src={antimatter} alt={'antimatter'} />
-            </MainLogo>
+        <Box display="flex" alignItems="center">
+          <MainLogo id={'antimatter'} to={'/'}>
+            <Image src={antimatter} alt={'antimatter'} />
+          </MainLogo>
+          <HideOnMobile breakpoint="md">
             <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
                 subTab ? (
@@ -99,7 +127,16 @@ export default function Header() {
                     {subTab.map((sub, idx) =>
                       sub.link ? (
                         <MenuItem key={sub.link + idx}>
-                          <ExternalLink href={sub.link} className={'link'}>
+                          <ExternalLink
+                            href={sub.link}
+                            className={'link'}
+                            color="#00000050"
+                            sx={{
+                              '&:hover': {
+                                color: '#232323!important'
+                              }
+                            }}
+                          >
                             {sub.titleContent ?? sub.title}
                           </ExternalLink>
                         </MenuItem>
@@ -123,11 +160,33 @@ export default function Header() {
                 )
               )}
             </LinksWrapper>
-          </Box>
-        </HideOnMobile>
-        <Box display="flex" alignItems="center" gap="20px">
+          </HideOnMobile>
+        </Box>
+
+        <Box display="flex" alignItems="center" gap={{ xs: '6px', sm: '20px' }}>
           <NetworkSelect />
           <Web3Status />
+          <ShowOnMobile breakpoint="md">
+            <IconButton
+              sx={{
+                border: '1px solid rgba(0, 0, 0, 0.1)',
+                height: { xs: 24, sm: 32 },
+                width: { xs: 24, sm: 32 },
+                mb: { xs: 0, sm: 15 },
+                mt: { xs: 0, sm: 8 },
+                padding: '4px',
+                borderRadius: '8px'
+              }}
+              onClick={() => {
+                setMobileMenuOpen(open => !open)
+              }}
+            >
+              <svg width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="#252525">
+                <path d="M1 1H13" strokeWidth="1.4" strokeLinecap="round" />
+                <path d="M1 7H13" strokeWidth="1.4" strokeLinecap="round" />
+              </svg>
+            </IconButton>
+          </ShowOnMobile>
         </Box>
       </StyledAppBar>
     </>

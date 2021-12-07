@@ -14,39 +14,55 @@ import flexibleUrl from 'assets/images/flexible.png'
 import Progress from 'components/Progress'
 import { routes } from 'constants/routes'
 import { useHistory } from 'react-router'
+import useBreakpoint from 'hooks/useBreakpoint'
 
-const StyledDualInvestGuide = styled(DualInvestGuide)({
+const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
   '& #dualInvestGuide': {
     zIndex: 2,
     '&:hover, :focus, :active': {
       opacity: 1,
       cursor: 'pointer'
     }
+  },
+  [theme.breakpoints.down('md')]: {
+    width: 'calc(100vw - 72px)'
   }
-})
+}))
 
 export default function DualInvest() {
   const history = useHistory()
+  const isDownMd = useBreakpoint('md')
 
   return (
-    <Box display="grid" justifyItems="center" width="100%" alignContent="flex-start" marginBottom="auto" gap={48}>
+    <Box
+      display="grid"
+      justifyItems="center"
+      width="100%"
+      alignContent="flex-start"
+      marginBottom="auto"
+      gap={{ xs: 36, md: 48 }}
+    >
       <Box
         display="flex"
         justifyContent="center"
-        sx={{ width: '100%', background: theme => theme.palette.background.paper, padding: '44px 61px' }}
+        sx={{
+          width: '100%',
+          background: theme => theme.palette.background.paper,
+          padding: { xs: '20px', md: '44px 61px' }
+        }}
       >
         <Box
           sx={{ maxWidth: theme => theme.width.maxContent }}
           width="100%"
-          display="flex"
+          display={{ xs: 'grid', md: 'flex' }}
           justifyContent="space-between"
           alignItems="center"
         >
           <Box display="grid" gap={12}>
             <Typography component="h1" sx={{ fontSize: { xs: 44 }, fontWeight: 700 }}>
-              Antimatter Dual Investment
+              Dual Investment
             </Typography>
-            <Box display="flex" gap={32}>
+            <Box display={{ xs: 'grid', md: 'flex' }} gap={{ xs: 8, md: 32 }}>
               <LogoText
                 logo={<Image src={checkUrl} />}
                 text={<Typography sx={{ fontSize: 18, opacity: 0.8 }}>Earn both ups and downs</Typography>}
@@ -56,11 +72,11 @@ export default function DualInvest() {
                 text={<Typography sx={{ fontSize: 18, opacity: 0.8 }}>More control</Typography>}
               />
             </Box>
-            <Grid container spacing={20} mt={30}>
-              <Grid item xs={6}>
+            <Grid container spacing={{ xs: 8, md: 20 }} mt={30}>
+              <Grid item xs={12} md={6}>
                 <NumericalCard value="9,657,321" unit="USDT" border subValue="Total investment amount" />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <NumericalCard value="168,640" unit="USDT" border subValue="Amount of investment in progress" />
               </Grid>
             </Grid>
@@ -77,33 +93,34 @@ export default function DualInvest() {
           background: theme => theme.palette.background.paper,
           borderRadius: 2,
           padding: '34px 24px',
-          maxWidth: theme => theme.width.maxContent
+
+          maxWidth: theme => ({ xs: `calc(100vw - 40px)`, md: theme.width.maxContent })
         }}
       >
-        <Box display="flex" alignContent="center" justifyContent="space-between">
+        <Box display={{ xs: 'grid', md: 'flex' }} alignContent="center" justifyContent="space-between">
           <Box display="grid" columnGap={20} rowGap={8}>
             <Image
               src={antimatterBlackCircle}
               style={{
                 gridRowStart: 1,
-                gridRowEnd: 'span 2'
+                gridRowEnd: isDownMd ? 'span 1' : 'span 2'
               }}
             />
             <Typography
               fontWeight={700}
               sx={{
-                gridColumnStart: 2,
+                gridColumnStart: isDownMd ? 1 : 2,
                 gridColumnEnd: 'span 1',
                 fontSize: 24
               }}
             >
               BTC financial management&nbsp;
               <Box component="span" sx={{ fontWeight: 400 }}>
-                [upward exercise]
+                {isDownMd && <br />}[upward exercise]
               </Box>
             </Typography>
             <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
-              Deposit BTC, and settle the principal and income at maturity as BTC or USDT
+              Deposit BTC, and settle the principal and income{isDownMd && <br />} at maturity as BTC or USDT
             </Typography>
           </Box>
           <Box display="flex" flexDirection="column" alignItems="flex-end">
@@ -157,10 +174,10 @@ export default function DualInvest() {
           background: theme => theme.palette.background.paper,
           borderRadius: 2,
           padding: '34px 24px',
-          maxWidth: theme => theme.width.maxContent
+          maxWidth: theme => ({ xs: `calc(100vw - 40px)`, md: theme.width.maxContent })
         }}
       >
-        <Box display="flex" alignContent="center" justifyContent="space-between">
+        <Box display={{ xs: 'grid', md: 'flex' }} alignContent="center" justifyContent="space-between">
           <Box display="grid" columnGap={20} rowGap={8}>
             <Image
               src={antimatterBlackCircle}
@@ -179,11 +196,11 @@ export default function DualInvest() {
             >
               USDT financial management&nbsp;
               <Box component="span" sx={{ fontWeight: 400 }}>
-                [drop exercise]
+                {isDownMd && <br />}[drop exercise]
               </Box>
             </Typography>
             <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
-              Deposit USDT, and settle the principal and income at maturity as BTC or USDT
+              Deposit USDT, and settle the principal and income {isDownMd && <br />}at maturity as BTC or USDT
             </Typography>
           </Box>
           <Box display="flex" flexDirection="column" alignItems="flex-end">
@@ -224,21 +241,21 @@ export default function DualInvest() {
       </Box>
 
       <Grid container sx={{ maxWidth: theme => theme.width.maxContent }} spacing={20} width="100%">
-        <Grid item md={4}>
+        <Grid item xs={12} md={4}>
           <FeatureCard
             icon={<Image src={securityUrl} />}
             title="Security"
             content="Top-level security infrastructure and risk control measures to protect asset safety"
           />
         </Grid>
-        <Grid item md={4}>
+        <Grid item xs={12} md={4}>
           <FeatureCard
             icon={<Image src={highReturnUrl} />}
             title="High Return"
             content="High-end liquidity strategy in the industry to ensure high returns"
           />
         </Grid>
-        <Grid item md={4}>
+        <Grid item xs={12} md={4}>
           <FeatureCard
             icon={<Image src={flexibleUrl} />}
             title="Flexible Experience"

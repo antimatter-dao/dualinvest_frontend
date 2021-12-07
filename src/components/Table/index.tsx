@@ -161,7 +161,7 @@ export default function Table({
   collapsible?: boolean
   hiddenParts?: JSX.Element[]
 }) {
-  const matches = useBreakpoint()
+  const matches = useBreakpoint('md')
 
   return (
     <>
@@ -172,11 +172,23 @@ export default function Table({
               <Box display="flex" flexDirection="column" gap="16px">
                 {header.map((headerString, index) => (
                   <CardRow key={index}>
-                    <Typography variant="inherit">{headerString}</Typography>
-                    <Typography sx={{ color: theme => theme.palette.text.secondary }}>
-                      {' '}
+                    <Typography variant="inherit" component="div">
+                      {headerString}
+                    </Typography>
+                    <Typography sx={{ color: theme => theme.palette.text.secondary }} component="div">
                       {data[index] ?? null}
                     </Typography>
+                    {collapsible && index + 1 === header.length && (
+                      <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        // onClick={() => setIsOpen(open => !open)}
+                        sx={{ flexGrow: 0 }}
+                      >
+                        <KeyboardArrowUpIcon />
+                        {/* {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} */}
+                      </IconButton>
+                    )}
                   </CardRow>
                 ))}
               </Box>

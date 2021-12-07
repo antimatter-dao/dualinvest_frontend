@@ -34,9 +34,7 @@ export default function SecondaryButton(props: Props) {
           color: theme.palette.secondary.contrastText
         },
         '&:disabled': {
-          opacity: theme.palette.action.disabledOpacity,
-          backgroundColor: theme.palette.secondary.light,
-          borderColor: theme.palette.secondary.light
+          opacity: theme.palette.action.disabledOpacity
         },
         ...style
       }}

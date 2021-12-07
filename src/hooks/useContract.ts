@@ -3,11 +3,17 @@ import { abi as GOVERNANCE_ABI } from '../constants/abis/governance.json'
 import ANTIMATTER_ABI from '../constants/abis/antimatter.json'
 import ANTIMATTER_GOVERNANCE_ABI from '../constants/abis/governance.json'
 import { useMemo } from 'react'
-import { ANTIMATTER_ADDRESS, GOVERNANCE_ADDRESS, ANTIMATTER_GOVERNANCE_ADDRESS } from '../constants'
+import {
+  ANTIMATTER_ADDRESS,
+  GOVERNANCE_ADDRESS,
+  ANTIMATTER_GOVERNANCE_ADDRESS,
+  DUAL_INVEST_ADDRESS
+} from '../constants'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ENS_ABI from '../constants/abis/ens-registrar.json'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
+import DUAL_INVEST_ABI from '../constants/abis/dual_invest.json'
 import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
 import UNISOCKS_ABI from '../constants/abis/unisocks.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
@@ -43,10 +49,8 @@ export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contrac
   let address: string | undefined
   if (chainId) {
     switch (chainId) {
-      case ChainId.MAINNET:
-      case ChainId.GÖRLI:
+      // case ChainId.MAINNET:
       case ChainId.ROPSTEN:
-      case ChainId.RINKEBY:
         address = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
         break
     }
@@ -86,9 +90,10 @@ export function useCallOrPutContract(address: string): Contract | null {
 }
 
 export function useSocksController(): Contract | null {
-  const { chainId } = useActiveWeb3React()
+  // const { chainId } = useActiveWeb3React()
   return useContract(
-    chainId === ChainId.MAINNET ? '0x65770b5283117639760beA3F867b69b3697a91dd' : undefined,
+    undefined,
+    // chainId === ChainId.MAINNET ? '0x65770b5283117639760beA3F867b69b3697a91dd' : undefined,
     UNISOCKS_ABI,
     false
   )
@@ -96,4 +101,8 @@ export function useSocksController(): Contract | null {
 
 export function useAntiMatterGovernanceContract(): Contract | null {
   return useContract(ANTIMATTER_GOVERNANCE_ADDRESS, ANTIMATTER_GOVERNANCE_ABI, false)
+}
+
+export function useDualInvestContract(): Contract | null {
+  return useContract(DUAL_INVEST_ADDRESS, DUAL_INVEST_ABI, true)
 }

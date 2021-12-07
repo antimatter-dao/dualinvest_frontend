@@ -53,10 +53,11 @@ export default function Select(props: Props) {
       MenuProps={{
         sx: {
           '& .MuiPaper-root': {
-            boxShadow: theme => theme.shadows[3],
-            width: 148,
+            width: 'max-content',
             borderRadius: '14px',
             marginTop: 6,
+            border: '1px solid rgba(0, 0, 0, 0.1)',
+            boxShadow: '0px 1px 8px rgba(0, 0, 0, 0.05)',
             backgroundColor: 'transparent',
             '& ul': {
               background: theme => theme.palette.background.paper,
