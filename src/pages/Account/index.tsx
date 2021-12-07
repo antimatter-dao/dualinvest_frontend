@@ -12,7 +12,14 @@ import historyUrl from 'assets/images/history.png'
 
 export default function Account() {
   return (
-    <Box sx={{ maxWidth: theme => theme.width.maxContent, margin: '62px 24px auto', width: '100%' }}>
+    <Box
+      sx={{
+        maxWidth: theme => theme.width.maxContent,
+        margin: { xs: '0 0 auto', md: '62px 24px auto' },
+        width: '100%',
+        padding: { xs: 20, md: 0 }
+      }}
+    >
       <Tabs
         titles={[
           <Tab text="Dashboard" iconUrl={dashboardUrl} key="dashboard" />,

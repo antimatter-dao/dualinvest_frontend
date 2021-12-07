@@ -11,15 +11,17 @@ import WalletModal from 'components/Modal/WalletModal/index'
 import Spinner from 'components/Spinner'
 import { BlackButton } from 'components/Button/Button'
 import { ReactComponent as Web3StatusIconSvg } from 'assets/svg/web3status_icon.svg'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 const ActionButton = styled(BlackButton)(({ theme }) => ({
   backgroundColor: theme.palette.error.main,
   fontSize: '14px',
+  marginBottom: 15,
   [theme.breakpoints.down('sm')]: {
     maxWidth: 320,
     width: '100%',
     borderRadius: 49,
-    height: '40px'
+    marginBottom: 0
   }
 }))
 
@@ -47,6 +49,7 @@ function Web3StatusInner() {
   const hasPendingTransactions = !!pending.length
   const toggleWalletModal = useWalletModalToggle()
   const theme = useTheme()
+  const isDownSm = useBreakpoint()
 
   if (account) {
     return (
@@ -68,9 +71,9 @@ function Web3StatusInner() {
           <div />
           {hasPendingTransactions ? (
             <Box sx={{ display: 'flex', alignItems: 'center', mr: { xs: 10, sm: 17 }, ml: { xs: 10, sm: 20 } }}>
-              <Spinner color={theme.palette.text.primary} size="16px" />
+              <Spinner color={theme.palette.text.primary} size={isDownSm ? '10px' : '16px'} />
               <Box component="span" sx={{ ml: 3 }}>
-                <Typography sx={{ fontSize: { xs: 9, sm: 14 }, ml: 8, color: theme.palette.text.primary }}>
+                <Typography sx={{ fontSize: { xs: 9, sm: 14 }, ml: 8, color: theme.palette.text.primary }} noWrap>
                   {pending?.length} Pending
                 </Typography>
               </Box>
@@ -93,13 +96,23 @@ function Web3StatusInner() {
     )
   } else if (error) {
     return (
-      <ActionButton width="140px" height="36px" style={{ marginBottom: 15 }} onClick={toggleWalletModal}>
+      <ActionButton
+        width={isDownSm ? '128px' : '140px'}
+        height={isDownSm ? '28px' : '36px'}
+        fontSize={isDownSm ? '12px' : '14px'}
+        onClick={toggleWalletModal}
+      >
         {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}
       </ActionButton>
     )
   } else {
     return (
-      <ActionButton width="140px" height="36px" style={{ marginBottom: 15 }} onClick={toggleWalletModal}>
+      <ActionButton
+        width={isDownSm ? '128px' : '140px'}
+        height={isDownSm ? '28px' : '36px'}
+        fontSize={isDownSm ? '12px' : '14px'}
+        onClick={toggleWalletModal}
+      >
         Connect Wallet
       </ActionButton>
     )

@@ -170,7 +170,11 @@ export default function ActionModal({
 
       <Modal customIsOpen={isOpen} customOnDismiss={handleDismiss} closeIcon>
         <Box display="grid" padding="20px 32px" gap="32px">
-          <Typography fontSize={20} sx={{ color: theme => theme.palette.text.secondary }}>
+          <Typography
+            fontSize={20}
+            fontWeight={{ xs: 700, sm: 400 }}
+            sx={{ color: theme => ({ xs: theme.palette.text.primary, sm: theme.palette.text.secondary }) }}
+          >
             {actionStr} {token?.symbol}
           </Typography>
           {/* {currencyInput && (
@@ -213,7 +217,7 @@ export default function ActionModal({
             </OutlinedCard>
           </Box>
           {children}
-          <Box display="flex" gap="16px">
+          <Box display={{ xs: 'grid', sm: 'flex' }} gap="16px">
             <OutlineButton onClick={handleDismiss}>Cancel</OutlineButton>
             {!isConfirmed && (
               <ActionButton

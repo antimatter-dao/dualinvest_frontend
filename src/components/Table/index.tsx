@@ -178,6 +178,17 @@ export default function Table({
                     <Typography sx={{ color: theme => theme.palette.text.secondary }} component="div">
                       {data[index] ?? null}
                     </Typography>
+                    {collapsible && index + 1 === header.length && (
+                      <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        // onClick={() => setIsOpen(open => !open)}
+                        sx={{ flexGrow: 0 }}
+                      >
+                        <KeyboardArrowUpIcon />
+                        {/* {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />} */}
+                      </IconButton>
+                    )}
                   </CardRow>
                 ))}
               </Box>
