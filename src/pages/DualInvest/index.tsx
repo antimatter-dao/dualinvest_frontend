@@ -180,7 +180,7 @@ export default function DualInvest() {
                 flexDirection={isDownMd ? 'column' : 'row'}
                 gap={20}
               >
-                <SimpleProgress val={15.08} total={50} hideValue width="100%" />
+                {isDownMd && <SimpleProgress val={15.08} total={50} hideValue width="100%" />}
                 <Button
                   height="36px"
                   width={isDownMd ? '100%' : '120px'}
@@ -267,7 +267,7 @@ export default function DualInvest() {
                 flexDirection={isDownMd ? 'column' : 'row'}
                 gap={20}
               >
-                <SimpleProgress val={15.08} total={50} hideValue width="100%" />
+                {isDownMd && <SimpleProgress val={15.08} total={50} hideValue width="100%" />}
                 <Button height="36px" width={isDownMd ? '100%' : '120px'} style={{ borderRadius: 50, fontSize: 14 }}>
                   Subscribe now
                 </Button>
