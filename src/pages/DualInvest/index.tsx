@@ -11,7 +11,7 @@ import Card from 'components/Card/Card'
 import securityUrl from 'assets/images/security.png'
 import highReturnUrl from 'assets/images/high_return.png'
 import flexibleUrl from 'assets/images/flexible.png'
-import Progress from 'components/Progress'
+import Progress, { SimpleProgress } from 'components/Progress'
 import { routes } from 'constants/routes'
 import { useHistory } from 'react-router'
 import useBreakpoint from 'hooks/useBreakpoint'
@@ -28,6 +28,29 @@ const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
     width: 'calc(100vw - 72px)'
   }
 }))
+
+const RowStr = styled(Typography)(({ theme }) => ({
+  color: '#000000',
+  fontWeight: 400,
+  [theme.breakpoints.down('md')]: {
+    fontWeight: 600,
+    fontSize: 12
+  }
+}))
+
+function CastValue({ unit, val, total }: { unit: string; val: number; total: number }) {
+  const isDownMd = useBreakpoint('md')
+  const percentage = ((val / total) * 100).toFixed(2)
+
+  if (isDownMd) {
+    return (
+      <RowStr>
+        {percentage}% {val} {unit} / {total} {unit}
+      </RowStr>
+    )
+  }
+  return <Progress unit={unit} val={val} total={total} />
+}
 
 export default function DualInvest() {
   const history = useHistory()
@@ -143,17 +166,24 @@ export default function DualInvest() {
           header={['Exercise Price', 'APY', 'Delivery Date', 'Holding Days', 'Cast/All', '']}
           rows={[
             [
-              '58,000 USDT',
-              <Typography color="primary" key="1" variant="inherit">
-                140.78%
-              </Typography>,
-              '29 Oct 2021',
-              '7 Days',
-              <Progress key={1} unit="BTC" val={15.08} total={50} />,
-              <Box width="100%" display="flex" alignItems="center" justifyContent="center" key="1">
+              <RowStr key={1}>58,000 USDT</RowStr>,
+              <RowStr key={1}>140.78%</RowStr>,
+              <RowStr key={1}>58,000 USDT 29 Oct 2021</RowStr>,
+              <RowStr key={1}>7 Days</RowStr>,
+              <CastValue key={1} unit="BTC" val={15.08} total={50} />,
+              <Box
+                width="100%"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                key="1"
+                flexDirection={isDownMd ? 'column' : 'row'}
+                gap={20}
+              >
+                <SimpleProgress val={15.08} total={50} hideValue width="100%" />
                 <Button
                   height="36px"
-                  width="120px"
+                  width={isDownMd ? '100%' : '120px'}
                   style={{ borderRadius: 50, fontSize: 14 }}
                   onClick={() => {
                     history.push(routes.dualInvestMgmt)
@@ -223,15 +253,22 @@ export default function DualInvest() {
           header={['Exercise Price', 'APY', 'Delivery Date', 'Holding Days', 'Cast/All', '']}
           rows={[
             [
-              '58,000 USDT',
-              <Typography color="primary" key="1" variant="inherit">
-                140.78%
-              </Typography>,
-              '29 Oct 2021',
-              '7 Days',
-              <Progress key={1} unit="BTC" val={15.08} total={50} />,
-              <Box width="100%" display="flex" alignItems="center" justifyContent="center" key="1">
-                <Button height="36px" width="120px" style={{ borderRadius: 50, fontSize: 14 }}>
+              <RowStr key={1}>58,000 USDT</RowStr>,
+              <RowStr key={1}>140.78%</RowStr>,
+              <RowStr key={1}>29 Oct 2021</RowStr>,
+              <RowStr key={1}>7 Days</RowStr>,
+              <CastValue key={1} unit="BTC" val={15.08} total={50} />,
+              <Box
+                width="100%"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                key="1"
+                flexDirection={isDownMd ? 'column' : 'row'}
+                gap={20}
+              >
+                <SimpleProgress val={15.08} total={50} hideValue width="100%" />
+                <Button height="36px" width={isDownMd ? '100%' : '120px'} style={{ borderRadius: 50, fontSize: 14 }}>
                   Subscribe now
                 </Button>
               </Box>
