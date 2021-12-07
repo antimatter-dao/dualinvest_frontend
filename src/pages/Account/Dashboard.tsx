@@ -17,6 +17,8 @@ import { useDualInvestCallback } from 'hooks/useDualInvest'
 import useModal from 'hooks/useModal'
 import { routes } from 'constants/routes'
 import { useHistory } from 'react-router'
+import useBreakpoint from 'hooks/useBreakpoint'
+import CurrencyLogo from 'components/essential/CurrencyLogo'
 
 const accountDetailsData = [['Withdraw', 'BTC', '1.087062', 'Sep 21, 2021  10:42:21 AM ']]
 
@@ -33,6 +35,7 @@ export default function Dashboard() {
   const { showModal, hideModal } = useModal()
   const { depositCallback, withdrawCallback } = useDualInvestCallback()
   const addTransaction = useTransactionAdder()
+  const isDownMd = useBreakpoint('md')
 
   const handleDepositOpen = useCallback(() => {
     setIsDepositOpen(true)
@@ -84,48 +87,81 @@ export default function Dashboard() {
     [withdrawCallback, account, showModal, hideModal, addTransaction]
   )
 
-  const balanceData = useMemo(
-    () => [
-      [
-        'BTC',
-        '0.286952',
-        '1.286952',
-        '0.286952',
-        '0.286952',
-        <Box display="flex" key="action" gap={10}>
-          <Button
-            fontSize={14}
-            style={{ maxWidth: 92, borderRadius: 4, height: 36 }}
-            onClick={() => {
-              setCurrentCurrency(BTC)
-              handleDepositOpen()
-            }}
-          >
-            Deposit
-          </Button>
-          <Button
-            fontSize={14}
-            style={{ maxWidth: 92, borderRadius: 4, height: 36 }}
-            onClick={() => {
-              setCurrentCurrency(BTC)
-              handleWithdrawOpen()
-            }}
-          >
-            Withdraw
-          </Button>
-          <OutlineButton
-            href=""
-            fontSize={14}
-            style={{ maxWidth: 92, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
-            primary
-          >
-            Buy
-          </OutlineButton>
+  const balanceActions = useMemo(() => {
+    return (
+      <Box display="flex" key="action" gap={10}>
+        <Button
+          fontSize={14}
+          style={{ maxWidth: 92, borderRadius: 4, height: 36 }}
+          onClick={() => {
+            setCurrentCurrency(BTC)
+            handleDepositOpen()
+          }}
+        >
+          Deposit
+        </Button>
+        <Button
+          fontSize={14}
+          style={{ maxWidth: 92, borderRadius: 4, height: 36 }}
+          onClick={() => {
+            setCurrentCurrency(BTC)
+            handleWithdrawOpen()
+          }}
+        >
+          Withdraw
+        </Button>
+        <OutlineButton
+          href=""
+          fontSize={14}
+          style={{ maxWidth: 92, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
+          primary
+        >
+          Buy
+        </OutlineButton>
+      </Box>
+    )
+  }, [])
+
+  const balanceData = useMemo(() => [['BTC', '0.286952', '1.286952', '0.286952', '0.286952', balanceActions]], [
+    handleDepositOpen,
+    handleWithdrawOpen
+  ])
+
+  const balanceDataIsDownMd: any = {
+    ['Available']: 0.28692,
+    ['Amount']: 1.28695,
+    ['Cumulative Invest']: 0.28692,
+    ['PnL']: 0.28692
+  }
+
+  const AccountBalanceCard = useMemo(() => {
+    return (
+      <Card color="#F2F5FA" padding="17px 16px">
+        <Box mb={20} display="flex" gap={16} alignItems="center">
+          <CurrencyLogo currency={BTC} />
+          <Box>
+            <Typography fontSize={16}>{BTC.symbol}</Typography>
+            <Typography fontSize={12} sx={{ opacity: 0.5 }}>
+              {BTC.name}
+            </Typography>
+          </Box>
         </Box>
-      ]
-    ],
-    [handleDepositOpen, handleWithdrawOpen]
-  )
+        {balanceActions}
+        <Box display="flex" flexDirection="column" gap={16} mt={24}>
+          {Object.keys(balanceDataIsDownMd).map((key, idx) => (
+            <Box key={idx} display="flex" justifyContent="space-between">
+              <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
+                {key}
+              </Typography>
+              <Typography fontSize={12} fontWeight={600}>
+                {balanceDataIsDownMd[key]}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      </Card>
+    )
+  }, [])
 
   if (!account)
     return (
@@ -187,7 +223,9 @@ export default function Dashboard() {
                   Invest
                 </Button>
               </NumericalCard>
-              {balanceData ? (
+              {balanceData && isDownMd ? (
+                AccountBalanceCard
+              ) : balanceData ? (
                 <Table header={['Token', 'Available', 'Amount', 'Cumulative Invest', 'PnL', '']} rows={balanceData} />
               ) : (
                 <NoDataCard height="20vh" />
