@@ -71,25 +71,6 @@ const positionMoreData = [
   ['767858724324', 'BTC-UP-62800-20211129', '7 Days', '62091.35']
 ]
 
-// function StatusTag({ status, width }: { status: 'progressing' | 'recruited'; width?: number }) {
-//   return (
-//     <Box
-//       component="div"
-//       borderRadius={22}
-//       color={status === 'progressing' ? '#18A0FB' : '#31B047'}
-//       bgcolor={status === 'progressing' ? 'rgba(24, 160, 251, 0.16)' : 'rgba(49, 176, 71, 0.16)'}
-//       fontSize={14}
-//       display="flex"
-//       alignItems="center"
-//       justifyContent="center"
-//       width={width || 100}
-//       height={36}
-//     >
-//       {status === 'progressing' ? 'Progressing' : 'Recruited'}
-//     </Box>
-//   )
-// }
-
 export default function Position() {
   const theme = useTheme()
   const [page, setPage] = useState(1)
