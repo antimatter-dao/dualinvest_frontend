@@ -6,6 +6,29 @@ import Button from 'components/Button/Button'
 import Card from 'components/Card/Card'
 import NumericalCard from 'components/Card/NumericalCard'
 import Pagination from 'components/Pagination'
+import useBreakpoint from 'hooks/useBreakpoint'
+import { ReactComponent as AccordionBtn } from 'assets/componentsIcon/accordion_btn.svg'
+
+enum PositionTableHeaderIndex {
+  investAmount,
+  apy,
+  deliveryDate,
+  strikePrice,
+  estimatedReceive,
+  date,
+  status
+}
+
+const PositionTableHeader = [
+  'Invest Amount',
+  'APY',
+  'Delivery Date',
+  'Strike Price',
+  'Estimated Receive',
+  'Date',
+  'Status',
+  ''
+]
 
 const positionData = [
   [
@@ -19,9 +42,7 @@ const positionData = [
     'Sep 21,2021 10:42 AM',
     <Box display="flex" key="action" gap={10} sx={{ mr: -37 }}>
       <StatusTag status="progressing" />
-      <Button fontSize={14} style={{ width: 68, borderRadius: 4, height: 36 }}>
-        Claim
-      </Button>
+      <ClaimButton onClick={() => {}} />
     </Box>
   ],
   [
@@ -35,9 +56,7 @@ const positionData = [
     'Sep 21,2021 10:42 AM',
     <Box display="flex" key="action" gap={10} sx={{ mr: -37 }}>
       <StatusTag status="recruited" />
-      <Button fontSize={14} style={{ width: 68, borderRadius: 4, height: 36 }}>
-        Claim
-      </Button>
+      <ClaimButton onClick={() => {}} />
     </Box>
   ]
 ]
@@ -57,7 +76,7 @@ const hiddenData = [
   }
 ]
 
-function StatusTag({ status }: { status: 'progressing' | 'recruited' }) {
+function StatusTag({ status, width }: { status: 'progressing' | 'recruited'; width?: number }) {
   return (
     <Box
       component="div"
@@ -68,7 +87,7 @@ function StatusTag({ status }: { status: 'progressing' | 'recruited' }) {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      width={100}
+      width={width || 100}
       height={36}
     >
       {status === 'progressing' ? 'Progressing' : 'Recruited'}
@@ -79,6 +98,7 @@ function StatusTag({ status }: { status: 'progressing' | 'recruited' }) {
 export default function Position() {
   const theme = useTheme()
   const [page, setPage] = useState(1)
+  const isDownMd = useBreakpoint('md')
 
   const hiddenParts = useCallback(() => {
     return hiddenData.map(data => (
@@ -102,22 +122,10 @@ export default function Position() {
           <Box padding="38px 24px">
             <NumericalCard title="BTC latest spot price" value="57640.00" border={true} />
 
-            {positionData ? (
-              <Table
-                header={[
-                  'Invest Amount',
-                  'APY',
-                  'Delivery Date',
-                  'Strike Price',
-                  'Estimated Receive',
-                  'Date',
-                  'Status',
-                  ''
-                ]}
-                rows={positionData}
-                hiddenParts={hiddenParts()}
-                collapsible
-              />
+            {positionData && isDownMd ? (
+              <PositionTableCards data={positionData} />
+            ) : positionData ? (
+              <Table header={PositionTableHeader} rows={positionData} hiddenParts={hiddenParts()} collapsible />
             ) : (
               <NoDataCard height="20vh" />
             )}
@@ -127,5 +135,44 @@ export default function Position() {
         </Card>
       </Box>
     </>
+  )
+}
+
+function PositionTableCards({ data }: { data: any[][] }) {
+  return (
+    <>
+      {data.map((dataRow, idx) => (
+        <Card key={idx} color="#F2F5FA" padding="17px 16px">
+          <Box display="flex" flexDirection="column" gap={16}>
+            {dataRow.map((datum, idx) => {
+              if (idx === PositionTableHeaderIndex.status) return null
+              return (
+                <Box key={idx} display="flex" justifyContent="space-between">
+                  <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
+                    {PositionTableHeader[idx]}
+                  </Typography>
+                  <Typography fontSize={12} fontWeight={600}>
+                    {datum}
+                  </Typography>
+                </Box>
+              )
+            })}
+          </Box>
+          <Box display="flex" gap={8} mt={20}>
+            <StatusTag status="progressing" width={120} />
+            <ClaimButton width={84} onClick={() => {}} />
+            <AccordionBtn />
+          </Box>
+        </Card>
+      ))}
+    </>
+  )
+}
+
+function ClaimButton({ width, onClick }: { width?: number; onClick: () => void }) {
+  return (
+    <Button onClick={onClick} fontSize={14} style={{ width: width || 60, borderRadius: 4, height: 36 }}>
+      Claim
+    </Button>
   )
 }
