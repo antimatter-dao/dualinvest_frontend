@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Box, Typography, useTheme } from '@mui/material'
+import { Box, Typography, useTheme, IconButton } from '@mui/material'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
 import Button from 'components/Button/Button'
@@ -7,7 +7,9 @@ import Card from 'components/Card/Card'
 import NumericalCard from 'components/Card/NumericalCard'
 import Pagination from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { ReactComponent as AccordionBtn } from 'assets/componentsIcon/accordion_btn.svg'
+import { ReactComponent as AccordionArrowDownIcon } from 'assets/componentsIcon/accordion_arrow_down.svg'
+import { ReactComponent as AccordionArrowUpIcon } from 'assets/componentsIcon/accordion_arrow_up.svg'
+import Divider from 'components/Divider'
 
 enum PositionTableHeaderIndex {
   investAmount,
@@ -61,19 +63,10 @@ const positionData = [
   ]
 ]
 
-const hiddenData = [
-  {
-    'Order ID': '767858724324',
-    'Product ID': 'BTC-UP-62800-20211129',
-    'Holding Days': '7 Days',
-    'Settlement Price': '62091.35'
-  },
-  {
-    'Order ID': '767858724324',
-    'Product ID': 'BTC-UP-62800-20211129',
-    'Holding Days': '7 Days',
-    'Settlement Price': '62091.35'
-  }
+const PositionMoreHeader = ['Order ID', 'Product ID', 'Holding Days', 'Settlement Price']
+const positionMoreData = [
+  ['767858724324', 'BTC-UP-62800-20211129', '7 Days', '62091.35'],
+  ['767858724324', 'BTC-UP-62800-20211129', '7 Days', '62091.35']
 ]
 
 function StatusTag({ status, width }: { status: 'progressing' | 'recruited'; width?: number }) {
@@ -101,14 +94,14 @@ export default function Position() {
   const isDownMd = useBreakpoint('md')
 
   const hiddenParts = useCallback(() => {
-    return hiddenData.map(data => (
+    return positionMoreData.map(data => (
       <>
-        {Object.keys(data).map((key, idx) => (
+        {data.map((datum, idx) => (
           <Box key={idx}>
             <Typography color={theme.palette.text.secondary} component="span" mr={8}>
-              {key}:
+              {PositionMoreHeader[idx]}:
             </Typography>
-            <Typography component="span">{data[key as keyof typeof data]}</Typography>
+            <Typography component="span">{datum}</Typography>
           </Box>
         ))}
       </>
@@ -123,7 +116,7 @@ export default function Position() {
             <NumericalCard title="BTC latest spot price" value="57640.00" border={true} />
 
             {positionData && isDownMd ? (
-              <PositionTableCards data={positionData} />
+              <PositionTableCards data={positionData} hiddenData={positionMoreData} />
             ) : positionData ? (
               <Table header={PositionTableHeader} rows={positionData} hiddenParts={hiddenParts()} collapsible />
             ) : (
@@ -138,7 +131,9 @@ export default function Position() {
   )
 }
 
-function PositionTableCards({ data }: { data: any[][] }) {
+function PositionTableCards({ data, hiddenData }: { data: any[][]; hiddenData: any[][] }) {
+  const [expanded, setExpanded] = useState<null | number>(null)
+
   return (
     <>
       {data.map((dataRow, idx) => (
@@ -158,11 +153,36 @@ function PositionTableCards({ data }: { data: any[][] }) {
               )
             })}
           </Box>
-          <Box display="flex" gap={8} mt={20}>
+          <Box display="flex" gap={8} mt={20} alignItems="center" mb={18}>
             <StatusTag status="progressing" width={120} />
             <ClaimButton width={84} onClick={() => {}} />
-            <AccordionBtn />
+            <AccordionButton
+              onClick={() => {
+                expanded === idx ? setExpanded(null) : setExpanded(idx)
+              }}
+              expanded={expanded === idx}
+            />
           </Box>
+          {expanded === idx && hiddenData && hiddenData[idx] && (
+            <>
+              <Divider extension={16} color="1px solid #252525" />
+              <Box display="flex" flexDirection="column" gap={16} mt={20}>
+                {hiddenData &&
+                  hiddenData[idx]?.map((datum, idx) => {
+                    return (
+                      <Box key={idx} display="flex" justifyContent="space-between">
+                        <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
+                          {PositionMoreHeader[idx]}
+                        </Typography>
+                        <Typography fontSize={12} fontWeight={600}>
+                          {datum}
+                        </Typography>
+                      </Box>
+                    )
+                  })}
+              </Box>
+            </>
+          )}
         </Card>
       ))}
     </>
@@ -175,4 +195,8 @@ function ClaimButton({ width, onClick }: { width?: number; onClick: () => void }
       Claim
     </Button>
   )
+}
+
+function AccordionButton({ onClick, expanded }: { onClick: () => void; expanded: boolean }) {
+  return <IconButton onClick={onClick}>{expanded ? <AccordionArrowUpIcon /> : <AccordionArrowDownIcon />}</IconButton>
 }
