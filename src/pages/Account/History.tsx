@@ -3,6 +3,7 @@ import Card from 'components/Card/Card'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
 import PaginationView from 'components/Pagination'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 const data = [
   [
@@ -19,26 +20,29 @@ const data = [
   ]
 ]
 
+const HistoryTableHeader = [
+  'Invest Amount',
+  'APY',
+  'Refund Amount',
+  'Delivery Date',
+  'Holding Days',
+  'Strike Price',
+  'Settlement Price',
+  'Date'
+]
+
 export default function History() {
+  const isDownMd = useBreakpoint('md')
+
   return (
     <Box sx={{ mt: 48, width: '100%' }}>
       <Card>
         <Box padding="38px 24px" display="grid" gap={36}>
-          {data.length ? (
+          {data.length && isDownMd ? (
+            <HistoryTableCards data={data} />
+          ) : data.length ? (
             <>
-              <Table
-                header={[
-                  'Invest Amount',
-                  'APY',
-                  'Refund Amount',
-                  'Delivery Date',
-                  'Holding Days',
-                  'Strike Price',
-                  'Settlement Price',
-                  'Date'
-                ]}
-                rows={data}
-              />
+              <Table header={HistoryTableHeader} rows={data} />
               <PaginationView count={20} page={5} setPage={() => {}} />
             </>
           ) : (
@@ -47,5 +51,30 @@ export default function History() {
         </Box>
       </Card>
     </Box>
+  )
+}
+
+function HistoryTableCards({ data }: { data: any[][] }) {
+  return (
+    <>
+      {data.map((dataRow, idx) => (
+        <Card key={idx} color="#F2F5FA" padding="17px 16px">
+          <Box display="flex" flexDirection="column" gap={16}>
+            {dataRow.map((datum, idx) => {
+              return (
+                <Box key={idx} display="flex" justifyContent="space-between">
+                  <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
+                    {HistoryTableHeader[idx]}
+                  </Typography>
+                  <Typography fontSize={12} fontWeight={600}>
+                    {datum}
+                  </Typography>
+                </Box>
+              )
+            })}
+          </Box>
+        </Card>
+      ))}
+    </>
   )
 }

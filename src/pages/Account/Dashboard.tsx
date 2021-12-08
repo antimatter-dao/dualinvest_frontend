@@ -212,7 +212,7 @@ export default function Dashboard() {
                 <AccountDetailCards data={accountDetailsData} />
               ) : accountDetailsData ? (
                 <>
-                  <Table header={['Type', 'Token', 'Amount', 'Date', '']} rows={accountDetailsData} />
+                  <Table header={DetailTableHeader} rows={accountDetailsData} />
                   <PaginationView count={4} page={1} setPage={() => {}} />
                 </>
               ) : (
