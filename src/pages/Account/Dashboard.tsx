@@ -174,7 +174,7 @@ export default function Dashboard() {
         token={currentCurrency}
         onAction={handleWithdraw}
       />
-      <Container sx={{ mt: 48 }}>
+      <Container disableGutters sx={{ mt: 48 }}>
         <Box display="grid" gap={48}>
           <Card>
             <Box padding="38px 24px" display="grid" gap={36}>
