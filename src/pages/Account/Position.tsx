@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Box, Typography, useTheme, IconButton } from '@mui/material'
+import { Box, Typography, useTheme, IconButton, Container } from '@mui/material'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
 import Button from 'components/Button/Button'
@@ -10,6 +10,8 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import { ReactComponent as AccordionArrowDownIcon } from 'assets/componentsIcon/accordion_arrow_down.svg'
 import { ReactComponent as AccordionArrowUpIcon } from 'assets/componentsIcon/accordion_arrow_up.svg'
 import Divider from 'components/Divider'
+import StatusTag from 'components/Status/StatusTag'
+import { useActiveWeb3React } from 'hooks'
 
 enum PositionTableHeaderIndex {
   investAmount,
@@ -69,29 +71,30 @@ const positionMoreData = [
   ['767858724324', 'BTC-UP-62800-20211129', '7 Days', '62091.35']
 ]
 
-function StatusTag({ status, width }: { status: 'progressing' | 'recruited'; width?: number }) {
-  return (
-    <Box
-      component="div"
-      borderRadius={22}
-      color={status === 'progressing' ? '#18A0FB' : '#31B047'}
-      bgcolor={status === 'progressing' ? 'rgba(24, 160, 251, 0.16)' : 'rgba(49, 176, 71, 0.16)'}
-      fontSize={14}
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      width={width || 100}
-      height={36}
-    >
-      {status === 'progressing' ? 'Progressing' : 'Recruited'}
-    </Box>
-  )
-}
+// function StatusTag({ status, width }: { status: 'progressing' | 'recruited'; width?: number }) {
+//   return (
+//     <Box
+//       component="div"
+//       borderRadius={22}
+//       color={status === 'progressing' ? '#18A0FB' : '#31B047'}
+//       bgcolor={status === 'progressing' ? 'rgba(24, 160, 251, 0.16)' : 'rgba(49, 176, 71, 0.16)'}
+//       fontSize={14}
+//       display="flex"
+//       alignItems="center"
+//       justifyContent="center"
+//       width={width || 100}
+//       height={36}
+//     >
+//       {status === 'progressing' ? 'Progressing' : 'Recruited'}
+//     </Box>
+//   )
+// }
 
 export default function Position() {
   const theme = useTheme()
   const [page, setPage] = useState(1)
   const isDownMd = useBreakpoint('md')
+  const { account } = useActiveWeb3React()
 
   const hiddenParts = useCallback(() => {
     return positionMoreData.map(data => (
@@ -107,6 +110,13 @@ export default function Position() {
       </>
     ))
   }, [theme.palette.text.secondary])
+
+  if (!account)
+    return (
+      <Container disableGutters sx={{ mt: 48 }}>
+        <NoDataCard />
+      </Container>
+    )
 
   return (
     <>
@@ -135,7 +145,7 @@ function PositionTableCards({ data, hiddenData }: { data: any[][]; hiddenData: a
   const [expanded, setExpanded] = useState<null | number>(null)
 
   return (
-    <>
+    <Box display="flex" flexDirection="column" gap={8} mt={24}>
       {data.map((dataRow, idx) => (
         <Card key={idx} color="#F2F5FA" padding="17px 16px">
           <Box display="flex" flexDirection="column" gap={16}>
@@ -154,7 +164,7 @@ function PositionTableCards({ data, hiddenData }: { data: any[][]; hiddenData: a
             })}
           </Box>
           <Box display="flex" gap={8} mt={20} alignItems="center" mb={18}>
-            <StatusTag status="progressing" width={120} />
+            <StatusTag status="progressing" width={'120px'} />
             <ClaimButton width={84} onClick={() => {}} />
             <AccordionButton
               onClick={() => {
@@ -185,7 +195,7 @@ function PositionTableCards({ data, hiddenData }: { data: any[][]; hiddenData: a
           )}
         </Card>
       ))}
-    </>
+    </Box>
   )
 }
 

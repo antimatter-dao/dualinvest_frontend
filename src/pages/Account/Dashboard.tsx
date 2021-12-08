@@ -10,8 +10,10 @@ import PaginationView from 'components/Pagination'
 import { useActiveWeb3React } from 'hooks'
 import ActionModal, { ActionType } from './ActionModal'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import StatusTag from 'components/Status/StatusTag'
+import TransactionTypeIcon from 'components/Icon/TransactionTypeIcon'
 import { Token, TokenAmount } from 'constants/token'
-import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
+import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useDualInvestCallback } from 'hooks/useDualInvest'
 import useModal from 'hooks/useModal'
@@ -22,7 +24,22 @@ import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ReactComponent as WithdrawlIcon } from 'assets/componentsIcon/withdraw_icon.svg'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
 
-const accountDetailsData = [['Withdraw', 'BTC', '1.087062', 'Sep 21, 2021  10:42:21 AM ']]
+const accountDetailsData = [
+  [
+    <TransactionTypeIcon key="type" txType="withdraw" />,
+    'BTC',
+    '1.087062',
+    'Sep 21, 2021  10:42:21 AM ',
+    <StatusTag key="status" status="completed" />
+  ],
+  [
+    <TransactionTypeIcon key="type" txType="deposit" />,
+    'BTC',
+    '1.087062',
+    'Sep 21, 2021  10:42:21 AM ',
+    <StatusTag key="status" status="completed" />
+  ]
+]
 
 const BTC = new Token(3, '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93', 18, 'BTC', 'btc_token')
 
@@ -75,7 +92,7 @@ export default function Dashboard() {
   const handleDeposit = useCallback(
     (val: string | undefined, token: Token, setHash: (hash: string) => void, onError: (e: Error) => void) => {
       if (!depositCallback || !val || !account) return
-      showModal(<TransacitonPendingModal />)
+      showModal(<TransactionPendingModal />)
       depositCallback(val, token.address, { gasLimit: 3000000 })
         .then(r => {
           hideModal()
@@ -93,7 +110,7 @@ export default function Dashboard() {
   const handleWithdraw = useCallback(
     (val: string | undefined, token: Token, setHash: (hash: string) => void, onError: (e: Error) => void) => () => {
       if (!withdrawCallback || !val || !account) return
-      showModal(<TransacitonPendingModal />)
+      showModal(<TransactionPendingModal />)
       withdrawCallback()
         .then(r => {
           hideModal()
@@ -135,7 +152,7 @@ export default function Dashboard() {
 
   if (!account)
     return (
-      <Container sx={{ mt: 48 }}>
+      <Container disableGutters sx={{ mt: 48 }}>
         <NoDataCard />
       </Container>
     )
@@ -182,6 +199,7 @@ export default function Dashboard() {
                 unit="$"
                 padding="20px 24px"
                 fontSize={'44px'}
+                dayChange="+ 8.91% / $350.28 "
               >
                 <Button
                   onClick={() => {
