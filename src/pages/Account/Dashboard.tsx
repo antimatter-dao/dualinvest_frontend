@@ -19,6 +19,8 @@ import { routes } from 'constants/routes'
 import { useHistory } from 'react-router'
 import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
+import { ReactComponent as WithdrawlIcon } from 'assets/componentsIcon/withdraw_icon.svg'
+import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
 
 const accountDetailsData = [['Withdraw', 'BTC', '1.087062', 'Sep 21, 2021  10:42:21 AM ']]
 
@@ -33,7 +35,15 @@ enum BalanceTableHeaderIndex {
   actions
 }
 
+enum DetailsTableHeaderIndex {
+  type,
+  token,
+  amount,
+  date
+}
+
 const BalanceTableHeader = ['Token', 'Available', 'Amount', 'Cumulative Invest', 'PnL', '']
+const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
 
 export default function Dashboard() {
   const [isDepositOpen, setIsDepositOpen] = useState(false)
@@ -198,7 +208,9 @@ export default function Dashboard() {
               <Typography fontSize={24} fontWeight={700}>
                 Account Details
               </Typography>
-              {accountDetailsData ? (
+              {accountDetailsData && isDownMd ? (
+                <AccountDetailCards data={accountDetailsData} />
+              ) : accountDetailsData ? (
                 <>
                   <Table header={['Type', 'Token', 'Amount', 'Date', '']} rows={accountDetailsData} />
                   <PaginationView count={4} page={1} setPage={() => {}} />
@@ -243,6 +255,60 @@ function AccountBalanceCards({ data }: { data: any[][] }) {
                 </Box>
               )
             })}
+          </Box>
+        </Card>
+      ))}
+    </>
+  )
+}
+
+function AccountDetailCards({ data }: { data: any[][] }) {
+  return (
+    <>
+      {data.map((dataRow, idx) => (
+        <Card color="#F2F5FA" padding="17px 16px" key={idx}>
+          <Box display="flex" flexDirection="column" gap={16}>
+            {dataRow.map((datum, idx) => {
+              return (
+                <Box key={idx} display="flex" justifyContent="space-between">
+                  <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
+                    {DetailTableHeader[idx]}
+                  </Typography>
+                  <Typography fontSize={12} fontWeight={600}>
+                    {idx === DetailsTableHeaderIndex.type && (
+                      <span style={{ marginRight: 5 }}>
+                        <WithdrawlIcon />
+                      </span>
+                    )}
+                    {idx === DetailsTableHeaderIndex.token && (
+                      <span style={{ marginRight: 5 }}>
+                        <CurrencyLogo currency={datum} size="12px" />
+                      </span>
+                    )}
+                    {datum}
+                    {idx === DetailsTableHeaderIndex.amount && (
+                      <span style={{ marginLeft: 5 }}>
+                        <UpperRightIcon />
+                      </span>
+                    )}
+                  </Typography>
+                </Box>
+              )
+            })}
+          </Box>
+          <Box
+            borderRadius={22}
+            bgcolor="rgba(17, 191, 45, 0.16)"
+            width="100%"
+            height={36}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            mt={20}
+          >
+            <Typography fontSize={14} color="#11BF2D" textAlign="center">
+              Completed
+            </Typography>
           </Box>
         </Card>
       ))}
