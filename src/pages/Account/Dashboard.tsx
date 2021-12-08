@@ -24,6 +24,17 @@ const accountDetailsData = [['Withdraw', 'BTC', '1.087062', 'Sep 21, 2021  10:42
 
 const BTC = new Token(3, '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93', 18, 'BTC', 'btc_token')
 
+enum BalanceTableHeaderIndex {
+  token,
+  available,
+  amount,
+  cumulativeInvest,
+  pnl,
+  actions
+}
+
+const BalanceTableHeader = ['Token', 'Available', 'Amount', 'Cumulative Invest', 'PnL', '']
+
 export default function Dashboard() {
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
@@ -87,81 +98,30 @@ export default function Dashboard() {
     [withdrawCallback, account, showModal, hideModal, addTransaction]
   )
 
-  const balanceActions = useMemo(() => {
-    return (
-      <Box display="flex" key="action" gap={10}>
-        <Button
-          fontSize={14}
-          style={{ maxWidth: 92, borderRadius: 4, height: 36 }}
-          onClick={() => {
+  const balanceData = useMemo(
+    () => [
+      [
+        'BTC',
+        '0.286952',
+        '1.286952',
+        '0.286952',
+        '0.286952',
+        <BalanceActions
+          key="1"
+          onDeposit={() => {
             setCurrentCurrency(BTC)
             handleDepositOpen()
           }}
-        >
-          Deposit
-        </Button>
-        <Button
-          fontSize={14}
-          style={{ maxWidth: 92, borderRadius: 4, height: 36 }}
-          onClick={() => {
+          onWithdraw={() => {
             setCurrentCurrency(BTC)
             handleWithdrawOpen()
           }}
-        >
-          Withdraw
-        </Button>
-        <OutlineButton
-          href=""
-          fontSize={14}
-          style={{ maxWidth: 92, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
-          primary
-        >
-          Buy
-        </OutlineButton>
-      </Box>
-    )
-  }, [])
-
-  const balanceData = useMemo(() => [['BTC', '0.286952', '1.286952', '0.286952', '0.286952', balanceActions]], [
-    handleDepositOpen,
-    handleWithdrawOpen
-  ])
-
-  const balanceDataIsDownMd: any = {
-    ['Available']: 0.28692,
-    ['Amount']: 1.28695,
-    ['Cumulative Invest']: 0.28692,
-    ['PnL']: 0.28692
-  }
-
-  const AccountBalanceCard = useMemo(() => {
-    return (
-      <Card color="#F2F5FA" padding="17px 16px">
-        <Box mb={20} display="flex" gap={16} alignItems="center">
-          <CurrencyLogo currency={BTC} />
-          <Box>
-            <Typography fontSize={16}>{BTC.symbol}</Typography>
-            <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-              {BTC.name}
-            </Typography>
-          </Box>
-        </Box>
-        {balanceActions}
-        <Box display="flex" flexDirection="column" gap={16} mt={24}>
-          {Object.keys(balanceDataIsDownMd).map((key, idx) => (
-            <Box key={idx} display="flex" justifyContent="space-between">
-              <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                {key}
-              </Typography>
-              <Typography fontSize={12} fontWeight={600}>
-                {balanceDataIsDownMd[key]}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
-      </Card>
-    )
-  }, [])
+          buyHref=""
+        />
+      ]
+    ],
+    [handleDepositOpen, handleWithdrawOpen]
+  )
 
   if (!account)
     return (
@@ -224,9 +184,9 @@ export default function Dashboard() {
                 </Button>
               </NumericalCard>
               {balanceData && isDownMd ? (
-                AccountBalanceCard
+                <AccountBalanceCards data={balanceData} />
               ) : balanceData ? (
-                <Table header={['Token', 'Available', 'Amount', 'Cumulative Invest', 'PnL', '']} rows={balanceData} />
+                <Table header={BalanceTableHeader} rows={balanceData} />
               ) : (
                 <NoDataCard height="20vh" />
               )}
@@ -251,5 +211,70 @@ export default function Dashboard() {
         </Box>
       </Container>
     </>
+  )
+}
+
+function AccountBalanceCards({ data }: { data: any[][] }) {
+  return (
+    <>
+      {data.map((dataRow, idx) => (
+        <Card color="#F2F5FA" padding="17px 16px" key={idx}>
+          <Box mb={20} display="flex" gap={16} alignItems="center">
+            <CurrencyLogo currency={BTC} />
+            <Box>
+              <Typography fontSize={16}>{BTC.symbol}</Typography>
+              <Typography fontSize={12} sx={{ opacity: 0.5 }}>
+                {BTC.name}
+              </Typography>
+            </Box>
+          </Box>
+          {dataRow[BalanceTableHeaderIndex.actions]}
+          <Box display="flex" flexDirection="column" gap={16} mt={24}>
+            {dataRow.map((datum, idx) => {
+              if (idx === BalanceTableHeaderIndex.actions) return null
+              return (
+                <Box key={idx} display="flex" justifyContent="space-between">
+                  <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
+                    {BalanceTableHeader[idx]}
+                  </Typography>
+                  <Typography fontSize={12} fontWeight={600}>
+                    {datum}
+                  </Typography>
+                </Box>
+              )
+            })}
+          </Box>
+        </Card>
+      ))}
+    </>
+  )
+}
+
+function BalanceActions({
+  onDeposit,
+  onWithdraw,
+  buyHref
+}: {
+  onDeposit: () => void
+  onWithdraw: () => void
+  buyHref: string
+}) {
+  return (
+    <Box display="flex" key="action" gap={10}>
+      <Button fontSize={14} style={{ maxWidth: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
+        Deposit
+      </Button>
+      <Button fontSize={14} style={{ maxWidth: 92, borderRadius: 4, height: 36 }} onClick={onWithdraw}>
+        Withdraw
+      </Button>
+      <OutlineButton
+        href={buyHref}
+        fontSize={14}
+        style={{ maxWidth: 92, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
+        primary
+      >
+        Buy
+      </OutlineButton>
+    </Box>
   )
 }
