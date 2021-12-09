@@ -14,6 +14,7 @@ const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
 
 export default function Progress({ val, total, unit }: { val: number; total: number; unit: string }) {
   const value = (val / total) * 100
+
   return (
     <Box display="grid" sx={{ width: 'max-content' }} columnGap={6} rowGap={4}>
       <Typography
@@ -31,12 +32,22 @@ export default function Progress({ val, total, unit }: { val: number; total: num
   )
 }
 
-export function SimpleProgress({ val, total }: { val: number; total: number }) {
+export function SimpleProgress({
+  val,
+  total,
+  hideValue,
+  width
+}: {
+  val: number
+  total: number
+  hideValue?: boolean
+  width?: string
+}) {
   const value = (val / total) * 100
   return (
-    <Box display="flex" sx={{ width: 'max-content' }} alignItems="center">
-      <Typography mr={8}>{value | 0}%</Typography>
-      <StyledLinearProgress variant="determinate" value={value} sx={{ width: 100 }} />
+    <Box display="flex" sx={{ width: width ?? 'max-content' }} alignItems="center">
+      {!hideValue && <Typography mr={8}>{value | 0}%</Typography>}
+      <StyledLinearProgress variant="determinate" value={value} sx={{ width: width ?? '100px' }} />
     </Box>
   )
 }
