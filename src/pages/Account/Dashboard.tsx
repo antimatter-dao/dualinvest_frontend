@@ -19,6 +19,7 @@ import { useDualInvestCallback } from 'hooks/useDualInvest'
 import useModal from 'hooks/useModal'
 import { routes } from 'constants/routes'
 import { useHistory } from 'react-router'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 const accountDetailsData = [
   [
@@ -46,6 +47,7 @@ export default function Dashboard() {
 
   const { account } = useActiveWeb3React()
   const theme = useTheme()
+  const isDownMd = useBreakpoint('md')
   const history = useHistory()
   const { showModal, hideModal } = useModal()
   const { depositCallback, withdrawCallback } = useDualInvestCallback()
@@ -100,6 +102,9 @@ export default function Dashboard() {
     },
     [withdrawCallback, account, showModal, hideModal, addTransaction]
   )
+  const buttonProps = {
+    width: isDownMd ? '256px' : '148px'
+  }
 
   const balanceData = useMemo(
     () => [
@@ -179,7 +184,7 @@ export default function Dashboard() {
           <Card>
             <Box padding="38px 24px" display="grid" gap={36}>
               <Box>
-                <Typography fontSize={24} fontWeight={700}>
+                <Typography fontSize={{ xs: 20, sm: 24 }} fontWeight={700}>
                   My Account Balance
                 </Typography>
                 <Typography sx={{ color: theme => theme.palette.text.secondary, mt: 8 }}>
@@ -199,8 +204,8 @@ export default function Dashboard() {
                   onClick={() => {
                     history.push(routes.dualInvest)
                   }}
-                  style={{ position: 'absolute', right: '24px', bottom: '20px', height: 44, fontSize: 14 }}
-                  width="148px"
+                  style={{ right: '24px', bottom: '20px', height: 44, fontSize: 14 }}
+                  {...buttonProps}
                 >
                   Invest
                 </Button>
