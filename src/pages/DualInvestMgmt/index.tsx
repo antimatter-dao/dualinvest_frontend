@@ -248,6 +248,10 @@ export default function DualInvestMgmt() {
                     unit="usdt"
                     id="incomeGraph"
                     height={graphContainer?.current?.offsetHeight ?? 280}
+                    lineSeriesData2={[
+                      { time: 16059744000000 as Time, value: 100 },
+                      { time: 16063200000000 as Time, value: 100 }
+                    ]}
                   />
                 </Box>
                 <OutlinedCard padding="16px 20px">
