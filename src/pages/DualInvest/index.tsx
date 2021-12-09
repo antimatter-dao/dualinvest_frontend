@@ -1,3 +1,5 @@
+import { useCallback } from 'react'
+import { useHistory } from 'react-router'
 import { Box, Typography, styled, Grid } from '@mui/material'
 import { ReactComponent as DualInvestGuide } from 'assets/svg/dualInvestGuide.svg'
 import checkUrl from 'assets/images/check.png'
@@ -13,8 +15,10 @@ import highReturnUrl from 'assets/images/high_return.png'
 import flexibleUrl from 'assets/images/flexible.png'
 import Progress, { SimpleProgress } from 'components/Progress'
 import { routes } from 'constants/routes'
-import { useHistory } from 'react-router'
 import useBreakpoint from 'hooks/useBreakpoint'
+import { Product } from 'utils/fetch/product'
+import Spinner from 'components/Spinner'
+import { useProductList } from 'hooks/useDualInvestData'
 
 const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
   '& #dualInvestGuide': {
@@ -38,23 +42,46 @@ const RowStr = styled(Typography)(({ theme }) => ({
   }
 }))
 
-function CastValue({ unit, val, total }: { unit: string; val: number; total: number }) {
-  const isDownMd = useBreakpoint('md')
-  const percentage = ((val / total) * 100).toFixed(2)
-
-  if (isDownMd) {
-    return (
-      <RowStr>
-        {percentage}% {val} {unit} / {total} {unit}
-      </RowStr>
-    )
-  }
-  return <Progress unit={unit} val={val} total={total} />
+const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => void) => {
+  return [
+    <RowStr key={1}>{data.strikePrice} USDT</RowStr>,
+    <RowStr key={1}>{(+data.apy * 100).toFixed(2)}%</RowStr>,
+    <RowStr key={1}>{data.expiredAt}</RowStr>,
+    <RowStr key={1}>7 Days</RowStr>,
+    <CastValue key={1} unit="BTC" val={15.08} total={50} />,
+    <Box
+      width="100%"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      key="1"
+      flexDirection={isDownMd ? 'column' : 'row'}
+      gap={20}
+    >
+      {isDownMd && <SimpleProgress val={15.08} total={50} hideValue width="100%" />}
+      <Button
+        height="36px"
+        width={isDownMd ? '100%' : '120px'}
+        style={{ borderRadius: 50, fontSize: 14 }}
+        onClick={hanldeSubscribe}
+      >
+        Subscribe now
+      </Button>
+    </Box>
+  ]
 }
 
 export default function DualInvest() {
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
+  const productList = useProductList()
+
+  const handleSubscribe = useCallback(
+    (id: number) => () => {
+      history.push(routes.dualInvestMgmt.replace(':id', id + ''))
+    },
+    [history]
+  )
 
   return (
     <Box
@@ -109,6 +136,7 @@ export default function DualInvest() {
       </Box>
 
       <Box
+        id="up"
         display="grid"
         width="100%"
         gap={44}
@@ -161,42 +189,11 @@ export default function DualInvest() {
             </Typography>
           </Box>
         </Box>
-        <Table
-          variant="outlined"
-          header={['Exercise Price', 'APY', 'Delivery Date', 'Holding Days', 'Cast/All', '']}
-          rows={[
-            [
-              <RowStr key={1}>58,000 USDT</RowStr>,
-              <RowStr key={1}>140.78%</RowStr>,
-              <RowStr key={1}>58,000 USDT 29 Oct 2021</RowStr>,
-              <RowStr key={1}>7 Days</RowStr>,
-              <CastValue key={1} unit="BTC" val={15.08} total={50} />,
-              <Box
-                width="100%"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                key="1"
-                flexDirection={isDownMd ? 'column' : 'row'}
-                gap={20}
-              >
-                {isDownMd && <SimpleProgress val={15.08} total={50} hideValue width="100%" />}
-                <Button
-                  height="36px"
-                  width={isDownMd ? '100%' : '120px'}
-                  style={{ borderRadius: 50, fontSize: 14 }}
-                  onClick={() => {
-                    history.push(routes.dualInvestMgmt)
-                  }}
-                >
-                  Subscribe now
-                </Button>
-              </Box>
-            ]
-          ]}
-        />
+        <DataTable onSubscribe={handleSubscribe} productList={productList?.call} />
       </Box>
+
       <Box
+        id="down"
         display="grid"
         width="100%"
         gap={44}
@@ -248,33 +245,7 @@ export default function DualInvest() {
             </Typography>
           </Box>
         </Box>
-        <Table
-          variant="outlined"
-          header={['Exercise Price', 'APY', 'Delivery Date', 'Holding Days', 'Cast/All', '']}
-          rows={[
-            [
-              <RowStr key={1}>58,000 USDT</RowStr>,
-              <RowStr key={1}>140.78%</RowStr>,
-              <RowStr key={1}>29 Oct 2021</RowStr>,
-              <RowStr key={1}>7 Days</RowStr>,
-              <CastValue key={1} unit="BTC" val={15.08} total={50} />,
-              <Box
-                width="100%"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                key="1"
-                flexDirection={isDownMd ? 'column' : 'row'}
-                gap={20}
-              >
-                {isDownMd && <SimpleProgress val={15.08} total={50} hideValue width="100%" />}
-                <Button height="36px" width={isDownMd ? '100%' : '120px'} style={{ borderRadius: 50, fontSize: 14 }}>
-                  Subscribe now
-                </Button>
-              </Box>
-            ]
-          ]}
-        />
+        <DataTable onSubscribe={handleSubscribe} productList={productList?.put} />
       </Box>
 
       <Grid container sx={{ maxWidth: theme => theme.width.maxContent }} spacing={20} width="100%">
@@ -304,6 +275,34 @@ export default function DualInvest() {
   )
 }
 
+function DataTable({
+  onSubscribe,
+  productList
+}: {
+  onSubscribe: (id: number) => () => void
+  productList: Product[] | undefined
+}) {
+  const isDownMd = useBreakpoint('md')
+
+  return (
+    <>
+      {productList ? (
+        <Table
+          variant="outlined"
+          header={['Exercise Price', 'APY', 'Delivery Date', 'Holding Days', 'Cast/All', '']}
+          rows={
+            productList
+              ? productList.map((item: Product) => formatData(item, isDownMd, onSubscribe(item.productId)))
+              : []
+          }
+        />
+      ) : (
+        <Spinner size={100} marginLeft="auto" marginRight="auto" />
+      )}
+    </>
+  )
+}
+
 function FeatureCard({ icon, title, content }: { icon: JSX.Element; title: string; content: string }) {
   return (
     <Card style={{ height: '100%' }}>
@@ -316,4 +315,18 @@ function FeatureCard({ icon, title, content }: { icon: JSX.Element; title: strin
       </Box>
     </Card>
   )
+}
+
+function CastValue({ unit, val, total }: { unit: string; val: number; total: number }) {
+  const isDownMd = useBreakpoint('md')
+  const percentage = ((val / total) * 100).toFixed(2)
+
+  if (isDownMd) {
+    return (
+      <RowStr>
+        {percentage}% {val} {unit} / {total} {unit}
+      </RowStr>
+    )
+  }
+  return <Progress unit={unit} val={val} total={total} />
 }

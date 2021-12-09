@@ -16,6 +16,7 @@ export default function NumericalInput({
   balance,
   label,
   unit,
+  endAdornment,
   onDeposit,
   ...props
 }: InputProps &
@@ -24,6 +25,7 @@ export default function NumericalInput({
     balance?: string
     unit?: string
     onDeposit?: () => void
+    endAdornment?: JSX.Element
   }) {
   const enforcer = (nextUserInput: string) => {
     const fixed = nextUserInput.replace(/,/g, '.')
@@ -82,7 +84,7 @@ export default function NumericalInput({
         endAdornment={
           onMax && (
             <Box gap="20px" display="flex" alignItems="center" paddingLeft="20px" paddingBottom="2px">
-              <span>{unit ?? 'MATTER'}</span>
+              {endAdornment ? endAdornment : unit && <span>{unit ?? 'MATTER'}</span>}
               <SecondaryButton
                 disabled={props.disabled === true ? true : false}
                 primary

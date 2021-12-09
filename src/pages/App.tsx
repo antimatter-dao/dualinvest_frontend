@@ -13,7 +13,7 @@ import DualInvest from './DualInvest'
 import DualInvestMgmt from './DualInvestMgmt'
 import NoService from './NoService'
 import Spinner from 'components/Spinner'
-import { fetchLocation } from 'utils/location'
+import { fetchLocation } from 'utils/fetch/location'
 import Account from './Account'
 
 const AppWrapper = styled('div')(({ theme }) => ({
