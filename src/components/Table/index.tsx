@@ -124,14 +124,15 @@ const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{ var
   })
 )
 
-const Card = styled('div')(`
-  background-color: rgba(255, 255, 255, 0.08);
-  border-radius: 30px;
-  padding: 24px;
-  > div {
-    width: 100%;
+const Card = styled('div')({
+  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+  border: '1px solid rgba(0, 0, 0, 0.1)',
+  borderRadius: 16,
+  padding: 16,
+  '& > div': {
+    width: '100%'
   }
-`)
+})
 
 const CardRow = styled('div')(`
   display: flex;
@@ -172,7 +173,7 @@ export default function Table({
               <Box display="flex" flexDirection="column" gap="16px">
                 {header.map((headerString, index) => (
                   <CardRow key={index}>
-                    <Typography variant="inherit" component="div">
+                    <Typography variant="inherit" component="div" fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
                       {headerString}
                     </Typography>
                     <Typography sx={{ color: theme => theme.palette.text.secondary }} component="div">
