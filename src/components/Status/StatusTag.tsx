@@ -2,6 +2,7 @@ import { Box } from '@mui/material'
 
 interface Props {
   status: 'progressing' | 'recruited' | 'completed' | 'failed'
+  width?: number | string
 }
 
 const statusStyles = {
@@ -12,7 +13,7 @@ const statusStyles = {
 }
 
 export default function StatusTag(props: Props) {
-  const { status } = props
+  const { status, width } = props
 
   return (
     <Box
@@ -24,7 +25,7 @@ export default function StatusTag(props: Props) {
       display="flex"
       alignItems="center"
       justifyContent="center"
-      width={100}
+      width={width || 100}
       height={36}
     >
       {statusStyles[status].statusText}
