@@ -43,6 +43,11 @@ enum DetailsTableHeaderIndex {
   date
 }
 
+const RecordType: { [key in number]: 'withdraw' | 'deposit' } = {
+  1: 'withdraw',
+  2: 'deposit'
+}
+
 const BalanceTableHeader = ['Token', 'Available', 'Amount', 'Cumulative Invest', 'PnL', '']
 const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
 
@@ -60,13 +65,6 @@ export default function Dashboard() {
   const isDownMd = useBreakpoint('md')
 
   const accountRecord = useAccountRecord()
-
-  console.log(accountRecord?.records)
-
-  const RecordType: { [key in number]: 'withdraw' | 'deposit' } = {
-    1: 'withdraw',
-    2: 'deposit'
-  }
 
   const accountDetailsData = useMemo(() => {
     const records = accountRecord?.records
@@ -242,7 +240,11 @@ export default function Dashboard() {
               ) : accountDetailsData ? (
                 <>
                   <Table header={DetailTableHeader} rows={accountDetailsData} />
-                  <PaginationView count={4} page={1} setPage={() => {}} />
+                  <PaginationView
+                    count={parseInt(accountRecord?.pages || '1', 10)}
+                    page={parseInt(accountRecord?.current || '1', 10)}
+                    setPage={() => {}}
+                  />
                 </>
               ) : (
                 <NoDataCard height="20vh" />
