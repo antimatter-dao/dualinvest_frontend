@@ -1,6 +1,7 @@
-import { useState, useRef } from 'react'
-import { NavLink } from 'react-router-dom'
+import { useState, useRef, useMemo, useCallback } from 'react'
+import { NavLink, useParams } from 'react-router-dom'
 import { Box, Typography, Grid, styled } from '@mui/material'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
 import { ReactComponent as RiskStatementIcon } from 'assets/svg/risk_statement.svg'
 import { ReactComponent as Faq } from 'assets/svg/faq.svg'
@@ -10,22 +11,20 @@ import Card, { OutlinedCard } from 'components/Card/Card'
 import Accordion from 'components/Accordion'
 import Divider from 'components/Divider'
 import InputNumerical from 'components/Input/InputNumerical'
-import Button from 'components/Button/Button'
+import Button, { BlackButton } from 'components/Button/Button'
 import { SimpleProgress } from 'components/Progress'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import LineChart from 'components/Chart'
 import { Time } from 'lightweight-charts'
-
-const data = {
-  ['Spot Price']: '59,000 USDT',
-  ['APY']: '140.25%',
-  ['Strike Price']: '62,800 USDT',
-  ['Delivery Date']: '29 Oct 2021',
-  ['Current Progress']: 0.16,
-  minAmount: '0.0001',
-  maxAmount: '2.00'
-}
+import { useProduct } from 'hooks/useDualInvestData'
+import { useTokenBalance } from 'state/wallet/hooks'
+import { useActiveWeb3React } from 'hooks'
+import { BTC } from 'constants/index'
+import { Axios } from 'utils/axios'
+import Spinner from 'components/Spinner'
+import { useDualInvestCallback } from 'hooks/useDualInvest'
+import { tryParseAmount } from 'utils/parseAmount'
+import { useWalletModalToggle } from 'state/application/hooks'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '18px',
@@ -66,9 +65,57 @@ const StyledOrderList = styled('ol')(({ theme }) => ({
 export default function DualInvestMgmt() {
   const [amount, setAmount] = useState('')
   const [expanded, setExpanded] = useState<number | null>(null)
+
   const graphContainer = useRef<HTMLDivElement>(null)
   const node = useRef<any>()
   useOnClickOutside(node, () => setExpanded(null))
+
+  const { id } = useParams<{ id: string }>()
+  const { account } = useActiveWeb3React()
+  const balance = useTokenBalance(account ?? undefined, BTC)
+  const { createOrderCallback } = useDualInvestCallback()
+  const product = useProduct(id)
+  const toggleWallet = useWalletModalToggle()
+
+  const data = useMemo(
+    () => ({
+      ['Spot Price']: product?.currentPrice ?? '-' + ' USDT',
+      ['APY']: product?.apy ?? '-' + '%',
+      ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
+      ['Delivery Date']: product?.expiredAt ?? '-',
+      ['Current Progress']: 0.16,
+      minAmount: product ? product.multiplier + ' ' + product.currency : '-',
+      maxAmount: product ? +product.orderLimit / +product.multiplier + ' ' + product.currency : '-'
+    }),
+    [product]
+  )
+
+  const handleSubscribe = useCallback(async () => {
+    if (!product || !amount || !createOrderCallback) return
+    const val = tryParseAmount((+amount * +product?.multiplier).toString(), BTC)?.raw?.toString()
+    if (!val) return
+    try {
+      const contractCall = await createOrderCallback(id, val, BTC.address)
+
+      const backendCall = await Axios.post<any>(
+        'createOrder',
+        {},
+        {
+          account,
+          amount,
+          productId: id
+        }
+      )
+      console.log(contractCall)
+      console.log(backendCall)
+    } catch (e) {
+      console.error(e)
+    }
+  }, [account, amount, createOrderCallback, id, product])
+
+  const error = useMemo(() => {
+    return product && (+amount > +product?.orderLimit || +amount < 1) ? undefined : true
+  }, [amount, product])
 
   return (
     <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto" justifyItems="center">
@@ -94,7 +141,26 @@ export default function DualInvestMgmt() {
           </Typography>
         </Box>
         <Grid container spacing={20}>
-          <Grid xs={12} md={4} item>
+          <Grid xs={12} md={4} item position="relative">
+            {!product && (
+              <Box
+                position="absolute"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                sx={{
+                  top: 20,
+                  left: 20,
+                  width: 'calc(100% - 20px)',
+                  height: 'calc(100% - 20px)',
+                  background: '#ffffff',
+                  zIndex: 3,
+                  borderRadius: 2
+                }}
+              >
+                <Spinner size={60} />
+              </Box>
+            )}
             <Card width="100%" padding="36px 24px">
               <Box display="flex" flexDirection="column" gap={20}>
                 {Object.keys(data).map((key, idx) => (
@@ -112,13 +178,22 @@ export default function DualInvestMgmt() {
                 <Divider extension={24} sx={{ opacity: 0.1 }} />
                 <Box>
                   <InputNumerical
+                    disabled={!product || !account}
                     value={amount}
-                    onMax={() => {}}
+                    onMax={() => {
+                      setAmount(balance?.toExact() ?? '')
+                    }}
                     label={'Subscription Amount'}
                     onChange={e => setAmount(e.target.value)}
-                    balance="123"
-                    unit="BTC"
+                    balance={balance?.toFixed(2) || '-'}
+                    unit={product?.currency ?? ''}
+                    endAdornment={
+                      <Typography noWrap>
+                        {product ? 'x  ' + product?.multiplier + ' ' + product?.currency : ''}
+                      </Typography>
+                    }
                     onDeposit={() => {}}
+                    error={error}
                   />
                   <Box display="grid" mt={12}>
                     <Typography
@@ -126,18 +201,23 @@ export default function DualInvestMgmt() {
                       sx={{ opacity: 0.5, display: 'flex', justifyContent: 'space-between', width: '100%' }}
                     >
                       <span>Min investment:</span>
-                      <span>{data.minAmount} BTC</span>
+                      <span>{data.minAmount} </span>
                     </Typography>
                     <Typography
                       fontSize={12}
                       sx={{ opacity: 0.5, display: 'flex', justifyContent: 'space-between', width: '100%' }}
                     >
                       <span>Max investment:</span>
-                      <span>{data.maxAmount} BTC</span>
+                      <span>{data.maxAmount} </span>
                     </Typography>
                   </Box>
                 </Box>
-                <Button>Subscribe</Button>
+                {!account && <BlackButton onClick={toggleWallet}>Connect Wallet</BlackButton>}
+                {account && (
+                  <Button onClick={handleSubscribe} disabled={error || !amount || !product?.isActive}>
+                    Subscribe
+                  </Button>
+                )}
                 <Box display="flex">
                   <InfoOutlinedIcon sx={{ color: theme.palette.primary.main, height: 12 }} />
                   <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
@@ -176,11 +256,11 @@ export default function DualInvestMgmt() {
                   </Typography>
                   <StyledUnorderList>
                     <li>
-                      When the final settlement price ≥ 62,800 USDT, you will receive{' '}
+                      When the final settlement price ≥ {product?.strikePrice ?? '-'} USDT, you will receive{' '}
                       <span style={{ color: theme.palette.text.primary }}>56,750.61 USDT</span>.
                     </li>
                     <li>
-                      When the settlement price is &lt; 62,800 USDT, you will receive{' '}
+                      When the settlement price is &lt; {product?.strikePrice ?? '-'} USDT, you will receive{' '}
                       <span style={{ color: theme.palette.text.primary }}>1.682655 BTC</span>.
                     </li>
                     <li>

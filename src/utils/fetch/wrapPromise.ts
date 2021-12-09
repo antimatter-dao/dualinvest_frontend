@@ -1,17 +1,10 @@
-export const fetchLocation = () => {
-  return wrapPromise(
-    fetch('http://ip-api.com/json/?fields=countryCode')
-      .then(r => r.clone().json())
-      .then(json => json.countryCode)
-      .catch(e => {
-        console.error(e)
-      })
-  )
+export interface WrappedPromise<T> {
+  read: () => T | undefined | Error
 }
 
-function wrapPromise(promise: Promise<any>) {
+export default function wrapPromise<T>(promise: Promise<any>): WrappedPromise<T> {
   let status = 'pending'
-  let result: any
+  let result: T | Error | undefined
   const suspender = promise.then(
     (r: any) => {
       status = 'success'
@@ -31,6 +24,7 @@ function wrapPromise(promise: Promise<any>) {
       } else if (status === 'success') {
         return result
       }
+      return undefined
     }
   }
 }
