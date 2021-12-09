@@ -21,7 +21,6 @@ import { routes } from 'constants/routes'
 import { useHistory } from 'react-router'
 import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
-import { ReactComponent as WithdrawlIcon } from 'assets/componentsIcon/withdraw_icon.svg'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
 
 const accountDetailsData = [
@@ -293,11 +292,6 @@ function AccountDetailCards({ data }: { data: any[][] }) {
                     {DetailTableHeader[idx]}
                   </Typography>
                   <Typography fontSize={12} fontWeight={600}>
-                    {idx === DetailsTableHeaderIndex.type && (
-                      <span style={{ marginRight: 5 }}>
-                        <WithdrawlIcon />
-                      </span>
-                    )}
                     {idx === DetailsTableHeaderIndex.token && (
                       <span style={{ marginRight: 5 }}>
                         <CurrencyLogo currency={datum} size="12px" />

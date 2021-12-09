@@ -9,7 +9,7 @@ import { useActiveWeb3React } from 'hooks'
 const data = [
   [
     '1.290809 BTC',
-    <Typography color="primary" key="1">
+    <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
       140.21%
     </Typography>,
     '1.290809 BTC',
