@@ -23,7 +23,7 @@ const HistoryTableHeader = [
 export default function History() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const orderList = useOrderRecords(InvestStatus.Settled)
+  const { orderList } = useOrderRecords(InvestStatus.Settled)
 
   const data = useMemo(() => {
     if (!orderList) return []

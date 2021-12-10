@@ -43,7 +43,9 @@ export default function Position() {
   const [page, setPage] = useState(1)
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const orderList = useOrderRecords(InvestStatus.ReadyToSettle)
+  const { orderList, pageParams } = useOrderRecords(InvestStatus.ReadyToSettle)
+
+  console.log(pageParams)
 
   const data = useMemo(() => {
     if (!orderList) return []
@@ -84,7 +86,7 @@ export default function Position() {
         ))}
       </>
     ))
-  }, [theme.palette.text.secondary])
+  }, [data, theme.palette.text.secondary])
 
   if (!account)
     return (
@@ -113,7 +115,14 @@ export default function Position() {
               <NoDataCard height="20vh" />
             )}
 
-            <Pagination count={10} page={page} setPage={setPage} perPage={12} boundaryCount={-1} />
+            <Pagination
+              count={pageParams?.count}
+              page={page}
+              setPage={setPage}
+              perPage={pageParams?.perPage}
+              boundaryCount={0}
+              total={pageParams.total}
+            />
           </Box>
         </Card>
       </Box>
@@ -125,7 +134,7 @@ function PositionTableCards({ data }: { data: { summary: any[]; details: any[] }
   const [expanded, setExpanded] = useState<null | number>(null)
 
   return (
-    <Box display="flex" flexDirection="column" gap={8} mt={24}>
+    <Box display="flex" flexDirection="column" gap={8} mt={24} mb={24}>
       {data.map((dataRow, idx) => (
         <Card key={idx} color="#F2F5FA" padding="17px 16px">
           <Box display="flex" flexDirection="column" gap={16}>

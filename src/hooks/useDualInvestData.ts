@@ -89,15 +89,29 @@ export enum InvestStatus {
 export function useOrderRecords(investStatus?: number) {
   const { account } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
+  const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
+    count: 0,
+    perPage: 0,
+    total: 0
+  })
 
+  console.log(account)
   useEffect(() => {
     const id = setInterval(() => {
-      Axios.get<{ records: OrderRecord[] }>('getOrderRecord', { address: account, investStatus: investStatus })
+      Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
+        address: null,
+        investStatus: investStatus
+      })
         .then(r => {
           if (r.data.code !== 200) {
             throw Error(r.data.msg)
           }
           setOrderList(r.data.data.records)
+          setPageParams({
+            count: parseInt(r.data.data.pages, 10),
+            perPage: parseInt(r.data.data.size, 10),
+            total: parseInt(r.data.data.total, 10)
+          })
         })
         .catch(e => {
           console.error(e)
@@ -108,5 +122,8 @@ export function useOrderRecords(investStatus?: number) {
       clearInterval(id)
     }
   })
-  return orderList
+  return {
+    orderList,
+    pageParams
+  }
 }
