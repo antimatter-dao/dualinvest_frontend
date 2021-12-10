@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Axios } from 'utils/axios'
 import { ProductList, productListFormatter, productFormatter, Product, OrderRecord } from 'utils/fetch/product'
-import { AccountRecord, accountRecordFormatter, fetchAccountRecord } from 'utils/fetch/account'
+import { AccountRecord } from 'utils/fetch/account'
 import { useActiveWeb3React } from 'hooks'
 
 export function useProductList() {
@@ -53,16 +53,17 @@ export function useProduct(productId: string) {
 }
 
 export function useAccountRecord() {
+  const { account } = useActiveWeb3React()
   const [accountRecord, setAccountRecord] = useState<AccountRecord | undefined>(undefined)
 
   useEffect(() => {
     const id = setInterval(() => {
-      fetchAccountRecord()
+      Axios.get('getAccountRecord', { address: account })
         .then(r => {
           if (r.data.code !== 200) {
             throw Error(r.data.msg)
           }
-          setAccountRecord(accountRecordFormatter(r.data.data))
+          setAccountRecord(r.data.data)
         })
         .catch(e => {
           console.error(e)
@@ -79,8 +80,6 @@ export function useAccountRecord() {
 export function useOrderRecords() {
   const { account } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
-
-  console.log(account)
 
   useEffect(() => {
     const id = setInterval(() => {
