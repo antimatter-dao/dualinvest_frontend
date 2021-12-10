@@ -1,9 +1,30 @@
-import wrapPromise from './wrapPromise'
-import { Axios } from 'utils/axios'
-
 const TYPE = {
   call: 'call',
   put: 'put'
+}
+
+export enum InvesStatusType {
+  SUCCESS = 'success',
+  PENDING = 'pending',
+  ERROR = 'error'
+}
+
+export const InvesStatus = {
+  [1]: InvesStatusType.PENDING,
+  [2]: InvesStatusType.SUCCESS,
+  [3]: InvesStatusType.SUCCESS,
+  [4]: InvesStatusType.SUCCESS,
+  [5]: InvesStatusType.ERROR,
+  [6]: InvesStatusType.PENDING
+}
+
+export interface createOrder {
+  address: string
+  amount: number
+  currency: string
+  investStatus: 1 | 2 | 3 | 4 | 5 | 6
+  orderId: number
+  productId: number
 }
 
 interface ProductRaw {
@@ -41,37 +62,37 @@ export interface Product {
 export interface ProductList {
   call: Product[]
   put: Product[]
+  btcPrice: string
 }
 
-export const fetchProductList = () => {
-  return wrapPromise<ProductList>(
-    Axios.get('getProducts')
-      .then(r => {
-        if (r.data.code !== 200) {
-          throw Error(r.data.msg)
-        }
-        return productListFormatter(r.data.data)
-      })
-      .catch(e => {
-        console.error(e)
-      })
-  )
+export interface OrderRecord {
+  address: string
+  amount: number
+  annualRor: string
+  confirmOrderHash: string
+  createdAt: number
+  currency: string
+  deliveryPrice: string
+  earn: string
+  expiredAt: number
+  hash: string
+  indexPrice: string
+  investStatus: number
+  isLiquidated: string
+  multiplier: string
+  orderId: number
+  price: string
+  productId: number
+  returnedAmount: string
+  returnedCurrency: string
+  signCount: string
+  status: string
+  strikeCurrency: string
+  strikePrice: string
+  ts: number
+  type: string
 }
 
-export const fetchProduct = () => {
-  return wrapPromise<ProductList>(
-    Axios.get('getProducts')
-      .then(r => {
-        if (r.data.code !== 200) {
-          throw Error(r.data.msg)
-        }
-        return productListFormatter(r.data.data)
-      })
-      .catch(e => {
-        console.error(e)
-      })
-  )
-}
 export const productFormatter = (raw: ProductRaw): Product => {
   return {
     currentPrice: raw.index_price,
@@ -96,8 +117,11 @@ export const productListFormatter = (raw: ProductRaw[]): ProductList => {
       } else {
         acc.put.push(res)
       }
+      if (item.currency === 'BTC') {
+        acc.btcPrice = item.index_price
+      }
       return acc
     },
-    { call: [], put: [] } as { call: any[]; put: any[] }
+    { call: [], put: [], btcPrice: '-' } as { call: any[]; put: any[]; btcPrice: string }
   )
 }

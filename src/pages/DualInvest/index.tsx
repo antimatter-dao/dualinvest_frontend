@@ -13,7 +13,7 @@ import Card from 'components/Card/Card'
 import securityUrl from 'assets/images/security.png'
 import highReturnUrl from 'assets/images/high_return.png'
 import flexibleUrl from 'assets/images/flexible.png'
-import Progress, { SimpleProgress } from 'components/Progress'
+import { /*Progress,*/ SimpleProgress } from 'components/Progress'
 import { routes } from 'constants/routes'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { Product } from 'utils/fetch/product'
@@ -48,7 +48,7 @@ const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => voi
     <RowStr key={1}>{(+data.apy * 100).toFixed(2)}%</RowStr>,
     <RowStr key={1}>{data.expiredAt}</RowStr>,
     <RowStr key={1}>7 Days</RowStr>,
-    <CastValue key={1} unit="BTC" val={15.08} total={50} />,
+    // <CastValue key={1} unit="BTC" val={15.08} total={50} />,
     <Box
       width="100%"
       display="flex"
@@ -176,7 +176,7 @@ export default function DualInvest() {
           </Box>
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Typography color="primary" fontSize={24} fontWeight={700} gap={8} display="flex" alignItems="center">
-              <span> 57,640.00</span>
+              <span> {productList?.btcPrice}</span>
               <svg width="17" height="18" viewBox="0 0 17 18" fill="none">
                 <path
                   d="M8.02174 3.81107L12.6559 6.40065V11.5896L8.04184 14.1889L3.40773 11.6287V6.4202L8.02174 3.81107ZM8.02174 0L6.3229 0.957655L1.69884 3.56678L0 4.52443V13.5244L1.69884 14.4723L6.33295 17.0521L8.03179 18L9.73063 17.0423L14.3446 14.4332L16.0435 13.4756V4.4658L14.3446 3.51792L9.71053 0.928339L8.02174 0Z"
@@ -232,7 +232,7 @@ export default function DualInvest() {
           </Box>
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Typography color="primary" fontSize={24} fontWeight={700} gap={8} display="flex" alignItems="center">
-              <span> 57,640.00</span>
+              <span>{productList?.btcPrice}</span>
               <svg width="17" height="18" viewBox="0 0 17 18" fill="none">
                 <path
                   d="M8.02174 3.81107L12.6559 6.40065V11.5896L8.04184 14.1889L3.40773 11.6287V6.4202L8.02174 3.81107ZM8.02174 0L6.3229 0.957655L1.69884 3.56678L0 4.52443V13.5244L1.69884 14.4723L6.33295 17.0521L8.03179 18L9.73063 17.0423L14.3446 14.4332L16.0435 13.4756V4.4658L14.3446 3.51792L9.71053 0.928339L8.02174 0Z"
@@ -289,7 +289,7 @@ function DataTable({
       {productList ? (
         <Table
           variant="outlined"
-          header={['Exercise Price', 'APY', 'Delivery Date', 'Holding Days', 'Cast/All', '']}
+          header={['Exercise Price', 'APY', 'Delivery Date', 'Holding Days', '']}
           rows={
             productList
               ? productList.map((item: Product) => formatData(item, isDownMd, onSubscribe(item.productId)))
@@ -317,16 +317,16 @@ function FeatureCard({ icon, title, content }: { icon: JSX.Element; title: strin
   )
 }
 
-function CastValue({ unit, val, total }: { unit: string; val: number; total: number }) {
-  const isDownMd = useBreakpoint('md')
-  const percentage = ((val / total) * 100).toFixed(2)
+// function CastValue({ unit, val, total }: { unit: string; val: number; total: number }) {
+//   const isDownMd = useBreakpoint('md')
+//   const percentage = ((val / total) * 100).toFixed(2)
 
-  if (isDownMd) {
-    return (
-      <RowStr>
-        {percentage}% {val} {unit} / {total} {unit}
-      </RowStr>
-    )
-  }
-  return <Progress unit={unit} val={val} total={total} />
-}
+//   if (isDownMd) {
+//     return (
+//       <RowStr>
+//         {percentage}% {val} {unit} / {total} {unit}
+//       </RowStr>
+//     )
+//   }
+//   return <Progress unit={unit} val={val} total={total} />
+// }

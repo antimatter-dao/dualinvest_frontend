@@ -1,10 +1,24 @@
+import { useActiveWeb3React } from 'hooks'
 import { useMemo, useCallback } from 'react'
+import { useSingleCallResult } from 'state/multicall/hooks'
+import { calculateGasMargin } from 'utils'
 import { useDualInvestContract } from './useContract'
+
+export function useDualInvestBalance(curAddress?: string) {
+  const contract = useDualInvestContract()
+  const { account } = useActiveWeb3React()
+  const args = useMemo(() => [curAddress ?? '', account ?? undefined], [account, curAddress])
+  const balanceRes = useSingleCallResult(curAddress ? contract : null, 'balances', args)
+
+  return useMemo(() => balanceRes?.result?.[0], [balanceRes])
+}
 
 export function useDualInvestCallback(): {
   depositCallback: undefined | ((val: string, tokenAddress: string, options?: any) => Promise<any>)
   withdrawCallback: undefined | (() => Promise<any>)
-  createOrderCallback: undefined | ((productId: string, amount: string, currencyAddress: string) => Promise<any>)
+  createOrderCallback:
+    | undefined
+    | ((orderId: string | number, productId: string, amount: string, currencyAddress: string) => Promise<any>)
 } {
   const contract = useDualInvestContract()
 
@@ -17,8 +31,19 @@ export function useDualInvestCallback(): {
   const withdraw = useCallback((): Promise<any> => contract?.withdraw(), [contract])
 
   const createOrder = useCallback(
-    (productId, amount, currencyAddress, options?): Promise<any> => {
-      return contract?.createOrder(productId, amount, currencyAddress, options)
+    async (orderId, productId, amount, currencyAddress): Promise<any> => {
+      if (!contract) return undefined
+      console.log(orderId, productId, amount, currencyAddress)
+      const estimatedGas = await contract.estimateGas
+        .createOrder(orderId, productId, amount, currencyAddress)
+        .catch((error: Error) => {
+          console.debug('Failed to create order', error)
+          throw error
+        })
+      console.log(orderId, productId, amount, currencyAddress)
+      return contract?.createOrder(orderId, productId, amount, currencyAddress, {
+        gasLimit: calculateGasMargin(estimatedGas)
+      })
     },
     [contract]
   )

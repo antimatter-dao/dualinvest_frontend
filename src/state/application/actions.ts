@@ -2,7 +2,7 @@ import { createAction } from '@reduxjs/toolkit'
 
 export type PopupContent = {
   txn: {
-    hash: string
+    hash?: string
     success: boolean
     summary?: string
   }

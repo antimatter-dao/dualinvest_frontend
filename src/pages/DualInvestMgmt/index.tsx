@@ -11,8 +11,8 @@ import Card, { OutlinedCard } from 'components/Card/Card'
 import Accordion from 'components/Accordion'
 import Divider from 'components/Divider'
 import InputNumerical from 'components/Input/InputNumerical'
-import Button, { BlackButton } from 'components/Button/Button'
-import { SimpleProgress } from 'components/Progress'
+import { BlackButton } from 'components/Button/Button'
+// import { SimpleProgress } from 'components/Progress'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import LineChart from 'components/Chart'
 import { Time } from 'lightweight-charts'
@@ -24,7 +24,16 @@ import { Axios } from 'utils/axios'
 import Spinner from 'components/Spinner'
 import { useDualInvestCallback } from 'hooks/useDualInvest'
 import { tryParseAmount } from 'utils/parseAmount'
-import { useWalletModalToggle } from 'state/application/hooks'
+import { useAddPopup, useWalletModalToggle } from 'state/application/hooks'
+import ActionButton from 'components/Button/ActionButton'
+import { createOrder, InvesStatus, InvesStatusType } from 'utils/fetch/product'
+import MessageBox from 'components/Modal/TransactionModals/MessageBox'
+import useModal from 'hooks/useModal'
+
+enum ErrorType {
+  insufficientBalance = 'Insufficient Balance',
+  singleLimitExceed = 'Single Limit Exceeded'
+}
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '18px',
@@ -64,6 +73,7 @@ const StyledOrderList = styled('ol')(({ theme }) => ({
 
 export default function DualInvestMgmt() {
   const [amount, setAmount] = useState('')
+  const [pending, setPending] = useState(false)
   const [expanded, setExpanded] = useState<number | null>(null)
 
   const graphContainer = useRef<HTMLDivElement>(null)
@@ -71,21 +81,23 @@ export default function DualInvestMgmt() {
   useOnClickOutside(node, () => setExpanded(null))
 
   const { id } = useParams<{ id: string }>()
+  const { showModal } = useModal()
   const { account } = useActiveWeb3React()
   const balance = useTokenBalance(account ?? undefined, BTC)
   const { createOrderCallback } = useDualInvestCallback()
   const product = useProduct(id)
   const toggleWallet = useWalletModalToggle()
+  const addPopup = useAddPopup()
 
   const data = useMemo(
     () => ({
       ['Spot Price']: product?.currentPrice ?? '-' + ' USDT',
-      ['APY']: product?.apy ?? '-' + '%',
+      ['APY']: product?.apy ? (+product.apy * 100).toFixed(2) + '%' : '- %',
       ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
       ['Delivery Date']: product?.expiredAt ?? '-',
-      ['Current Progress']: 0.16,
+      // ['Current Progress']: 0.16,
       minAmount: product ? product.multiplier + ' ' + product.currency : '-',
-      maxAmount: product ? +product.orderLimit / +product.multiplier + ' ' + product.currency : '-'
+      maxAmount: product ? +product.orderLimit * +product.multiplier + ' ' + product.currency : '-'
     }),
     [product]
   )
@@ -95,27 +107,88 @@ export default function DualInvestMgmt() {
     const val = tryParseAmount((+amount * +product?.multiplier).toString(), BTC)?.raw?.toString()
     if (!val) return
     try {
-      const contractCall = await createOrderCallback(id, val, BTC.address)
-
-      const backendCall = await Axios.post<any>(
-        'createOrder',
-        {},
-        {
-          account,
-          amount,
-          productId: id
-        }
-      )
+      setPending(true)
+      // const backendCall = await Axios.post<any>(
+      //   'createOrder',
+      //   {},
+      //   {
+      //     account,
+      //     amount,
+      //     product_id: id
+      //   }
+      // )
+      // if (backendCall.data.code !== 200) throw Error('Backend Error')
+      // if (!backendCall.data.data) throw Error(backendCall.data.msg)
+      // console.log(backendCall)
+      // const { orderId, productId } = backendCall.data.data
+      // const contractCall = await createOrderCallback(orderId, productId, val, BTC.address)
+      const orderId = 28
+      const contractCall = await createOrderCallback(orderId, '11', val, BTC.address)
       console.log(contractCall)
-      console.log(backendCall)
+      let fail = 0
+      const polling = new Promise((resolve, reject) => {
+        const timeoutId = setTimeout(() => {
+          Axios.post<createOrder>(
+            'createOrder',
+            {},
+            {
+              account,
+              amount,
+              product_id: id,
+              client_order_id: orderId
+            }
+          )
+            .then(r => {
+              console.log(999, r)
+              const statusCode = r.data.data.investStatus
+              if (InvesStatus[statusCode] === InvesStatusType.ERROR) {
+                if (fail > 6) {
+                  clearInterval(timeoutId)
+                  reject('Confirm Order fail')
+                }
+              }
+              if (InvesStatus[statusCode] === InvesStatusType.SUCCESS) {
+                clearInterval(timeoutId)
+                resolve(() => {})
+              }
+            })
+            .catch((e: Error) => {
+              if (fail > 6) {
+                clearInterval(timeoutId)
+                reject('Confirm Order fail')
+              }
+              console.error(888, e)
+              fail++
+            })
+        }, 2000)
+      })
+      await polling
+
+      addPopup(
+        {
+          txn: {
+            success: true,
+            summary: `Subscribe successful product ID:${/*productId ??*/ ''}, order ID:${orderId}`
+          }
+        },
+        orderId + ''
+      )
+      setPending(false)
     } catch (e) {
+      setPending(false)
+      showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message}</MessageBox>)
       console.error(e)
     }
-  }, [account, amount, createOrderCallback, id, product])
+  }, [account, addPopup, amount, createOrderCallback, id, product, showModal])
 
   const error = useMemo(() => {
-    return product && (+amount > +product?.orderLimit || +amount < 1) ? undefined : true
-  }, [amount, product])
+    if (!product || !balance) return ''
+    let str = ''
+    if (amount !== '' && +balance.toExact() < +amount * +product.multiplier) str = ErrorType.insufficientBalance
+    if (amount !== '' && (+amount > +product?.orderLimit || +amount < 1)) str = ErrorType.singleLimitExceed
+    // if (!amount) str = 'Please Input Amount'
+    return str
+  }, [amount, balance, product])
 
   return (
     <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto" justifyItems="center">
@@ -166,13 +239,13 @@ export default function DualInvestMgmt() {
                 {Object.keys(data).map((key, idx) => (
                   <Box key={idx} display="flex" justifyContent="space-between">
                     <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
-                    {key === 'Current Progress' ? (
+                    {/* {key === 'Current Progress' ? (
                       <SimpleProgress key={1} val={0.16} total={1} />
-                    ) : (
-                      <Typography color={key === 'APY' ? theme.palette.primary.main : theme.palette.text.primary}>
-                        {data[key as keyof typeof data]}
-                      </Typography>
-                    )}
+                    ) : ( */}
+                    <Typography color={key === 'APY' ? theme.palette.primary.main : theme.palette.text.primary}>
+                      {data[key as keyof typeof data]}
+                    </Typography>
+                    {/* )} */}
                   </Box>
                 ))}
                 <Divider extension={24} sx={{ opacity: 0.1 }} />
@@ -181,7 +254,7 @@ export default function DualInvestMgmt() {
                     disabled={!product || !account}
                     value={amount}
                     onMax={() => {
-                      setAmount(balance?.toExact() ?? '')
+                      setAmount(balance ? `${+balance?.toExact() / 0.1}` : '')
                     }}
                     label={'Subscription Amount'}
                     onChange={e => setAmount(e.target.value)}
@@ -189,11 +262,11 @@ export default function DualInvestMgmt() {
                     unit={product?.currency ?? ''}
                     endAdornment={
                       <Typography noWrap>
-                        {product ? 'x  ' + product?.multiplier + ' ' + product?.currency : ''}
+                        {product ? 'X ' + product?.multiplier + ' ' + product?.currency : ''}
                       </Typography>
                     }
                     onDeposit={() => {}}
-                    error={error}
+                    error={!!error}
                   />
                   <Box display="grid" mt={12}>
                     <Typography
@@ -214,14 +287,42 @@ export default function DualInvestMgmt() {
                 </Box>
                 {!account && <BlackButton onClick={toggleWallet}>Connect Wallet</BlackButton>}
                 {account && (
-                  <Button onClick={handleSubscribe} disabled={error || !amount || !product?.isActive}>
-                    Subscribe
-                  </Button>
+                  <ActionButton
+                    pending={pending}
+                    pendingText={'Pending'}
+                    error={!amount ? 'Please Input Amount' : ''}
+                    onAction={handleSubscribe}
+                    actionText=" Subscribe"
+                    disableAction={!product?.isActive ? true : !!error}
+                    successText={'Ended'}
+                    success={!product?.isActive}
+                  />
                 )}
                 <Box display="flex">
-                  <InfoOutlinedIcon sx={{ color: theme.palette.primary.main, height: 12 }} />
-                  <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
-                    Once subscribed the APY will get locked in, the product can&apos;t be cancelled after subscription.
+                  <InfoOutlinedIcon
+                    sx={{ color: error ? theme.palette.error.main : theme.palette.primary.main, height: 12 }}
+                  />
+                  <Typography component="p" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
+                    {error ? (
+                      error === ErrorType.insufficientBalance ? (
+                        <>
+                          <Typography component="span" color="error" fontSize={12}>
+                            Insufficient Balance.
+                          </Typography>
+                          Please recharge your account first before opening wealth management
+                        </>
+                      ) : (
+                        <>
+                          <Typography component="span" color="error" fontSize={12} sx={{ display: 'block' }}>
+                            Single Limit Exceeded.
+                          </Typography>
+                          Single financial management limit is {product?.multiplier ?? '-'}～
+                          {product ? +product?.orderLimit * +product?.multiplier : '-'} BTC
+                        </>
+                      )
+                    ) : (
+                      'Once subscribed the APY will get locked in, the product can&apos;t be cancelled after subscription.'
+                    )}
                   </Typography>
                 </Box>
               </Box>

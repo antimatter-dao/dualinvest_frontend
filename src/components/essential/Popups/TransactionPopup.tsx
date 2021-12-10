@@ -10,7 +10,7 @@ export default function TransactionPopup({
   success,
   summary
 }: {
-  hash: string
+  hash?: string
   success?: boolean
   summary?: string
 }) {
@@ -26,9 +26,11 @@ export default function TransactionPopup({
             <ReportGmailerrorredOutlinedIcon color="error" height={20} width={20} />
           )}
         </div>
-        <Typography variant="inherit">{summary ?? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}</Typography>{' '}
+        <Typography variant="inherit">
+          {summary ? summary : hash ? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65) : '-'}
+        </Typography>{' '}
       </Box>
-      {chainId && (
+      {chainId && hash && (
         <ExternalLink
           underline="always"
           href={getEtherscanLink(chainId ? chainId : 1, hash, 'transaction')}

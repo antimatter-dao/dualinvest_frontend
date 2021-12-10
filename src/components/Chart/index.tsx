@@ -247,6 +247,7 @@ export default function LineChart({
       color: secondaryColor
     })
     priceLine?.setData(priceLineData)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chart])
 
   return (

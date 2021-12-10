@@ -25,7 +25,7 @@ interface Tab extends TabContent {
 export const Tabs: Tab[] = [
   { title: 'Dual Investment', route: routes.dualInvest },
   { title: 'Account', route: routes.account },
-  { title: 'DAO', route: routes.dao },
+  { title: 'DAO', link: 'https://dao.antimatter.finance/#/' },
   { title: 'Docs', link: 'https://docs.antimatter.finance/' },
   {
     title: 'Labs',

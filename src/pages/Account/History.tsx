@@ -5,21 +5,8 @@ import Table from 'components/Table'
 import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useActiveWeb3React } from 'hooks'
-
-const data = [
-  [
-    '1.290809 BTC',
-    <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
-      140.21%
-    </Typography>,
-    '1.290809 BTC',
-    'Sep 21, 2021',
-    '7 days',
-    '62800.00',
-    '1.954241 BTC',
-    'Sep 21, 2021  10:42 AM'
-  ]
-]
+import { useOrderRecords } from 'hooks/useDualInvestData'
+import { useMemo } from 'react'
 
 const HistoryTableHeader = [
   'Invest Amount',
@@ -35,6 +22,25 @@ const HistoryTableHeader = [
 export default function History() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
+  const orderList = useOrderRecords()
+  console.log('history', orderList)
+
+  const data = useMemo(() => {
+    if (!orderList) return []
+    return orderList.map(({ amount, multiplier, annualRor, investStatus }) => [
+      investStatus,
+      +amount * +multiplier + ' BTC',
+      <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
+        {(+annualRor * 100).toFixed(2)}%
+      </Typography>,
+      '1.290809 BTC',
+      'Sep 21, 2021',
+      '7 days',
+      '62800.00',
+      '1.954241 BTC',
+      'Sep 21, 2021  10:42 AM'
+    ])
+  }, [orderList])
 
   if (!account)
     return (
