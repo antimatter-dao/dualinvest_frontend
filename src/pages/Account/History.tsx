@@ -7,6 +7,7 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import { useActiveWeb3React } from 'hooks'
 import { useOrderRecords } from 'hooks/useDualInvestData'
 import { useMemo } from 'react'
+import dayjs from 'dayjs'
 
 const HistoryTableHeader = [
   'Invest Amount',
@@ -27,19 +28,30 @@ export default function History() {
 
   const data = useMemo(() => {
     if (!orderList) return []
-    return orderList.map(({ amount, multiplier, annualRor, investStatus }) => [
-      investStatus,
-      +amount * +multiplier + ' BTC',
-      <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
-        {(+annualRor * 100).toFixed(2)}%
-      </Typography>,
-      '1.290809 BTC',
-      'Sep 21, 2021',
-      '7 days',
-      '62800.00',
-      '1.954241 BTC',
-      'Sep 21, 2021  10:42 AM'
-    ])
+    return orderList.map(
+      ({
+        amount,
+        annualRor,
+        returnedAmount,
+        returnedCurrency,
+        strikePrice,
+        expiredAt,
+        createdAt,
+        deliveryPrice,
+        currency
+      }) => [
+        amount,
+        <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
+          {(+annualRor * 100).toFixed(2)}%
+        </Typography>,
+        `${returnedAmount} ${returnedCurrency}`,
+        dayjs(expiredAt).format('MMM DD, YYYY'),
+        `${dayjs().diff(dayjs(createdAt), 'day')} days`,
+        strikePrice,
+        `${deliveryPrice} ${currency}`,
+        dayjs(createdAt).format('MMM DD, YYYY hh:mm:ss A')
+      ]
+    )
   }, [orderList])
 
   if (!account)
