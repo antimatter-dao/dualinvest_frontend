@@ -23,7 +23,7 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
 import { useAccountRecord } from 'hooks/useDualInvestData'
-import { fomattedDate } from 'utils/formattedDate'
+import dayjs from 'dayjs'
 
 const BTC = new Token(3, '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93', 18, 'BTC', 'btc_token')
 
@@ -72,13 +72,12 @@ export default function Dashboard() {
 
     return records.map(record => {
       const timestamp = parseInt(record.timestamp)
-      const formattedDate = fomattedDate(timestamp)
 
       return [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
         'BTC',
         `${record.amount}`,
-        `${formattedDate}`,
+        dayjs(timestamp).format('MMM DD, YYYY hh:mm:ss A'),
         <StatusTag key="status" status="completed" />
       ]
     })
