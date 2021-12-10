@@ -6,7 +6,7 @@ import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useActiveWeb3React } from 'hooks'
 import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 
 const HistoryTableHeader = [
@@ -23,7 +23,8 @@ const HistoryTableHeader = [
 export default function History() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const { orderList } = useOrderRecords(InvestStatus.Settled)
+  const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled)
+  const [page, setPage] = useState(1)
 
   const data = useMemo(() => {
     if (!orderList) return []
@@ -69,7 +70,14 @@ export default function History() {
           ) : data.length ? (
             <>
               <Table header={HistoryTableHeader} rows={data} />
-              <PaginationView count={20} page={5} setPage={() => {}} />
+              <PaginationView
+                count={pageParams?.count}
+                page={page}
+                setPage={setPage}
+                perPage={pageParams?.perPage}
+                boundaryCount={0}
+                total={pageParams.total}
+              />
             </>
           ) : (
             <NoDataCard height="20vh" />

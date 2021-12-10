@@ -5,7 +5,7 @@ import Table from 'components/Table'
 import Button from 'components/Button/Button'
 import Card from 'components/Card/Card'
 import NumericalCard from 'components/Card/NumericalCard'
-import Pagination from 'components/Pagination'
+import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { ReactComponent as AccordionArrowDownIcon } from 'assets/componentsIcon/accordion_arrow_down.svg'
 import { ReactComponent as AccordionArrowUpIcon } from 'assets/componentsIcon/accordion_arrow_up.svg'
@@ -44,8 +44,6 @@ export default function Position() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   const { orderList, pageParams } = useOrderRecords(InvestStatus.ReadyToSettle)
-
-  console.log(pageParams)
 
   const data = useMemo(() => {
     if (!orderList) return []
@@ -101,21 +99,17 @@ export default function Position() {
         <Card>
           <Box padding="38px 24px">
             <NumericalCard title="BTC latest spot price" value="57640.00" border={true} />
-
-            {data && isDownMd ? (
+            {isDownMd ? (
               <PositionTableCards data={data} />
-            ) : data ? (
+            ) : (
               <Table
                 header={PositionTableHeader}
                 rows={data.map(datum => datum.summary)}
                 hiddenParts={hiddenParts()}
                 collapsible
               />
-            ) : (
-              <NoDataCard height="20vh" />
             )}
-
-            <Pagination
+            <PaginationView
               count={pageParams?.count}
               page={page}
               setPage={setPage}
@@ -123,6 +117,7 @@ export default function Position() {
               boundaryCount={0}
               total={pageParams.total}
             />
+            {data.length === 0 && <NoDataCard height="20vh" />}
           </Box>
         </Card>
       </Box>

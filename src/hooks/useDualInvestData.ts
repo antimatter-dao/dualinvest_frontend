@@ -4,6 +4,15 @@ import { ProductList, productListFormatter, productFormatter, Product, OrderReco
 import { AccountRecord } from 'utils/fetch/account'
 import { useActiveWeb3React } from 'hooks'
 
+export enum InvestStatus {
+  Confirming = 1,
+  Ordered = 2,
+  ReadyToSettle = 3,
+  Settled = 4,
+  OrderFailed = 5,
+  OrderSuccess = 6
+}
+
 export function useProductList() {
   const [productList, setProductList] = useState<ProductList | undefined>(undefined)
 
@@ -55,6 +64,11 @@ export function useProduct(productId: string) {
 export function useAccountRecord() {
   const { account } = useActiveWeb3React()
   const [accountRecord, setAccountRecord] = useState<AccountRecord | undefined>(undefined)
+  const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
+    count: 0,
+    perPage: 0,
+    total: 0
+  })
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -64,6 +78,11 @@ export function useAccountRecord() {
             throw Error(r.data.msg)
           }
           setAccountRecord(r.data.data)
+          setPageParams({
+            count: parseInt(r.data.data.pages, 10),
+            perPage: parseInt(r.data.data.size, 10),
+            total: parseInt(r.data.data.total, 10)
+          })
         })
         .catch(e => {
           console.error(e)
@@ -74,16 +93,7 @@ export function useAccountRecord() {
       clearInterval(id)
     }
   })
-  return accountRecord
-}
-
-export enum InvestStatus {
-  Confirming = 1,
-  Ordered = 2,
-  ReadyToSettle = 3,
-  Settled = 4,
-  OrderFailed = 5,
-  OrderSuccess = 6
+  return { accountRecord, pageParams }
 }
 
 export function useOrderRecords(investStatus?: number) {
@@ -95,11 +105,10 @@ export function useOrderRecords(investStatus?: number) {
     total: 0
   })
 
-  console.log(account)
   useEffect(() => {
     const id = setInterval(() => {
       Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
-        address: null,
+        address: account,
         investStatus: investStatus
       })
         .then(r => {
