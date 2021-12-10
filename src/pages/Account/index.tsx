@@ -9,6 +9,7 @@ import History from './History'
 import dashboardUrl from 'assets/images/dashboard.png'
 import positionUrl from 'assets/images/position.png'
 import historyUrl from 'assets/images/history.png'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 export default function Account() {
   return (
@@ -43,9 +44,19 @@ export default function Account() {
 }
 
 function Tab({ text, iconUrl }: { text: string; iconUrl: string }) {
+  const isDownMd = useBreakpoint('md')
   return (
-    <Typography key="dashboard" fontWeight={500} sx={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-      <Image src={iconUrl} style={{ width: 24, height: 'auto' }} />
+    <Typography
+      key="dashboard"
+      fontWeight={500}
+      sx={{ display: 'flex', alignItems: 'center', gap: { xs: 8.45, md: 12 } }}
+    >
+      {isDownMd ? (
+        <Image src={iconUrl} style={{ width: 17, height: 'auto' }} />
+      ) : (
+        <Image src={iconUrl} style={{ width: 24, height: 'auto' }} />
+      )}
+
       {text}
     </Typography>
   )

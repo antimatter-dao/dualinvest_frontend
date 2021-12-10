@@ -28,8 +28,8 @@ export default function Tabs(props: Props) {
               key={idx}
               label={tab}
               sx={{
-                padding: '20px 10px 25px 0',
-                mr: 25,
+                padding: { xs: '20px 0px 17px 0px', md: '20px 10px 25px 0px' },
+                mr: { xs: 23, md: 25 },
                 textTransform: 'none',
                 color: theme => theme.palette.text.primary,
                 opacity: 0.4,
