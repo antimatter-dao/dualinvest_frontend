@@ -77,7 +77,16 @@ export function useAccountRecord() {
   return accountRecord
 }
 
-export function useOrderRecords() {
+export enum InvestStatus {
+  Confirming = 1,
+  Ordered = 2,
+  ReadyToSettle = 3,
+  Settled = 4,
+  OrderFailed = 5,
+  OrderSuccess = 6
+}
+
+export function useOrderRecords(investStatus?: number) {
   const { account } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
 
@@ -85,7 +94,7 @@ export function useOrderRecords() {
 
   useEffect(() => {
     const id = setInterval(() => {
-      Axios.get<{ records: OrderRecord[] }>('getOrderRecord', { address: null })
+      Axios.get<{ records: OrderRecord[] }>('getOrderRecord', { address: null, investStatus: investStatus })
         .then(r => {
           if (r.data.code !== 200) {
             throw Error(r.data.msg)

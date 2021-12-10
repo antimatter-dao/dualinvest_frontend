@@ -12,7 +12,8 @@ import { ReactComponent as AccordionArrowUpIcon } from 'assets/componentsIcon/ac
 import Divider from 'components/Divider'
 import StatusTag from 'components/Status/StatusTag'
 import { useActiveWeb3React } from 'hooks'
-import { useOrderRecords } from 'hooks/useDualInvestData'
+import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
+import dayjs from 'dayjs'
 
 enum PositionTableHeaderIndex {
   investAmount,
@@ -42,32 +43,34 @@ export default function Position() {
   const [page, setPage] = useState(1)
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const orderList = useOrderRecords()
+  const orderList = useOrderRecords(InvestStatus.ReadyToSettle)
 
   console.log(orderList)
 
   const data = useMemo(() => {
     if (!orderList) return []
 
-    return orderList.map(({}) => {
-      return {
-        summary: [
-          '1.290909 BTC',
-          <Typography color="primary" key="1" variant="inherit">
-            140.21%
-          </Typography>,
-          'Sep 21,2021',
-          '62800.00',
-          '1.954241',
-          'Sep 21,2021 10:42 AM',
-          <Box display="flex" key="action" gap={10} sx={{ mr: -37 }}>
-            <StatusTag status="progressing" />
-            <ClaimButton onClick={() => {}} />
-          </Box>
-        ],
-        details: ['767858724324', 'BTC-UP-62800-20211129', '7 Days', '62091.35']
+    return orderList.map(
+      ({ amount, currency, annualRor, expiredAt, strikePrice, earn, createdAt, orderId, productId, deliveryPrice }) => {
+        return {
+          summary: [
+            `${amount} ${currency}`,
+            <Typography color="primary" key="1" variant="inherit">
+              {annualRor}%
+            </Typography>,
+            dayjs(expiredAt).format('MMM DD, YYYY'),
+            strikePrice,
+            earn,
+            dayjs(createdAt).format('MMM DD, YYYY hh:mm:ss A'),
+            <Box display="flex" key="action" gap={10} sx={{ mr: -37 }}>
+              <StatusTag status="progressing" />
+              <ClaimButton onClick={() => {}} />
+            </Box>
+          ],
+          details: [orderId, productId, `${dayjs().diff(dayjs(createdAt), 'day')} days`, deliveryPrice]
+        }
       }
-    })
+    )
   }, [orderList])
 
   const hiddenParts = useCallback(() => {
