@@ -81,9 +81,11 @@ export function useOrderRecords() {
   const { account } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
 
+  console.log(account)
+
   useEffect(() => {
     const id = setInterval(() => {
-      Axios.get<{ records: OrderRecord[] }>('getOrderRecord', { address: account })
+      Axios.get<{ records: OrderRecord[] }>('getOrderRecord', { address: null })
         .then(r => {
           if (r.data.code !== 200) {
             throw Error(r.data.msg)
