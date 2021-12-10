@@ -17,18 +17,18 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import LineChart from 'components/Chart'
 import { Time } from 'lightweight-charts'
 import { useProduct } from 'hooks/useDualInvestData'
-import { useTokenBalance } from 'state/wallet/hooks'
 import { useActiveWeb3React } from 'hooks'
 import { BTC } from 'constants/index'
 import { Axios } from 'utils/axios'
 import Spinner from 'components/Spinner'
-import { useDualInvestCallback } from 'hooks/useDualInvest'
+import { useDualInvestBalance, useDualInvestCallback } from 'hooks/useDualInvest'
 import { tryParseAmount } from 'utils/parseAmount'
 import { useAddPopup, useWalletModalToggle } from 'state/application/hooks'
 import ActionButton from 'components/Button/ActionButton'
-import { createOrder, InvesStatus, InvesStatusType } from 'utils/fetch/product'
+import { InvesStatus, InvesStatusType, OrderRecord } from 'utils/fetch/product'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import useModal from 'hooks/useModal'
+import ActionModal, { ActionType } from 'pages/Account/ActionModal'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -75,6 +75,8 @@ export default function DualInvestMgmt() {
   const [amount, setAmount] = useState('')
   const [pending, setPending] = useState(false)
   const [expanded, setExpanded] = useState<number | null>(null)
+  const [isDepositOpen, setIsDepositOpen] = useState(false)
+  const [currentCurrency] = useState(BTC)
 
   const graphContainer = useRef<HTMLDivElement>(null)
   const node = useRef<any>()
@@ -83,11 +85,15 @@ export default function DualInvestMgmt() {
   const { id } = useParams<{ id: string }>()
   const { showModal } = useModal()
   const { account } = useActiveWeb3React()
-  const balance = useTokenBalance(account ?? undefined, BTC)
+  const balance = useDualInvestBalance(currentCurrency)
   const { createOrderCallback } = useDualInvestCallback()
   const product = useProduct(id)
   const toggleWallet = useWalletModalToggle()
   const addPopup = useAddPopup()
+
+  const hideDeposit = useCallback(() => {
+    setIsDepositOpen(false)
+  }, [])
 
   const data = useMemo(
     () => ({
@@ -108,44 +114,35 @@ export default function DualInvestMgmt() {
     if (!val) return
     try {
       setPending(true)
-      // const backendCall = await Axios.post<any>(
-      //   'createOrder',
-      //   {},
-      //   {
-      //     account,
-      //     amount,
-      //     product_id: id
-      //   }
-      // )
-      // if (backendCall.data.code !== 200) throw Error('Backend Error')
-      // if (!backendCall.data.data) throw Error(backendCall.data.msg)
-      // console.log(backendCall)
-      // const { orderId, productId } = backendCall.data.data
-      // const contractCall = await createOrderCallback(orderId, productId, val, BTC.address)
-      const orderId = 28
-      const contractCall = await createOrderCallback(orderId, '11', val, BTC.address)
+      const backendCall = await Axios.post<any>(
+        'createOrder',
+        {},
+        {
+          account,
+          amount,
+          product_id: id
+        }
+      )
+      if (backendCall.data.code !== 200) throw Error('Backend Error')
+      if (!backendCall.data.data) throw Error(backendCall.data.msg)
+      console.log(backendCall)
+      const { orderId, productId } = backendCall.data.data
+      const contractCall = await createOrderCallback(orderId, productId, val, BTC.address)
+      // const orderId = 28
+      // const contractCall = await createOrderCallback(orderId, '11', val, BTC.address)
       console.log(contractCall)
       let fail = 0
       const polling = new Promise((resolve, reject) => {
-        const timeoutId = setTimeout(() => {
-          Axios.post<createOrder>(
-            'createOrder',
-            {},
-            {
-              account,
-              amount,
-              product_id: id,
-              client_order_id: orderId
-            }
-          )
+        const timeoutId = setInterval(() => {
+          console.log('timeout')
+
+          Axios.get<{ records: OrderRecord[] }>('getOrderRecord?orderId=' + orderId, { address: account })
             .then(r => {
-              console.log(999, r)
-              const statusCode = r.data.data.investStatus
+              console.log(999, r.data.data.records[0])
+              const statusCode = r.data.data.records[0].investStatus as keyof typeof InvesStatus
               if (InvesStatus[statusCode] === InvesStatusType.ERROR) {
-                if (fail > 6) {
-                  clearInterval(timeoutId)
-                  reject('Confirm Order fail')
-                }
+                clearInterval(timeoutId)
+                reject('Confirm Order fail')
               }
               if (InvesStatus[statusCode] === InvesStatusType.SUCCESS) {
                 clearInterval(timeoutId)
@@ -156,6 +153,7 @@ export default function DualInvestMgmt() {
               if (fail > 6) {
                 clearInterval(timeoutId)
                 reject('Confirm Order fail')
+                throw Error('Confirm Order fail')
               }
               console.error(888, e)
               fail++
@@ -184,264 +182,266 @@ export default function DualInvestMgmt() {
   const error = useMemo(() => {
     if (!product || !balance) return ''
     let str = ''
-    if (amount !== '' && +balance.toExact() < +amount * +product.multiplier) str = ErrorType.insufficientBalance
+    if (amount !== '' && +balance < +amount * +product.multiplier) str = ErrorType.insufficientBalance
     if (amount !== '' && (+amount > +product?.orderLimit || +amount < 1)) str = ErrorType.singleLimitExceed
-    // if (!amount) str = 'Please Input Amount'
     return str
   }, [amount, balance, product])
 
   return (
-    <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto" justifyItems="center">
-      <Box
-        display="flex"
-        alignItems="center"
-        sx={{ width: '100%', background: theme.palette.background.paper, padding: '28px 165px' }}
-      >
-        <NavLink to={routes.dualInvest} style={{ textDecoration: 'none' }}>
-          <ArrowLeft />
-          <Typography component="span" color={theme.bgColor.bg1} fontSize={14} ml={16}>
-            Back
-          </Typography>
-        </NavLink>
-      </Box>
-      <Box padding="60px 0" sx={{ maxWidth: theme.width.maxContent }} width="100%">
-        <Box mb={60}>
-          <Typography fontSize={44} fontWeight={700} component="span">
-            BTC Financial Management
-          </Typography>
-          <Typography fontSize={44} fontWeight={400} component="span" ml={8}>
-            [upward exercise]
-          </Typography>
+    <>
+      <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
+      <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto" justifyItems="center">
+        <Box
+          display="flex"
+          alignItems="center"
+          sx={{ width: '100%', background: theme.palette.background.paper, padding: '28px 165px' }}
+        >
+          <NavLink to={routes.dualInvest} style={{ textDecoration: 'none' }}>
+            <ArrowLeft />
+            <Typography component="span" color={theme.bgColor.bg1} fontSize={14} ml={16}>
+              Back
+            </Typography>
+          </NavLink>
         </Box>
-        <Grid container spacing={20}>
-          <Grid xs={12} md={4} item position="relative">
-            {!product && (
-              <Box
-                position="absolute"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                sx={{
-                  top: 20,
-                  left: 20,
-                  width: 'calc(100% - 20px)',
-                  height: 'calc(100% - 20px)',
-                  background: '#ffffff',
-                  zIndex: 3,
-                  borderRadius: 2
-                }}
-              >
-                <Spinner size={60} />
-              </Box>
-            )}
-            <Card width="100%" padding="36px 24px">
-              <Box display="flex" flexDirection="column" gap={20}>
-                {Object.keys(data).map((key, idx) => (
-                  <Box key={idx} display="flex" justifyContent="space-between">
-                    <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
-                    {/* {key === 'Current Progress' ? (
+        <Box padding="60px 0" sx={{ maxWidth: theme.width.maxContent }} width="100%">
+          <Box mb={60}>
+            <Typography fontSize={44} fontWeight={700} component="span">
+              BTC Financial Management
+            </Typography>
+            <Typography fontSize={44} fontWeight={400} component="span" ml={8}>
+              [upward exercise]
+            </Typography>
+          </Box>
+          <Grid container spacing={20}>
+            <Grid xs={12} md={4} item position="relative">
+              {!product && (
+                <Box
+                  position="absolute"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{
+                    top: 20,
+                    left: 20,
+                    width: 'calc(100% - 20px)',
+                    height: 'calc(100% - 20px)',
+                    background: '#ffffff',
+                    zIndex: 3,
+                    borderRadius: 2
+                  }}
+                >
+                  <Spinner size={60} />
+                </Box>
+              )}
+              <Card width="100%" padding="36px 24px">
+                <Box display="flex" flexDirection="column" gap={20}>
+                  {Object.keys(data).map((key, idx) => (
+                    <Box key={idx} display="flex" justifyContent="space-between">
+                      <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
+                      {/* {key === 'Current Progress' ? (
                       <SimpleProgress key={1} val={0.16} total={1} />
                     ) : ( */}
-                    <Typography color={key === 'APY' ? theme.palette.primary.main : theme.palette.text.primary}>
-                      {data[key as keyof typeof data]}
-                    </Typography>
-                    {/* )} */}
-                  </Box>
-                ))}
-                <Divider extension={24} sx={{ opacity: 0.1 }} />
-                <Box>
-                  <InputNumerical
-                    disabled={!product || !account}
-                    value={amount}
-                    onMax={() => {
-                      setAmount(balance ? `${+balance?.toExact() / 0.1}` : '')
-                    }}
-                    label={'Subscription Amount'}
-                    onChange={e => setAmount(e.target.value)}
-                    balance={balance?.toFixed(2) || '-'}
-                    unit={product?.currency ?? ''}
-                    endAdornment={
-                      <Typography noWrap>
-                        {product ? 'X ' + product?.multiplier + ' ' + product?.currency : ''}
+                      <Typography color={key === 'APY' ? theme.palette.primary.main : theme.palette.text.primary}>
+                        {data[key as keyof typeof data]}
                       </Typography>
-                    }
-                    onDeposit={() => {}}
-                    error={!!error}
-                  />
-                  <Box display="grid" mt={12}>
-                    <Typography
-                      fontSize={12}
-                      sx={{ opacity: 0.5, display: 'flex', justifyContent: 'space-between', width: '100%' }}
-                    >
-                      <span>Min investment:</span>
-                      <span>{data.minAmount} </span>
-                    </Typography>
-                    <Typography
-                      fontSize={12}
-                      sx={{ opacity: 0.5, display: 'flex', justifyContent: 'space-between', width: '100%' }}
-                    >
-                      <span>Max investment:</span>
-                      <span>{data.maxAmount} </span>
+                      {/* )} */}
+                    </Box>
+                  ))}
+                  <Divider extension={24} sx={{ opacity: 0.1 }} />
+                  <Box>
+                    <InputNumerical
+                      disabled={!product || !account}
+                      value={amount}
+                      onMax={() => {
+                        setAmount(balance ? `${+balance / (product ? +product?.multiplier : 1)}` : '')
+                      }}
+                      label={'Subscription Amount'}
+                      onChange={e => setAmount(e.target.value)}
+                      balance={balance || '-'}
+                      unit={product?.currency ?? ''}
+                      endAdornment={
+                        <Typography noWrap>
+                          {product ? 'X ' + product?.multiplier + ' ' + product?.currency : ''}
+                        </Typography>
+                      }
+                      onDeposit={() => {}}
+                      error={!!error}
+                    />
+                    <Box display="grid" mt={12}>
+                      <Typography
+                        fontSize={12}
+                        sx={{ opacity: 0.5, display: 'flex', justifyContent: 'space-between', width: '100%' }}
+                      >
+                        <span>Min investment:</span>
+                        <span>{data.minAmount} </span>
+                      </Typography>
+                      <Typography
+                        fontSize={12}
+                        sx={{ opacity: 0.5, display: 'flex', justifyContent: 'space-between', width: '100%' }}
+                      >
+                        <span>Max investment:</span>
+                        <span>{data.maxAmount} </span>
+                      </Typography>
+                    </Box>
+                  </Box>
+                  {!account && <BlackButton onClick={toggleWallet}>Connect Wallet</BlackButton>}
+                  {account && (
+                    <ActionButton
+                      pending={pending}
+                      pendingText={'Pending'}
+                      error={!amount ? 'Please Input Amount' : ''}
+                      onAction={handleSubscribe}
+                      actionText=" Subscribe"
+                      disableAction={!product?.isActive ? true : !!error}
+                      successText={'Ended'}
+                      success={!product?.isActive}
+                    />
+                  )}
+                  <Box display="flex">
+                    <InfoOutlinedIcon
+                      sx={{ color: error ? theme.palette.error.main : theme.palette.primary.main, height: 12 }}
+                    />
+                    <Typography component="p" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
+                      {error ? (
+                        error === ErrorType.insufficientBalance ? (
+                          <>
+                            <Typography component="span" color="error" fontSize={12}>
+                              Insufficient Balance.
+                            </Typography>
+                            Please recharge your account first before opening wealth management
+                          </>
+                        ) : (
+                          <>
+                            <Typography component="span" color="error" fontSize={12} sx={{ display: 'block' }}>
+                              Single Limit Exceeded.
+                            </Typography>
+                            Single financial management limit is {product?.multiplier ?? '-'}～
+                            {product ? +product?.orderLimit * +product?.multiplier : '-'} BTC
+                          </>
+                        )
+                      ) : (
+                        'Once subscribed the APY will get locked in, the product can&apos;t be cancelled after subscription.'
+                      )}
                     </Typography>
                   </Box>
                 </Box>
-                {!account && <BlackButton onClick={toggleWallet}>Connect Wallet</BlackButton>}
-                {account && (
-                  <ActionButton
-                    pending={pending}
-                    pendingText={'Pending'}
-                    error={!amount ? 'Please Input Amount' : ''}
-                    onAction={handleSubscribe}
-                    actionText=" Subscribe"
-                    disableAction={!product?.isActive ? true : !!error}
-                    successText={'Ended'}
-                    success={!product?.isActive}
-                  />
-                )}
-                <Box display="flex">
-                  <InfoOutlinedIcon
-                    sx={{ color: error ? theme.palette.error.main : theme.palette.primary.main, height: 12 }}
-                  />
-                  <Typography component="p" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
-                    {error ? (
-                      error === ErrorType.insufficientBalance ? (
-                        <>
-                          <Typography component="span" color="error" fontSize={12}>
-                            Insufficient Balance.
-                          </Typography>
-                          Please recharge your account first before opening wealth management
-                        </>
-                      ) : (
-                        <>
-                          <Typography component="span" color="error" fontSize={12} sx={{ display: 'block' }}>
-                            Single Limit Exceeded.
-                          </Typography>
-                          Single financial management limit is {product?.multiplier ?? '-'}～
-                          {product ? +product?.orderLimit * +product?.multiplier : '-'} BTC
-                        </>
-                      )
-                    ) : (
-                      'Once subscribed the APY will get locked in, the product can&apos;t be cancelled after subscription.'
-                    )}
-                  </Typography>
+              </Card>
+            </Grid>
+            <Grid xs={12} md={8} item>
+              <Card width="100%" padding="32px 24px" style={{ height: '100%' }}>
+                <Box display="flex" flexDirection="column" gap="20px" maxWidth={'100%'} height="100%">
+                  <Box display="flex" justifyContent="space-between">
+                    <Typography fontSize={24} fontWeight={700}>
+                      Purchase expected income graph
+                    </Typography>
+                  </Box>
+                  <Box sx={{ maxWidth: '100vw', height: '100%', flexGrow: 1 }} ref={graphContainer}>
+                    <LineChart
+                      lineColor="#18A0FB"
+                      lineSeriesData={[
+                        { time: 16059744000000 as Time, value: 80.01 },
+                        { time: 16060608000000 as Time, value: 96.63 },
+                        { time: 16061472000000 as Time, value: 76.64 },
+                        { time: 16062336000000 as Time, value: 81.89 },
+                        { time: 16063200000000 as Time, value: 74.43 }
+                      ]}
+                      unit="usdt"
+                      id="incomeGraph"
+                      height={graphContainer?.current?.offsetHeight ?? 280}
+                      priceLineData={[
+                        { time: 16063200000000 as Time, value: 88 },
+                        { time: 16063200000000 as Time, value: 88 }
+                      ]}
+                    />
+                  </Box>
+                  <OutlinedCard padding="16px 20px">
+                    <Typography fontSize={16} color={theme.palette.text.primary}>
+                      Return on investment:
+                    </Typography>
+                    <StyledUnorderList>
+                      <li>
+                        When the final settlement price ≥ {product?.strikePrice ?? '-'} USDT, you will receive{' '}
+                        <span style={{ color: theme.palette.text.primary }}>56,750.61 USDT</span>.
+                      </li>
+                      <li>
+                        When the settlement price is &lt; {product?.strikePrice ?? '-'} USDT, you will receive{' '}
+                        <span style={{ color: theme.palette.text.primary }}>1.682655 BTC</span>.
+                      </li>
+                      <li>
+                        APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully
+                        complete the subscription.
+                      </li>
+                    </StyledUnorderList>
+                  </OutlinedCard>
                 </Box>
-              </Box>
-            </Card>
-          </Grid>
-          <Grid xs={12} md={8} item>
-            <Card width="100%" padding="32px 24px" style={{ height: '100%' }}>
-              <Box display="flex" flexDirection="column" gap="20px" maxWidth={'100%'} height="100%">
-                <Box display="flex" justifyContent="space-between">
+              </Card>
+            </Grid>
+            <Grid xs={12} item>
+              <Card width="100%" padding="32px 24px">
+                <Box display="flex" alignItems="center" gap={11.68}>
+                  <RiskStatementIcon />
                   <Typography fontSize={24} fontWeight={700}>
-                    Purchase expected income graph
+                    Risk statement
                   </Typography>
                 </Box>
-                <Box sx={{ maxWidth: '100vw', height: '100%', flexGrow: 1 }} ref={graphContainer}>
-                  <LineChart
-                    lineColor="#18A0FB"
-                    lineSeriesData={[
-                      { time: 16059744000000 as Time, value: 80.01 },
-                      { time: 16060608000000 as Time, value: 96.63 },
-                      { time: 16061472000000 as Time, value: 76.64 },
-                      { time: 16062336000000 as Time, value: 81.89 },
-                      { time: 16063200000000 as Time, value: 74.43 }
-                    ]}
-                    unit="usdt"
-                    id="incomeGraph"
-                    height={graphContainer?.current?.offsetHeight ?? 280}
-                    priceLineData={[
-                      { time: 16063200000000 as Time, value: 88 },
-                      { time: 16063200000000 as Time, value: 88 }
-                    ]}
-                  />
-                </Box>
-                <OutlinedCard padding="16px 20px">
-                  <Typography fontSize={16} color={theme.palette.text.primary}>
-                    Return on investment:
+                <StyledOrderList>
+                  <li>
+                    This product is a non-principal-guaranteed wealth management product. Market fluctuations may result
+                    in a loss of principal. Please invest with caution.
+                  </li>
+                  <li>
+                    The investment amount is calculated in real time with the market, please refer to the actual
+                    purchase transaction.
+                  </li>
+                  <li>
+                    The annualized rate of return changes in real time with the market, please refer to the actual rate
+                    of return of the purchase transaction.
+                  </li>
+                  <li>
+                    The average spot price of the last 30 minutes at 12:00 (UTC+8) on the delivery date will be used as
+                    the settlement price.
+                  </li>
+                  <li>Early redemption is not supported, and users can only get rewards after the expiry date.</li>
+                  <li>
+                    After the product is purchased, you can view it on my currency holding page, and the payment will be
+                    automatically issued to the Account after the delivery.
+                  </li>
+                </StyledOrderList>
+              </Card>
+            </Grid>
+            <Grid xs={12} item>
+              <Card width="100%" padding="32px 24px">
+                <Box display="flex" alignItems="center" gap={11.68}>
+                  <Faq />
+                  <Typography fontSize={24} fontWeight={700}>
+                    FAQ
                   </Typography>
-                  <StyledUnorderList>
-                    <li>
-                      When the final settlement price ≥ {product?.strikePrice ?? '-'} USDT, you will receive{' '}
-                      <span style={{ color: theme.palette.text.primary }}>56,750.61 USDT</span>.
-                    </li>
-                    <li>
-                      When the settlement price is &lt; {product?.strikePrice ?? '-'} USDT, you will receive{' '}
-                      <span style={{ color: theme.palette.text.primary }}>1.682655 BTC</span>.
-                    </li>
-                    <li>
-                      APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully
-                      complete the subscription.
-                    </li>
-                  </StyledUnorderList>
-                </OutlinedCard>
-              </Box>
-            </Card>
+                </Box>
+                <Box mt={28}>
+                  {[
+                    {
+                      summary: 'accordion1',
+                      details: '123'
+                    },
+                    {
+                      summary: 'accordion2',
+                      details: '123'
+                    }
+                  ].map(({ summary, details }, idx) => (
+                    <Accordion
+                      key={idx}
+                      summary={summary}
+                      details={details}
+                      expanded={expanded === idx}
+                      onChange={() => setExpanded(idx)}
+                    />
+                  ))}
+                </Box>
+              </Card>
+            </Grid>
           </Grid>
-          <Grid xs={12} item>
-            <Card width="100%" padding="32px 24px">
-              <Box display="flex" alignItems="center" gap={11.68}>
-                <RiskStatementIcon />
-                <Typography fontSize={24} fontWeight={700}>
-                  Risk statement
-                </Typography>
-              </Box>
-              <StyledOrderList>
-                <li>
-                  This product is a non-principal-guaranteed wealth management product. Market fluctuations may result
-                  in a loss of principal. Please invest with caution.
-                </li>
-                <li>
-                  The investment amount is calculated in real time with the market, please refer to the actual purchase
-                  transaction.
-                </li>
-                <li>
-                  The annualized rate of return changes in real time with the market, please refer to the actual rate of
-                  return of the purchase transaction.
-                </li>
-                <li>
-                  The average spot price of the last 30 minutes at 12:00 (UTC+8) on the delivery date will be used as
-                  the settlement price.
-                </li>
-                <li>Early redemption is not supported, and users can only get rewards after the expiry date.</li>
-                <li>
-                  After the product is purchased, you can view it on my currency holding page, and the payment will be
-                  automatically issued to the Account after the delivery.
-                </li>
-              </StyledOrderList>
-            </Card>
-          </Grid>
-          <Grid xs={12} item>
-            <Card width="100%" padding="32px 24px">
-              <Box display="flex" alignItems="center" gap={11.68}>
-                <Faq />
-                <Typography fontSize={24} fontWeight={700}>
-                  FAQ
-                </Typography>
-              </Box>
-              <Box mt={28}>
-                {[
-                  {
-                    summary: 'accordion1',
-                    details: '123'
-                  },
-                  {
-                    summary: 'accordion2',
-                    details: '123'
-                  }
-                ].map(({ summary, details }, idx) => (
-                  <Accordion
-                    key={idx}
-                    summary={summary}
-                    details={details}
-                    expanded={expanded === idx}
-                    onChange={() => setExpanded(idx)}
-                  />
-                ))}
-              </Box>
-            </Card>
-          </Grid>
-        </Grid>
+        </Box>
       </Box>
-    </Box>
+    </>
   )
 }

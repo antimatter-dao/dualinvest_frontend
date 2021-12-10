@@ -1,12 +1,12 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect, useMemo } from 'react'
 import { Box, Typography, useTheme } from '@mui/material'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import OutlineButton from 'components/Button/OutlineButton'
 import NumericalInput from 'components/Input/InputNumerical'
 import Modal from 'components/Modal'
 import { Token } from 'constants/token'
 // import Select from 'components/Select/Select'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
-import useModal from 'hooks/useModal'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { StatusIcon } from 'components/Modal/TransactionModals/DestinationAddress'
 import { useActiveWeb3React } from 'hooks'
@@ -18,12 +18,12 @@ import { tryParseAmount } from 'utils/parseAmount'
 import ConfirmModal from './ConfirmModal'
 import { useTransaction } from 'state/transactions/hooks'
 import { OutlinedCard } from 'components/Card/Card'
-import { DUAL_INVEST_ADDRESS } from 'constants/index'
-
-const data = {
-  walletBalance: '2.087016 ETH',
-  accountBalance: '2.087016 ETH'
-}
+import { BTC, DUAL_INVEST_ADDRESS } from 'constants/index'
+import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { useDualInvestBalance, useDualInvestCallback } from 'hooks/useDualInvest'
+import useModal from 'hooks/useModal'
+import { TokenAmount } from 'constants/token'
 
 export enum ActionType {
   DEPOSIT = 'deposit',
@@ -34,23 +34,14 @@ export default function ActionModal({
   isOpen,
   onDismiss,
   type,
-  children,
-  token,
-  onAction
+  token
 }: // currencyInput
 {
   token?: Token
-  children?: React.ReactNode
   isOpen: boolean
   type: ActionType
   // currencyInput?: boolean
   onDismiss: () => void
-  onAction: (
-    val: string | undefined,
-    token: Token,
-    setHash: (hash: string) => void,
-    onError: (e: Error) => void
-  ) => void
 }) {
   const [val, setVal] = useState('')
   const [isConfirmed, setIsConfrirmed] = useState(false)
@@ -58,10 +49,12 @@ export default function ActionModal({
   const [confirmModalOpen, setConfirmModalOpen] = useState(false)
   const actionStr = type === ActionType.DEPOSIT ? 'Deposit' : 'Withdraw'
   const [pending, setPending] = useState(false)
+
   const { connector, account } = useActiveWeb3React()
   const theme = useTheme()
   const [hash, setHash] = useState('')
   const { hideModal, showModal } = useModal()
+  const contractBalance = useDualInvestBalance(BTC)
   const balance = useTokenBalance(account ?? undefined, token)
   const txn = useTransaction(hash)
   const [approvalState, approveCallback] = useApproveCallback(tryParseAmount(val, token), DUAL_INVEST_ADDRESS)
@@ -130,6 +123,13 @@ export default function ActionModal({
       }
     },
     [connector, handleDismiss, hideModal, showModal]
+  )
+
+  const { onDeposit, onWithdraw } = useActionCallback(
+    tryParseAmount(val, token)?.raw.toString(),
+    token,
+    setHash,
+    handleErrorModal
   )
 
   useEffect(() => {
@@ -212,11 +212,19 @@ export default function ActionModal({
               </Box>
               <Box display="flex" justifyContent="space-between" color={theme.palette.text.secondary}>
                 <Typography>Account Balance</Typography>
-                <Typography>{data.accountBalance}</Typography>
+                <Typography>{token ? contractBalance : '-'}</Typography>
               </Box>
             </OutlinedCard>
           </Box>
-          {children}
+          {type === ActionType.DEPOSIT && (
+            <Box display="flex" mt={-20}>
+              <InfoOutlinedIcon sx={{ color: theme.palette.primary.main, height: 12 }} />
+              <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
+                Please make sure there is a certain amount of {token?.symbol ?? 'BTC'} in the wallet balance, otherwise
+                the deposit will fail due to insufficient handling fees.
+              </Typography>
+            </Box>
+          )}
           <Box display={{ xs: 'grid', sm: 'flex' }} gap="16px">
             <OutlineButton onClick={handleDismiss}>Cancel</OutlineButton>
             {!isConfirmed && (
@@ -244,7 +252,13 @@ export default function ActionModal({
               <ActionButton
                 error={!token ? 'No token' : undefined}
                 onAction={() => {
-                  token && onAction(tryParseAmount(val, token)?.raw.toString(), token, setHash, handleErrorModal)
+                  if (!token) return
+                  if (type === ActionType.DEPOSIT) {
+                    onDeposit()
+                  }
+                  if (type === ActionType.WITHDRAW) {
+                    onWithdraw()
+                  }
                 }}
                 pending={pending}
                 pendingText="Pending Confirmation"
@@ -257,4 +271,48 @@ export default function ActionModal({
       </Modal>
     </>
   )
+}
+
+function useActionCallback(
+  val: string | undefined,
+  token: Token | undefined,
+  setHash: (hash: string) => void,
+  onError: (e: Error) => void
+) {
+  const { account } = useActiveWeb3React()
+  const { showModal, hideModal } = useModal()
+  const { depositCallback, withdrawCallback } = useDualInvestCallback()
+  const addTransaction = useTransactionAdder()
+
+  const handleDeposit = useCallback(() => {
+    if (!token || !depositCallback || !val || !account) return
+    showModal(<TransactionPendingModal />)
+    depositCallback(val, token.address, { gasLimit: 3000000 })
+      .then(r => {
+        hideModal()
+        setHash(r.hash)
+        const tokenAmount = new TokenAmount(token, val)
+        addTransaction(r, {
+          summary: `Deposit ${tokenAmount.toExact()} ${token.symbol}`
+        })
+      })
+      .catch(onError)
+  }, [depositCallback, val, account, showModal, token, onError, hideModal, setHash, addTransaction])
+
+  const handleWithdraw = useCallback(() => {
+    if (!token || !withdrawCallback || !val || !account) return
+    showModal(<TransactionPendingModal />)
+    withdrawCallback()
+      .then(r => {
+        hideModal()
+        setHash(r.hash)
+        const tokenAmount = new TokenAmount(token, val)
+        addTransaction(r, {
+          summary: `Withdraw ${tokenAmount.toExact()} ${token.symbol}`
+        })
+      })
+      .catch(onError)
+  }, [withdrawCallback, val, account, showModal, onError, hideModal, setHash, token, addTransaction])
+
+  return useMemo(() => ({ onDeposit: handleDeposit, onWithdraw: handleWithdraw }), [handleDeposit, handleWithdraw])
 }
