@@ -45,8 +45,6 @@ export default function Position() {
   const { account } = useActiveWeb3React()
   const orderList = useOrderRecords(InvestStatus.ReadyToSettle)
 
-  console.log(orderList)
-
   const data = useMemo(() => {
     if (!orderList) return []
 
