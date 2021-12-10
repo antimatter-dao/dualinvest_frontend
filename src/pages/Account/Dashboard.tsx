@@ -123,9 +123,6 @@ export default function Dashboard() {
     },
     [withdrawCallback, account, showModal, hideModal, addTransaction]
   )
-  const buttonProps = {
-    width: isDownMd ? '256px' : '148px'
-  }
 
   const balanceData = useMemo(
     () => [
@@ -194,25 +191,36 @@ export default function Dashboard() {
                   Deposit funds to your Dual Investment account, you can withdraw available amount at any time
                 </Typography>
               </Box>
-              <NumericalCard
-                value={'1,908.12'}
-                border
-                title="Portfolio Value"
-                unit="$"
-                padding="20px 24px"
-                fontSize={'44px'}
-                dayChange="+ 8.91% / $350.28 "
-              >
-                <Button
-                  onClick={() => {
-                    history.push(routes.dualInvest)
-                  }}
-                  style={{ right: '24px', bottom: '20px', height: 44, fontSize: 14 }}
-                  {...buttonProps}
+
+              {isDownMd ? (
+                <InvestmentValueCard value={'1,908.12'} unit="$" dayChange="+ 8.91% / $350.28 " />
+              ) : (
+                <NumericalCard
+                  value={'1,908.12'}
+                  border
+                  title="Portfolio Value"
+                  unit="$"
+                  padding="20px 24px"
+                  fontSize={'44px'}
+                  dayChange="+ 8.91% / $350.28 "
                 >
-                  Invest
-                </Button>
-              </NumericalCard>
+                  <Button
+                    onClick={() => {
+                      history.push(routes.dualInvest)
+                    }}
+                    style={{
+                      position: 'absolute',
+                      right: '24px',
+                      bottom: '20px',
+                      width: 148,
+                      height: 44,
+                      fontSize: 14
+                    }}
+                  >
+                    Invest
+                  </Button>
+                </NumericalCard>
+              )}
               {balanceData && isDownMd ? (
                 <AccountBalanceCards data={balanceData} />
               ) : balanceData ? (
@@ -357,5 +365,77 @@ function BalanceActions({
         Buy
       </OutlineButton>
     </Box>
+  )
+}
+
+function InvestmentValueCard({ value, unit, dayChange }: { value?: string; unit?: string; dayChange?: string }) {
+  const theme = useTheme()
+  const history = useHistory()
+  return (
+    <Card width={1} style={{ position: 'relative', border: '1px solid #00000010' }}>
+      <Box
+        sx={{
+          padding: '16px',
+          gap: '12px',
+          height: 'auto',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        <Box display="flex">
+          <Typography variant="inherit" color={theme.palette.text.secondary}>
+            Total Investment Value
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'baseline',
+            color: theme.palette.text.primary
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: 20,
+              fontWeight: 700,
+              lineHeight: 1
+            }}
+          >
+            {value}
+          </Typography>
+          <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>{unit}</Typography>
+          <Box
+            component="div"
+            borderRadius={22}
+            color="#31B047"
+            bgcolor="rgba(49, 176, 71, 0.16)"
+            fontSize={14}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            width={120}
+            height={24}
+            ml={12}
+          >
+            <Typography
+              sx={{
+                color: '#11BF2D',
+                fontSize: '12px'
+              }}
+            >
+              {dayChange}
+            </Typography>
+          </Box>
+        </Box>
+        <Button
+          onClick={() => {
+            history.push(routes.dualInvest)
+          }}
+          style={{ width: '100%', height: 36, fontSize: 14, borderRadius: 22 }}
+        >
+          Invest
+        </Button>
+      </Box>
+    </Card>
   )
 }
