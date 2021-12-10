@@ -82,7 +82,7 @@ export function useOrderRecords() {
 
   useEffect(() => {
     const id = setInterval(() => {
-      Axios.get('getOrderRecord', { address: account })
+      Axios.get<{ records: OrderRecord[] }>('getOrderRecord', { address: account })
         .then(r => {
           if (r.data.code !== 200) {
             throw Error(r.data.msg)

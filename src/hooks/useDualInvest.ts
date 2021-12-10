@@ -1,16 +1,20 @@
+import { Token } from 'constants/token'
 import { useActiveWeb3React } from 'hooks'
 import { useMemo, useCallback } from 'react'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { calculateGasMargin } from 'utils'
+import { parseBalance } from 'utils/parseAmount'
 import { useDualInvestContract } from './useContract'
 
-export function useDualInvestBalance(curAddress?: string) {
+export function useDualInvestBalance(token?: Token) {
   const contract = useDualInvestContract()
   const { account } = useActiveWeb3React()
-  const args = useMemo(() => [curAddress ?? '', account ?? undefined], [account, curAddress])
-  const balanceRes = useSingleCallResult(curAddress ? contract : null, 'balances', args)
+  const args = useMemo(() => [token?.address ?? '', account ?? undefined], [account, token])
+  const balanceRes = useSingleCallResult(token ? contract : null, 'balances', args)
 
-  return useMemo(() => balanceRes?.result?.[0], [balanceRes])
+  return useMemo(() => {
+    return token && balanceRes?.result ? parseBalance(balanceRes.result?.[0].toString(), token) : '-'
+  }, [balanceRes.result, token])
 }
 
 export function useDualInvestCallback(): {
