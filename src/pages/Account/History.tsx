@@ -5,7 +5,7 @@ import Table from 'components/Table'
 import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useActiveWeb3React } from 'hooks'
-import { useOrderRecords } from 'hooks/useDualInvestData'
+import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
 import { useMemo } from 'react'
 import dayjs from 'dayjs'
 
@@ -23,7 +23,7 @@ const HistoryTableHeader = [
 export default function History() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const orderList = useOrderRecords()
+  const orderList = useOrderRecords(InvestStatus.Settled)
 
   const data = useMemo(() => {
     if (!orderList) return []
