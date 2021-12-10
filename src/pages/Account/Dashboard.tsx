@@ -22,23 +22,8 @@ import { useHistory } from 'react-router'
 import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
-
-const accountDetailsData = [
-  [
-    <TransactionTypeIcon key="type" txType="withdraw" />,
-    'BTC',
-    '1.087062',
-    'Sep 21, 2021  10:42:21 AM ',
-    <StatusTag key="status" status="completed" />
-  ],
-  [
-    <TransactionTypeIcon key="type" txType="deposit" />,
-    'BTC',
-    '1.087062',
-    'Sep 21, 2021  10:42:21 AM ',
-    <StatusTag key="status" status="completed" />
-  ]
-]
+import { useAccountRecord } from 'hooks/useDualInvestData'
+import { fomattedDate } from 'utils/formattedDate'
 
 const BTC = new Token(3, '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93', 18, 'BTC', 'btc_token')
 
@@ -58,6 +43,11 @@ enum DetailsTableHeaderIndex {
   date
 }
 
+const RecordType: { [key in number]: 'withdraw' | 'deposit' } = {
+  1: 'withdraw',
+  2: 'deposit'
+}
+
 const BalanceTableHeader = ['Token', 'Available', 'Amount', 'Cumulative Invest', 'PnL', '']
 const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
 
@@ -73,6 +63,26 @@ export default function Dashboard() {
   const { depositCallback, withdrawCallback } = useDualInvestCallback()
   const addTransaction = useTransactionAdder()
   const isDownMd = useBreakpoint('md')
+
+  const accountRecord = useAccountRecord()
+
+  const accountDetailsData = useMemo(() => {
+    const records = accountRecord?.records
+    if (!records) return
+
+    return records.map(record => {
+      const timestamp = parseInt(record.timestamp)
+      const formattedDate = fomattedDate(timestamp)
+
+      return [
+        <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
+        'BTC',
+        `${record.amount}`,
+        `${formattedDate}`,
+        <StatusTag key="status" status="completed" />
+      ]
+    })
+  }, [accountRecord])
 
   const handleDepositOpen = useCallback(() => {
     setIsDepositOpen(true)
@@ -230,7 +240,11 @@ export default function Dashboard() {
               ) : accountDetailsData ? (
                 <>
                   <Table header={DetailTableHeader} rows={accountDetailsData} />
-                  <PaginationView count={4} page={1} setPage={() => {}} />
+                  <PaginationView
+                    count={parseInt(accountRecord?.pages || '1', 10)}
+                    page={parseInt(accountRecord?.current || '1', 10)}
+                    setPage={() => {}}
+                  />
                 </>
               ) : (
                 <NoDataCard height="20vh" />

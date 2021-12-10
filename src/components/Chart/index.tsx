@@ -82,11 +82,13 @@ export default function LineChart({
   unit,
   unit2,
   id,
-  width
+  width,
+  priceLineData
 }: {
   style?: React.CSSProperties
   lineSeriesData: LineSeriesData
   lineSeriesData2?: LineSeriesData
+  priceLineData?: LineSeriesData
   height?: number
   lineColor?: string
   unit: string
@@ -235,6 +237,17 @@ export default function LineChart({
       chart.timeScale().fitContent()
     }
   }, [chart, lineColor, lineSeries, lineSeriesData, lineSeriesData2, theme])
+
+  useEffect(() => {
+    if (!chart || !priceLineData) return
+    const priceLine = chart?.addLineSeries({
+      lineType: LineType.Simple,
+      lineStyle: LineStyle.LargeDashed,
+      lineWidth: 1,
+      color: secondaryColor
+    })
+    priceLine?.setData(priceLineData)
+  }, [chart])
 
   return (
     <>
