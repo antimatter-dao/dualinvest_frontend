@@ -50,7 +50,19 @@ export default function Position() {
     if (!orderList) return []
 
     return orderList.map(
-      ({ amount, currency, annualRor, expiredAt, strikePrice, earn, createdAt, orderId, productId, deliveryPrice }) => {
+      ({
+        amount,
+        currency,
+        annualRor,
+        expiredAt,
+        strikePrice,
+        earn,
+        createdAt,
+        orderId,
+        productId,
+        deliveryPrice,
+        investStatus
+      }) => {
         return {
           summary: [
             `${amount} ${currency}`,
@@ -61,9 +73,9 @@ export default function Position() {
             strikePrice,
             earn,
             dayjs(+createdAt * 1000).format('MMM DD, YYYY hh:mm:ss A'),
-            <Box display="flex" key="action" gap={10} sx={{ mr: -15 }}>
-              <StatusTag status="progressing" />
-              <ClaimButton onClick={() => {}} />
+            <Box display="flex" key="action" gap={isDownMd ? 10 : 8} sx={{ mr: -15 }}>
+              <StatusTag status={investStatus === 2 ? 'progressing' : 'finished'} width={isDownMd ? 120 : 100} />
+              <ClaimButton onClick={() => {}} width={isDownMd ? 84 : 68} />
             </Box>
           ],
           details: [orderId, productId, `${dayjs().diff(dayjs(createdAt * 1000), 'day')} days`, deliveryPrice]
@@ -154,8 +166,21 @@ function PositionTableCards({ data }: { data: { summary: any[]; details: any[] }
       {data.map((dataRow, idx) => (
         <Card key={idx} color="#F2F5FA" padding="17px 16px">
           <Box display="flex" flexDirection="column" gap={16}>
-            {dataRow.summary.map((datum, idx) => {
-              if (idx === PositionTableHeaderIndex.status) return null
+            {dataRow.summary.map((datum, idx2) => {
+              if (idx2 === PositionTableHeaderIndex.status) {
+                return (
+                  <Box display="flex" alignItems="center" gap={14}>
+                    {datum}
+                    <AccordionButton
+                      onClick={() => {
+                        expanded === idx ? setExpanded(null) : setExpanded(idx)
+                      }}
+                      expanded={expanded === idx}
+                    />
+                  </Box>
+                )
+              }
+
               return (
                 <Box key={idx} display="flex" justifyContent="space-between">
                   <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
@@ -168,16 +193,7 @@ function PositionTableCards({ data }: { data: { summary: any[]; details: any[] }
               )
             })}
           </Box>
-          <Box display="flex" gap={8} mt={20} alignItems="center" mb={18}>
-            <StatusTag status="progressing" width={'120px'} />
-            <ClaimButton width={84} onClick={() => {}} />
-            <AccordionButton
-              onClick={() => {
-                expanded === idx ? setExpanded(null) : setExpanded(idx)
-              }}
-              expanded={expanded === idx}
-            />
-          </Box>
+
           {expanded === idx && dataRow.details && (
             <>
               <Divider extension={16} color="1px solid #252525" />

@@ -108,7 +108,7 @@ export function useOrderRecords(investStatus?: number, pageNum = 1, pageSize = 8
   useEffect(() => {
     const id = setInterval(() => {
       Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
-        address: account,
+        address: null,
         investStatus,
         pageNum,
         pageSize
