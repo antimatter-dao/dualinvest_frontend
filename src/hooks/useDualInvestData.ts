@@ -92,7 +92,7 @@ export function useAccountRecord(pageNum = 1, pageSize = 8) {
     return () => {
       clearInterval(id)
     }
-  })
+  }, [account, pageNum, pageSize])
   return { accountRecord, pageParams }
 }
 
@@ -132,7 +132,7 @@ export function useOrderRecords(investStatus?: number, pageNum = 1, pageSize = 8
     return () => {
       clearInterval(id)
     }
-  })
+  }, [account, investStatus, pageNum, pageSize])
   return {
     orderList,
     pageParams

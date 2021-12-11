@@ -61,7 +61,7 @@ export default function Position() {
             strikePrice,
             earn,
             dayjs(+createdAt * 1000).format('MMM DD, YYYY hh:mm:ss A'),
-            <Box display="flex" key="action" gap={10} sx={{ mr: -37 }}>
+            <Box display="flex" key="action" gap={10} sx={{ mr: -15 }}>
               <StatusTag status="progressing" />
               <ClaimButton onClick={() => {}} />
             </Box>
