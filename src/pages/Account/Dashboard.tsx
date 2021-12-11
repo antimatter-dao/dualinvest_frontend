@@ -20,6 +20,9 @@ import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_ri
 import { useAccountRecord } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
 import { BTC } from 'constants/index'
+import Spinner from 'components/Spinner'
+import { ExternalLink } from 'theme/components'
+import { getEtherscanLink } from 'utils/index'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -49,25 +52,35 @@ export default function Dashboard() {
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
   const [currentCurrency, setCurrentCurrency] = useState<Token | undefined>(undefined)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
   const [page, setPage] = useState(1)
 
-  const { accountRecord, pageParams } = useAccountRecord()
+  const { accountRecord, pageParams } = useAccountRecord(page)
 
   const accountDetailsData = useMemo(() => {
     const records = accountRecord?.records
-    if (!records) return
+    if (!records) return []
 
     return records.map(record => {
-      const timestamp = parseInt(record.timestamp)
+      const scanLink = chainId ? getEtherscanLink(chainId, record.hash, 'transaction') : ''
 
       return [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
-        'BTC',
-        `${record.amount}`,
-        dayjs(timestamp).format('MMM DD, YYYY hh:mm:ss A'),
+        <Box key={1} display="flex" gap={10} alignItems="center">
+          <CurrencyLogo currency={BTC} />
+          <Typography fontSize={16}>{BTC.symbol}</Typography>
+        </Box>,
+        <Box key={1} display="flex" alignItems="center">
+          <Typography component="span">${record.amount}</Typography>
+          <Box component="span" sx={{ ml: 5, display: 'flex', alignItems: 'center' }}>
+            <ExternalLink href={scanLink}>
+              <UpperRightIcon />
+            </ExternalLink>
+          </Box>
+        </Box>,
+        dayjs(+record.timestamp * 1000).format('MMM DD, YYYY hh:mm:ss A'),
         <StatusTag key="status" status="completed" />
       ]
     })
@@ -139,43 +152,67 @@ export default function Dashboard() {
                   Deposit funds to your Dual Investment account, you can withdraw available amount at any time
                 </Typography>
               </Box>
-
-              {isDownMd ? (
-                <InvestmentValueCard value={'1,908.12'} unit="$" dayChange="+ 8.91% / $350.28 " />
-              ) : (
-                <NumericalCard
-                  value={'1,908.12'}
-                  border
-                  title="Portfolio Value"
-                  unit="$"
-                  padding="20px 24px"
-                  fontSize={'44px'}
-                  // dayChange="+ 8.91% / $350.28 "
-                >
-                  <Button
-                    onClick={() => {
-                      history.push(routes.dualInvest)
-                    }}
-                    style={{
-                      position: 'absolute',
-                      right: '24px',
-                      bottom: '20px',
-                      width: 148,
-                      height: 44,
-                      fontSize: 14
+              <Box position="relative">
+                {!accountRecord && (
+                  <Box
+                    position="absolute"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      background: '#ffffff',
+                      zIndex: 3,
+                      borderRadius: 2
                     }}
                   >
-                    Invest
-                  </Button>
-                </NumericalCard>
-              )}
-              {balanceData && isDownMd ? (
-                <AccountBalanceCards data={balanceData} />
-              ) : balanceData ? (
-                <Table header={BalanceTableHeader} rows={balanceData} />
-              ) : (
-                <NoDataCard height="20vh" />
-              )}
+                    <Spinner size={60} />
+                  </Box>
+                )}
+
+                {isDownMd ? (
+                  <InvestmentValueCard
+                    value={'1,908.12'}
+                    unit="$"
+                    // dayChange="+ 8.91% / $350.28 "
+                  />
+                ) : (
+                  <NumericalCard
+                    value={'1,908.12'}
+                    border
+                    title="Portfolio Value"
+                    unit="$"
+                    padding="20px 24px"
+                    fontSize={'44px'}
+                    // dayChange="+ 8.91% / $350.28 "
+                  >
+                    <Button
+                      onClick={() => {
+                        history.push(routes.dualInvest)
+                      }}
+                      style={{
+                        position: 'absolute',
+                        right: '24px',
+                        bottom: '20px',
+                        width: 148,
+                        height: 44,
+                        fontSize: 14
+                      }}
+                    >
+                      Invest
+                    </Button>
+                  </NumericalCard>
+                )}
+
+                {balanceData && isDownMd ? (
+                  <AccountBalanceCards data={balanceData} />
+                ) : balanceData ? (
+                  <Table header={BalanceTableHeader} rows={balanceData} />
+                ) : (
+                  <NoDataCard height="20vh" />
+                )}
+              </Box>
             </Box>
           </Card>
 
@@ -184,26 +221,46 @@ export default function Dashboard() {
               <Typography fontSize={24} fontWeight={700}>
                 Account Details
               </Typography>
-              {accountDetailsData ? (
-                <>
-                  {isDownMd ? (
-                    <AccountDetailCards data={accountDetailsData} />
-                  ) : (
-                    <Table header={DetailTableHeader} rows={accountDetailsData} />
-                  )}
+              <Box position="relative">
+                {!accountRecord && (
+                  <Box
+                    position="absolute"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      background: '#ffffff',
+                      zIndex: 3,
+                      borderRadius: 2
+                    }}
+                  >
+                    <Spinner size={60} />
+                  </Box>
+                )}
 
-                  <Pagination
-                    count={pageParams?.count}
-                    page={page}
-                    setPage={setPage}
-                    perPage={pageParams?.perPage}
-                    boundaryCount={0}
-                    total={pageParams.total}
-                  />
-                </>
-              ) : (
-                <NoDataCard height="20vh" />
-              )}
+                {accountDetailsData.length > 0 ? (
+                  <>
+                    {isDownMd ? (
+                      <AccountDetailCards data={accountDetailsData} />
+                    ) : (
+                      <Table header={DetailTableHeader} rows={accountDetailsData} />
+                    )}
+
+                    <Pagination
+                      count={pageParams?.count}
+                      page={page}
+                      perPage={pageParams?.perPage}
+                      boundaryCount={0}
+                      total={pageParams.total}
+                      onChange={(event, value) => setPage(value)}
+                    />
+                  </>
+                ) : (
+                  <NoDataCard height="20vh" />
+                )}
+              </Box>
             </Box>
           </Card>
         </Box>
@@ -214,7 +271,7 @@ export default function Dashboard() {
 
 function AccountBalanceCards({ data }: { data: any[][] }) {
   return (
-    <>
+    <Box mt={24}>
       {data.map((dataRow, idx) => (
         <Card color="#F2F5FA" padding="17px 16px" key={idx}>
           <Box mb={20} display="flex" gap={16} alignItems="center">
@@ -244,13 +301,13 @@ function AccountBalanceCards({ data }: { data: any[][] }) {
           </Box>
         </Card>
       ))}
-    </>
+    </Box>
   )
 }
 
 function AccountDetailCards({ data }: { data: any[][] }) {
   return (
-    <>
+    <Box display="flex" flexDirection="column" gap={8} mb={24}>
       {data.map((dataRow, idx) => (
         <Card color="#F2F5FA" padding="17px 16px" key={idx}>
           <Box display="flex" flexDirection="column" gap={16}>
@@ -267,11 +324,6 @@ function AccountDetailCards({ data }: { data: any[][] }) {
                       </span>
                     )}
                     {datum}
-                    {idx === DetailsTableHeaderIndex.amount && (
-                      <span style={{ marginLeft: 5 }}>
-                        <UpperRightIcon />
-                      </span>
-                    )}
                   </Typography>
                 </Box>
               )
@@ -293,7 +345,7 @@ function AccountDetailCards({ data }: { data: any[][] }) {
           </Box>
         </Card>
       ))}
-    </>
+    </Box>
   )
 }
 

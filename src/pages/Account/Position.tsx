@@ -14,6 +14,7 @@ import StatusTag from 'components/Status/StatusTag'
 import { useActiveWeb3React } from 'hooks'
 import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
+import Spinner from 'components/Spinner'
 
 enum PositionTableHeaderIndex {
   investAmount,
@@ -43,7 +44,7 @@ export default function Position() {
   const [page, setPage] = useState(1)
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const { orderList, pageParams } = useOrderRecords(InvestStatus.ReadyToSettle)
+  const { orderList, pageParams } = useOrderRecords(InvestStatus.ReadyToSettle, page)
 
   const data = useMemo(() => {
     if (!orderList) return []
@@ -56,16 +57,16 @@ export default function Position() {
             <Typography color="primary" key="1" variant="inherit">
               {annualRor}%
             </Typography>,
-            dayjs(expiredAt).format('MMM DD, YYYY'),
+            dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
             strikePrice,
             earn,
-            dayjs(createdAt).format('MMM DD, YYYY hh:mm:ss A'),
-            <Box display="flex" key="action" gap={10} sx={{ mr: -37 }}>
+            dayjs(+createdAt * 1000).format('MMM DD, YYYY hh:mm:ss A'),
+            <Box display="flex" key="action" gap={10} sx={{ mr: -15 }}>
               <StatusTag status="progressing" />
               <ClaimButton onClick={() => {}} />
             </Box>
           ],
-          details: [orderId, productId, `${dayjs().diff(dayjs(createdAt), 'day')} days`, deliveryPrice]
+          details: [orderId, productId, `${dayjs().diff(dayjs(createdAt * 1000), 'day')} days`, deliveryPrice]
         }
       }
     )
@@ -99,25 +100,45 @@ export default function Position() {
         <Card>
           <Box padding="38px 24px">
             <NumericalCard title="BTC latest spot price" value="57640.00" border={true} />
-            {isDownMd ? (
-              <PositionTableCards data={data} />
-            ) : (
-              <Table
-                header={PositionTableHeader}
-                rows={data.map(datum => datum.summary)}
-                hiddenParts={hiddenParts()}
-                collapsible
+            <Box position="relative">
+              {!orderList && (
+                <Box
+                  position="absolute"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    background: '#ffffff',
+                    zIndex: 3,
+                    borderRadius: 2
+                  }}
+                >
+                  <Spinner size={60} />
+                </Box>
+              )}
+
+              {isDownMd ? (
+                <PositionTableCards data={data} />
+              ) : (
+                <Table
+                  header={PositionTableHeader}
+                  rows={data.map(datum => datum.summary)}
+                  hiddenParts={hiddenParts()}
+                  collapsible
+                />
+              )}
+              <PaginationView
+                count={pageParams?.count}
+                page={page}
+                perPage={pageParams?.perPage}
+                boundaryCount={0}
+                total={pageParams.total}
+                onChange={(event, value) => setPage(value)}
               />
-            )}
-            <PaginationView
-              count={pageParams?.count}
-              page={page}
-              setPage={setPage}
-              perPage={pageParams?.perPage}
-              boundaryCount={0}
-              total={pageParams.total}
-            />
-            {data.length === 0 && <NoDataCard height="20vh" />}
+              {data.length === 0 && <NoDataCard height="20vh" />}
+            </Box>
           </Box>
         </Card>
       </Box>

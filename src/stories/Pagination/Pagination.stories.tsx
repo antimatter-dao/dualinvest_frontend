@@ -10,13 +10,5 @@ export default {
 
 export const Default = () => {
   const [curPage, setCurPage] = useState(4)
-  return (
-    <Pagination
-      count={20}
-      page={curPage}
-      setPage={num => {
-        setCurPage(num)
-      }}
-    />
-  )
+  return <Pagination count={20} page={curPage} onChange={(event, value) => setCurPage(value)} />
 }

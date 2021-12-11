@@ -47,6 +47,15 @@ const StyledUnorderList = styled('ul')(({ theme }) => ({
   }
 }))
 
+const AccordionDetailText = styled(Box)({
+  opacity: 0.5,
+  display: 'grid',
+  gap: 8,
+  '& p': {
+    margin: 0
+  }
+})
+
 const StyledOrderList = styled('ol')(({ theme }) => ({
   display: 'block',
   listStyle: 'none',
@@ -194,16 +203,23 @@ export default function DualInvestMgmt() {
       <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
       <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto" justifyItems="center">
         <Box
-          display="flex"
-          alignItems="center"
-          sx={{ width: '100%', background: theme.palette.background.paper, padding: '28px 165px' }}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            background: theme.palette.background.paper,
+            height: 72
+          }}
         >
-          <NavLink to={routes.dualInvest} style={{ textDecoration: 'none' }}>
-            <ArrowLeft />
-            <Typography component="span" color={theme.bgColor.bg1} fontSize={14} ml={16}>
-              Back
-            </Typography>
-          </NavLink>
+          <Box maxWidth={theme.width.maxContent} width="100%">
+            <NavLink to={routes.dualInvest} style={{ textDecoration: 'none' }}>
+              <ArrowLeft />
+              <Typography component="span" color={theme.bgColor.bg1} fontSize={14} ml={16}>
+                Back
+              </Typography>
+            </NavLink>
+          </Box>
         </Box>
         <Box padding="60px 0" sx={{ maxWidth: theme.width.maxContent }} width="100%">
           <Box mb={60}>
@@ -475,12 +491,79 @@ export default function DualInvestMgmt() {
                 <Box mt={28}>
                   {[
                     {
-                      summary: 'accordion1',
-                      details: '123'
+                      summary: 'What is Dual Investment?',
+                      details: (
+                        <AccordionDetailText>
+                          Antimatter Dual Investment is an advanced options derivative based on a decentralised
+                          protocol. The product has a &quot;market-neutral, returns guaranteed&quot; feature, where the
+                          yield is clear and fixed at the time of purchase, while the settlement currency is uncertain.
+                          At maturity, the settlement currency depends on the outcome of the settlement price at
+                          maturity compared to the strike price.
+                        </AccordionDetailText>
+                      )
                     },
                     {
-                      summary: 'accordion2',
-                      details: '123'
+                      summary: 'How is my return calculated?',
+                      details: (
+                        <AccordionDetailText>
+                          <p>
+                            When a product is &quot;exercised&quot;, the subscription amount and yields will be swapped
+                            at the strike price in the alternative currency.
+                          </p>
+                          <p>
+                            <b>Up-and-Exercised:</b> Yields = (Subscription Amount * Strike Price) * [1 + (APY % *
+                            Period (days) / 365)]
+                          </p>
+                          <p>
+                            <b>Down-and-Exercised:</b> Yields = (Subscription Amount / Strike Price) * [1 + (APY % *
+                            Cycle (Days) / 365)]
+                          </p>
+                          <p>
+                            When a subscription is &quot;unexercised&quot;, the subscription amount and yields will not
+                            be transferred into the alternative currency and the user will receive the currency they
+                            invested.
+                          </p>
+                          <p>
+                            <b>Yields</b> = Subscription Amount * [1 + (APY% * Period (days) / 365)]
+                          </p>
+                          <p>
+                            Yields will be automatically credited to the user&apos;s account within 24 hours of
+                            settlement.
+                          </p>
+                        </AccordionDetailText>
+                      )
+                    },
+                    {
+                      summary:
+                        'What are “Strike Price”, “Underlying Asset”, “Deposit Currency”, “Alternate Currency”, “Deposit Days”, and “Settlement Price”?',
+                      details: (
+                        <AccordionDetailText>
+                          <p>
+                            <b>Strike Price</b> - A set price at which deposit currency will be converted into alternate
+                            currency if the product is exercised.
+                          </p>
+                          <p>
+                            <b>Underlying Asset</b> - An asset on which a Dual Investment product is based. For
+                            instance, if you are making reference to BTC spot price and BTC strike price, then the
+                            underlying asset is BTC.
+                          </p>
+                          <p>
+                            <b>Deposit Currency</b> - The currency you have used to subscribe to a Dual Investment
+                            product.
+                          </p>
+                          <p>
+                            <b>Alternate Currency</b> - The currency you will be receiving if the product is exercised.
+                          </p>
+                          <p>
+                            <b>Deposit Days</b> - A number of days remaining until the delivery date.
+                          </p>
+                          <p>
+                            <b>Settlement Price</b> - Average of the spot price in the last 30 minutes before 08:00
+                            (UTC) on the delivery date. Settlement price and strike price determines whether a product
+                            is exercised or not.
+                          </p>
+                        </AccordionDetailText>
+                      )
                     }
                   ].map(({ summary, details }, idx) => (
                     <Accordion

@@ -16,7 +16,7 @@ interface PaginationProps {
   page: number
   siblingCount?: number
   boundaryCount?: number
-  setPage: (page: number) => void
+  // setPage: (page: number) => void
   // eslint-disable-next-line @typescript-eslint/ban-types
   onChange?: (event: object, page: number) => void
   perPage?: number
@@ -26,7 +26,7 @@ export default function PaginationView({
   count,
   page,
   onChange,
-  setPage,
+  // setPage,
   siblingCount,
   boundaryCount,
   perPage,
@@ -66,10 +66,7 @@ export default function PaginationView({
             boundaryCount={boundaryCount || 1}
             variant="outlined"
             shape="rounded"
-            onChange={(event, page) => {
-              onChange && onChange(event, page)
-              setPage(page)
-            }}
+            onChange={onChange}
           />
         </Box>
       )}

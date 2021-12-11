@@ -8,6 +8,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
 import { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
+import Spinner from 'components/Spinner'
 
 const HistoryTableHeader = [
   'Invest Amount',
@@ -23,8 +24,8 @@ const HistoryTableHeader = [
 export default function History() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled)
   const [page, setPage] = useState(1)
+  const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled, page)
 
   const data = useMemo(() => {
     if (!orderList) return []
@@ -45,11 +46,11 @@ export default function History() {
           {(+annualRor * 100).toFixed(2)}%
         </Typography>,
         `${returnedAmount} ${returnedCurrency}`,
-        dayjs(expiredAt).format('MMM DD, YYYY'),
-        `${dayjs().diff(dayjs(createdAt), 'day')} days`,
+        dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
+        `${dayjs().diff(dayjs(createdAt * 1000), 'day')} days`,
         strikePrice,
         `${deliveryPrice} ${currency}`,
-        dayjs(createdAt).format('MMM DD, YYYY hh:mm:ss A')
+        dayjs(+createdAt * 1000).format('MMM DD, YYYY hh:mm:ss A')
       ]
     )
   }, [orderList])
@@ -64,7 +65,24 @@ export default function History() {
   return (
     <Box sx={{ mt: 48, width: '100%' }}>
       <Card>
-        <Box padding="38px 24px" display="grid" gap={36}>
+        <Box padding="38px 24px" display="grid" gap={36} position="relative">
+          {!orderList && (
+            <Box
+              position="absolute"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              sx={{
+                width: '100%',
+                height: '100%',
+                background: '#ffffff',
+                zIndex: 3,
+                borderRadius: 2
+              }}
+            >
+              <Spinner size={60} />
+            </Box>
+          )}
           {data.length && isDownMd ? (
             <HistoryTableCards data={data} />
           ) : data.length ? (
@@ -73,10 +91,10 @@ export default function History() {
               <PaginationView
                 count={pageParams?.count}
                 page={page}
-                setPage={setPage}
                 perPage={pageParams?.perPage}
                 boundaryCount={0}
                 total={pageParams.total}
+                onChange={(event, value) => setPage(value)}
               />
             </>
           ) : (
