@@ -361,6 +361,20 @@ export default function DualInvestMgmt() {
                     <Typography fontSize={24} fontWeight={700}>
                       Purchase expected income graph
                     </Typography>
+                    <Box display="flex" alignItems="center" gap={24}>
+                      <Box display="flex" alignItems="center" gap={8}>
+                        <Box height={10} width={10} borderRadius="50%" bgcolor="#18A0FB" />
+                        <Typography fontSize={12} color="#18A0FB">
+                          Spot Price
+                        </Typography>
+                      </Box>
+                      <Box fontSize={12} display="flex" alignItems="center" gap={8}>
+                        <Box height={10} width={10} borderRadius="50%" bgcolor="#F0B90B" />
+                        <Typography fontSize={12} color="#F0B90B">
+                          Strike Price
+                        </Typography>
+                      </Box>
+                    </Box>
                   </Box>
                   <Box sx={{ maxWidth: '100vw', height: '100%', flexGrow: 1 }} ref={graphContainer}>
                     <LineChart
