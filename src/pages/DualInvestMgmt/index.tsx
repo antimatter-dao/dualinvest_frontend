@@ -29,6 +29,7 @@ import { InvesStatus, InvesStatusType, OrderRecord } from 'utils/fetch/product'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import useModal from 'hooks/useModal'
 import ActionModal, { ActionType } from 'pages/Account/ActionModal'
+import dayjs from 'dayjs'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -103,7 +104,7 @@ export default function DualInvestMgmt() {
       ['Spot Price']: product?.currentPrice ?? '-' + ' USDT',
       ['APY']: product?.apy ? (+product.apy * 100).toFixed(2) + '%' : '- %',
       ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
-      ['Delivery Date']: product?.expiredAt ?? '-',
+      ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') : '-',
       // ['Current Progress']: 0.16,
       minAmount: product ? product.multiplier + ' ' + product.currency : '-',
       maxAmount: product ? +product.orderLimit * +product.multiplier + ' ' + product.currency : '-'
@@ -183,8 +184,10 @@ export default function DualInvestMgmt() {
   }, [amount, balance, product])
 
   const strikeLineData = useMemo(() => {
-    return product ? [{ time: (product.ts * 1000) as Time, value: +product.strikePrice }] : undefined
-  }, [product])
+    return product?.expiredAt && product?.strikePrice
+      ? { time: product.expiredAt as Time, value: +product.strikePrice }
+      : undefined
+  }, [product?.expiredAt, product?.strikePrice])
 
   return (
     <>
@@ -232,8 +235,8 @@ export default function DualInvestMgmt() {
                   <Spinner size={60} />
                 </Box>
               )}
-              <Card width="100%" padding="36px 24px">
-                <Box display="flex" flexDirection="column" gap={20}>
+              <Card width="100%" padding="36px 24px" style={{ height: '100%' }}>
+                <Box display="flex" flexDirection="column" gap={20} height="100%">
                   {Object.keys(data).map((key, idx) => (
                     <Box key={idx} display="flex" justifyContent="space-between">
                       <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
@@ -346,21 +349,65 @@ export default function DualInvestMgmt() {
                       Purchase expected income graph
                     </Typography>
                   </Box>
-                  <Box sx={{ maxWidth: '100vw', height: '100%', flexGrow: 1 }} ref={graphContainer}>
-                    <LineChart
-                      lineColor="#18A0FB"
-                      lineSeriesData={[
-                        { time: 16059744000000 as Time, value: 40000 },
-                        { time: 16060608000000 as Time, value: 40000 },
-                        { time: 16061472000000 as Time, value: 40000 },
-                        { time: 16062336000000 as Time, value: 40000 },
-                        { time: 16063200000000 as Time, value: 40000 }
-                      ]}
-                      unit="usdt"
-                      id="incomeGraph"
-                      height={graphContainer?.current?.offsetHeight ?? 280}
-                      priceLineData={strikeLineData}
-                    />
+                  <Box sx={{ maxWidth: '100vw', height: '100%', flexGrow: 1 }}>
+                    <Box
+                      maxHeight="100%"
+                      height="100%"
+                      gap={20}
+                      display={{ xs: 'grid', md: 'flex', maxWidth: '100vw' }}
+                    >
+                      <Grid
+                        item
+                        xs={12}
+                        md={8}
+                        sx={{
+                          height: { xs: '300px', md: '100%', maxWidth: '100vw', width: { xs: '100%', md: 'auto' } }
+                        }}
+                        ref={graphContainer}
+                      >
+                        {product ? (
+                          <LineChart
+                            lineColor="#18A0FB"
+                            lineSeriesData={[
+                              { time: (1639214327205 + 10000) as Time, value: 52000 },
+                              { time: (1639214327205 + 20000) as Time, value: 51000 },
+                              { time: (1639214327205 + 30000) as Time, value: 56000 },
+                              { time: (1639214327205 + 40000) as Time, value: 52000 },
+                              { time: (1639214327205 + 50000) as Time, value: 53000 }
+                            ]}
+                            unit="usdt"
+                            id="incomeGraph"
+                            height={graphContainer?.current?.offsetHeight ?? 280}
+                            width={graphContainer?.current?.offsetWidth ?? 500}
+                            strikeData={strikeLineData}
+                          />
+                        ) : (
+                          <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
+                            <Spinner size={100} marginRight="auto" marginLeft="auto" />
+                          </Box>
+                        )}
+                      </Grid>
+                      <Grid
+                        item
+                        xs={12}
+                        md={4}
+                        sx={{ height: { xs: 'auto', md: '100%' } }}
+                        paddingBottom={{ xs: 0, md: 22 }}
+                      >
+                        <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
+                          <Card gray>
+                            <Box padding="16px" fontSize={14}>
+                              Settlement price ≥ 62800USDT, will be exercised Estimated return 56750.61 USDT
+                            </Box>
+                          </Card>
+                          <Card gray>
+                            <Box padding="16px" fontSize={14}>
+                              Settlement price ≥ 62800USDT, will be exercised Estimated return 56750.61 USDT
+                            </Box>
+                          </Card>
+                        </Box>
+                      </Grid>
+                    </Box>
                   </Box>
                   <OutlinedCard padding="16px 20px">
                     <Typography fontSize={16} color={theme.palette.text.primary}>

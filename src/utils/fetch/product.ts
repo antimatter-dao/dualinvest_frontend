@@ -48,7 +48,7 @@ interface ProductRaw {
 
 export interface Product {
   productId: number
-  expiredAt: string
+  expiredAt: number
   apy: string
   type: string
   isActive: boolean
@@ -98,7 +98,7 @@ export const productFormatter = (raw: ProductRaw): Product => {
   return {
     currentPrice: raw.index_price,
     productId: raw.product_id,
-    expiredAt: raw.expired_str,
+    expiredAt: raw.expired_at * 1000,
     apy: raw.annual_ror,
     type: raw.type,
     isActive: raw.is_active,
