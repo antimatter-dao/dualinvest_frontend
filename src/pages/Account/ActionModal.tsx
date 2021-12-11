@@ -18,7 +18,7 @@ import { tryParseAmount } from 'utils/parseAmount'
 import ConfirmModal from './ConfirmModal'
 import { useTransaction } from 'state/transactions/hooks'
 import { OutlinedCard } from 'components/Card/Card'
-import { BTC, DUAL_INVEST_ADDRESS } from 'constants/index'
+import { DUAL_INVEST_ADDRESS } from 'constants/index'
 import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useDualInvestBalance, useDualInvestCallback } from 'hooks/useDualInvest'
@@ -54,7 +54,7 @@ export default function ActionModal({
   const theme = useTheme()
   const [hash, setHash] = useState('')
   const { hideModal, showModal } = useModal()
-  const contractBalance = useDualInvestBalance(BTC)
+  const contractBalance = useDualInvestBalance(token)
   const balance = useTokenBalance(account ?? undefined, token)
   const txn = useTransaction(hash)
   const [approvalState, approveCallback] = useApproveCallback(tryParseAmount(val, token), DUAL_INVEST_ADDRESS)
@@ -62,6 +62,17 @@ export default function ActionModal({
   // const handleSelect = useCallback(e => {
   //   setSelectedCur(e.target.value)
   // }, [])
+
+  const handleMax = useCallback(() => {
+    if (balance && type === ActionType.DEPOSIT) {
+      setVal(balance.toExact())
+      return
+    }
+    if (contractBalance && type === ActionType.WITHDRAW) {
+      setVal(contractBalance)
+      return
+    }
+  }, [balance, contractBalance, type])
 
   const handleDismiss = useCallback(() => {
     setVal('')
@@ -165,7 +176,7 @@ export default function ActionModal({
           setConfirmModalOpen(false)
         }}
       >
-        Deposit {val} {token?.symbol}
+        {actionStr} {val} {token?.symbol}
       </ConfirmModal>
 
       <Modal customIsOpen={isOpen} customOnDismiss={handleDismiss} closeIcon>
@@ -195,13 +206,7 @@ export default function ActionModal({
               onChange={e => {
                 setVal(e.target.value)
               }}
-              onMax={
-                balance !== undefined
-                  ? () => {
-                      setVal(balance.toExact())
-                    }
-                  : undefined
-              }
+              onMax={handleMax}
               unit={token ? token.symbol : undefined}
             />
 
@@ -212,7 +217,7 @@ export default function ActionModal({
               </Box>
               <Box display="flex" justifyContent="space-between" color={theme.palette.text.secondary}>
                 <Typography>Account Balance</Typography>
-                <Typography>{token ? contractBalance : '-'}</Typography>
+                <Typography>{token ? contractBalance + ' ' + token.symbol : '-'}</Typography>
               </Box>
             </OutlinedCard>
           </Box>
@@ -237,7 +242,7 @@ export default function ActionModal({
                 }}
               />
             )}
-            {isConfirmed && approvalState !== ApprovalState.APPROVED && (
+            {isConfirmed && approvalState !== ApprovalState.APPROVED && type === ActionType.DEPOSIT && (
               <ActionButton
                 pending={approvalState === ApprovalState.PENDING}
                 pendingText="Approving"
@@ -248,7 +253,7 @@ export default function ActionModal({
                 actionText="Approve"
               />
             )}
-            {isConfirmed && approvalState === ApprovalState.APPROVED && (
+            {isConfirmed && (approvalState === ApprovalState.APPROVED || type === ActionType.WITHDRAW) && (
               <ActionButton
                 error={!token ? 'No token' : undefined}
                 onAction={() => {
@@ -265,7 +270,6 @@ export default function ActionModal({
                 actionText={actionStr}
               />
             )}
-            {/* <ActionButton error={val ? undefined : 'Amount required'} onAction={() => {}} actionText="Confirm" /> */}
           </Box>
         </Box>
       </Modal>
@@ -302,7 +306,7 @@ function useActionCallback(
   const handleWithdraw = useCallback(() => {
     if (!token || !withdrawCallback || !val || !account) return
     showModal(<TransactionPendingModal />)
-    withdrawCallback()
+    withdrawCallback(val, token.address)
       .then(r => {
         hideModal()
         setHash(r.hash)

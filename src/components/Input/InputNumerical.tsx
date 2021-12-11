@@ -59,7 +59,7 @@ export default function NumericalInput({
               </InputLabel>
             )}
             {onDeposit && (
-              <TextButton fontSize={12} color="#11BF2D" style={{ marginLeft: 8 }}>
+              <TextButton fontSize={12} color="#11BF2D" style={{ marginLeft: 8 }} onClick={onDeposit}>
                 Deposit
               </TextButton>
             )}

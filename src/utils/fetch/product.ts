@@ -57,6 +57,7 @@ export interface Product {
   multiplier: string
   currency: string
   orderLimit: string
+  ts: number
 }
 
 export interface ProductList {
@@ -104,7 +105,8 @@ export const productFormatter = (raw: ProductRaw): Product => {
     strikePrice: raw.strike_price,
     multiplier: raw.multiplier,
     currency: raw.currency,
-    orderLimit: raw.order_limit
+    orderLimit: raw.order_limit,
+    ts: raw.ts
   }
 }
 

@@ -6,6 +6,7 @@ const MobilePopupWrapper = styled('div')(({ height, theme }: any) => ({
   position: 'relative',
   maxWidth: '100%',
   height: height,
+  zIndex: 1301,
   margin: height ? '0 auto;' : 0,
   marginBottom: height ? '20px' : 0,
   display: 'none',
@@ -32,7 +33,7 @@ const FixedPopupColumn = styled('div')(({ theme }) => ({
   right: 60,
   maxWidth: 320,
   width: '100%',
-  zIndex: 3,
+  zIndex: 1301,
   display: 'grid',
   gridRowGap: 20,
   [theme.breakpoints.down('md')]: {

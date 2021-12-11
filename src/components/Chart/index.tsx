@@ -100,6 +100,7 @@ export default function LineChart({
   const toolTipRef = useRef<HTMLDivElement>(null)
   const [toolTipInfo, setToolTipInfo] = useState<ToolTipInfo | undefined>(undefined)
   const [chart, setChart] = useState<IChartApi | undefined>(undefined)
+  const [strikePrice, setStrikePrice] = useState<undefined | number>(undefined)
   const [lineSeries, setLineSeries] = useState<ISeriesApi<'Line'> | undefined>(undefined)
   const [lineSeries2, setLineSeries2] = useState<ISeriesApi<'Line'> | undefined>(undefined)
 
@@ -239,7 +240,7 @@ export default function LineChart({
   }, [chart, lineColor, lineSeries, lineSeriesData, lineSeriesData2, theme])
 
   useEffect(() => {
-    if (!chart || !priceLineData) return
+    if (!chart || !priceLineData || strikePrice) return
     const priceLine = chart?.addLineSeries({
       lineType: LineType.Simple,
       lineStyle: LineStyle.LargeDashed,
@@ -247,8 +248,8 @@ export default function LineChart({
       color: secondaryColor
     })
     priceLine?.setData(priceLineData)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chart])
+    setStrikePrice(priceLineData[0].value)
+  }, [chart, priceLineData, strikePrice])
 
   return (
     <>

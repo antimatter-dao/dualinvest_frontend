@@ -150,7 +150,7 @@ export default function Dashboard() {
                   unit="$"
                   padding="20px 24px"
                   fontSize={'44px'}
-                  dayChange="+ 8.91% / $350.28 "
+                  // dayChange="+ 8.91% / $350.28 "
                 >
                   <Button
                     onClick={() => {
@@ -326,7 +326,7 @@ function BalanceActions({
   )
 }
 
-function InvestmentValueCard({ value, unit, dayChange }: { value?: string; unit?: string; dayChange?: string }) {
+function InvestmentValueCard({ value, unit }: { value?: string; unit?: string; dayChange?: string }) {
   const theme = useTheme()
   const history = useHistory()
   return (
@@ -362,7 +362,7 @@ function InvestmentValueCard({ value, unit, dayChange }: { value?: string; unit?
             {value}
           </Typography>
           <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>{unit}</Typography>
-          <Box
+          {/* <Box
             component="div"
             borderRadius={22}
             color="#31B047"
@@ -383,7 +383,7 @@ function InvestmentValueCard({ value, unit, dayChange }: { value?: string; unit?
             >
               {dayChange}
             </Typography>
-          </Box>
+          </Box> */}
         </Box>
         <Button
           onClick={() => {

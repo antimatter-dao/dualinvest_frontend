@@ -94,6 +94,9 @@ export default function DualInvestMgmt() {
   const hideDeposit = useCallback(() => {
     setIsDepositOpen(false)
   }, [])
+  const showDeposit = useCallback(() => {
+    setIsDepositOpen(true)
+  }, [])
 
   const data = useMemo(
     () => ({
@@ -125,20 +128,13 @@ export default function DualInvestMgmt() {
       )
       if (backendCall.data.code !== 200) throw Error('Backend Error')
       if (!backendCall.data.data) throw Error(backendCall.data.msg)
-      console.log(backendCall)
       const { orderId, productId } = backendCall.data.data
-      const contractCall = await createOrderCallback(orderId, productId, val, BTC.address)
-      // const orderId = 28
-      // const contractCall = await createOrderCallback(orderId, '11', val, BTC.address)
-      console.log(contractCall)
+      await createOrderCallback(orderId, productId, val, BTC.address)
       let fail = 0
       const polling = new Promise((resolve, reject) => {
         const timeoutId = setInterval(() => {
-          console.log('timeout')
-
           Axios.get<{ records: OrderRecord[] }>('getOrderRecord?orderId=' + orderId, { address: account })
             .then(r => {
-              console.log(999, r.data.data.records[0])
               const statusCode = r.data.data.records[0].investStatus as keyof typeof InvesStatus
               if (InvesStatus[statusCode] === InvesStatusType.ERROR) {
                 clearInterval(timeoutId)
@@ -153,9 +149,8 @@ export default function DualInvestMgmt() {
               if (fail > 6) {
                 clearInterval(timeoutId)
                 reject('Confirm Order fail')
-                throw Error('Confirm Order fail')
+                throw Error('Confirm Order fail:' + e)
               }
-              console.error(888, e)
               fail++
             })
         }, 2000)
@@ -166,7 +161,7 @@ export default function DualInvestMgmt() {
         {
           txn: {
             success: true,
-            summary: `Subscribe successful product ID:${/*productId ??*/ ''}, order ID:${orderId}`
+            summary: `Subscribe successful, order ID:${orderId}`
           }
         },
         orderId + ''
@@ -186,6 +181,10 @@ export default function DualInvestMgmt() {
     if (amount !== '' && (+amount > +product?.orderLimit || +amount < 1)) str = ErrorType.singleLimitExceed
     return str
   }, [amount, balance, product])
+
+  const strikeLineData = useMemo(() => {
+    return product ? [{ time: (product.ts * 1000) as Time, value: +product.strikePrice }] : undefined
+  }, [product])
 
   return (
     <>
@@ -260,11 +259,23 @@ export default function DualInvestMgmt() {
                       balance={balance || '-'}
                       unit={product?.currency ?? ''}
                       endAdornment={
-                        <Typography noWrap>
-                          {product ? 'X ' + product?.multiplier + ' ' + product?.currency : ''}
+                        <Typography noWrap fontSize={14} alignItems="center">
+                          {product && product?.multiplier && product?.currency ? (
+                            <>
+                              {`X ${product?.multiplier} `}
+                              <Typography component="span" sx={{ margin: '0 10px' }}>
+                                =
+                              </Typography>
+                              <Typography component="span" color="primary">
+                                {+product?.multiplier * +amount} {product?.currency}
+                              </Typography>
+                            </>
+                          ) : (
+                            ''
+                          )}
                         </Typography>
                       }
-                      onDeposit={() => {}}
+                      onDeposit={showDeposit}
                       error={!!error}
                     />
                     <Box display="grid" mt={12}>
@@ -339,19 +350,16 @@ export default function DualInvestMgmt() {
                     <LineChart
                       lineColor="#18A0FB"
                       lineSeriesData={[
-                        { time: 16059744000000 as Time, value: 80.01 },
-                        { time: 16060608000000 as Time, value: 96.63 },
-                        { time: 16061472000000 as Time, value: 76.64 },
-                        { time: 16062336000000 as Time, value: 81.89 },
-                        { time: 16063200000000 as Time, value: 74.43 }
+                        { time: 16059744000000 as Time, value: 40000 },
+                        { time: 16060608000000 as Time, value: 40000 },
+                        { time: 16061472000000 as Time, value: 40000 },
+                        { time: 16062336000000 as Time, value: 40000 },
+                        { time: 16063200000000 as Time, value: 40000 }
                       ]}
                       unit="usdt"
                       id="incomeGraph"
                       height={graphContainer?.current?.offsetHeight ?? 280}
-                      priceLineData={[
-                        { time: 16063200000000 as Time, value: 88 },
-                        { time: 16063200000000 as Time, value: 88 }
-                      ]}
+                      priceLineData={strikeLineData}
                     />
                   </Box>
                   <OutlinedCard padding="16px 20px">

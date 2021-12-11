@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { Box, Typography, styled, Grid } from '@mui/material'
 import { ReactComponent as DualInvestGuide } from 'assets/svg/dualInvestGuide.svg'
@@ -82,6 +82,18 @@ export default function DualInvest() {
     },
     [history]
   )
+
+  useEffect(() => {
+    const el = document.getElementById('dualInvestGuide')
+    if (!el) return
+    const redirect = () => {
+      window.open('https://docs.antimatter.finance/antimatter-dual-investment/rules', '_blank')
+    }
+    el.addEventListener('click', redirect)
+    return () => {
+      el.removeEventListener('click', redirect)
+    }
+  })
 
   return (
     <Box
