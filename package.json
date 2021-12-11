@@ -102,6 +102,7 @@
     "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.0.6",
     "big.js": "^6.1.1",
+    "dayjs": "^1.10.7",
     "decimal.js-light": "^2.5.1",
     "jsbi": "^4.0.0",
     "lightweight-charts": "^3.7.0",

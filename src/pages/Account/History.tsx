@@ -5,8 +5,9 @@ import Table from 'components/Table'
 import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useActiveWeb3React } from 'hooks'
-import { useOrderRecords } from 'hooks/useDualInvestData'
-import { useMemo } from 'react'
+import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
+import { useMemo, useState } from 'react'
+import dayjs from 'dayjs'
 
 const HistoryTableHeader = [
   'Invest Amount',
@@ -22,24 +23,35 @@ const HistoryTableHeader = [
 export default function History() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const orderList = useOrderRecords()
-  console.log('history', orderList)
+  const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled)
+  const [page, setPage] = useState(1)
 
   const data = useMemo(() => {
     if (!orderList) return []
-    return orderList.map(({ amount, multiplier, annualRor, investStatus }) => [
-      investStatus,
-      +amount * +multiplier + ' BTC',
-      <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
-        {(+annualRor * 100).toFixed(2)}%
-      </Typography>,
-      '1.290809 BTC',
-      'Sep 21, 2021',
-      '7 days',
-      '62800.00',
-      '1.954241 BTC',
-      'Sep 21, 2021  10:42 AM'
-    ])
+    return orderList.map(
+      ({
+        amount,
+        annualRor,
+        returnedAmount,
+        returnedCurrency,
+        strikePrice,
+        expiredAt,
+        createdAt,
+        deliveryPrice,
+        currency
+      }) => [
+        amount,
+        <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
+          {(+annualRor * 100).toFixed(2)}%
+        </Typography>,
+        `${returnedAmount} ${returnedCurrency}`,
+        dayjs(expiredAt).format('MMM DD, YYYY'),
+        `${dayjs().diff(dayjs(createdAt), 'day')} days`,
+        strikePrice,
+        `${deliveryPrice} ${currency}`,
+        dayjs(createdAt).format('MMM DD, YYYY hh:mm:ss A')
+      ]
+    )
   }, [orderList])
 
   if (!account)
@@ -58,7 +70,14 @@ export default function History() {
           ) : data.length ? (
             <>
               <Table header={HistoryTableHeader} rows={data} />
-              <PaginationView count={20} page={5} setPage={() => {}} />
+              <PaginationView
+                count={pageParams?.count}
+                page={page}
+                setPage={setPage}
+                perPage={pageParams?.perPage}
+                boundaryCount={0}
+                total={pageParams.total}
+              />
             </>
           ) : (
             <NoDataCard height="20vh" />

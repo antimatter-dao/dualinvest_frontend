@@ -1,8 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Axios } from 'utils/axios'
 import { ProductList, productListFormatter, productFormatter, Product, OrderRecord } from 'utils/fetch/product'
-import { AccountRecord, accountRecordFormatter, fetchAccountRecord } from 'utils/fetch/account'
+import { AccountRecord } from 'utils/fetch/account'
 import { useActiveWeb3React } from 'hooks'
+
+export enum InvestStatus {
+  Confirming = 1,
+  Ordered = 2,
+  ReadyToSettle = 3,
+  Settled = 4,
+  OrderFailed = 5,
+  OrderSuccess = 6
+}
 
 export function useProductList() {
   const [productList, setProductList] = useState<ProductList | undefined>(undefined)
@@ -53,16 +62,27 @@ export function useProduct(productId: string) {
 }
 
 export function useAccountRecord() {
+  const { account } = useActiveWeb3React()
   const [accountRecord, setAccountRecord] = useState<AccountRecord | undefined>(undefined)
+  const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
+    count: 0,
+    perPage: 0,
+    total: 0
+  })
 
   useEffect(() => {
     const id = setInterval(() => {
-      fetchAccountRecord()
+      Axios.get('getAccountRecord', { address: account })
         .then(r => {
           if (r.data.code !== 200) {
             throw Error(r.data.msg)
           }
-          setAccountRecord(accountRecordFormatter(r.data.data))
+          setAccountRecord(r.data.data)
+          setPageParams({
+            count: parseInt(r.data.data.pages, 10),
+            perPage: parseInt(r.data.data.size, 10),
+            total: parseInt(r.data.data.total, 10)
+          })
         })
         .catch(e => {
           console.error(e)
@@ -73,21 +93,34 @@ export function useAccountRecord() {
       clearInterval(id)
     }
   })
-  return accountRecord
+  return { accountRecord, pageParams }
 }
 
-export function useOrderRecords() {
+export function useOrderRecords(investStatus?: number) {
   const { account } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
+  const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
+    count: 0,
+    perPage: 0,
+    total: 0
+  })
 
   useEffect(() => {
     const id = setInterval(() => {
-      Axios.get<{ records: OrderRecord[] }>('getOrderRecord', { address: account })
+      Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
+        address: account,
+        investStatus: investStatus
+      })
         .then(r => {
           if (r.data.code !== 200) {
             throw Error(r.data.msg)
           }
           setOrderList(r.data.data.records)
+          setPageParams({
+            count: parseInt(r.data.data.pages, 10),
+            perPage: parseInt(r.data.data.size, 10),
+            total: parseInt(r.data.data.total, 10)
+          })
         })
         .catch(e => {
           console.error(e)
@@ -98,5 +131,8 @@ export function useOrderRecords() {
       clearInterval(id)
     }
   })
-  return orderList
+  return {
+    orderList,
+    pageParams
+  }
 }

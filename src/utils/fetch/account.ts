@@ -1,5 +1,3 @@
-import { Axios } from 'utils/axios'
-
 interface Record {
   id: string
   account: string
@@ -27,12 +25,4 @@ export interface AccountRecord {
   maxLimit: null | string
   searchCount: boolean
   pages: string
-}
-
-export const fetchAccountRecord = () => {
-  return Axios.get('getAccountRecord')
-}
-
-export const accountRecordFormatter = (accountRecord: AccountRecord): AccountRecord => {
-  return { ...accountRecord }
 }

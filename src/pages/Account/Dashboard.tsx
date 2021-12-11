@@ -7,7 +7,7 @@ import NoDataCard from 'components/Card/NoDataCard'
 import Button from 'components/Button/Button'
 import OutlineButton from 'components/Button/OutlineButton'
 import NumericalCard from 'components/Card/NumericalCard'
-import PaginationView from 'components/Pagination'
+import Pagination from 'components/Pagination'
 import { useActiveWeb3React } from 'hooks'
 import ActionModal, { ActionType } from './ActionModal'
 import StatusTag from 'components/Status/StatusTag'
@@ -18,7 +18,7 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
 import { useAccountRecord } from 'hooks/useDualInvestData'
-import { fomattedDate } from 'utils/formattedDate'
+import dayjs from 'dayjs'
 import { BTC } from 'constants/index'
 
 enum BalanceTableHeaderIndex {
@@ -49,13 +49,12 @@ export default function Dashboard() {
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
   const [currentCurrency, setCurrentCurrency] = useState<Token | undefined>(undefined)
-
   const { account } = useActiveWeb3React()
   const history = useHistory()
-
   const isDownMd = useBreakpoint('md')
+  const [page, setPage] = useState(1)
 
-  const accountRecord = useAccountRecord()
+  const { accountRecord, pageParams } = useAccountRecord()
 
   const accountDetailsData = useMemo(() => {
     const records = accountRecord?.records
@@ -63,13 +62,12 @@ export default function Dashboard() {
 
     return records.map(record => {
       const timestamp = parseInt(record.timestamp)
-      const formattedDate = fomattedDate(timestamp)
 
       return [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
         'BTC',
         `${record.amount}`,
-        `${formattedDate}`,
+        dayjs(timestamp).format('MMM DD, YYYY hh:mm:ss A'),
         <StatusTag key="status" status="completed" />
       ]
     })
@@ -186,15 +184,21 @@ export default function Dashboard() {
               <Typography fontSize={24} fontWeight={700}>
                 Account Details
               </Typography>
-              {accountDetailsData && isDownMd ? (
-                <AccountDetailCards data={accountDetailsData} />
-              ) : accountDetailsData ? (
+              {accountDetailsData ? (
                 <>
-                  <Table header={DetailTableHeader} rows={accountDetailsData} />
-                  <PaginationView
-                    count={parseInt(accountRecord?.pages || '1', 10)}
-                    page={parseInt(accountRecord?.current || '1', 10)}
-                    setPage={() => {}}
+                  {isDownMd ? (
+                    <AccountDetailCards data={accountDetailsData} />
+                  ) : (
+                    <Table header={DetailTableHeader} rows={accountDetailsData} />
+                  )}
+
+                  <Pagination
+                    count={pageParams?.count}
+                    page={page}
+                    setPage={setPage}
+                    perPage={pageParams?.perPage}
+                    boundaryCount={0}
+                    total={pageParams.total}
                   />
                 </>
               ) : (
