@@ -69,7 +69,10 @@ export default function Dashboard() {
 
       return [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
-        'BTC',
+        <Box key={1} display="flex" gap={10} alignItems="center">
+          <CurrencyLogo currency={BTC} />
+          <Typography fontSize={16}>{BTC.symbol}</Typography>
+        </Box>,
         <Box key={1} display="flex" alignItems="center">
           <Typography component="span">${record.amount}</Typography>
           <Box component="span" sx={{ ml: 5, display: 'flex', alignItems: 'center' }}>
