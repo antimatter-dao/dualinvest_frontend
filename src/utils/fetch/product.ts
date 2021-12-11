@@ -44,11 +44,13 @@ interface ProductRaw {
   strike_price: string
   ts: number
   type: string
+  gt_strike_price: string
+  lt_strike_price: string
 }
 
 export interface Product {
   productId: number
-  expiredAt: string
+  expiredAt: number
   apy: string
   type: string
   isActive: boolean
@@ -58,6 +60,8 @@ export interface Product {
   currency: string
   orderLimit: string
   ts: number
+  gtStrikePrice: string
+  ltStrikePrice: string
 }
 
 export interface ProductList {
@@ -98,7 +102,7 @@ export const productFormatter = (raw: ProductRaw): Product => {
   return {
     currentPrice: raw.index_price,
     productId: raw.product_id,
-    expiredAt: raw.expired_str,
+    expiredAt: raw.expired_at * 1000,
     apy: raw.annual_ror,
     type: raw.type,
     isActive: raw.is_active,
@@ -106,7 +110,9 @@ export const productFormatter = (raw: ProductRaw): Product => {
     multiplier: raw.multiplier,
     currency: raw.currency,
     orderLimit: raw.order_limit,
-    ts: raw.ts
+    ts: raw.ts,
+    gtStrikePrice: raw.gt_strike_price,
+    ltStrikePrice: raw.lt_strike_price
   }
 }
 

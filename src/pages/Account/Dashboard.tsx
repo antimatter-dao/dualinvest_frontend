@@ -23,6 +23,8 @@ import { BTC } from 'constants/index'
 import Spinner from 'components/Spinner'
 import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
+import { usePrice } from 'hooks/usePriceSet'
+import { useAccountBalances } from 'hooks/useAccountBalance'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -49,8 +51,29 @@ export default function Dashboard() {
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
   const [page, setPage] = useState(1)
-
+  const btcPrice = usePrice('BTC')
+  const accountBalances = useAccountBalances()
   const { accountRecord, pageParams } = useAccountRecord(page)
+
+  const indexPrices = useMemo(() => {
+    return {
+      BTC: btcPrice
+    }
+  }, [btcPrice])
+
+  const totalInvest = useMemo(() => {
+    if (!accountBalances) return '-'
+    const accumulated = Object.keys(accountBalances).reduce((acc: number, key: string) => {
+      const val = accountBalances?.[key as keyof typeof accountBalances]?.totalInvest
+      const price = indexPrices[key as keyof typeof indexPrices]
+      if (val && price) {
+        return acc + +val * +price
+      } else {
+        return acc
+      }
+    }, 0)
+    return accumulated.toFixed(2) + ''
+  }, [accountBalances, indexPrices])
 
   const accountDetailsData = useMemo(() => {
     const records = accountRecord?.records
@@ -78,7 +101,7 @@ export default function Dashboard() {
         <>{!isDownMd && <StatusTag key="status" status="completed" />}</>
       ]
     })
-  }, [accountRecord, isDownMd])
+  }, [accountRecord?.records, chainId, isDownMd])
 
   const handleDepositOpen = useCallback(() => {
     setIsDepositOpen(true)
@@ -94,30 +117,31 @@ export default function Dashboard() {
     setCurrentCurrency(undefined)
   }, [])
 
-  const balanceData = useMemo(
-    () => [
-      [
-        'BTC',
-        '0.286952',
-        '1.286952',
-        '0.286952',
-        '0.286952',
-        <BalanceActions
-          key="1"
-          onDeposit={() => {
-            setCurrentCurrency(BTC)
-            handleDepositOpen()
-          }}
-          onWithdraw={() => {
-            setCurrentCurrency(BTC)
-            handleWithdrawOpen()
-          }}
-          buyHref=""
-        />
-      ]
-    ],
-    [handleDepositOpen, handleWithdrawOpen]
-  )
+  const balanceData = useMemo(() => {
+    return accountBalances
+      ? [
+          [
+            'BTC',
+            accountBalances.BTC.availableBalance ?? '-',
+            accountBalances.BTC.lockedBalance ?? '-',
+            accountBalances.BTC.totalInvest ?? '-',
+            accountBalances.BTC.earned ?? '-',
+            <BalanceActions
+              key="1"
+              onDeposit={() => {
+                setCurrentCurrency(BTC)
+                handleDepositOpen()
+              }}
+              onWithdraw={() => {
+                setCurrentCurrency(BTC)
+                handleWithdrawOpen()
+              }}
+              buyHref=""
+            />
+          ]
+        ]
+      : []
+  }, [accountBalances, handleDepositOpen, handleWithdrawOpen])
 
   if (!account)
     return (
@@ -167,13 +191,13 @@ export default function Dashboard() {
 
                 {isDownMd ? (
                   <InvestmentValueCard
-                    value={'1,908.12'}
+                    value={totalInvest}
                     unit="$"
                     // dayChange="+ 8.91% / $350.28 "
                   />
                 ) : (
                   <NumericalCard
-                    value={'1,908.12'}
+                    value={totalInvest}
                     border
                     title="Portfolio Value"
                     unit="$"
@@ -308,7 +332,7 @@ function AccountDetailCards({ data }: { data: any[][] }) {
             {dataRow.map((datum, idx) => {
               return (
                 <Box key={idx} display="flex" justifyContent="space-between">
-                  <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
+                  <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }} component="div">
                     {DetailTableHeader[idx]}
                   </Typography>
                   <Typography fontSize={12} fontWeight={600}>

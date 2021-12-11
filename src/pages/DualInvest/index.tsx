@@ -19,6 +19,7 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import { Product } from 'utils/fetch/product'
 import Spinner from 'components/Spinner'
 import { useProductList } from 'hooks/useDualInvestData'
+import dayjs from 'dayjs'
 
 const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
   '& #dualInvestGuide': {
@@ -45,8 +46,10 @@ const RowStr = styled(Typography)(({ theme }) => ({
 const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => void) => {
   return [
     <RowStr key={1}>{data.strikePrice} USDT</RowStr>,
-    <RowStr key={1}>{(+data.apy * 100).toFixed(2)}%</RowStr>,
-    <RowStr key={1}>{data.expiredAt}</RowStr>,
+    <RowStr key={1} minWidth={'50px'}>
+      {(+data.apy * 100).toFixed(2)}%
+    </RowStr>,
+    <RowStr key={1}>{dayjs(data.expiredAt).format('DD MMM YYYY')}</RowStr>,
     <RowStr key={1}>7 Days</RowStr>,
     // <CastValue key={1} unit="BTC" val={15.08} total={50} />,
     <Box

@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { Paper, styled, useTheme, Typography, Box } from '@mui/material'
+import React, { useEffect, useState, useCallback } from 'react'
+import { /*Paper,*/ Typography, Box, styled, useTheme, Divider } from '@mui/material'
 import {
   createChart,
   CrosshairMode,
@@ -7,11 +7,14 @@ import {
   ISeriesApi,
   LineStyle,
   LineType,
-  MouseEventParams,
-  isBusinessDay,
-  BusinessDay,
+  // sMouseEventParams,
+  // isBusinessDay,
+  // BusinessDay,
   Time
 } from 'lightweight-charts'
+import dayjs from 'dayjs'
+import Spinner from 'components/Spinner'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 export type LineSeriesData = Array<{
   time: Time
@@ -19,76 +22,75 @@ export type LineSeriesData = Array<{
   rate?: string
 }>
 
-type ToolTipInfo = Partial<Omit<MouseEventParams, 'seriesPrices'>> & {
-  price?: string
-  date?: Time
-  price2?: string
-}
+// type ToolTipInfo = Partial<Omit<MouseEventParams, 'seriesPrices'>> & {
+//   price?: string
+//   date?: Time
+//   price2?: string
+// }
 
 const Chart = styled('div')(`
   width: 100%;
-  max-width: 100%;
+  max-width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-left: 3px;
-  position: relative
+  position: relative;
+  min-height: 100%;
 `)
 
 const secondaryColor = '#F0B90B'
-const toolTipMargin = 48
+// const toolTipMargin = 48
 
-const tooltipFunction = ({
-  series,
-  series2,
-  setToolTipInfo
-}: {
-  series: undefined | ISeriesApi<'Line'>
-  series2?: undefined | ISeriesApi<'Line'>
-  setToolTipInfo: (info: ToolTipInfo | undefined) => void
-}) => (param: MouseEventParams) => {
-  if (!series || !param || !param.point || param.time === undefined) {
-    setToolTipInfo(undefined)
-    return
-  }
+// const tooltipFunction = ({
+//   series,
+//   series2,
+//   setToolTipInfo
+// }: {
+//   series: undefined | ISeriesApi<'Line'>
+//   series2?: undefined | ISeriesApi<'Line'>
+//   setToolTipInfo: (info: ToolTipInfo | undefined) => void
+// }) => (param: MouseEventParams) => {
+//   if (!series || !param || !param.point || param.time === undefined) {
+//     setToolTipInfo(undefined)
+//     return
+//   }
 
-  function businessDayToString(businessDay: BusinessDay) {
-    return businessDay.year + '-' + businessDay.month + '-' + businessDay.day
-  }
+//   function businessDayToString(businessDay: BusinessDay) {
+//     return businessDay.year + '-' + businessDay.month + '-' + businessDay.day
+//   }
 
-  const date: Time = isBusinessDay(param.time)
-    ? businessDayToString(param.time)
-    : new Date(param.time).toUTCString().slice(4, 16)
+//   const date: Time = isBusinessDay(param.time)
+//     ? businessDayToString(param.time)
+//     : new Date(param.time).toUTCString().slice(4, 16)
 
-  setToolTipInfo({
-    time: param.time,
-    point: param.point,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    /* @ts-ignore */
-    price: param.seriesPrices.get(series),
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    /* @ts-ignore */
-    price2: series2 ? param.seriesPrices.get(series2) : undefined,
-    date
-  })
-}
+//   setToolTipInfo({
+//     time: param.time,
+//     point: param.point,
+//     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//     /* @ts-ignore */
+//     price: param.seriesPrices.get(series),
+//     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//     /* @ts-ignore */
+//     price2: series2 ? param.seriesPrices.get(series2) : undefined,
+//     date
+//   })
+// }
 
 export default function LineChart({
   style,
   lineSeriesData,
-  lineSeriesData2,
   height,
   lineColor,
-  unit,
-  unit2,
+  // unit,
+  // unit2,
   id,
   width,
-  priceLineData
+  strikeData
 }: {
   style?: React.CSSProperties
   lineSeriesData: LineSeriesData
-  lineSeriesData2?: LineSeriesData
-  priceLineData?: LineSeriesData
+  strikeData?: { time: Time; value: number }
   height?: number
   lineColor?: string
   unit: string
@@ -97,12 +99,33 @@ export default function LineChart({
   width?: number
 }) {
   const theme = useTheme()
-  const toolTipRef = useRef<HTMLDivElement>(null)
-  const [toolTipInfo, setToolTipInfo] = useState<ToolTipInfo | undefined>(undefined)
+  // const toolTipRef = useRef<HTMLDivElement>(null)
+  // const [toolTipInfo, setToolTipInfo] = useState<ToolTipInfo | undefined>(undefined)
+  const [strikeLineLeft, setStrikeLineLeft] = useState<number | undefined>(undefined)
+  const [strikeLineHeight, setStrikeLineHeight] = useState<number | undefined>(undefined)
   const [chart, setChart] = useState<IChartApi | undefined>(undefined)
-  const [strikePrice, setStrikePrice] = useState<undefined | number>(undefined)
+  const [priceLine, setPriceLine] = useState<ISeriesApi<'Line'> | undefined>(undefined)
   const [lineSeries, setLineSeries] = useState<ISeriesApi<'Line'> | undefined>(undefined)
-  const [lineSeries2, setLineSeries2] = useState<ISeriesApi<'Line'> | undefined>(undefined)
+
+  const isDownMd = useBreakpoint('md')
+
+  const handleStrikeLine = useCallback(() => {
+    if (!strikeData || !chart) {
+      return
+    }
+    const widthEl: HTMLTableCellElement | null = document.querySelector(
+      `#${id}-chart table tr:first-child td:first-child`
+    )
+    const rect = widthEl?.getBoundingClientRect()
+    const width = rect?.width || 0
+    const height = rect?.height || 0
+
+    const left = chart.timeScale()?.timeToCoordinate?.(strikeData.time)
+    if (!left) return
+
+    setStrikeLineLeft((left as number) + width)
+    setStrikeLineHeight(height)
+  }, [chart, id, strikeData])
 
   useEffect(() => {
     if (chart) return
@@ -146,17 +169,17 @@ export default function LineChart({
         }
       },
       crosshair: {
-        mode: CrosshairMode.Normal,
+        mode: CrosshairMode.Magnet,
         vertLine: {
           color: '#00000020',
           width: 2,
           style: LineStyle.Solid,
-          visible: true,
+          visible: false,
           labelVisible: false
         },
         horzLine: {
-          visible: false,
-          labelVisible: false
+          visible: true,
+          labelVisible: true
         }
       },
       handleScroll: {
@@ -184,77 +207,140 @@ export default function LineChart({
         precision: 2
       }
     })
+    handleStrikeLine()
     setLineSeries(lineSeries)
-  }, [chart, height, id, lineColor, theme, width])
+  }, [chart, handleStrikeLine, height, id, lineColor, theme, width])
 
   useEffect(() => {
     const resizeFunction = () => {
       const chartEl = document.getElementById(id + '-chart')
       if (!chartEl || !chart) return
-      chart.resize(width ? width : chartEl.getBoundingClientRect().width, height || 174)
+      const resizeWidth = isDownMd ? window.innerWidth - 60 : width ? width : chartEl.getBoundingClientRect().width
+      chart.resize(resizeWidth, height || 174)
+      handleStrikeLine()
     }
     window.addEventListener('resize', resizeFunction)
 
     return () => window.removeEventListener('resize', resizeFunction)
-  }, [chart, height, id, width])
+  }, [chart, height, id, width, handleStrikeLine, isDownMd])
+
+  // useEffect(() => {
+  //   if (!chart) return
+  //   const crossHairfunction = tooltipFunction({
+  //     series: lineSeries,
+  //     series2: lineSeries2,
+  //     setToolTipInfo: info => {
+  //       setToolTipInfo(info)
+  //     }
+  //   })
+  //   chart.subscribeCrosshairMove(crossHairfunction)
+
+  //   return () => chart.unsubscribeCrosshairMove(crossHairfunction)
+  // }, [chart, lineSeries, lineSeries2, unit, unit2])
 
   useEffect(() => {
-    if (!chart) return
-    const crossHairfunction = tooltipFunction({
-      series: lineSeries,
-      series2: lineSeries2,
-      setToolTipInfo: info => {
-        setToolTipInfo(info)
-      }
-    })
-    chart.subscribeCrosshairMove(crossHairfunction)
-
-    return () => chart.unsubscribeCrosshairMove(crossHairfunction)
-  }, [chart, lineSeries, lineSeries2, unit, unit2])
+    if (!chart || !strikeData) return
+    chart.subscribeCrosshairMove(handleStrikeLine)
+    return () => chart.unsubscribeCrosshairMove(handleStrikeLine)
+  }, [chart, id, lineSeries, strikeData, handleStrikeLine])
 
   useEffect(() => {
     if (lineSeries) {
       lineSeries.setData(lineSeriesData)
     }
-
     if (chart) {
-      if (lineSeriesData2) {
-        const lineSeries2 = chart.addLineSeries({
-          color: secondaryColor,
-          lineWidth: 1,
-          crosshairMarkerVisible: true,
-          crosshairMarkerRadius: 4,
-          lineType: LineType.Simple,
-          crosshairMarkerBorderColor: '#ffffff',
-          crosshairMarkerBackgroundColor: theme.palette.text.primary,
-          priceFormat: {
-            type: 'price',
-            precision: 2
-          }
-        })
-        setLineSeries2(lineSeries2)
-        lineSeries2.setData(lineSeriesData2)
-      }
       chart.timeScale().fitContent()
     }
-  }, [chart, lineColor, lineSeries, lineSeriesData, lineSeriesData2, theme])
+    handleStrikeLine()
+
+    // if (chart) {
+    //   if (lineSeriesData2) {
+    //     const lineSeries2 = chart.addLineSeries({
+    //       color: secondaryColor,
+    //       lineWidth: 1,
+    //       crosshairMarkerVisible: true,
+    //       crosshairMarkerRadius: 4,
+    //       lineType: LineType.Simple,
+    //       crosshairMarkerBorderColor: '#ffffff',
+    //       crosshairMarkerBackgroundColor: theme.palette.text.primary,
+    //       priceFormat: {
+    //         type: 'price',
+    //         precision: 2
+    //       }
+    //     })
+    //     setLineSeries2(lineSeries2)
+    //     lineSeries2.setData(lineSeriesData2)
+    //   }
+    // chart.timeScale().fitContent()
+    // }
+  }, [chart, handleStrikeLine, lineColor, lineSeries, lineSeriesData, strikeData, theme])
 
   useEffect(() => {
-    if (!chart || !priceLineData || strikePrice) return
-    const priceLine = chart?.addLineSeries({
-      lineType: LineType.Simple,
-      lineStyle: LineStyle.LargeDashed,
-      lineWidth: 1,
-      color: secondaryColor
-    })
-    priceLine?.setData(priceLineData)
-    setStrikePrice(priceLineData[0].value)
-  }, [chart, priceLineData, strikePrice])
+    if (!chart || !strikeData) return
+    if (!priceLine) {
+      const pl = chart?.addLineSeries({
+        lineType: LineType.Simple,
+        lineStyle: LineStyle.LargeDashed,
+        lineWidth: 1,
+        color: secondaryColor,
+        crosshairMarkerVisible: false
+      })
+      setPriceLine(pl)
+    }
+    priceLine?.setData([strikeData])
+  }, [chart, handleStrikeLine, priceLine, strikeData])
 
   return (
     <>
       <Chart sx={{ ...style }} id={id + '-chart'}>
-        <Paper
+        {strikeData && strikeLineLeft && strikeLineHeight ? (
+          <>
+            <Divider
+              orientation="vertical"
+              sx={{
+                width: '2px',
+                top: 0,
+                position: 'absolute',
+                zIndex: 10,
+                borderColor: '#31B047',
+                height: strikeLineHeight,
+                left: strikeLineLeft,
+                borderWidth: '1px'
+              }}
+            />
+            <Box
+              sx={{
+                position: 'absolute',
+                zIndex: 10,
+                top: strikeLineHeight,
+                left: strikeLineLeft,
+                transform: 'translate(-50%, 1px)',
+                background: '#ffffff',
+                color: theme => theme.palette.primary.main
+              }}
+            >
+              <Typography align="center" noWrap fontSize={12} fontWeight={700}>
+                {dayjs(strikeData.time as number).format('DD MMM YYYY')}
+              </Typography>
+              <Typography align="center" noWrap fontSize={12} fontWeight={700}>
+                (Delivery Date)
+              </Typography>
+            </Box>
+          </>
+        ) : (
+          <Box
+            height="100%"
+            width="100%"
+            sx={{ background: '#ffffff', position: 'absolute', zIndex: 3, top: 0 }}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Spinner size={100} />
+          </Box>
+        )}
+
+        {/* <Paper
           ref={toolTipRef}
           id={id + 'chartToolTip'}
           sx={{
@@ -300,26 +386,26 @@ export default function LineChart({
               </Box>
             )}
           </Box>
-        </Paper>
+        </Paper> */}
       </Chart>
     </>
   )
 }
 
-function Capsule({ val }: { val: string }) {
-  return (
-    <Typography
-      fontSize={12}
-      sx={{
-        minWidth: '56px',
-        textAlign: 'center',
-        padding: '5px 12px',
-        borderRadius: 3,
-        backgroundColor: theme => (val[0] === '-' ? theme.palette.error.light : theme.palette.secondary.main),
-        color: theme => (val[0] === '-' ? theme.palette.error.main : theme.palette.secondary.light)
-      }}
-    >
-      {val}
-    </Typography>
-  )
-}
+// function Capsule({ val }: { val: string }) {
+//   return (
+//     <Typography
+//       fontSize={12}
+//       sx={{
+//         minWidth: '56px',
+//         textAlign: 'center',
+//         padding: '5px 12px',
+//         borderRadius: 3,
+//         backgroundColor: theme => (val[0] === '-' ? theme.palette.error.light : theme.palette.secondary.main),
+//         color: theme => (val[0] === '-' ? theme.palette.error.main : theme.palette.secondary.light)
+//       }}
+//     >
+//       {val}
+//     </Typography>
+//   )
+// }
