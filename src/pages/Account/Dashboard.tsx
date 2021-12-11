@@ -267,7 +267,7 @@ export default function Dashboard() {
 
 function AccountBalanceCards({ data }: { data: any[][] }) {
   return (
-    <>
+    <Box mt={24}>
       {data.map((dataRow, idx) => (
         <Card color="#F2F5FA" padding="17px 16px" key={idx}>
           <Box mb={20} display="flex" gap={16} alignItems="center">
@@ -297,13 +297,13 @@ function AccountBalanceCards({ data }: { data: any[][] }) {
           </Box>
         </Card>
       ))}
-    </>
+    </Box>
   )
 }
 
 function AccountDetailCards({ data }: { data: any[][] }) {
   return (
-    <Box display="flex" flexDirection="column" gap={8}>
+    <Box display="flex" flexDirection="column" gap={8} mb={24}>
       {data.map((dataRow, idx) => (
         <Card color="#F2F5FA" padding="17px 16px" key={idx}>
           <Box display="flex" flexDirection="column" gap={16}>
