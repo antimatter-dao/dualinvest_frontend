@@ -318,11 +318,6 @@ function AccountDetailCards({ data }: { data: any[][] }) {
                       </span>
                     )}
                     {datum}
-                    {idx === DetailsTableHeaderIndex.amount && (
-                      <span style={{ marginLeft: 5 }}>
-                        <UpperRightIcon />
-                      </span>
-                    )}
                   </Typography>
                 </Box>
               )
