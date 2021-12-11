@@ -200,16 +200,23 @@ export default function DualInvestMgmt() {
       <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
       <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto" justifyItems="center">
         <Box
-          display="flex"
-          alignItems="center"
-          sx={{ width: '100%', background: theme.palette.background.paper, padding: '28px 165px' }}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            background: theme.palette.background.paper,
+            height: 72
+          }}
         >
-          <NavLink to={routes.dualInvest} style={{ textDecoration: 'none' }}>
-            <ArrowLeft />
-            <Typography component="span" color={theme.bgColor.bg1} fontSize={14} ml={16}>
-              Back
-            </Typography>
-          </NavLink>
+          <Box maxWidth={theme.width.maxContent} width="100%">
+            <NavLink to={routes.dualInvest} style={{ textDecoration: 'none' }}>
+              <ArrowLeft />
+              <Typography component="span" color={theme.bgColor.bg1} fontSize={14} ml={16}>
+                Back
+              </Typography>
+            </NavLink>
+          </Box>
         </Box>
         <Box padding="60px 0" sx={{ maxWidth: theme.width.maxContent }} width="100%">
           <Box mb={60}>
