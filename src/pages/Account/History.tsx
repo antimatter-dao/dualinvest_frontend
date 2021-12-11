@@ -46,11 +46,11 @@ export default function History() {
           {(+annualRor * 100).toFixed(2)}%
         </Typography>,
         `${returnedAmount} ${returnedCurrency}`,
-        dayjs(expiredAt).format('MMM DD, YYYY'),
-        `${dayjs().diff(dayjs(createdAt), 'day')} days`,
+        dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
+        `${dayjs().diff(dayjs(createdAt * 1000), 'day')} days`,
         strikePrice,
         `${deliveryPrice} ${currency}`,
-        dayjs(createdAt).format('MMM DD, YYYY hh:mm:ss A')
+        dayjs(+createdAt * 1000).format('MMM DD, YYYY hh:mm:ss A')
       ]
     )
   }, [orderList])

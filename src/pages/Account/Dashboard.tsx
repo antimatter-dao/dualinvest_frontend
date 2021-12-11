@@ -64,7 +64,6 @@ export default function Dashboard() {
     if (!records) return []
 
     return records.map(record => {
-      const timestamp = parseInt(record.timestamp) * 1000
       const scanLink = chainId ? getEtherscanLink(chainId, record.hash, 'transaction') : ''
 
       return [
@@ -81,7 +80,7 @@ export default function Dashboard() {
             </ExternalLink>
           </Box>
         </Box>,
-        dayjs(timestamp).format('MMM DD, YYYY hh:mm:ss A'),
+        dayjs(+record.timestamp * 1000).format('MMM DD, YYYY hh:mm:ss A'),
         <StatusTag key="status" status="completed" />
       ]
     })

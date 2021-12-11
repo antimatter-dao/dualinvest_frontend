@@ -57,16 +57,16 @@ export default function Position() {
             <Typography color="primary" key="1" variant="inherit">
               {annualRor}%
             </Typography>,
-            dayjs(expiredAt).format('MMM DD, YYYY'),
+            dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
             strikePrice,
             earn,
-            dayjs(createdAt).format('MMM DD, YYYY hh:mm:ss A'),
+            dayjs(+createdAt * 1000).format('MMM DD, YYYY hh:mm:ss A'),
             <Box display="flex" key="action" gap={10} sx={{ mr: -37 }}>
               <StatusTag status="progressing" />
               <ClaimButton onClick={() => {}} />
             </Box>
           ],
-          details: [orderId, productId, `${dayjs().diff(dayjs(createdAt), 'day')} days`, deliveryPrice]
+          details: [orderId, productId, `${dayjs().diff(dayjs(createdAt * 1000), 'day')} days`, deliveryPrice]
         }
       }
     )
