@@ -6,6 +6,7 @@ interface Record {
   amount: string
   timestamp: string
   type: number
+  symbol: string
 }
 
 interface Order {

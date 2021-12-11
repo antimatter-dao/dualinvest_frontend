@@ -33,13 +33,6 @@ enum BalanceTableHeaderIndex {
   actions
 }
 
-enum DetailsTableHeaderIndex {
-  type,
-  token,
-  amount,
-  date
-}
-
 const RecordType: { [key in number]: 'withdraw' | 'deposit' } = {
   1: 'withdraw',
   2: 'deposit'
@@ -65,12 +58,13 @@ export default function Dashboard() {
 
     return records.map(record => {
       const scanLink = chainId ? getEtherscanLink(chainId, record.hash, 'transaction') : ''
+      const token = chainId ? new Token(chainId, record.currency, 18, record.symbol) : undefined
 
       return [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
         <Box key={1} display="flex" gap={10} alignItems="center">
-          <CurrencyLogo currency={BTC} />
-          <Typography fontSize={16}>{BTC.symbol}</Typography>
+          <CurrencyLogo currency={token} size="12px" />
+          {record.symbol}
         </Box>,
         <Box key={1} display="flex" alignItems="center">
           <Typography component="span">${record.amount}</Typography>
@@ -81,10 +75,10 @@ export default function Dashboard() {
           </Box>
         </Box>,
         dayjs(+record.timestamp * 1000).format('MMM DD, YYYY hh:mm:ss A'),
-        <StatusTag key="status" status="completed" />
+        <>{!isDownMd && <StatusTag key="status" status="completed" />}</>
       ]
     })
-  }, [accountRecord])
+  }, [accountRecord, isDownMd])
 
   const handleDepositOpen = useCallback(() => {
     setIsDepositOpen(true)
@@ -318,11 +312,6 @@ function AccountDetailCards({ data }: { data: any[][] }) {
                     {DetailTableHeader[idx]}
                   </Typography>
                   <Typography fontSize={12} fontWeight={600}>
-                    {idx === DetailsTableHeaderIndex.token && (
-                      <span style={{ marginRight: 5 }}>
-                        <CurrencyLogo currency={datum} size="12px" />
-                      </span>
-                    )}
                     {datum}
                   </Typography>
                 </Box>
