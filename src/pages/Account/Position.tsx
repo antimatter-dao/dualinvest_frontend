@@ -39,17 +39,30 @@ const PositionTableHeader = [
 
 const PositionMoreHeader = ['Order ID', 'Product ID', 'Holding Days', 'Settlement Price']
 
+const PageSize = 8
+
 export default function Position() {
   const theme = useTheme()
   const [page, setPage] = useState(1)
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const { orderList, pageParams } = useOrderRecords(InvestStatus.ReadyToSettle, page)
+  const { orderList, pageParams } = useOrderRecords(undefined, undefined, 999999)
+  const filteredOrderList = orderList?.filter(order =>
+    [InvestStatus.Ordered, InvestStatus.ReadyToSettle].includes(order.investStatus)
+  )
+
+  const pageCount = useMemo(() => {
+    if (!filteredOrderList) return 0
+
+    return Math.ceil(filteredOrderList.length / PageSize)
+  }, [filteredOrderList])
 
   const data = useMemo(() => {
-    if (!orderList) return []
+    if (!filteredOrderList) return []
 
-    return orderList.map(
+    const currentPageList = filteredOrderList.slice((page - 1) * PageSize, page * PageSize)
+
+    return currentPageList.map(
       ({
         amount,
         currency,
@@ -74,7 +87,10 @@ export default function Position() {
             earn,
             dayjs(+createdAt * 1000).format('MMM DD, YYYY hh:mm:ss A'),
             <Box display="flex" key="action" gap={isDownMd ? 10 : 8} sx={{ mr: -15 }}>
-              <StatusTag status={investStatus === 2 ? 'progressing' : 'finished'} width={isDownMd ? 120 : 100} />
+              <StatusTag
+                status={investStatus === InvestStatus.Ordered ? 'progressing' : 'finished'}
+                width={isDownMd ? 120 : 100}
+              />
               <ClaimButton onClick={() => {}} width={isDownMd ? 84 : 68} />
             </Box>
           ],
@@ -82,7 +98,7 @@ export default function Position() {
         }
       }
     )
-  }, [orderList])
+  }, [filteredOrderList, page])
 
   const hiddenParts = useCallback(() => {
     return data.map(datum => (
@@ -142,9 +158,9 @@ export default function Position() {
                 />
               )}
               <PaginationView
-                count={pageParams?.count}
+                count={pageCount}
                 page={page}
-                perPage={pageParams?.perPage}
+                perPage={PageSize}
                 boundaryCount={0}
                 total={pageParams.total}
                 onChange={(event, value) => setPage(value)}

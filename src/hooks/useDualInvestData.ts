@@ -96,7 +96,7 @@ export function useAccountRecord(pageNum = 1, pageSize = 8) {
   return { accountRecord, pageParams }
 }
 
-export function useOrderRecords(investStatus?: number, pageNum = 1, pageSize = 8) {
+export function useOrderRecords(investStatus?: number, pageNum?: number, pageSize?: number) {
   const { account } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
   const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
@@ -108,7 +108,7 @@ export function useOrderRecords(investStatus?: number, pageNum = 1, pageSize = 8
   useEffect(() => {
     const id = setInterval(() => {
       Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
-        address: null,
+        address: account,
         investStatus,
         pageNum,
         pageSize

@@ -25,7 +25,7 @@ export default function History() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
-  const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled, page)
+  const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled, page, 8)
 
   const data = useMemo(() => {
     if (!orderList) return []
