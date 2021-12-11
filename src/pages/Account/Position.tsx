@@ -14,6 +14,7 @@ import StatusTag from 'components/Status/StatusTag'
 import { useActiveWeb3React } from 'hooks'
 import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
+import Spinner from 'components/Spinner'
 
 enum PositionTableHeaderIndex {
   investAmount,
@@ -99,25 +100,45 @@ export default function Position() {
         <Card>
           <Box padding="38px 24px">
             <NumericalCard title="BTC latest spot price" value="57640.00" border={true} />
-            {isDownMd ? (
-              <PositionTableCards data={data} />
-            ) : (
-              <Table
-                header={PositionTableHeader}
-                rows={data.map(datum => datum.summary)}
-                hiddenParts={hiddenParts()}
-                collapsible
+            <Box position="relative">
+              {!orderList && (
+                <Box
+                  position="absolute"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    background: '#ffffff',
+                    zIndex: 3,
+                    borderRadius: 2
+                  }}
+                >
+                  <Spinner size={60} />
+                </Box>
+              )}
+
+              {isDownMd ? (
+                <PositionTableCards data={data} />
+              ) : (
+                <Table
+                  header={PositionTableHeader}
+                  rows={data.map(datum => datum.summary)}
+                  hiddenParts={hiddenParts()}
+                  collapsible
+                />
+              )}
+              <PaginationView
+                count={pageParams?.count}
+                page={page}
+                setPage={setPage}
+                perPage={pageParams?.perPage}
+                boundaryCount={0}
+                total={pageParams.total}
               />
-            )}
-            <PaginationView
-              count={pageParams?.count}
-              page={page}
-              setPage={setPage}
-              perPage={pageParams?.perPage}
-              boundaryCount={0}
-              total={pageParams.total}
-            />
-            {data.length === 0 && <NoDataCard height="20vh" />}
+              {data.length === 0 && <NoDataCard height="20vh" />}
+            </Box>
           </Box>
         </Card>
       </Box>

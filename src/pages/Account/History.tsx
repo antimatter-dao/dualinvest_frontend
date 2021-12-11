@@ -8,6 +8,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
 import { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
+import Spinner from 'components/Spinner'
 
 const HistoryTableHeader = [
   'Invest Amount',
@@ -64,7 +65,24 @@ export default function History() {
   return (
     <Box sx={{ mt: 48, width: '100%' }}>
       <Card>
-        <Box padding="38px 24px" display="grid" gap={36}>
+        <Box padding="38px 24px" display="grid" gap={36} position="relative">
+          {!orderList && (
+            <Box
+              position="absolute"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              sx={{
+                width: '100%',
+                height: '100%',
+                background: '#ffffff',
+                zIndex: 3,
+                borderRadius: 2
+              }}
+            >
+              <Spinner size={60} />
+            </Box>
+          )}
           {data.length && isDownMd ? (
             <HistoryTableCards data={data} />
           ) : data.length ? (

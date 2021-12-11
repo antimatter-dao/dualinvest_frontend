@@ -20,6 +20,7 @@ import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_ri
 import { useAccountRecord } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
 import { BTC } from 'constants/index'
+import Spinner from 'components/Spinner'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -58,7 +59,7 @@ export default function Dashboard() {
 
   const accountDetailsData = useMemo(() => {
     const records = accountRecord?.records
-    if (!records) return
+    if (!records) return []
 
     return records.map(record => {
       const timestamp = parseInt(record.timestamp)
@@ -139,43 +140,63 @@ export default function Dashboard() {
                   Deposit funds to your Dual Investment account, you can withdraw available amount at any time
                 </Typography>
               </Box>
-
-              {isDownMd ? (
-                <InvestmentValueCard value={'1,908.12'} unit="$" dayChange="+ 8.91% / $350.28 " />
-              ) : (
-                <NumericalCard
-                  value={'1,908.12'}
-                  border
-                  title="Portfolio Value"
-                  unit="$"
-                  padding="20px 24px"
-                  fontSize={'44px'}
-                  // dayChange="+ 8.91% / $350.28 "
-                >
-                  <Button
-                    onClick={() => {
-                      history.push(routes.dualInvest)
-                    }}
-                    style={{
-                      position: 'absolute',
-                      right: '24px',
-                      bottom: '20px',
-                      width: 148,
-                      height: 44,
-                      fontSize: 14
+              <Box position="relative">
+                {!accountRecord && (
+                  <Box
+                    position="absolute"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      background: '#ffffff',
+                      zIndex: 3,
+                      borderRadius: 2
                     }}
                   >
-                    Invest
-                  </Button>
-                </NumericalCard>
-              )}
-              {balanceData && isDownMd ? (
-                <AccountBalanceCards data={balanceData} />
-              ) : balanceData ? (
-                <Table header={BalanceTableHeader} rows={balanceData} />
-              ) : (
-                <NoDataCard height="20vh" />
-              )}
+                    <Spinner size={60} />
+                  </Box>
+                )}
+
+                {isDownMd ? (
+                  <InvestmentValueCard value={'1,908.12'} unit="$" dayChange="+ 8.91% / $350.28 " />
+                ) : (
+                  <NumericalCard
+                    value={'1,908.12'}
+                    border
+                    title="Portfolio Value"
+                    unit="$"
+                    padding="20px 24px"
+                    fontSize={'44px'}
+                    // dayChange="+ 8.91% / $350.28 "
+                  >
+                    <Button
+                      onClick={() => {
+                        history.push(routes.dualInvest)
+                      }}
+                      style={{
+                        position: 'absolute',
+                        right: '24px',
+                        bottom: '20px',
+                        width: 148,
+                        height: 44,
+                        fontSize: 14
+                      }}
+                    >
+                      Invest
+                    </Button>
+                  </NumericalCard>
+                )}
+
+                {balanceData && isDownMd ? (
+                  <AccountBalanceCards data={balanceData} />
+                ) : balanceData ? (
+                  <Table header={BalanceTableHeader} rows={balanceData} />
+                ) : (
+                  <NoDataCard height="20vh" />
+                )}
+              </Box>
             </Box>
           </Card>
 
@@ -184,26 +205,46 @@ export default function Dashboard() {
               <Typography fontSize={24} fontWeight={700}>
                 Account Details
               </Typography>
-              {accountDetailsData ? (
-                <>
-                  {isDownMd ? (
-                    <AccountDetailCards data={accountDetailsData} />
-                  ) : (
-                    <Table header={DetailTableHeader} rows={accountDetailsData} />
-                  )}
+              <Box position="relative">
+                {!accountRecord && (
+                  <Box
+                    position="absolute"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      background: '#ffffff',
+                      zIndex: 3,
+                      borderRadius: 2
+                    }}
+                  >
+                    <Spinner size={60} />
+                  </Box>
+                )}
 
-                  <Pagination
-                    count={pageParams?.count}
-                    page={page}
-                    setPage={setPage}
-                    perPage={pageParams?.perPage}
-                    boundaryCount={0}
-                    total={pageParams.total}
-                  />
-                </>
-              ) : (
-                <NoDataCard height="20vh" />
-              )}
+                {accountDetailsData.length > 0 ? (
+                  <>
+                    {isDownMd ? (
+                      <AccountDetailCards data={accountDetailsData} />
+                    ) : (
+                      <Table header={DetailTableHeader} rows={accountDetailsData} />
+                    )}
+
+                    <Pagination
+                      count={pageParams?.count}
+                      page={page}
+                      setPage={setPage}
+                      perPage={pageParams?.perPage}
+                      boundaryCount={0}
+                      total={pageParams.total}
+                    />
+                  </>
+                ) : (
+                  <NoDataCard height="20vh" />
+                )}
+              </Box>
             </Box>
           </Card>
         </Box>
