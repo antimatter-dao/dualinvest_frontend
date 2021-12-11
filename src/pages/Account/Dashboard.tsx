@@ -303,7 +303,7 @@ function AccountBalanceCards({ data }: { data: any[][] }) {
 
 function AccountDetailCards({ data }: { data: any[][] }) {
   return (
-    <>
+    <Box display="flex" flexDirection="column" gap={8}>
       {data.map((dataRow, idx) => (
         <Card color="#F2F5FA" padding="17px 16px" key={idx}>
           <Box display="flex" flexDirection="column" gap={16}>
@@ -341,7 +341,7 @@ function AccountDetailCards({ data }: { data: any[][] }) {
           </Box>
         </Card>
       ))}
-    </>
+    </Box>
   )
 }
 
