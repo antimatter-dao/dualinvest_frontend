@@ -172,7 +172,11 @@ export default function Dashboard() {
                 )}
 
                 {isDownMd ? (
-                  <InvestmentValueCard value={'1,908.12'} unit="$" dayChange="+ 8.91% / $350.28 " />
+                  <InvestmentValueCard
+                    value={'1,908.12'}
+                    unit="$"
+                    // dayChange="+ 8.91% / $350.28 "
+                  />
                 ) : (
                   <NumericalCard
                     value={'1,908.12'}
