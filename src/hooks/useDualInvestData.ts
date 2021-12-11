@@ -61,7 +61,7 @@ export function useProduct(productId: string) {
   return product
 }
 
-export function useAccountRecord() {
+export function useAccountRecord(pageNum = 1, pageSize = 8) {
   const { account } = useActiveWeb3React()
   const [accountRecord, setAccountRecord] = useState<AccountRecord | undefined>(undefined)
   const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
@@ -72,7 +72,7 @@ export function useAccountRecord() {
 
   useEffect(() => {
     const id = setInterval(() => {
-      Axios.get('getAccountRecord', { address: account })
+      Axios.get('getAccountRecord', { address: account, pageNum, pageSize })
         .then(r => {
           if (r.data.code !== 200) {
             throw Error(r.data.msg)
@@ -96,7 +96,7 @@ export function useAccountRecord() {
   return { accountRecord, pageParams }
 }
 
-export function useOrderRecords(investStatus?: number) {
+export function useOrderRecords(investStatus?: number, pageNum = 1, pageSize = 8) {
   const { account } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
   const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
@@ -109,7 +109,9 @@ export function useOrderRecords(investStatus?: number) {
     const id = setInterval(() => {
       Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
         address: account,
-        investStatus: investStatus
+        investStatus: investStatus,
+        pageNum,
+        pageSize
       })
         .then(r => {
           if (r.data.code !== 200) {

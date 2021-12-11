@@ -57,7 +57,7 @@ export default function Dashboard() {
   const isDownMd = useBreakpoint('md')
   const [page, setPage] = useState(1)
 
-  const { accountRecord, pageParams } = useAccountRecord()
+  const { accountRecord, pageParams } = useAccountRecord(page)
 
   const accountDetailsData = useMemo(() => {
     const records = accountRecord?.records
@@ -247,10 +247,10 @@ export default function Dashboard() {
                     <Pagination
                       count={pageParams?.count}
                       page={page}
-                      setPage={setPage}
                       perPage={pageParams?.perPage}
                       boundaryCount={0}
                       total={pageParams.total}
+                      onChange={(event, value) => setPage(value)}
                     />
                   </>
                 ) : (

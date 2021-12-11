@@ -24,8 +24,8 @@ const HistoryTableHeader = [
 export default function History() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled)
   const [page, setPage] = useState(1)
+  const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled, page)
 
   const data = useMemo(() => {
     if (!orderList) return []
@@ -91,10 +91,10 @@ export default function History() {
               <PaginationView
                 count={pageParams?.count}
                 page={page}
-                setPage={setPage}
                 perPage={pageParams?.perPage}
                 boundaryCount={0}
                 total={pageParams.total}
+                onChange={(event, value) => setPage(value)}
               />
             </>
           ) : (
