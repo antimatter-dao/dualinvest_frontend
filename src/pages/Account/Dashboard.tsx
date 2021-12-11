@@ -84,7 +84,7 @@ export default function Dashboard() {
         <StatusTag key="status" status="completed" />
       ]
     })
-  }, [accountRecord])
+  }, [accountRecord?.records, chainId])
 
   const handleDepositOpen = useCallback(() => {
     setIsDepositOpen(true)

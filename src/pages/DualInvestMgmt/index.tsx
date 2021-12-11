@@ -1,6 +1,7 @@
 import { useState, useRef, useMemo, useCallback } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 import { Box, Typography, Grid, styled } from '@mui/material'
+import dayjs from 'dayjs'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
 import { ReactComponent as RiskStatementIcon } from 'assets/svg/risk_statement.svg'
@@ -29,7 +30,7 @@ import { InvesStatus, InvesStatusType, OrderRecord } from 'utils/fetch/product'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import useModal from 'hooks/useModal'
 import ActionModal, { ActionType } from 'pages/Account/ActionModal'
-import dayjs from 'dayjs'
+import { usePriceSet } from 'hooks/usePriceSet'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -100,6 +101,7 @@ export default function DualInvestMgmt() {
   const product = useProduct(id)
   const toggleWallet = useWalletModalToggle()
   const addPopup = useAddPopup()
+  const priceSet = usePriceSet(product?.currency)
 
   const hideDeposit = useCallback(() => {
     setIsDepositOpen(false)
@@ -248,7 +250,7 @@ export default function DualInvestMgmt() {
                     borderRadius: 2
                   }}
                 >
-                  <Spinner size={60} />
+                  <Spinner size={100} />
                 </Box>
               )}
               <Card width="100%" padding="36px 24px" style={{ height: '100%' }}>
@@ -381,20 +383,13 @@ export default function DualInvestMgmt() {
                         }}
                         ref={graphContainer}
                       >
-                        {product ? (
+                        {product && priceSet ? (
                           <LineChart
                             lineColor="#18A0FB"
-                            lineSeriesData={[
-                              { time: (1639214327205 + 10000) as Time, value: 52000 },
-                              { time: (1639214327205 + 20000) as Time, value: 51000 },
-                              { time: (1639214327205 + 30000) as Time, value: 56000 },
-                              { time: (1639214327205 + 40000) as Time, value: 52000 },
-                              { time: (1639214327205 + 50000) as Time, value: 53000 }
-                            ]}
+                            lineSeriesData={priceSet}
                             unit="usdt"
                             id="incomeGraph"
                             height={graphContainer?.current?.offsetHeight ?? 280}
-                            width={graphContainer?.current?.offsetWidth ?? 500}
                             strikeData={strikeLineData}
                           />
                         ) : (

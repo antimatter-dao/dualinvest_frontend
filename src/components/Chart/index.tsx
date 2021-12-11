@@ -14,6 +14,7 @@ import {
 } from 'lightweight-charts'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 export type LineSeriesData = Array<{
   time: Time
@@ -105,6 +106,8 @@ export default function LineChart({
   const [chart, setChart] = useState<IChartApi | undefined>(undefined)
   const [priceLine, setPriceLine] = useState<ISeriesApi<'Line'> | undefined>(undefined)
   const [lineSeries, setLineSeries] = useState<ISeriesApi<'Line'> | undefined>(undefined)
+
+  const isDownMd = useBreakpoint('md')
 
   const handleStrikeLine = useCallback(() => {
     if (!strikeData || !chart) {
@@ -212,13 +215,14 @@ export default function LineChart({
     const resizeFunction = () => {
       const chartEl = document.getElementById(id + '-chart')
       if (!chartEl || !chart) return
-      chart.resize(width ? width : chartEl.getBoundingClientRect().width, height || 174)
+      const resizeWidth = isDownMd ? window.innerWidth - 60 : width ? width : chartEl.getBoundingClientRect().width
+      chart.resize(resizeWidth, height || 174)
       handleStrikeLine()
     }
     window.addEventListener('resize', resizeFunction)
 
     return () => window.removeEventListener('resize', resizeFunction)
-  }, [chart, height, id, width, handleStrikeLine])
+  }, [chart, height, id, width, handleStrikeLine, isDownMd])
 
   // useEffect(() => {
   //   if (!chart) return
