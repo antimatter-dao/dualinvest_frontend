@@ -200,7 +200,7 @@ function PositionTableCards({ data }: { data: { summary: any[]; details: any[] }
               return (
                 <Box key={idx} display="flex" justifyContent="space-between">
                   <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                    {PositionTableHeader[idx]}
+                    {PositionTableHeader[idx2]}
                   </Typography>
                   <Typography fontSize={12} fontWeight={600}>
                     {datum}
