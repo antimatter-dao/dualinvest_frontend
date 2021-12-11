@@ -21,6 +21,8 @@ import { useAccountRecord } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
 import { BTC } from 'constants/index'
 import Spinner from 'components/Spinner'
+import { ExternalLink } from 'theme/components'
+import { getEtherscanLink } from 'utils/index'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -50,7 +52,7 @@ export default function Dashboard() {
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
   const [currentCurrency, setCurrentCurrency] = useState<Token | undefined>(undefined)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
   const [page, setPage] = useState(1)
@@ -62,12 +64,20 @@ export default function Dashboard() {
     if (!records) return []
 
     return records.map(record => {
-      const timestamp = parseInt(record.timestamp)
+      const timestamp = parseInt(record.timestamp) * 1000
+      const scanLink = chainId ? getEtherscanLink(chainId, record.hash, 'transaction') : ''
 
       return [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
         'BTC',
-        `${record.amount}`,
+        <Box key={1} display="flex" alignItems="center">
+          <Typography component="span">${record.amount}</Typography>
+          <Box component="span" sx={{ ml: 5, display: 'flex', alignItems: 'center' }}>
+            <ExternalLink href={scanLink}>
+              <UpperRightIcon />
+            </ExternalLink>
+          </Box>
+        </Box>,
         dayjs(timestamp).format('MMM DD, YYYY hh:mm:ss A'),
         <StatusTag key="status" status="completed" />
       ]
