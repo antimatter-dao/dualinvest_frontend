@@ -12,7 +12,7 @@ import { useActiveWeb3React } from 'hooks'
 import ActionModal, { ActionType } from './ActionModal'
 import StatusTag from 'components/Status/StatusTag'
 import TransactionTypeIcon from 'components/Icon/TransactionTypeIcon'
-import { Token } from 'constants/token'
+import { Token, Currency } from 'constants/token'
 import { routes } from 'constants/routes'
 import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
@@ -25,7 +25,6 @@ import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
 import { usePrice } from 'hooks/usePriceSet'
 import { useAccountBalances } from 'hooks/useAccountBalance'
-import LogoText from 'components/LogoText'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -43,6 +42,20 @@ const RecordType: { [key in number]: 'withdraw' | 'deposit' } = {
 
 const BalanceTableHeader = ['Token', 'Available', 'Amount', 'Cumulative Invest', 'PnL', '']
 const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
+
+function TokenHeader({ token }: { token: Currency }) {
+  return (
+    <Box display="flex" alignItems="center" gap={16}>
+      <CurrencyLogo currency={token} size="32px" />
+      <Box>
+        <Typography fontSize={16}>{token.symbol}</Typography>
+        <Typography fontSize={12} sx={{ opacity: 0.5 }}>
+          {token.name}
+        </Typography>
+      </Box>
+    </Box>
+  )
+}
 
 export default function Dashboard() {
   const [isDepositOpen, setIsDepositOpen] = useState(false)
@@ -122,7 +135,7 @@ export default function Dashboard() {
     return accountBalances
       ? [
           [
-            <LogoText key="1" logo={<CurrencyLogo currency={BTC} />} text="BTC" size="32px" />,
+            <TokenHeader key="1" token={BTC} />,
             accountBalances?.BTC?.availableBalance ?? '-',
             accountBalances?.BTC?.lockedBalance ?? '-',
             accountBalances?.BTC?.totalInvest ?? '-',
@@ -141,7 +154,7 @@ export default function Dashboard() {
             />
           ],
           [
-            <LogoText key="1" logo={<CurrencyLogo currency={USDT} />} text="USDT" size="32px" />,
+            <TokenHeader key="1" token={USDT} />,
             accountBalances?.USDT?.availableBalance ?? '-',
             accountBalances?.USDT?.lockedBalance ?? '-',
             accountBalances?.USDT?.totalInvest ?? '-',
