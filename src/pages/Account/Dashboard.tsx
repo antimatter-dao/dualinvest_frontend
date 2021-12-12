@@ -150,7 +150,7 @@ export default function Dashboard() {
                 setCurrentCurrency(BTC)
                 handleWithdrawOpen()
               }}
-              buyHref=""
+              buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c"
             />
           ],
           [
@@ -169,7 +169,7 @@ export default function Dashboard() {
                 setCurrentCurrency(USDT)
                 handleWithdrawOpen()
               }}
-              buyHref=""
+              buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x55d398326f99059ff775485246999027b3197955"
             />
           ]
         ]
@@ -414,7 +414,7 @@ function BalanceActions({
         style={{ maxWidth: 92, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
         primary
       >
-        Buy
+        Swap
       </OutlineButton>
     </Box>
   )
