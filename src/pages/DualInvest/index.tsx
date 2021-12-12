@@ -275,7 +275,7 @@ export default function DualInvest() {
                 </svg>
               </Typography>
               <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
-                USDT latest spot price
+                BTC latest spot price
               </Typography>
             </Box>
           </Card>
