@@ -32,6 +32,7 @@ import useModal from 'hooks/useModal'
 import ActionModal, { ActionType } from 'pages/Account/ActionModal'
 import { usePriceSet } from 'hooks/usePriceSet'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -103,6 +104,7 @@ export default function DualInvestMgmt() {
   const toggleWallet = useWalletModalToggle()
   const addPopup = useAddPopup()
   const priceSet = usePriceSet(product?.currency)
+  const isDownMd = useBreakpoint('md')
 
   const hideDeposit = useCallback(() => {
     setIsDepositOpen(false)
@@ -218,14 +220,21 @@ export default function DualInvestMgmt() {
   return (
     <>
       <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
-      <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto" justifyItems="center">
+      <Box
+        display="grid"
+        width="100%"
+        alignContent="flex-start"
+        marginBottom="auto"
+        justifyItems="center"
+        padding={isDownMd ? '24px 20px' : 0}
+      >
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             width: '100%',
-            background: theme.palette.background.paper,
+            background: isDownMd ? theme.palette.background.default : theme.palette.background.paper,
             height: 72
           }}
         >
@@ -233,17 +242,17 @@ export default function DualInvestMgmt() {
             <NavLink to={routes.dualInvest} style={{ textDecoration: 'none' }}>
               <ArrowLeft />
               <Typography component="span" color={theme.bgColor.bg1} fontSize={14} ml={16}>
-                Back
+                Go Back
               </Typography>
             </NavLink>
           </Box>
         </Box>
-        <Box padding="60px 0" sx={{ maxWidth: theme.width.maxContent }} width="100%">
-          <Box mb={60}>
-            <Typography fontSize={44} fontWeight={700} component="span">
+        <Box padding={isDownMd ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
+          <Box mb={isDownMd ? 24 : 60} display="flex" gap={8} flexDirection={isDownMd ? 'column' : 'row'}>
+            <Typography fontSize={isDownMd ? 24 : 44} fontWeight={700}>
               {product?.investCurrency} Financial Management
             </Typography>
-            <Typography fontSize={44} fontWeight={400} component="span" ml={8}>
+            <Typography fontSize={isDownMd ? 24 : 44} fontWeight={400}>
               [{product?.type === 'call' ? 'upward' : 'drop'} exercise]
             </Typography>
           </Box>
@@ -367,7 +376,10 @@ export default function DualInvestMgmt() {
                           </>
                         )
                       ) : (
-                        'Once subscribed the APY will get locked in, the product can&apos;t be cancelled after subscription.'
+                        <>
+                          Once subscribed the APY will get locked in, the product can&apos;t be cancelled after
+                          subscription.
+                        </>
                       )}
                     </Typography>
                   </Box>
