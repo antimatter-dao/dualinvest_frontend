@@ -9,7 +9,7 @@ export function usePriceSet(symbol: string | undefined) {
   useEffect(() => {
     if (!symbol) return
     // const id = setInterval(() => {
-    fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}USDT&interval=1d&limit=30`, {
+    fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}USDT&interval=1d&limit=12`, {
       method: 'GET',
       mode: 'cors',
       headers: {}

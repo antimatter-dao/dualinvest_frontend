@@ -31,6 +31,7 @@ import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import useModal from 'hooks/useModal'
 import ActionModal, { ActionType } from 'pages/Account/ActionModal'
 import { usePriceSet } from 'hooks/usePriceSet'
+import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -155,13 +156,26 @@ export default function DualInvestMgmt() {
               if (InvesStatus[statusCode] === InvesStatusType.SUCCESS) {
                 clearInterval(timeoutId)
                 resolve(() => {})
+                setAmount('')
+                showModal(
+                  <TransactionSubmittedModal header={'Successful Subscription!'}>
+                    <Typography fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
+                      {`You have successfully subscribed ${+product?.multiplier * +amount} ${product?.currency} to ${
+                        product.investCurrency
+                      }[${product?.type === 'call' ? 'upward' : 'drop'} exercise] ${product.strikePrice} ${dayjs(
+                        product.expiredAt
+                      ).format()}`}
+                    </Typography>
+                  </TransactionSubmittedModal>
+                )
               }
             })
-            .catch((e: Error) => {
+            .catch(() => {
               if (fail > 6) {
                 clearInterval(timeoutId)
-                reject('Confirm Order fail')
-                throw Error('Confirm Order fail:' + e)
+                reject('Confirm Order timeout')
+                setAmount('')
+                // showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message}</MessageBox>)
               }
               fail++
             })
@@ -181,6 +195,7 @@ export default function DualInvestMgmt() {
       setPending(false)
     } catch (e) {
       setPending(false)
+      setAmount('')
       showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message}</MessageBox>)
       console.error(e)
     }
@@ -226,10 +241,10 @@ export default function DualInvestMgmt() {
         <Box padding="60px 0" sx={{ maxWidth: theme.width.maxContent }} width="100%">
           <Box mb={60}>
             <Typography fontSize={44} fontWeight={700} component="span">
-              BTC Financial Management
+              {product?.investCurrency} Financial Management
             </Typography>
             <Typography fontSize={44} fontWeight={400} component="span" ml={8}>
-              [upward exercise]
+              [{product?.type === 'call' ? 'upward' : 'drop'} exercise]
             </Typography>
           </Box>
           <Grid container spacing={20}>

@@ -1,6 +1,6 @@
 const TYPE = {
-  call: 'call',
-  put: 'put'
+  call: 'CALL',
+  put: 'PUT'
 }
 
 export enum InvesStatusType {
@@ -58,6 +58,7 @@ export interface Product {
   currentPrice: string
   multiplier: string
   currency: string
+  investCurrency: string
   orderLimit: string
   ts: number
   gtStrikePrice: string
@@ -109,6 +110,7 @@ export const productFormatter = (raw: ProductRaw): Product => {
     strikePrice: raw.strike_price,
     multiplier: raw.multiplier,
     currency: raw.currency,
+    investCurrency: raw.invest_currency,
     orderLimit: raw.order_limit,
     ts: raw.ts,
     gtStrikePrice: raw.gt_strike_price,

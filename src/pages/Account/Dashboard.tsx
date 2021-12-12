@@ -19,7 +19,7 @@ import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
 import { useAccountRecord } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
-import { BTC } from 'constants/index'
+import { BTC, USDT } from 'constants/index'
 import Spinner from 'components/Spinner'
 import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
@@ -122,10 +122,10 @@ export default function Dashboard() {
       ? [
           [
             'BTC',
-            accountBalances.BTC.availableBalance ?? '-',
-            accountBalances.BTC.lockedBalance ?? '-',
-            accountBalances.BTC.totalInvest ?? '-',
-            accountBalances.BTC.earned ?? '-',
+            accountBalances?.BTC?.availableBalance ?? '-',
+            accountBalances?.BTC?.lockedBalance ?? '-',
+            accountBalances?.BTC?.totalInvest ?? '-',
+            accountBalances?.BTC?.earned ?? '-',
             <BalanceActions
               key="1"
               onDeposit={() => {
@@ -134,6 +134,25 @@ export default function Dashboard() {
               }}
               onWithdraw={() => {
                 setCurrentCurrency(BTC)
+                handleWithdrawOpen()
+              }}
+              buyHref=""
+            />
+          ],
+          [
+            'USDT',
+            accountBalances?.USDT?.availableBalance ?? '-',
+            accountBalances?.USDT?.lockedBalance ?? '-',
+            accountBalances?.USDT?.totalInvest ?? '-',
+            accountBalances?.USDT?.earned ?? '-',
+            <BalanceActions
+              key="1"
+              onDeposit={() => {
+                setCurrentCurrency(USDT)
+                handleDepositOpen()
+              }}
+              onWithdraw={() => {
+                setCurrentCurrency(USDT)
                 handleWithdrawOpen()
               }}
               buyHref=""
