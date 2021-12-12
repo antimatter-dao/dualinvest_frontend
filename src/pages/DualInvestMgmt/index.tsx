@@ -325,7 +325,7 @@ export default function DualInvestMgmt() {
                 <Box display="grid" flexDirection="column" gap={20} height="100%" width="100%" padding="36px 24px">
                   {Object.keys(data).map((key, idx) => (
                     <Box key={idx} display="flex" justifyContent="space-between">
-                      <Typography fontSize={{ xs: 16, md: 12 }} sx={{ opacity: 0.8 }}>
+                      <Typography fontSize={16} sx={{ opacity: 0.8 }}>
                         {key}
                       </Typography>
                       {/* {key === 'Current Progress' ? (
