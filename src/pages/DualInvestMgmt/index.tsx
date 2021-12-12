@@ -92,7 +92,7 @@ export default function DualInvestMgmt() {
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const [currentCurrency, setCurrentCurrency] = useState(BTC)
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false))
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
   const graphContainer = useRef<HTMLDivElement>(null)
   const node = useRef<any>()
