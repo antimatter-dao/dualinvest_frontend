@@ -98,7 +98,7 @@ export default function Position() {
         }
       }
     )
-  }, [filteredOrderList, page])
+  }, [filteredOrderList, page, isDownMd])
 
   const hiddenParts = useCallback(() => {
     return data.map(datum => (
