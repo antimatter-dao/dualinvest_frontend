@@ -307,7 +307,7 @@ function useActionCallback(
   const handleDeposit = useCallback(() => {
     if (!token || !depositCallback || !val || !account) return
     showModal(<TransactionPendingModal />)
-    depositCallback(val, token.address, { gasLimit: 3000000 })
+    depositCallback(val, token.address)
       .then(r => {
         hideModal()
         setHash(r.hash)

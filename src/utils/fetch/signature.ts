@@ -15,3 +15,9 @@ export interface SignatureRequest {
   currency: string
   nonce: number
 }
+
+export interface SignatureRequest2 {
+  account: string
+  chainId: number
+  orderId: string
+}

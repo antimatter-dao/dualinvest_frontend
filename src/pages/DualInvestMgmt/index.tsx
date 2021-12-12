@@ -14,6 +14,7 @@ import Divider from 'components/Divider'
 import InputNumerical from 'components/Input/InputNumerical'
 import { BlackButton } from 'components/Button/Button'
 // import { SimpleProgress } from 'components/Progress'
+import ConfirmModal from './ConfirmModal'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import LineChart from 'components/Chart'
 import { Time } from 'lightweight-charts'
@@ -90,6 +91,8 @@ export default function DualInvestMgmt() {
   const [expanded, setExpanded] = useState<number | null>(null)
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const [currentCurrency, setCurrentCurrency] = useState(BTC)
+  const [isConfirmed, setIsConfirmed] = useState(false)
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
   const graphContainer = useRef<HTMLDivElement>(null)
   const node = useRef<any>()
@@ -106,6 +109,21 @@ export default function DualInvestMgmt() {
   const priceSet = usePriceSet(product?.currency)
   const multiplier = product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1
   const isDownMd = useBreakpoint('md')
+
+  const showConfirm = useCallback(() => {
+    setIsConfirmOpen(true)
+  }, [])
+  const hideConfirm = useCallback(() => {
+    setIsConfirmOpen(false)
+  }, [])
+
+  const handleConfirm = useCallback(() => {
+    setIsConfirmed(true)
+  }, [])
+
+  const handleInput = useCallback(e => {
+    setAmount(Math.floor(+e.target.value) + '')
+  }, [])
 
   const hideDeposit = useCallback(() => {
     setIsDepositOpen(false)
@@ -196,8 +214,10 @@ export default function DualInvestMgmt() {
         orderId + ''
       )
       setPending(false)
+      setIsConfirmed(false)
     } catch (e) {
       setPending(false)
+      setIsConfirmed(false)
       setAmount('')
       showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
       console.error(e)
@@ -259,6 +279,7 @@ export default function DualInvestMgmt() {
 
   return (
     <>
+      <ConfirmModal isOpen={isConfirmOpen} onDismiss={hideConfirm} onConfirm={handleConfirm} />
       <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
       <Box
         display="grid"
@@ -334,7 +355,7 @@ export default function DualInvestMgmt() {
                   <Divider extension={24} sx={{ opacity: 0.1 }} />
                   <Box>
                     <InputNumerical
-                      disabled={!product || !account}
+                      disabled={!product || !account || isConfirmed}
                       value={amount}
                       onMax={() => {
                         setAmount(
@@ -342,7 +363,7 @@ export default function DualInvestMgmt() {
                         )
                       }}
                       label={'Subscription Amount'}
-                      onChange={e => setAmount(e.target.value)}
+                      onChange={handleInput}
                       balance={balance || '-'}
                       unit={product?.investCurrency ?? ''}
                       endAdornment={
@@ -366,7 +387,7 @@ export default function DualInvestMgmt() {
                                 =
                               </Typography>
                               <Typography component="span" color="primary" fontSize={14}>
-                                {+product.multiplier * +amount * multiplier} {product.investCurrency}
+                                {(+product.multiplier * +amount * multiplier).toFixed(2)} {product.investCurrency}
                               </Typography>
                             </>
                           ) : (
@@ -387,7 +408,19 @@ export default function DualInvestMgmt() {
                     </Box>
                   </Box>
                   {!account && <BlackButton onClick={toggleWallet}>Connect Wallet</BlackButton>}
-                  {account && (
+                  {!isConfirmed && account && (
+                    <ActionButton
+                      pending={pending}
+                      pendingText={'Pending'}
+                      error={!amount ? 'Please Input Amount' : ''}
+                      onAction={showConfirm}
+                      actionText=" Subscribe"
+                      disableAction={!product?.isActive ? true : !!error}
+                      successText={'Ended'}
+                      success={!product?.isActive}
+                    />
+                  )}
+                  {isConfirmed && account && (
                     <ActionButton
                       pending={pending}
                       pendingText={'Pending'}

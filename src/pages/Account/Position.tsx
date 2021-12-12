@@ -15,6 +15,8 @@ import { useActiveWeb3React } from 'hooks'
 import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
+import { usePrice } from 'hooks/usePriceSet'
+import { useDualInvestCallback } from 'hooks/useDualInvest'
 
 enum PositionTableHeaderIndex {
   investAmount,
@@ -46,6 +48,8 @@ export default function Position() {
   const [page, setPage] = useState(1)
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
+  const price = usePrice('BTC')
+  const { finishOrderCallback } = useDualInvestCallback()
   const { orderList } = useOrderRecords(undefined, undefined, 999999)
   const filteredOrderList = orderList?.filter(order =>
     [InvestStatus.Ordered, InvestStatus.ReadyToSettle].includes(order.investStatus)
@@ -91,14 +95,26 @@ export default function Position() {
                 status={investStatus === InvestStatus.Ordered ? 'progressing' : 'finished'}
                 width={isDownMd ? 120 : 100}
               />
-              <ClaimButton onClick={() => {}} width={isDownMd ? 84 : 68} />
+              <ClaimButton
+                onClick={() => {
+                  if (!finishOrderCallback) return
+                  finishOrderCallback(orderId + '', productId + '')
+                    .then(r => {
+                      console.log(78787, r)
+                    })
+                    .catch(e => {
+                      console.error(e)
+                    })
+                }}
+                width={isDownMd ? 84 : 68}
+              />
             </Box>
           ],
           details: [orderId, productId, `${dayjs().diff(dayjs(createdAt * 1000), 'day')} days`, deliveryPrice]
         }
       }
     )
-  }, [filteredOrderList, page, isDownMd])
+  }, [filteredOrderList, page, isDownMd, finishOrderCallback])
 
   const hiddenParts = useCallback(() => {
     return data.map(datum => (
@@ -127,7 +143,7 @@ export default function Position() {
       <Box sx={{ mt: 48, width: '100%' }}>
         <Card>
           <Box padding="38px 24px">
-            <NumericalCard title="BTC latest spot price" value="57640.00" border={true} />
+            <NumericalCard title="BTC latest spot price" value={price} border={true} />
             <Box position="relative">
               {!orderList && (
                 <Box

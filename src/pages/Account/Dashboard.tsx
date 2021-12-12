@@ -100,7 +100,7 @@ export default function Dashboard() {
       return [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
         <Box key={1} display="flex" gap={10} alignItems="center">
-          <CurrencyLogo currency={token} size="12px" />
+          <CurrencyLogo currency={token} size="16px" />
           {record.symbol}
         </Box>,
         <Box key={1} display="flex" alignItems="center">

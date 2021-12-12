@@ -37,6 +37,8 @@ export default function OutlineButton(props: Props) {
     <ButtonBase
       component={component}
       href={component ? href : undefined}
+      target={href ? '_blank' : undefined}
+      rel={href ? 'noopener noreferrer' : undefined}
       onClick={onClick ?? undefined}
       disabled={disabled}
       sx={{

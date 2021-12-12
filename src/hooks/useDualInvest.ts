@@ -6,7 +6,7 @@ import { calculateGasMargin } from 'utils'
 import { Axios } from 'utils/axios'
 import { parseBalance } from 'utils/parseAmount'
 import { useDualInvestContract } from './useContract'
-import { Signature, SignatureRequest } from 'utils/fetch/signature'
+import { Signature, SignatureRequest, SignatureRequest2 } from 'utils/fetch/signature'
 import { retry } from 'utils/retry'
 
 export function useDualInvestBalance(token?: Token) {
@@ -21,11 +21,12 @@ export function useDualInvestBalance(token?: Token) {
 }
 
 export function useDualInvestCallback(): {
-  depositCallback: undefined | ((val: string, tokenAddress: string, options?: any) => Promise<any>)
+  depositCallback: undefined | ((val: string, tokenAddress: string) => Promise<any>)
   withdrawCallback: undefined | ((amount: string, currency: string) => Promise<any>)
   createOrderCallback:
     | undefined
     | ((orderId: string | number, productId: string, amount: string, currencyAddress: string) => Promise<any>)
+  finishOrderCallback: undefined | ((orderId: string, productId: string) => Promise<any>)
 } {
   const { account, chainId } = useActiveWeb3React()
   const contract = useDualInvestContract()
@@ -53,7 +54,7 @@ export function useDualInvestCallback(): {
           const nonce = await contract?.withdrawNonces(account)
           const signRes = await retry(
             () =>
-              getSignature('getWithdrawSign', {
+              getWithdrawSignature({
                 account: account,
                 amount: +amount,
                 chainId: chainId,
@@ -102,19 +103,32 @@ export function useDualInvestCallback(): {
   )
 
   const finishOrder = useCallback(
-    async (orderId, productId, amount, currencyAddress): Promise<any> => {
-      if (!contract) return undefined
-      const estimatedGas = await contract.estimateGas
-        .finishOrder(orderId, productId, amount, currencyAddress)
-        .catch((error: Error) => {
-          console.debug('Failed to create order', error)
-          throw error
-        })
-      return contract?.finishOrder(orderId, productId, amount, currencyAddress, {
+    async (orderId, productId): Promise<any> => {
+      if (!contract || !account || !chainId || !orderId) return undefined
+      const signRes = await retry(
+        () =>
+          getFinishOrderSignature({
+            account: account,
+            chainId: chainId,
+            orderId: orderId
+          }),
+        { n: 5, minWait: 2000, maxWait: 2000 }
+      ).promise
+      if (!signRes.data.data) {
+        throw Error('Cannot get signature')
+      }
+      console.log(999, signRes)
+      const { returnedCurrencyAddress, returnedAmount, fee, signatory, signV, signR, signS } = signRes.data.data
+      const args = [orderId, productId, returnedCurrencyAddress, returnedAmount, fee, [signatory, signV, signR, signS]]
+      const estimatedGas = await contract.estimateGas.finishOrder(...args).catch((error: Error) => {
+        console.debug('Failed to create order', error)
+        throw error
+      })
+      return contract?.finishOrder(...args, {
         gasLimit: calculateGasMargin(estimatedGas)
       })
     },
-    [contract]
+    [account, chainId, contract]
   )
 
   const res = useMemo(() => {
@@ -129,4 +143,6 @@ export function useDualInvestCallback(): {
   return res
 }
 
-const getSignature = (route: string, data: SignatureRequest) => Axios.getSignature<Signature>(route, data)
+const getWithdrawSignature = (data: SignatureRequest) => Axios.getSignature<Signature>('getWithdrawSign', data)
+
+const getFinishOrderSignature = (data: SignatureRequest2) => Axios.getSignature<any>('getFinishOrderSign', data)

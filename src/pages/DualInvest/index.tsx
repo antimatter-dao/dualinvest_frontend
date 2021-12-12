@@ -332,7 +332,7 @@ function DataTable({
           }
         />
       ) : (
-        <Spinner marginLeft="auto" marginRight="auto" />
+        <Spinner marginLeft="auto" marginRight="auto" size={60} />
       )}
     </>
   )
