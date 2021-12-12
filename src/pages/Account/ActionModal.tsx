@@ -49,7 +49,7 @@ export default function ActionModal({
   const [confirmModalOpen, setConfirmModalOpen] = useState(false)
   const actionStr = type === ActionType.DEPOSIT ? 'Deposit' : 'Withdraw'
   const [pending, setPending] = useState(false)
-
+  const [error, setError] = useState('')
   const { connector, account } = useActiveWeb3React()
   const theme = useTheme()
   const [hash, setHash] = useState('')
@@ -166,6 +166,22 @@ export default function ActionModal({
     }
   }, [handleDismiss, handleSucccessModal, hash, onDismiss, showModal, txn])
 
+  useEffect(() => {
+    if (type === ActionType.DEPOSIT && balance) {
+      if (+val > +balance?.toExact()) {
+        setError('Insufficient Balance')
+        return
+      }
+    }
+    if (type === ActionType.WITHDRAW && contractBalance) {
+      if (+val > +contractBalance) {
+        setError('Insufficient Balance')
+        return
+      }
+    }
+    setError('')
+  }, [balance, contractBalance, type, val])
+
   return (
     <>
       <ConfirmModal
@@ -234,7 +250,7 @@ export default function ActionModal({
             <OutlineButton onClick={handleDismiss}>Cancel</OutlineButton>
             {!isConfirmed && (
               <ActionButton
-                error={val ? undefined : 'Amount required'}
+                error={error ? error : val ? undefined : 'Amount required'}
                 disableAction={!Number(val)}
                 actionText="Confirm"
                 onAction={() => {

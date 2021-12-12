@@ -7,3 +7,11 @@ export interface Signature {
   signR: string
   signS: string
 }
+
+export interface SignatureRequest {
+  account: string
+  amount: number
+  chainId: number
+  currency: string
+  nonce: number
+}

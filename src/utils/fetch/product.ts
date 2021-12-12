@@ -63,6 +63,7 @@ export interface Product {
   ts: number
   gtStrikePrice: string
   ltStrikePrice: string
+  strikeCurrency: string
 }
 
 export interface ProductList {
@@ -114,7 +115,8 @@ export const productFormatter = (raw: ProductRaw): Product => {
     orderLimit: raw.order_limit,
     ts: raw.ts,
     gtStrikePrice: raw.gt_strike_price,
-    ltStrikePrice: raw.lt_strike_price
+    ltStrikePrice: raw.lt_strike_price,
+    strikeCurrency: raw.strike_currency
   }
 }
 
