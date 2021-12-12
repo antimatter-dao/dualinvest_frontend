@@ -102,7 +102,7 @@ export default function DualInvest() {
   return (
     <Box
       display="grid"
-      justifyItems="center"
+      justifyItems={{ xs: 'flex-start', md: 'center' }}
       width="100%"
       alignContent="flex-start"
       marginBottom="auto"
@@ -176,6 +176,7 @@ export default function DualInvest() {
         display="grid"
         width="100%"
         gap={8}
+        margin={{ xs: '0px 20px' }}
         sx={{
           background: theme => theme.palette.background.paper,
           borderRadius: 2,
@@ -242,6 +243,7 @@ export default function DualInvest() {
         display="grid"
         width="100%"
         gap={8}
+        margin={{ xs: '0px 20px' }}
         sx={{
           background: theme => theme.palette.background.paper,
           borderRadius: 2,
@@ -302,7 +304,13 @@ export default function DualInvest() {
         </Box>
         <DataTable onSubscribe={handleSubscribe} productList={productList?.put} />
       </Box>
-      <Box display="flex" alignContent="center" justifyContent="center" width={theme => theme.width.maxContent}>
+      <Box
+        display="flex"
+        alignContent="center"
+        justifyContent="center"
+        maxWidth={theme => ({ xs: `calc(100vw - 40px)`, md: theme.width.maxContent })}
+        margin={{ xs: '0px 20px' }}
+      >
         <Grid container sx={{ justifyContent: 'space-between' }} spacing={20}>
           <Grid item xs={12} md={4}>
             <FeatureCard
