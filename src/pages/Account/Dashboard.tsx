@@ -322,7 +322,7 @@ export default function Dashboard() {
 
 function AccountBalanceCards({ data }: { data: any[][] }) {
   return (
-    <Box mt={24}>
+    <Box mt={24} display="grid" gap={8}>
       {data.map((dataRow, idx) => (
         <Card color="#F2F5FA" padding="17px 16px" key={idx}>
           <Box display="grid" gap={20}>
