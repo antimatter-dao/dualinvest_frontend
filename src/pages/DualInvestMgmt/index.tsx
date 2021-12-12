@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useCallback } from 'react'
+import { useState, useRef, useMemo, useCallback, useEffect } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 import { Box, Typography, Grid, styled } from '@mui/material'
 import dayjs from 'dayjs'
@@ -19,7 +19,7 @@ import LineChart from 'components/Chart'
 import { Time } from 'lightweight-charts'
 import { useProduct } from 'hooks/useDualInvestData'
 import { useActiveWeb3React } from 'hooks'
-import { BTC } from 'constants/index'
+import { BTC, USDT } from 'constants/index'
 import { Axios } from 'utils/axios'
 import Spinner from 'components/Spinner'
 import { useDualInvestBalance, useDualInvestCallback } from 'hooks/useDualInvest'
@@ -31,6 +31,8 @@ import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import useModal from 'hooks/useModal'
 import ActionModal, { ActionType } from 'pages/Account/ActionModal'
 import { usePriceSet } from 'hooks/usePriceSet'
+import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -87,7 +89,7 @@ export default function DualInvestMgmt() {
   const [pending, setPending] = useState(false)
   const [expanded, setExpanded] = useState<number | null>(null)
   const [isDepositOpen, setIsDepositOpen] = useState(false)
-  const [currentCurrency] = useState(BTC)
+  const [currentCurrency, setCurrentCurrency] = useState(BTC)
 
   const graphContainer = useRef<HTMLDivElement>(null)
   const node = useRef<any>()
@@ -102,6 +104,8 @@ export default function DualInvestMgmt() {
   const toggleWallet = useWalletModalToggle()
   const addPopup = useAddPopup()
   const priceSet = usePriceSet(product?.currency)
+  const multiplier = product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1
+  const isDownMd = useBreakpoint('md')
 
   const hideDeposit = useCallback(() => {
     setIsDepositOpen(false)
@@ -117,15 +121,15 @@ export default function DualInvestMgmt() {
       ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
       ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') : '-',
       // ['Current Progress']: 0.16,
-      minAmount: product ? product.multiplier + ' ' + product.currency : '-',
-      maxAmount: product ? +product.orderLimit * +product.multiplier + ' ' + product.currency : '-'
+      minAmount: product ? +product.multiplier * multiplier + ' ' + product.investCurrency : '-',
+      maxAmount: product ? +product.orderLimit * +product.multiplier * multiplier + ' ' + product.investCurrency : '-'
     }),
-    [product]
+    [multiplier, product]
   )
 
   const handleSubscribe = useCallback(async () => {
     if (!product || !amount || !createOrderCallback) return
-    const val = tryParseAmount((+amount * +product?.multiplier).toString(), BTC)?.raw?.toString()
+    const val = tryParseAmount((+amount * +product?.multiplier).toString(), currentCurrency)?.raw?.toString()
     if (!val) return
     try {
       setPending(true)
@@ -141,7 +145,7 @@ export default function DualInvestMgmt() {
       if (backendCall.data.code !== 200) throw Error('Backend Error')
       if (!backendCall.data.data) throw Error(backendCall.data.msg)
       const { orderId, productId } = backendCall.data.data
-      await createOrderCallback(orderId, productId, val, BTC.address)
+      await createOrderCallback(orderId, productId, val, currentCurrency.address)
       let fail = 0
       const polling = new Promise((resolve, reject) => {
         const timeoutId = setInterval(() => {
@@ -150,22 +154,35 @@ export default function DualInvestMgmt() {
               const statusCode = r.data.data.records[0].investStatus as keyof typeof InvesStatus
               if (InvesStatus[statusCode] === InvesStatusType.ERROR) {
                 clearInterval(timeoutId)
-                reject('Confirm Order fail')
+                reject('Order fail')
+                throw Error('Order fail')
               }
               if (InvesStatus[statusCode] === InvesStatusType.SUCCESS) {
                 clearInterval(timeoutId)
                 resolve(() => {})
+                setAmount('')
+                showModal(
+                  <TransactionSubmittedModal header={'Successful Subscription!'}>
+                    <Typography fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
+                      {`You have successfully subscribed ${+product?.multiplier * +amount * multiplier} ${
+                        product?.currency
+                      } to ${product.investCurrency}[${product?.type === 'CALL' ? 'upward' : 'drop'} exercise] ${
+                        product.strikePrice
+                      } ${dayjs(product.expiredAt).format()}`}
+                    </Typography>
+                  </TransactionSubmittedModal>
+                )
               }
             })
-            .catch((e: Error) => {
+            .catch(() => {
               if (fail > 6) {
                 clearInterval(timeoutId)
-                reject('Confirm Order fail')
-                throw Error('Confirm Order fail:' + e)
+                reject('Confirm Order timeout')
+                throw Error('Confirm Order timeout')
               }
               fail++
             })
-        }, 2000)
+        }, 3000)
       })
       await polling
 
@@ -181,18 +198,19 @@ export default function DualInvestMgmt() {
       setPending(false)
     } catch (e) {
       setPending(false)
-      showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message}</MessageBox>)
+      setAmount('')
+      showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
       console.error(e)
     }
-  }, [account, addPopup, amount, createOrderCallback, id, product, showModal])
+  }, [account, addPopup, amount, createOrderCallback, currentCurrency, id, multiplier, product, showModal])
 
   const error = useMemo(() => {
     if (!product || !balance) return ''
     let str = ''
-    if (amount !== '' && +balance < +amount * +product.multiplier) str = ErrorType.insufficientBalance
+    if (amount !== '' && +balance < +amount * +product.multiplier * multiplier) str = ErrorType.insufficientBalance
     if (amount !== '' && (+amount > +product?.orderLimit || +amount < 1)) str = ErrorType.singleLimitExceed
     return str
-  }, [amount, balance, product])
+  }, [amount, balance, multiplier, product])
 
   const strikeLineData = useMemo(() => {
     return product?.expiredAt && product?.strikePrice
@@ -200,36 +218,82 @@ export default function DualInvestMgmt() {
       : undefined
   }, [product?.expiredAt, product?.strikePrice])
 
+  useEffect(() => {
+    product?.type === 'CALL' ? setCurrentCurrency(BTC) : setCurrentCurrency(USDT)
+  }, [product?.type])
+  const returnOnInvestment = useMemo(() => {
+    return (
+      <div>
+        <Typography fontSize={16} color={theme.palette.text.primary}>
+          Return on investment:
+        </Typography>
+        <StyledUnorderList>
+          <li>
+            When the final settlement price ≥ {product?.strikePrice ?? '-'} USDT, you will receive{' '}
+            <span style={{ color: theme.palette.text.primary }}>
+              {product?.gtStrikePrice} {product?.investCurrency}
+            </span>
+            .
+          </li>
+          <li>
+            When the settlement price is &lt; {product?.strikePrice ?? '-'} USDT, you will receive{' '}
+            <span style={{ color: theme.palette.text.primary }}>
+              {product?.ltStrikePrice} {product?.strikeCurrency}
+            </span>
+            .
+          </li>
+          <li>
+            APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully complete the
+            subscription.
+          </li>
+        </StyledUnorderList>
+      </div>
+    )
+  }, [
+    product?.gtStrikePrice,
+    product?.investCurrency,
+    product?.ltStrikePrice,
+    product?.strikeCurrency,
+    product?.strikePrice
+  ])
+
   return (
     <>
       <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
-      <Box display="grid" width="100%" alignContent="flex-start" marginBottom="auto" justifyItems="center">
+      <Box
+        display="grid"
+        width="100%"
+        alignContent="flex-start"
+        marginBottom="auto"
+        justifyItems="center"
+        padding={isDownMd ? '24px 20px' : 0}
+      >
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             width: '100%',
-            background: theme.palette.background.paper,
-            height: 72
+            background: isDownMd ? theme.palette.background.default : theme.palette.background.paper,
+            padding: isDownMd ? '0 0 28px 0' : '27px 0'
           }}
         >
           <Box maxWidth={theme.width.maxContent} width="100%">
             <NavLink to={routes.dualInvest} style={{ textDecoration: 'none' }}>
               <ArrowLeft />
               <Typography component="span" color={theme.bgColor.bg1} fontSize={14} ml={16}>
-                Back
+                Go Back
               </Typography>
             </NavLink>
           </Box>
         </Box>
-        <Box padding="60px 0" sx={{ maxWidth: theme.width.maxContent }} width="100%">
-          <Box mb={60}>
-            <Typography fontSize={44} fontWeight={700} component="span">
-              BTC Financial Management
+        <Box padding={isDownMd ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
+          <Box mb={isDownMd ? 24 : 60} display="flex" gap={8} flexDirection={isDownMd ? 'column' : 'row'}>
+            <Typography fontSize={isDownMd ? 24 : 44} fontWeight={700}>
+              {product?.investCurrency} Financial Management
             </Typography>
             <Typography fontSize={44} fontWeight={400} component="span" ml={8}>
-              [upward exercise]
+              [{product?.type === 'CALL' ? 'upward' : 'drop'} exercise]
             </Typography>
           </Box>
           <Grid container spacing={20}>
@@ -250,7 +314,7 @@ export default function DualInvestMgmt() {
                     borderRadius: 2
                   }}
                 >
-                  <Spinner size={100} />
+                  <Spinner size={60} />
                 </Box>
               )}
               <Card width="100%" padding="36px 24px" style={{ height: '100%' }}>
@@ -273,22 +337,36 @@ export default function DualInvestMgmt() {
                       disabled={!product || !account}
                       value={amount}
                       onMax={() => {
-                        setAmount(balance ? `${+balance / (product ? +product?.multiplier : 1)}` : '')
+                        setAmount(
+                          balance ? `${Math.floor(+balance / ((product ? +product?.multiplier : 1) * multiplier))}` : ''
+                        )
                       }}
                       label={'Subscription Amount'}
                       onChange={e => setAmount(e.target.value)}
                       balance={balance || '-'}
-                      unit={product?.currency ?? ''}
+                      unit={product?.investCurrency ?? ''}
                       endAdornment={
-                        <Typography noWrap fontSize={14} alignItems="center">
-                          {product && product?.multiplier && product?.currency ? (
+                        <Typography noWrap fontSize={12} alignItems="center">
+                          {product && product?.multiplier && product?.investCurrency ? (
                             <>
-                              {`X ${product?.multiplier} `}
-                              <Typography component="span" sx={{ margin: '0 10px' }}>
+                              <span style={{ margin: '0 2px' }}>X</span>
+                              {product.multiplier}
+                              {product.type === 'PUT' && (
+                                <Typography component="span" sx={{ marginLeft: '10px' }} fontSize={12}>
+                                  <span style={{ margin: '0 2px' }}>X</span>
+                                  {product.strikePrice}
+                                </Typography>
+                              )}
+                              {product.type === 'PUT' && <br />}
+                              <Typography
+                                component="span"
+                                sx={{ margin: '0 10px', marginLeft: product.type === 'PUT' ? 'auto' : undefined }}
+                                fontSize={12}
+                              >
                                 =
                               </Typography>
-                              <Typography component="span" color="primary">
-                                {+product?.multiplier * +amount} {product?.currency}
+                              <Typography component="span" color="primary" fontSize={14}>
+                                {+product.multiplier * +amount * multiplier} {product.investCurrency}
                               </Typography>
                             </>
                           ) : (
@@ -299,20 +377,12 @@ export default function DualInvestMgmt() {
                       onDeposit={showDeposit}
                       error={!!error}
                     />
-                    <Box display="grid" mt={12}>
-                      <Typography
-                        fontSize={12}
-                        sx={{ opacity: 0.5, display: 'flex', justifyContent: 'space-between', width: '100%' }}
-                      >
-                        <span>Min investment:</span>
-                        <span>{data.minAmount} </span>
+                    <Box display="flex" mt={12} justifyContent="space-between">
+                      <Typography fontSize={12} sx={{ opacity: 0.5 }}>
+                        <span>Min investment: {data.minAmount}</span>
                       </Typography>
-                      <Typography
-                        fontSize={12}
-                        sx={{ opacity: 0.5, display: 'flex', justifyContent: 'space-between', width: '100%' }}
-                      >
-                        <span>Max investment:</span>
-                        <span>{data.maxAmount} </span>
+                      <Typography fontSize={12} sx={{ opacity: 0.5 }}>
+                        <span>Max investment: {data.maxAmount}</span>
                       </Typography>
                     </Box>
                   </Box>
@@ -352,7 +422,10 @@ export default function DualInvestMgmt() {
                           </>
                         )
                       ) : (
-                        'Once subscribed the APY will get locked in, the product can&apos;t be cancelled after subscription.'
+                        <>
+                          Once subscribed the APY will get locked in, the product can&apos;t be cancelled after
+                          subscription.
+                        </>
                       )}
                     </Typography>
                   </Box>
@@ -362,7 +435,12 @@ export default function DualInvestMgmt() {
             <Grid xs={12} md={8} item>
               <Card width="100%" padding="32px 24px" style={{ height: '100%' }}>
                 <Box display="flex" flexDirection="column" gap="20px" maxWidth={'100%'} height="100%">
-                  <Box display="flex" justifyContent="space-between">
+                  <Box
+                    display="flex"
+                    justifyContent={isDownMd ? 'flex-start' : 'space-between'}
+                    flexDirection={isDownMd ? 'column' : 'row'}
+                    gap={18}
+                  >
                     <Typography fontSize={24} fontWeight={700}>
                       Purchase expected income graph
                     </Typography>
@@ -408,51 +486,41 @@ export default function DualInvestMgmt() {
                           />
                         ) : (
                           <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-                            <Spinner size={100} marginRight="auto" marginLeft="auto" />
+                            <Spinner size={60} marginRight="auto" marginLeft="auto" />
                           </Box>
                         )}
                       </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        md={4}
-                        sx={{ height: { xs: 'auto', md: '100%' } }}
-                        paddingBottom={{ xs: 0, md: 22 }}
-                      >
-                        <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
-                          <Card gray>
-                            <Box padding="16px" fontSize={14}>
-                              Settlement price ≥ 62800USDT, will be exercised Estimated return 56750.61 USDT
-                            </Box>
-                          </Card>
-                          <Card gray>
-                            <Box padding="16px" fontSize={14}>
-                              Settlement price ≥ 62800USDT, will be exercised Estimated return 56750.61 USDT
-                            </Box>
-                          </Card>
-                        </Box>
-                      </Grid>
+                      {!isDownMd && (
+                        <Grid
+                          item
+                          xs={12}
+                          md={4}
+                          sx={{ height: { xs: 'auto', md: '100%' } }}
+                          paddingBottom={{ xs: 0, md: 22 }}
+                        >
+                          <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
+                            <Card gray>
+                              <Box padding="16px" fontSize={14}>
+                                Settlement price ≥ {product?.strikePrice ?? '-'}, will be exercised. Estimated return{' '}
+                                {product?.gtStrikePrice} {product?.investCurrency}
+                              </Box>
+                            </Card>
+                            <Card gray>
+                              <Box padding="16px" fontSize={14}>
+                                Settlement price &lt; {product?.strikePrice ?? '-'}, will not be exercised. Estimated
+                                return {product?.ltStrikePrice} {product?.strikeCurrency}
+                              </Box>
+                            </Card>
+                          </Box>
+                        </Grid>
+                      )}
                     </Box>
                   </Box>
-                  <OutlinedCard padding="16px 20px">
-                    <Typography fontSize={16} color={theme.palette.text.primary}>
-                      Return on investment:
-                    </Typography>
-                    <StyledUnorderList>
-                      <li>
-                        When the final settlement price ≥ {product?.strikePrice ?? '-'} USDT, you will receive{' '}
-                        <span style={{ color: theme.palette.text.primary }}>56,750.61 USDT</span>.
-                      </li>
-                      <li>
-                        When the settlement price is &lt; {product?.strikePrice ?? '-'} USDT, you will receive{' '}
-                        <span style={{ color: theme.palette.text.primary }}>1.682655 BTC</span>.
-                      </li>
-                      <li>
-                        APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully
-                        complete the subscription.
-                      </li>
-                    </StyledUnorderList>
-                  </OutlinedCard>
+                  {isDownMd ? (
+                    returnOnInvestment
+                  ) : (
+                    <OutlinedCard padding="16px 20px">{returnOnInvestment}</OutlinedCard>
+                  )}
                 </Box>
               </Card>
             </Grid>

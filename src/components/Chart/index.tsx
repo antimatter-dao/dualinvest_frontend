@@ -171,10 +171,9 @@ export default function LineChart({
       crosshair: {
         mode: CrosshairMode.Magnet,
         vertLine: {
-          color: '#00000020',
+          color: '#00000010',
           width: 2,
-          style: LineStyle.Solid,
-          visible: false,
+          visible: true,
           labelVisible: false
         },
         horzLine: {
@@ -183,13 +182,13 @@ export default function LineChart({
         }
       },
       handleScroll: {
-        mouseWheel: true,
-        pressedMouseMove: true
+        mouseWheel: false,
+        pressedMouseMove: false
       },
       handleScale: {
-        axisPressedMouseMove: true,
-        mouseWheel: true,
-        pinch: true
+        axisPressedMouseMove: false,
+        mouseWheel: false,
+        pinch: false
       }
     })
     setChart(chartEl)
@@ -238,20 +237,20 @@ export default function LineChart({
   //   return () => chart.unsubscribeCrosshairMove(crossHairfunction)
   // }, [chart, lineSeries, lineSeries2, unit, unit2])
 
-  useEffect(() => {
-    if (!chart || !strikeData) return
-    chart.subscribeCrosshairMove(handleStrikeLine)
-    return () => chart.unsubscribeCrosshairMove(handleStrikeLine)
-  }, [chart, id, lineSeries, strikeData, handleStrikeLine])
+  // useEffect(() => {
+  //   if (!chart || !strikeData) return
+  //   chart.subscribeCrosshairMove(handleStrikeLine)
+  //   return () => chart.unsubscribeCrosshairMove(handleStrikeLine)
+  // }, [chart, id, lineSeries, strikeData, handleStrikeLine])
 
   useEffect(() => {
     if (lineSeries) {
       lineSeries.setData(lineSeriesData)
+      handleStrikeLine()
     }
     if (chart) {
       chart.timeScale().fitContent()
     }
-    handleStrikeLine()
 
     // if (chart) {
     //   if (lineSeriesData2) {
@@ -331,12 +330,12 @@ export default function LineChart({
           <Box
             height="100%"
             width="100%"
-            sx={{ background: '#ffffff', position: 'absolute', zIndex: 3, top: 0 }}
+            sx={{ background: '#ffffff50', position: 'absolute', zIndex: 3, top: 0 }}
             display="flex"
             justifyContent="center"
             alignItems="center"
           >
-            <Spinner size={100} />
+            <Spinner size={60} />
           </Box>
         )}
 

@@ -12,14 +12,14 @@ import { useActiveWeb3React } from 'hooks'
 import ActionModal, { ActionType } from './ActionModal'
 import StatusTag from 'components/Status/StatusTag'
 import TransactionTypeIcon from 'components/Icon/TransactionTypeIcon'
-import { Token } from 'constants/token'
+import { Token, Currency } from 'constants/token'
 import { routes } from 'constants/routes'
 import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
 import { useAccountRecord } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
-import { BTC } from 'constants/index'
+import { BTC, USDT } from 'constants/index'
 import Spinner from 'components/Spinner'
 import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
@@ -42,6 +42,20 @@ const RecordType: { [key in number]: 'withdraw' | 'deposit' } = {
 
 const BalanceTableHeader = ['Token', 'Available', 'Amount', 'Cumulative Invest', 'PnL', '']
 const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
+
+function TokenHeader({ token }: { token: Currency }) {
+  return (
+    <Box display="flex" alignItems="center" gap={16}>
+      <CurrencyLogo currency={token} size="32px" />
+      <Box>
+        <Typography fontSize={16}>{token.symbol}</Typography>
+        <Typography fontSize={12} sx={{ opacity: 0.5 }}>
+          {token.name}
+        </Typography>
+      </Box>
+    </Box>
+  )
+}
 
 export default function Dashboard() {
   const [isDepositOpen, setIsDepositOpen] = useState(false)
@@ -121,11 +135,11 @@ export default function Dashboard() {
     return accountBalances
       ? [
           [
-            'BTC',
-            accountBalances.BTC.availableBalance ?? '-',
-            accountBalances.BTC.lockedBalance ?? '-',
-            accountBalances.BTC.totalInvest ?? '-',
-            accountBalances.BTC.earned ?? '-',
+            <TokenHeader key="btc" token={BTC} />,
+            accountBalances?.BTC?.availableBalance ?? '-',
+            accountBalances?.BTC?.lockedBalance ?? '-',
+            accountBalances?.BTC?.totalInvest ?? '-',
+            accountBalances?.BTC?.earned ?? '-',
             <BalanceActions
               key="1"
               onDeposit={() => {
@@ -136,7 +150,26 @@ export default function Dashboard() {
                 setCurrentCurrency(BTC)
                 handleWithdrawOpen()
               }}
-              buyHref=""
+              buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c"
+            />
+          ],
+          [
+            <TokenHeader key="usdt" token={USDT} />,
+            accountBalances?.USDT?.availableBalance ?? '-',
+            accountBalances?.USDT?.lockedBalance ?? '-',
+            accountBalances?.USDT?.totalInvest ?? '-',
+            accountBalances?.USDT?.earned ?? '-',
+            <BalanceActions
+              key="1"
+              onDeposit={() => {
+                setCurrentCurrency(USDT)
+                handleDepositOpen()
+              }}
+              onWithdraw={() => {
+                setCurrentCurrency(USDT)
+                handleWithdrawOpen()
+              }}
+              buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x55d398326f99059ff775485246999027b3197955"
             />
           ]
         ]
@@ -289,26 +322,22 @@ export default function Dashboard() {
 
 function AccountBalanceCards({ data }: { data: any[][] }) {
   return (
-    <Box mt={24}>
+    <Box mt={24} display="grid" gap={8}>
       {data.map((dataRow, idx) => (
-        <Card color="#F2F5FA" padding="17px 16px" key={idx}>
-          <Box mb={20} display="flex" gap={16} alignItems="center">
-            <CurrencyLogo currency={BTC} />
-            <Box>
-              <Typography fontSize={16}>{BTC.symbol}</Typography>
-              <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-                {BTC.name}
-              </Typography>
-            </Box>
+        <Card color="#F2F5FA" padding="17px 16px" key={`balance-row-${idx}`}>
+          <Box display="grid" gap={20}>
+            {dataRow[BalanceTableHeaderIndex.token]}
+            {dataRow[BalanceTableHeaderIndex.actions]}
           </Box>
-          {dataRow[BalanceTableHeaderIndex.actions]}
+
           <Box display="flex" flexDirection="column" gap={16} mt={24}>
-            {dataRow.map((datum, idx) => {
-              if (idx === BalanceTableHeaderIndex.actions) return null
+            {dataRow.map((datum, idx2) => {
+              if (idx2 === BalanceTableHeaderIndex.token) return null
+              if (idx2 === BalanceTableHeaderIndex.actions) return null
               return (
-                <Box key={idx} display="flex" justifyContent="space-between">
+                <Box key={`balance-row-${idx}-datum-${idx2}`} display="flex" justifyContent="space-between">
                   <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                    {BalanceTableHeader[idx]}
+                    {BalanceTableHeader[idx2]}
                   </Typography>
                   <Typography fontSize={12} fontWeight={600}>
                     {datum}
@@ -327,15 +356,15 @@ function AccountDetailCards({ data }: { data: any[][] }) {
   return (
     <Box display="flex" flexDirection="column" gap={8} mb={24}>
       {data.map((dataRow, idx) => (
-        <Card color="#F2F5FA" padding="17px 16px" key={idx}>
+        <Card color="#F2F5FA" padding="17px 16px" key={`detail-row-${idx}`}>
           <Box display="flex" flexDirection="column" gap={16}>
-            {dataRow.map((datum, idx) => {
+            {dataRow.map((datum, idx2) => {
               return (
-                <Box key={idx} display="flex" justifyContent="space-between">
+                <Box key={`detail-row-${idx}-datum-${idx2}`} display="flex" justifyContent="space-between">
                   <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }} component="div">
-                    {DetailTableHeader[idx]}
+                    {DetailTableHeader[idx2]}
                   </Typography>
-                  <Typography fontSize={12} fontWeight={600}>
+                  <Typography fontSize={12} fontWeight={600} component="div">
                     {datum}
                   </Typography>
                 </Box>
@@ -385,7 +414,7 @@ function BalanceActions({
         style={{ maxWidth: 92, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
         primary
       >
-        Buy
+        Swap
       </OutlineButton>
     </Box>
   )

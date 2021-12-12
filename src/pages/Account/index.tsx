@@ -1,6 +1,4 @@
-import { Suspense } from 'react'
 import { Box, Typography } from '@mui/material'
-import Spinner from 'components/Spinner'
 import Tabs from 'components/Tabs/Tabs'
 import Image from 'components/Image'
 import Dashboard from './Dashboard'
@@ -27,17 +25,7 @@ export default function Account() {
           <Tab text="Position" iconUrl={positionUrl} key="position" />,
           <Tab text="History" iconUrl={historyUrl} key="history" />
         ]}
-        contents={[
-          <Suspense fallback={<Spinner size={100} />} key="dashboard">
-            <Dashboard />
-          </Suspense>,
-          <Suspense fallback={<Spinner size={100} />} key="position">
-            <Position />
-          </Suspense>,
-          <Suspense fallback={<Spinner size={100} />} key="history">
-            <History />
-          </Suspense>
-        ]}
+        contents={[<Dashboard key="dashboard" />, <Position key="position" />, <History key="history" />]}
       />
     </Box>
   )

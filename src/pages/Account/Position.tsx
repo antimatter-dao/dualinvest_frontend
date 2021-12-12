@@ -46,7 +46,7 @@ export default function Position() {
   const [page, setPage] = useState(1)
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const { orderList, pageParams } = useOrderRecords(undefined, undefined, 999999)
+  const { orderList } = useOrderRecords(undefined, undefined, 999999)
   const filteredOrderList = orderList?.filter(order =>
     [InvestStatus.Ordered, InvestStatus.ReadyToSettle].includes(order.investStatus)
   )
@@ -98,7 +98,7 @@ export default function Position() {
         }
       }
     )
-  }, [filteredOrderList, page])
+  }, [filteredOrderList, page, isDownMd])
 
   const hiddenParts = useCallback(() => {
     return data.map(datum => (
@@ -162,7 +162,7 @@ export default function Position() {
                 page={page}
                 perPage={PageSize}
                 boundaryCount={0}
-                total={pageParams.total}
+                total={filteredOrderList?.length}
                 onChange={(event, value) => setPage(value)}
               />
               {data.length === 0 && <NoDataCard height="20vh" />}
@@ -198,7 +198,7 @@ function PositionTableCards({ data }: { data: { summary: any[]; details: any[] }
               }
 
               return (
-                <Box key={idx} display="flex" justifyContent="space-between">
+                <Box key={idx2} display="flex" justifyContent="space-between">
                   <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
                     {PositionTableHeader[idx2]}
                   </Typography>

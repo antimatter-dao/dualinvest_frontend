@@ -6,7 +6,8 @@ import { calculateGasMargin } from 'utils'
 import { Axios } from 'utils/axios'
 import { parseBalance } from 'utils/parseAmount'
 import { useDualInvestContract } from './useContract'
-import { Signature } from 'utils/fetch/signature'
+import { Signature, SignatureRequest } from 'utils/fetch/signature'
+import { retry } from 'utils/retry'
 
 export function useDualInvestBalance(token?: Token) {
   const contract = useDualInvestContract()
@@ -26,25 +27,63 @@ export function useDualInvestCallback(): {
     | undefined
     | ((orderId: string | number, productId: string, amount: string, currencyAddress: string) => Promise<any>)
 } {
+  const { account, chainId } = useActiveWeb3React()
   const contract = useDualInvestContract()
 
   const deposit = useCallback(
-    (val, tokenAddress, options?): Promise<any> => {
-      return contract?.deposit(val, tokenAddress, options)
+    async (val, tokenAddress): Promise<any> => {
+      if (!contract) {
+        throw Error('no contract')
+      }
+      const estimatedGas = await contract.estimateGas.deposit(val, tokenAddress).catch((error: Error) => {
+        console.debug('Failed to create order', error)
+        throw error
+      })
+      return contract?.deposit(val, tokenAddress, { gasLimit: estimatedGas })
     },
     [contract]
   )
-  const withdraw = useCallback((): Promise<any> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        // const signRes = await getSignature(1)
-        const contractRes = await contract?.withdraw()
-        resolve(contractRes)
-      } catch (e) {
-        reject(e)
-      }
-    })
-  }, [contract])
+  const withdraw = useCallback(
+    (amount: string, currency: string): Promise<any> => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          if (!contract || !account || !chainId) {
+            throw Error('withdraw fail')
+          }
+          const nonce = await contract?.withdrawNonces(account)
+          const signRes = await retry(
+            () =>
+              getSignature('getWithdrawSign', {
+                account: account,
+                amount: +amount,
+                chainId: chainId,
+                currency: currency,
+                nonce: nonce.toString()
+              }),
+            { n: 5, minWait: 5000, maxWait: 5000 }
+          ).promise
+
+          if (signRes.status !== 200) {
+            throw Error('get signature error')
+          }
+          const withdrawArgs = [
+            amount,
+            currency,
+            [signRes.data.data.signatory, signRes.data.data.signV, signRes.data.data.signR, signRes.data.data.signS]
+          ]
+          const estimatedGas = await contract.estimateGas.withdraw(...withdrawArgs).catch((error: Error) => {
+            console.debug('Failed to create order', error)
+            throw error
+          })
+          const contractRes = await contract?.withdraw(...withdrawArgs, { gasLimit: estimatedGas })
+          resolve(contractRes)
+        } catch (e) {
+          reject(e)
+        }
+      })
+    },
+    [account, chainId, contract]
+  )
 
   const createOrder = useCallback(
     async (orderId, productId, amount, currencyAddress): Promise<any> => {
@@ -71,7 +110,7 @@ export function useDualInvestCallback(): {
           console.debug('Failed to create order', error)
           throw error
         })
-      return contract?.createOrder(orderId, productId, amount, currencyAddress, {
+      return contract?.finishOrder(orderId, productId, amount, currencyAddress, {
         gasLimit: calculateGasMargin(estimatedGas)
       })
     },
@@ -90,38 +129,4 @@ export function useDualInvestCallback(): {
   return res
 }
 
-export function getSignature(signatureCount: 1 | 3 = 1): Promise<any> {
-  const signRoutes = [
-    'https://node1.chainswap.com/web/getNftRecvSignData',
-    'https://node2.chainswap.com/web/getNftRecvSignData',
-    'https://node3.chainswap.com/web/getNftRecvSignData',
-    'https://node4.chainswap.com/web/getNftRecvSignData',
-    'https://node5.chainswap.com/web/getNftRecvSignData'
-  ]
-
-  const httpRequestsList = signRoutes.map(route => Axios.post<Signature>(route, {}))
-
-  const aggregated: Signature[] = []
-  let error = 0
-  const requestList: Promise<Signature[]> = new Promise((resolve, reject) => {
-    httpRequestsList.map(promise => {
-      promise
-        .then(r => {
-          if (r?.data?.code !== 200) return
-          aggregated.push(r.data.data)
-          if (aggregated.length >= signatureCount) {
-            resolve(aggregated.slice(0, signatureCount))
-          }
-        })
-        .catch(() => {
-          if (error > signRoutes.length - signatureCount) {
-            reject('signature request fail')
-          } else {
-            error++
-          }
-        })
-    })
-  })
-
-  return requestList
-}
+const getSignature = (route: string, data: SignatureRequest) => Axios.getSignature<Signature>(route, data)

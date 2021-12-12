@@ -52,7 +52,7 @@ export function useProduct(productId: string) {
         .catch(e => {
           console.error(e)
         })
-    }, 3000)
+    }, 5000)
 
     return () => {
       clearInterval(id)
