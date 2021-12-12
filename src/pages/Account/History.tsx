@@ -37,7 +37,7 @@ export default function History() {
         returnedCurrency,
         strikePrice,
         expiredAt,
-        createdAt,
+        ts,
         deliveryPrice,
         currency
       }) => [
@@ -47,10 +47,10 @@ export default function History() {
         </Typography>,
         `${returnedAmount} ${returnedCurrency}`,
         dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
-        `${dayjs().diff(dayjs(createdAt * 1000), 'day')} days`,
+        `${dayjs().diff(dayjs(ts * 1000), 'day')} days`,
         strikePrice,
         `${deliveryPrice} ${currency}`,
-        dayjs(+createdAt * 1000).format('MMM DD, YYYY hh:mm:ss A')
+        dayjs(+ts * 1000).format('MMM DD, YYYY hh:mm:ss A')
       ]
     )
   }, [orderList])
