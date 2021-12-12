@@ -217,6 +217,30 @@ export default function DualInvestMgmt() {
       : undefined
   }, [product?.expiredAt, product?.strikePrice])
 
+  const returnOnInvestment = useMemo(() => {
+    return (
+      <div>
+        <Typography fontSize={16} color={theme.palette.text.primary}>
+          Return on investment:
+        </Typography>
+        <StyledUnorderList>
+          <li>
+            When the final settlement price ≥ {product?.strikePrice ?? '-'} USDT, you will receive{' '}
+            <span style={{ color: theme.palette.text.primary }}>56,750.61 USDT</span>.
+          </li>
+          <li>
+            When the settlement price is &lt; {product?.strikePrice ?? '-'} USDT, you will receive{' '}
+            <span style={{ color: theme.palette.text.primary }}>1.682655 BTC</span>.
+          </li>
+          <li>
+            APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully complete the
+            subscription.
+          </li>
+        </StyledUnorderList>
+      </div>
+    )
+  }, [theme.palette.text.primary, product?.strikePrice])
+
   return (
     <>
       <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
@@ -235,7 +259,7 @@ export default function DualInvestMgmt() {
             justifyContent: 'center',
             width: '100%',
             background: isDownMd ? theme.palette.background.default : theme.palette.background.paper,
-            height: 72
+            padding: isDownMd ? '0 0 28px 0' : '27px 0'
           }}
         >
           <Box maxWidth={theme.width.maxContent} width="100%">
@@ -323,20 +347,12 @@ export default function DualInvestMgmt() {
                       onDeposit={showDeposit}
                       error={!!error}
                     />
-                    <Box display="grid" mt={12}>
-                      <Typography
-                        fontSize={12}
-                        sx={{ opacity: 0.5, display: 'flex', justifyContent: 'space-between', width: '100%' }}
-                      >
-                        <span>Min investment:</span>
-                        <span>{data.minAmount} </span>
+                    <Box display="flex" mt={12} justifyContent="space-between">
+                      <Typography fontSize={12} sx={{ opacity: 0.5 }}>
+                        <span>Min investment: {data.minAmount}</span>
                       </Typography>
-                      <Typography
-                        fontSize={12}
-                        sx={{ opacity: 0.5, display: 'flex', justifyContent: 'space-between', width: '100%' }}
-                      >
-                        <span>Max investment:</span>
-                        <span>{data.maxAmount} </span>
+                      <Typography fontSize={12} sx={{ opacity: 0.5 }}>
+                        <span>Max investment: {data.maxAmount}</span>
                       </Typography>
                     </Box>
                   </Box>
@@ -389,7 +405,12 @@ export default function DualInvestMgmt() {
             <Grid xs={12} md={8} item>
               <Card width="100%" padding="32px 24px" style={{ height: '100%' }}>
                 <Box display="flex" flexDirection="column" gap="20px" maxWidth={'100%'} height="100%">
-                  <Box display="flex" justifyContent="space-between">
+                  <Box
+                    display="flex"
+                    justifyContent={isDownMd ? 'flex-start' : 'space-between'}
+                    flexDirection={isDownMd ? 'column' : 'row'}
+                    gap={18}
+                  >
                     <Typography fontSize={24} fontWeight={700}>
                       Purchase expected income graph
                     </Typography>
@@ -439,47 +460,37 @@ export default function DualInvestMgmt() {
                           </Box>
                         )}
                       </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        md={4}
-                        sx={{ height: { xs: 'auto', md: '100%' } }}
-                        paddingBottom={{ xs: 0, md: 22 }}
-                      >
-                        <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
-                          <Card gray>
-                            <Box padding="16px" fontSize={14}>
-                              Settlement price ≥ 62800USDT, will be exercised Estimated return 56750.61 USDT
-                            </Box>
-                          </Card>
-                          <Card gray>
-                            <Box padding="16px" fontSize={14}>
-                              Settlement price ≥ 62800USDT, will be exercised Estimated return 56750.61 USDT
-                            </Box>
-                          </Card>
-                        </Box>
-                      </Grid>
+                      {!isDownMd && (
+                        <Grid
+                          item
+                          xs={12}
+                          md={4}
+                          sx={{ height: { xs: 'auto', md: '100%' } }}
+                          paddingBottom={{ xs: 0, md: 22 }}
+                        >
+                          <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
+                            <Card gray>
+                              <Box padding="16px" fontSize={14}>
+                                Settlement price ≥ {product?.strikePrice ?? '-'}, will be exercised Estimated return
+                                56750.61 USDT
+                              </Box>
+                            </Card>
+                            <Card gray>
+                              <Box padding="16px" fontSize={14}>
+                                Settlement price ≥ {product?.strikePrice ?? '-'}, will be exercised Estimated return
+                                56750.61 USDT
+                              </Box>
+                            </Card>
+                          </Box>
+                        </Grid>
+                      )}
                     </Box>
                   </Box>
-                  <OutlinedCard padding="16px 20px">
-                    <Typography fontSize={16} color={theme.palette.text.primary}>
-                      Return on investment:
-                    </Typography>
-                    <StyledUnorderList>
-                      <li>
-                        When the final settlement price ≥ {product?.strikePrice ?? '-'} USDT, you will receive{' '}
-                        <span style={{ color: theme.palette.text.primary }}>56,750.61 USDT</span>.
-                      </li>
-                      <li>
-                        When the settlement price is &lt; {product?.strikePrice ?? '-'} USDT, you will receive{' '}
-                        <span style={{ color: theme.palette.text.primary }}>1.682655 BTC</span>.
-                      </li>
-                      <li>
-                        APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully
-                        complete the subscription.
-                      </li>
-                    </StyledUnorderList>
-                  </OutlinedCard>
+                  {isDownMd ? (
+                    returnOnInvestment
+                  ) : (
+                    <OutlinedCard padding="16px 20px">{returnOnInvestment}</OutlinedCard>
+                  )}
                 </Box>
               </Card>
             </Grid>
