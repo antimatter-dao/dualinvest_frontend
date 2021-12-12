@@ -92,7 +92,7 @@ export default function DualInvestMgmt() {
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const [currentCurrency, setCurrentCurrency] = useState(BTC)
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
+  const [isConfirmOpen, setIsConfirmOpen] = useState(true)
 
   const graphContainer = useRef<HTMLDivElement>(null)
   const node = useRef<any>()
@@ -279,7 +279,7 @@ export default function DualInvestMgmt() {
 
   return (
     <>
-      <ConfirmModal isOpen={isConfirmOpen} onDismiss={hideConfirm} onConfirm={handleConfirm} />
+      <ConfirmModal isOpen={isConfirmOpen} onDismiss={hideConfirm} onConfirm={handleConfirm} amount={amount} />
       <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
       <Box
         display="grid"
