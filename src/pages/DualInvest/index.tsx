@@ -30,7 +30,7 @@ const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
     }
   },
   [theme.breakpoints.down('md')]: {
-    width: 'calc(100vw - 72px)'
+    width: 'calc(100vw - 50px)'
   }
 }))
 
@@ -124,25 +124,45 @@ export default function DualInvest() {
           alignItems="center"
         >
           <Box display="grid" gap={12}>
-            <Typography component="h1" sx={{ fontSize: { xs: 44 }, fontWeight: 700 }}>
+            <Typography component="h1" sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700 }}>
               Dual Investment
             </Typography>
-            <Box display={{ xs: 'grid', md: 'flex' }} gap={{ xs: 8, md: 32 }}>
+            <Box display={{ xs: 'grid', md: 'flex' }} gap={{ xs: 8, md: 32 }} paddingBottom={{ xs: 16, md: 30 }}>
               <LogoText
                 logo={<Image src={checkUrl} />}
-                text={<Typography sx={{ fontSize: 18, opacity: 0.8 }}>Earn both ups and downs</Typography>}
+                text={
+                  <Typography sx={{ fontSize: { xs: 14, md: 18 }, opacity: 0.8 }}>
+                    Earn fixed yield on idle assets
+                  </Typography>
+                }
               />
               <LogoText
                 logo={<Image src={checkUrl} />}
-                text={<Typography sx={{ fontSize: 18, opacity: 0.8 }}>More control</Typography>}
+                text={
+                  <Typography sx={{ fontSize: { xs: 14, md: 18 }, opacity: 0.8 }}>
+                    Earn on both ups and downs
+                  </Typography>
+                }
               />
             </Box>
-            <Grid container spacing={{ xs: 8, md: 20 }} mt={30}>
+            <Grid container spacing={{ xs: 8, md: 20 }}>
               <Grid item xs={12} md={6}>
-                <NumericalCard value="9,657,321" unit="USDT" border subValue="Total investment amount" />
+                <NumericalCard
+                  width={isDownMd ? '320px' : '264px'}
+                  value="9,657,321"
+                  unit="USDT"
+                  border
+                  subValue="Total investment amount"
+                />
               </Grid>
               <Grid item xs={12} md={6}>
-                <NumericalCard value="168,640" unit="USDT" border subValue="Amount of investment in progress" />
+                <NumericalCard
+                  width={isDownMd ? '320px' : '264px'}
+                  value="168,640"
+                  unit="USDT"
+                  border
+                  subValue="Amount of subscribed investment"
+                />
               </Grid>
             </Grid>
           </Box>
@@ -262,30 +282,31 @@ export default function DualInvest() {
         </Box>
         <DataTable onSubscribe={handleSubscribe} productList={productList?.put} />
       </Box>
-
-      <Grid container sx={{ maxWidth: theme => theme.width.maxContent }} spacing={20} width="100%">
-        <Grid item xs={12} md={4}>
-          <FeatureCard
-            icon={<Image src={securityUrl} />}
-            title="Security"
-            content="Top-level security infrastructure and risk control measures to protect asset safety"
-          />
+      <Box display="flex" alignContent="center" justifyContent="center" width={theme => theme.width.maxContent}>
+        <Grid container sx={{ justifyContent: 'space-between' }} spacing={20}>
+          <Grid item xs={12} md={4}>
+            <FeatureCard
+              icon={<Image src={securityUrl} />}
+              title="Security"
+              content="Top-level security infrastructure and risk control measures to protect asset safety"
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <FeatureCard
+              icon={<Image src={highReturnUrl} />}
+              title="High Return"
+              content="We ensure your APY gets locked in on subscription. Enjoy high fixed yield!"
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <FeatureCard
+              icon={<Image src={flexibleUrl} />}
+              title="Flexible Experience"
+              content="High flexibility and low barriers for participation "
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={4}>
-          <FeatureCard
-            icon={<Image src={highReturnUrl} />}
-            title="High Return"
-            content="High-end liquidity strategy in the industry to ensure high returns"
-          />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <FeatureCard
-            icon={<Image src={flexibleUrl} />}
-            title="Flexible Experience"
-            content="Low barriers to participation and strong flexibility"
-          />
-        </Grid>
-      </Grid>
+      </Box>
     </Box>
   )
 }
