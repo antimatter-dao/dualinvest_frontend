@@ -26,6 +26,7 @@ export default function _Accordion(props: Props) {
       expanded={expanded}
     >
       <AccordionSummary
+        sx={{ fontSize: { xs: 14, md: 16 } }}
         expandIcon={expanded ? <RemoveIcon sx={{ color: '#929292' }} /> : <AddIcon sx={{ color: '#929292' }} />}
       >
         {summary}

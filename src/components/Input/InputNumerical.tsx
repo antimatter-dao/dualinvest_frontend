@@ -52,7 +52,7 @@ export default function NumericalInput({
       {(label || balance) && (
         <Box display="flex" justifyContent="space-between">
           <InputLabel>{label}</InputLabel>
-          <Box display="flex" alignItems="flex-start">
+          <Box display="flex" alignItems="baseline">
             {!!balance && (
               <InputLabel style={{ fontSize: '12px' }}>
                 Available: {balance} {unit ?? 'MATTER'}
