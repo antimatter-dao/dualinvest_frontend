@@ -246,11 +246,11 @@ export default function LineChart({
   useEffect(() => {
     if (lineSeries) {
       lineSeries.setData(lineSeriesData)
+      handleStrikeLine()
     }
     if (chart) {
       chart.timeScale().fitContent()
     }
-    handleStrikeLine()
 
     // if (chart) {
     //   if (lineSeriesData2) {
@@ -330,12 +330,12 @@ export default function LineChart({
           <Box
             height="100%"
             width="100%"
-            sx={{ background: '#ffffff', position: 'absolute', zIndex: 3, top: 0 }}
+            sx={{ background: '#ffffff50', position: 'absolute', zIndex: 3, top: 0 }}
             display="flex"
             justifyContent="center"
             alignItems="center"
           >
-            <Spinner size={100} />
+            <Spinner size={60} />
           </Box>
         )}
 

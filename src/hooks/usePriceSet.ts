@@ -52,7 +52,7 @@ export function usePrice(symbol: string | undefined) {
           setPrice(json.price)
         })
         .catch(e => console.error(e))
-    }, 10000)
+    }, 3000)
 
     return () => {
       clearInterval(id)
