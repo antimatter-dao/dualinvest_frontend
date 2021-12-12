@@ -25,6 +25,7 @@ import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
 import { usePrice } from 'hooks/usePriceSet'
 import { useAccountBalances } from 'hooks/useAccountBalance'
+import LogoText from 'components/LogoText'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -121,7 +122,7 @@ export default function Dashboard() {
     return accountBalances
       ? [
           [
-            'BTC',
+            <LogoText key="1" logo={<CurrencyLogo currency={BTC} />} text="BTC" size="32px" />,
             accountBalances?.BTC?.availableBalance ?? '-',
             accountBalances?.BTC?.lockedBalance ?? '-',
             accountBalances?.BTC?.totalInvest ?? '-',
@@ -140,7 +141,7 @@ export default function Dashboard() {
             />
           ],
           [
-            'USDT',
+            <LogoText key="1" logo={<CurrencyLogo currency={USDT} />} text="USDT" size="32px" />,
             accountBalances?.USDT?.availableBalance ?? '-',
             accountBalances?.USDT?.lockedBalance ?? '-',
             accountBalances?.USDT?.totalInvest ?? '-',

@@ -2,9 +2,13 @@ import React, { useMemo } from 'react'
 import Logo from './LogoBase'
 import { Currency } from '../../../constants/token/currency'
 import { Token } from '../../../constants/token/token'
+import { BTC, USDT } from 'constants/index'
+import BtcLogo from 'assets/svg/btc_logo.svg'
+import UsdtLogo from 'assets/svg/usdt_logo.svg'
 
-export const getTokenLogoURL = (address: string) =>
-  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+export const getTokenLogoURL = (address: string) => {
+  return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+}
 
 export default function CurrencyLogo({
   currency,
@@ -16,6 +20,12 @@ export default function CurrencyLogo({
   style?: React.CSSProperties
 }) {
   const srcs: string[] = useMemo(() => {
+    if (currency === BTC) {
+      return [BtcLogo]
+    }
+    if (currency === USDT) {
+      return [UsdtLogo]
+    }
     if (currency instanceof Token) {
       return [getTokenLogoURL(currency.address)]
     }

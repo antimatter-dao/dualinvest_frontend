@@ -8,7 +8,7 @@ import LogoText from 'components/LogoText'
 import Table from 'components/Table'
 import NumericalCard from 'components/Card/NumericalCard'
 import Button from 'components/Button/Button'
-import antimatterBlackCircle from 'assets/svg/antimatter_circle_black.svg'
+// import antimatterBlackCircle from 'assets/svg/antimatter_circle_black.svg'
 import Card from 'components/Card/Card'
 import securityUrl from 'assets/images/security.png'
 import highReturnUrl from 'assets/images/high_return.png'
@@ -20,6 +20,8 @@ import { Product } from 'utils/fetch/product'
 import Spinner from 'components/Spinner'
 import { useProductList } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
+import { BTC, USDT } from 'constants/index'
+import CurrencyLogo from 'components/essential/CurrencyLogo'
 
 const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
   '& #dualInvestGuide': {
@@ -165,13 +167,21 @@ export default function DualInvest() {
       >
         <Box display={{ xs: 'grid', md: 'flex' }} alignContent="center" justifyContent="space-between">
           <Box display="grid" columnGap={20} rowGap={8}>
-            <Image
-              src={antimatterBlackCircle}
+            <CurrencyLogo
+              currency={BTC}
+              size="64px"
               style={{
                 gridRowStart: 1,
                 gridRowEnd: isDownMd ? 'span 1' : 'span 2'
               }}
             />
+            {/* <Image
+              src={antimatterBlackCircle}
+              style={{
+                gridRowStart: 1,
+                gridRowEnd: isDownMd ? 'span 1' : 'span 2'
+              }}
+            /> */}
             <Typography
               fontWeight={700}
               sx={{
@@ -221,17 +231,25 @@ export default function DualInvest() {
       >
         <Box display={{ xs: 'grid', md: 'flex' }} alignContent="center" justifyContent="space-between">
           <Box display="grid" columnGap={20} rowGap={8}>
-            <Image
+            <CurrencyLogo
+              currency={USDT}
+              size="64px"
+              style={{
+                gridRowStart: 1,
+                gridRowEnd: isDownMd ? 'span 1' : 'span 2'
+              }}
+            />
+            {/* <Image
               src={antimatterBlackCircle}
               style={{
                 gridRowStart: 1,
-                gridRowEnd: 'span 2'
+                gridRowEnd: isDownMd ? 'span 1' : 'span 2'
               }}
-            />
+            /> */}
             <Typography
               fontWeight={700}
               sx={{
-                gridColumnStart: 2,
+                gridColumnStart: isDownMd ? 1 : 2,
                 gridColumnEnd: 'span 1',
                 fontSize: 24
               }}
