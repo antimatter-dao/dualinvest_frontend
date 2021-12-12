@@ -20,10 +20,10 @@ export default function CurrencyLogo({
   style?: React.CSSProperties
 }) {
   const srcs: string[] = useMemo(() => {
-    if (currency === BTC) {
+    if (currency?.symbol === BTC.symbol) {
       return [BtcLogo]
     }
-    if (currency === USDT) {
+    if (currency?.symbol === USDT.symbol) {
       return [UsdtLogo]
     }
     if (currency instanceof Token) {
