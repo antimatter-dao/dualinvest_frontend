@@ -69,12 +69,10 @@ export function useOrderRecords(investStatus?: number, pageNum?: number, pageSiz
     total: 0
   })
 
-  console.log(account)
-
   usePollingWithMaxRetries(
     () =>
-      Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecords', {
-        address: null,
+      Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
+        address: account,
         investStatus,
         pageNum,
         pageSize
