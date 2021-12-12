@@ -13,7 +13,7 @@ import Card from 'components/Card/Card'
 import securityUrl from 'assets/images/security.png'
 import highReturnUrl from 'assets/images/high_return.png'
 import flexibleUrl from 'assets/images/flexible.png'
-import { /*Progress,*/ SimpleProgress } from 'components/Progress'
+// import { Progress, SimpleProgress } from 'components/Progress'
 import { routes } from 'constants/routes'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { Product } from 'utils/fetch/product'
@@ -62,7 +62,7 @@ const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => voi
       flexDirection={isDownMd ? 'column' : 'row'}
       gap={20}
     >
-      {isDownMd && <SimpleProgress val={15.08} total={50} hideValue width="100%" />}
+      {/* {isDownMd && <SimpleProgress val={15.08} total={50} hideValue width="100%" />} */}
       <Button
         height="36px"
         width={isDownMd ? '100%' : '120px'}
