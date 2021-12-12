@@ -175,13 +175,6 @@ export default function DualInvest() {
                 gridRowEnd: isDownMd ? 'span 1' : 'span 2'
               }}
             />
-            {/* <Image
-              src={antimatterBlackCircle}
-              style={{
-                gridRowStart: 1,
-                gridRowEnd: isDownMd ? 'span 1' : 'span 2'
-              }}
-            /> */}
             <Typography
               fontWeight={700}
               sx={{
@@ -239,13 +232,6 @@ export default function DualInvest() {
                 gridRowEnd: isDownMd ? 'span 1' : 'span 2'
               }}
             />
-            {/* <Image
-              src={antimatterBlackCircle}
-              style={{
-                gridRowStart: 1,
-                gridRowEnd: isDownMd ? 'span 1' : 'span 2'
-              }}
-            /> */}
             <Typography
               fontWeight={700}
               sx={{
