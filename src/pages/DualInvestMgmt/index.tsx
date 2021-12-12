@@ -239,7 +239,7 @@ export default function DualInvestMgmt() {
         </StyledUnorderList>
       </div>
     )
-  }, [theme.palette.text.primary, product?.strikePrice])
+  }, [product?.strikePrice])
 
   return (
     <>
