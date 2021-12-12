@@ -37,7 +37,6 @@ const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
 }))
 
 const RowStr = styled(Typography)(({ theme }) => ({
-  color: '#000000',
   fontWeight: 400,
   [theme.breakpoints.down('md')]: {
     fontWeight: 600,
@@ -48,7 +47,7 @@ const RowStr = styled(Typography)(({ theme }) => ({
 const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => void) => {
   return [
     <RowStr key={1}>{data.strikePrice} USDT</RowStr>,
-    <RowStr key={1} minWidth={'50px'}>
+    <RowStr key={1} minWidth={'50px'} color="#31B047">
       {(+data.apy * 100).toFixed(2)}%
     </RowStr>,
     <RowStr key={1}>{dayjs(data.expiredAt).format('DD MMM YYYY')}</RowStr>,
