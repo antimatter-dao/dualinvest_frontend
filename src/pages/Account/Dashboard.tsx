@@ -135,7 +135,7 @@ export default function Dashboard() {
     return accountBalances
       ? [
           [
-            <TokenHeader key="1" token={BTC} />,
+            <TokenHeader key="btc" token={BTC} />,
             accountBalances?.BTC?.availableBalance ?? '-',
             accountBalances?.BTC?.lockedBalance ?? '-',
             accountBalances?.BTC?.totalInvest ?? '-',
@@ -154,7 +154,7 @@ export default function Dashboard() {
             />
           ],
           [
-            <TokenHeader key="1" token={USDT} />,
+            <TokenHeader key="usdt" token={USDT} />,
             accountBalances?.USDT?.availableBalance ?? '-',
             accountBalances?.USDT?.lockedBalance ?? '-',
             accountBalances?.USDT?.totalInvest ?? '-',
@@ -324,7 +324,7 @@ function AccountBalanceCards({ data }: { data: any[][] }) {
   return (
     <Box mt={24} display="grid" gap={8}>
       {data.map((dataRow, idx) => (
-        <Card color="#F2F5FA" padding="17px 16px" key={idx}>
+        <Card color="#F2F5FA" padding="17px 16px" key={`balance-row-${idx}`}>
           <Box display="grid" gap={20}>
             {dataRow[BalanceTableHeaderIndex.token]}
             {dataRow[BalanceTableHeaderIndex.actions]}
@@ -335,7 +335,7 @@ function AccountBalanceCards({ data }: { data: any[][] }) {
               if (idx2 === BalanceTableHeaderIndex.token) return null
               if (idx2 === BalanceTableHeaderIndex.actions) return null
               return (
-                <Box key={idx2} display="flex" justifyContent="space-between">
+                <Box key={`balance-row-${idx}-datum-${idx2}`} display="flex" justifyContent="space-between">
                   <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
                     {BalanceTableHeader[idx2]}
                   </Typography>
@@ -356,15 +356,15 @@ function AccountDetailCards({ data }: { data: any[][] }) {
   return (
     <Box display="flex" flexDirection="column" gap={8} mb={24}>
       {data.map((dataRow, idx) => (
-        <Card color="#F2F5FA" padding="17px 16px" key={idx}>
+        <Card color="#F2F5FA" padding="17px 16px" key={`detail-row-${idx}`}>
           <Box display="flex" flexDirection="column" gap={16}>
-            {dataRow.map((datum, idx) => {
+            {dataRow.map((datum, idx2) => {
               return (
-                <Box key={idx} display="flex" justifyContent="space-between">
+                <Box key={`detail-row-${idx}-datum-${idx2}`} display="flex" justifyContent="space-between">
                   <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }} component="div">
-                    {DetailTableHeader[idx]}
+                    {DetailTableHeader[idx2]}
                   </Typography>
-                  <Typography fontSize={12} fontWeight={600}>
+                  <Typography fontSize={12} fontWeight={600} component="div">
                     {datum}
                   </Typography>
                 </Box>
