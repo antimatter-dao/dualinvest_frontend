@@ -16,13 +16,13 @@ export default function NoService() {
           <p>
             The dapp is only open to non-U.S. and non-China persons and entities. Use of VPN, Tor, proxies or other
             means to circumvent this restriction is a violation of our&nbsp;
-            <ExternalLink sx={{ fontSize: 16 }} href="https://docs.antimatter.finance/disclaimer/notice-and-disclaimer">
+            <ExternalLink sx={{ fontSize: 20 }} href="https://docs.antimatter.finance/disclaimer/notice-and-disclaimer">
               Terms of Service.
             </ExternalLink>
           </p>
           <p>
             For details, please see our&nbsp;
-            <ExternalLink sx={{ fontSize: 16 }} href="https://docs.antimatter.finance/disclaimer/notice-and-disclaimer">
+            <ExternalLink sx={{ fontSize: 20 }} href="https://docs.antimatter.finance/disclaimer/notice-and-disclaimer">
               Terms of Service
             </ExternalLink>
             .

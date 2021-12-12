@@ -15,6 +15,8 @@ import { useActiveWeb3React } from 'hooks'
 import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
+import { usePrice } from 'hooks/usePriceSet'
+import { useDualInvestCallback } from 'hooks/useDualInvest'
 
 enum PositionTableHeaderIndex {
   investAmount,
@@ -46,10 +48,13 @@ export default function Position() {
   const [page, setPage] = useState(1)
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const { orderList, pageParams } = useOrderRecords(undefined, undefined, 999999)
-  const filteredOrderList = orderList?.filter(order =>
-    [InvestStatus.Ordered, InvestStatus.ReadyToSettle].includes(order.investStatus)
-  )
+  const price = usePrice('BTC')
+  const { finishOrderCallback } = useDualInvestCallback()
+  const { orderList } = useOrderRecords(undefined, undefined, 999999)
+
+  const filteredOrderList = useMemo(() => {
+    return orderList?.filter(order => [InvestStatus.Ordered, InvestStatus.ReadyToSettle].includes(order.investStatus))
+  }, [orderList])
 
   const pageCount = useMemo(() => {
     if (!filteredOrderList) return 0
@@ -70,7 +75,7 @@ export default function Position() {
         expiredAt,
         strikePrice,
         earn,
-        createdAt,
+        ts,
         orderId,
         productId,
         deliveryPrice,
@@ -85,20 +90,32 @@ export default function Position() {
             dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
             strikePrice,
             earn,
-            dayjs(+createdAt * 1000).format('MMM DD, YYYY hh:mm:ss A'),
+            dayjs(+ts * 1000).format('MMM DD, YYYY hh:mm:ss A'),
             <Box display="flex" key="action" gap={isDownMd ? 10 : 8} sx={{ mr: -15 }}>
               <StatusTag
                 status={investStatus === InvestStatus.Ordered ? 'progressing' : 'finished'}
                 width={isDownMd ? 120 : 100}
               />
-              <ClaimButton onClick={() => {}} width={isDownMd ? 84 : 68} />
+              <ClaimButton
+                onClick={() => {
+                  if (!finishOrderCallback) return
+                  finishOrderCallback(orderId + '', productId + '')
+                    .then(r => {
+                      console.log(78787, r)
+                    })
+                    .catch(e => {
+                      console.error(e)
+                    })
+                }}
+                width={isDownMd ? 84 : 68}
+              />
             </Box>
           ],
-          details: [orderId, productId, `${dayjs().diff(dayjs(createdAt * 1000), 'day')} days`, deliveryPrice]
+          details: [orderId, productId, `${dayjs().diff(dayjs(ts * 1000), 'day')} days`, deliveryPrice]
         }
       }
     )
-  }, [filteredOrderList, page])
+  }, [filteredOrderList, page, isDownMd, finishOrderCallback])
 
   const hiddenParts = useCallback(() => {
     return data.map(datum => (
@@ -127,7 +144,7 @@ export default function Position() {
       <Box sx={{ mt: 48, width: '100%' }}>
         <Card>
           <Box padding="38px 24px">
-            <NumericalCard title="BTC latest spot price" value="57640.00" border={true} />
+            <NumericalCard title="BTC latest spot price" value={price} border={true} />
             <Box position="relative">
               {!orderList && (
                 <Box
@@ -162,7 +179,7 @@ export default function Position() {
                 page={page}
                 perPage={PageSize}
                 boundaryCount={0}
-                total={pageParams.total}
+                total={filteredOrderList?.length}
                 onChange={(event, value) => setPage(value)}
               />
               {data.length === 0 && <NoDataCard height="20vh" />}

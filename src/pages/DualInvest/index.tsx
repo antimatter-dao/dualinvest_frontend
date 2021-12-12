@@ -8,18 +8,20 @@ import LogoText from 'components/LogoText'
 import Table from 'components/Table'
 import NumericalCard from 'components/Card/NumericalCard'
 import Button from 'components/Button/Button'
-import antimatterBlackCircle from 'assets/svg/antimatter_circle_black.svg'
+// import antimatterBlackCircle from 'assets/svg/antimatter_circle_black.svg'
 import Card from 'components/Card/Card'
 import securityUrl from 'assets/images/security.png'
 import highReturnUrl from 'assets/images/high_return.png'
 import flexibleUrl from 'assets/images/flexible.png'
-import { /*Progress,*/ SimpleProgress } from 'components/Progress'
+// import { Progress, SimpleProgress } from 'components/Progress'
 import { routes } from 'constants/routes'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { Product } from 'utils/fetch/product'
 import Spinner from 'components/Spinner'
 import { useProductList } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
+import { BTC, USDT } from 'constants/index'
+import CurrencyLogo from 'components/essential/CurrencyLogo'
 
 const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
   '& #dualInvestGuide': {
@@ -35,7 +37,6 @@ const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
 }))
 
 const RowStr = styled(Typography)(({ theme }) => ({
-  color: '#000000',
   fontWeight: 400,
   [theme.breakpoints.down('md')]: {
     fontWeight: 600,
@@ -46,7 +47,7 @@ const RowStr = styled(Typography)(({ theme }) => ({
 const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => void) => {
   return [
     <RowStr key={1}>{data.strikePrice} USDT</RowStr>,
-    <RowStr key={1} minWidth={'50px'}>
+    <RowStr key={1} minWidth={'50px'} color="#31B047">
       {(+data.apy * 100).toFixed(2)}%
     </RowStr>,
     <RowStr key={1}>{dayjs(data.expiredAt).format('DD MMM YYYY')}</RowStr>,
@@ -61,7 +62,7 @@ const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => voi
       flexDirection={isDownMd ? 'column' : 'row'}
       gap={20}
     >
-      {isDownMd && <SimpleProgress val={15.08} total={50} hideValue width="100%" />}
+      {/* {isDownMd && <SimpleProgress val={15.08} total={50} hideValue width="100%" />} */}
       <Button
         height="36px"
         width={isDownMd ? '100%' : '120px'}
@@ -154,22 +155,23 @@ export default function DualInvest() {
         id="up"
         display="grid"
         width="100%"
-        gap={44}
+        gap={8}
         sx={{
           background: theme => theme.palette.background.paper,
           borderRadius: 2,
           padding: '34px 24px',
-
           maxWidth: theme => ({ xs: `calc(100vw - 40px)`, md: theme.width.maxContent })
         }}
       >
         <Box display={{ xs: 'grid', md: 'flex' }} alignContent="center" justifyContent="space-between">
           <Box display="grid" columnGap={20} rowGap={8}>
-            <Image
-              src={antimatterBlackCircle}
+            <CurrencyLogo
+              currency={BTC}
+              size="64px"
               style={{
                 gridRowStart: 1,
-                gridRowEnd: isDownMd ? 'span 1' : 'span 2'
+                gridRowEnd: isDownMd ? 'span 1' : 'span 2',
+                marginBottom: isDownMd ? 12 : 0
               }}
             />
             <Typography
@@ -189,20 +191,28 @@ export default function DualInvest() {
               Deposit BTC, and settle the principal and income{isDownMd && <br />} at maturity as BTC or USDT
             </Typography>
           </Box>
-          <Box display="flex" flexDirection="column" alignItems="flex-end">
-            <Typography color="primary" fontSize={24} fontWeight={700} gap={8} display="flex" alignItems="center">
-              <span> {productList?.btcPrice}</span>
-              <svg width="17" height="18" viewBox="0 0 17 18" fill="none">
-                <path
-                  d="M8.02174 3.81107L12.6559 6.40065V11.5896L8.04184 14.1889L3.40773 11.6287V6.4202L8.02174 3.81107ZM8.02174 0L6.3229 0.957655L1.69884 3.56678L0 4.52443V13.5244L1.69884 14.4723L6.33295 17.0521L8.03179 18L9.73063 17.0423L14.3446 14.4332L16.0435 13.4756V4.4658L14.3446 3.51792L9.71053 0.928339L8.02174 0Z"
-                  fill="#375CD2"
-                />
-              </svg>
-            </Typography>
-            <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
-              BTC latest spot price
-            </Typography>
-          </Box>
+          <Card gray={isDownMd} style={{ borderRadius: '16px', margin: isDownMd ? '16px 0' : 0 }}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems={isDownMd ? 'flex-start' : 'flex-end'}
+              padding="16px 20px"
+              gap={isDownMd ? 10 : 0}
+            >
+              <Typography color="primary" fontSize={24} fontWeight={700} gap={8} display="flex" alignItems="center">
+                <span> {productList?.btcPrice}</span>
+                <svg width="17" height="18" viewBox="0 0 17 18" fill="none">
+                  <path
+                    d="M8.02174 3.81107L12.6559 6.40065V11.5896L8.04184 14.1889L3.40773 11.6287V6.4202L8.02174 3.81107ZM8.02174 0L6.3229 0.957655L1.69884 3.56678L0 4.52443V13.5244L1.69884 14.4723L6.33295 17.0521L8.03179 18L9.73063 17.0423L14.3446 14.4332L16.0435 13.4756V4.4658L14.3446 3.51792L9.71053 0.928339L8.02174 0Z"
+                    fill="#375CD2"
+                  />
+                </svg>
+              </Typography>
+              <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
+                BTC latest spot price
+              </Typography>
+            </Box>
+          </Card>
         </Box>
         <DataTable onSubscribe={handleSubscribe} productList={productList?.call} />
       </Box>
@@ -211,7 +221,7 @@ export default function DualInvest() {
         id="down"
         display="grid"
         width="100%"
-        gap={44}
+        gap={8}
         sx={{
           background: theme => theme.palette.background.paper,
           borderRadius: 2,
@@ -221,17 +231,19 @@ export default function DualInvest() {
       >
         <Box display={{ xs: 'grid', md: 'flex' }} alignContent="center" justifyContent="space-between">
           <Box display="grid" columnGap={20} rowGap={8}>
-            <Image
-              src={antimatterBlackCircle}
+            <CurrencyLogo
+              currency={USDT}
+              size="64px"
               style={{
                 gridRowStart: 1,
-                gridRowEnd: 'span 2'
+                gridRowEnd: isDownMd ? 'span 1' : 'span 2',
+                marginBottom: isDownMd ? 12 : 0
               }}
             />
             <Typography
               fontWeight={700}
               sx={{
-                gridColumnStart: 2,
+                gridColumnStart: isDownMd ? 1 : 2,
                 gridColumnEnd: 'span 1',
                 fontSize: 24
               }}
@@ -245,20 +257,28 @@ export default function DualInvest() {
               Deposit USDT, and settle the principal and income {isDownMd && <br />}at maturity as BTC or USDT
             </Typography>
           </Box>
-          <Box display="flex" flexDirection="column" alignItems="flex-end">
-            <Typography color="primary" fontSize={24} fontWeight={700} gap={8} display="flex" alignItems="center">
-              <span>{productList?.btcPrice}</span>
-              <svg width="17" height="18" viewBox="0 0 17 18" fill="none">
-                <path
-                  d="M8.02174 3.81107L12.6559 6.40065V11.5896L8.04184 14.1889L3.40773 11.6287V6.4202L8.02174 3.81107ZM8.02174 0L6.3229 0.957655L1.69884 3.56678L0 4.52443V13.5244L1.69884 14.4723L6.33295 17.0521L8.03179 18L9.73063 17.0423L14.3446 14.4332L16.0435 13.4756V4.4658L14.3446 3.51792L9.71053 0.928339L8.02174 0Z"
-                  fill="#375CD2"
-                />
-              </svg>
-            </Typography>
-            <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
-              USDT latest spot price
-            </Typography>
-          </Box>
+          <Card gray={isDownMd} style={{ borderRadius: '16px', margin: isDownMd ? '16px 0' : 0 }}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems={isDownMd ? 'flex-start' : 'flex-end'}
+              padding="16px 20px"
+              gap={isDownMd ? 10 : 0}
+            >
+              <Typography color="primary" fontSize={24} fontWeight={700} gap={8} display="flex" alignItems="center">
+                <span>{productList?.btcPrice}</span>
+                <svg width="17" height="18" viewBox="0 0 17 18" fill="none">
+                  <path
+                    d="M8.02174 3.81107L12.6559 6.40065V11.5896L8.04184 14.1889L3.40773 11.6287V6.4202L8.02174 3.81107ZM8.02174 0L6.3229 0.957655L1.69884 3.56678L0 4.52443V13.5244L1.69884 14.4723L6.33295 17.0521L8.03179 18L9.73063 17.0423L14.3446 14.4332L16.0435 13.4756V4.4658L14.3446 3.51792L9.71053 0.928339L8.02174 0Z"
+                    fill="#375CD2"
+                  />
+                </svg>
+              </Typography>
+              <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
+                BTC latest spot price
+              </Typography>
+            </Box>
+          </Card>
         </Box>
         <DataTable onSubscribe={handleSubscribe} productList={productList?.put} />
       </Box>
@@ -312,7 +332,7 @@ function DataTable({
           }
         />
       ) : (
-        <Spinner size={100} marginLeft="auto" marginRight="auto" />
+        <Spinner marginLeft="auto" marginRight="auto" size={60} />
       )}
     </>
   )

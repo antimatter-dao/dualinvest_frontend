@@ -121,4 +121,6 @@ export const BLOCKED_ADDRESSES: string[] = [
 
 export const DUAL_INVEST_ADDRESS = '0x380b5959600F90656188498bf29475d5a4d2FEa5'
 
-export const BTC = new Token(3, '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93', 18, 'BTC', 'btc_token')
+export const BTC = new Token(3, '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93', 18, 'BTC', 'Bitcoin')
+
+export const USDT = new Token(3, '0xE78D911B56a6321bF622172D32D916f9563e8D84', 18, 'USDT', 'Tether (USDT)')
