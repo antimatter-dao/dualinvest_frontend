@@ -331,11 +331,11 @@ function AccountBalanceCards({ data }: { data: any[][] }) {
           </Box>
 
           <Box display="flex" flexDirection="column" gap={16} mt={24}>
-            {dataRow.map((datum, idx) => {
+            {dataRow.map((datum, idx2) => {
               if (idx === BalanceTableHeaderIndex.token) return null
               if (idx === BalanceTableHeaderIndex.actions) return null
               return (
-                <Box key={idx} display="flex" justifyContent="space-between">
+                <Box key={idx2} display="flex" justifyContent="space-between">
                   <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
                     {BalanceTableHeader[idx]}
                   </Typography>
