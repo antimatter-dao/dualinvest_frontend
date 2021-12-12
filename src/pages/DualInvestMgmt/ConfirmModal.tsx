@@ -59,10 +59,14 @@ export default function ConfirmModal({
             return (
               <Box key={idx} display="flex" justifyContent="space-between">
                 {key === 'Platform service fee' ? (
-                  <>
-                    <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
-                    {/* <QuestionHelper text="..." /> */}
-                  </>
+                  <Box display="flex" alignItems="center">
+                    <Typography sx={{ opacity: 0.8 }} component="span">
+                      {key}
+                    </Typography>
+                    <span>
+                      <QuestionHelper text="The platform will charge 1% of the profit as a service fee" size={11} />
+                    </span>
+                  </Box>
                 ) : (
                   <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
                 )}

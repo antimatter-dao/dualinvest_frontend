@@ -13,8 +13,8 @@ const QuestionWrapper = styled('div')(({ theme }) => ({
   outline: 'none',
   cursor: 'default',
   borderRadius: '36px',
-  backgroundColor: theme.bgColor.bg2,
-  color: theme.textColor.text2,
+  backgroundColor: theme.palette.background.paper,
+  color: '#828282',
   '&:hover, :focus': {
     opacity: 0.7
   }
