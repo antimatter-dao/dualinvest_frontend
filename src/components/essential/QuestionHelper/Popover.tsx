@@ -11,7 +11,7 @@ const PopoverContainer = styled('div')(({ theme }) => ({
   background: '#424242',
   border: '1px solid #424242',
   boxShadow: '0 4px 8px 0 #424242',
-  color: '#FFFFFF',
+  color: theme.palette.primary.contrastText,
   borderRadius: ' 8px'
 }))
 
