@@ -325,18 +325,14 @@ function AccountBalanceCards({ data }: { data: any[][] }) {
     <Box mt={24}>
       {data.map((dataRow, idx) => (
         <Card color="#F2F5FA" padding="17px 16px" key={idx}>
-          <Box mb={20} display="flex" gap={16} alignItems="center">
-            <CurrencyLogo currency={BTC} />
-            <Box>
-              <Typography fontSize={16}>{BTC.symbol}</Typography>
-              <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-                {BTC.name}
-              </Typography>
-            </Box>
+          <Box display="grid" gap={20}>
+            {dataRow[BalanceTableHeaderIndex.token]}
+            {dataRow[BalanceTableHeaderIndex.actions]}
           </Box>
-          {dataRow[BalanceTableHeaderIndex.actions]}
+
           <Box display="flex" flexDirection="column" gap={16} mt={24}>
             {dataRow.map((datum, idx) => {
+              if (idx === BalanceTableHeaderIndex.token) return null
               if (idx === BalanceTableHeaderIndex.actions) return null
               return (
                 <Box key={idx} display="flex" justifyContent="space-between">
