@@ -272,14 +272,16 @@ export default function DualInvestMgmt() {
           <li>
             When the final settlement price ≥ {product?.strikePrice ?? '-'} USDT, you will receive{' '}
             <span style={{ color: theme.palette.text.primary }}>
-              {product?.gtStrikePrice} {product?.investCurrency}
+              {product?.gtStrikePrice}{' '}
+              {product ? (product.type === 'CALL' ? product?.strikeCurrency : product?.investCurrency) : ''}
             </span>
             .
           </li>
           <li>
             When the settlement price is &lt; {product?.strikePrice ?? '-'} USDT, you will receive{' '}
             <span style={{ color: theme.palette.text.primary }}>
-              {product?.ltStrikePrice} {product?.strikeCurrency}
+              {product?.ltStrikePrice}{' '}
+              {product ? (product.type === 'CALL' ? product?.investCurrency : product?.strikeCurrency) : ''}
             </span>
             .
           </li>
@@ -290,13 +292,7 @@ export default function DualInvestMgmt() {
         </StyledUnorderList>
       </div>
     )
-  }, [
-    product?.gtStrikePrice,
-    product?.investCurrency,
-    product?.ltStrikePrice,
-    product?.strikeCurrency,
-    product?.strikePrice
-  ])
+  }, [product])
 
   return (
     <>
@@ -567,13 +563,23 @@ export default function DualInvestMgmt() {
                             <Card gray>
                               <Box padding="16px" fontSize={14}>
                                 Settlement price ≥ {product?.strikePrice ?? '-'}, will be exercised. Estimated return{' '}
-                                {product?.gtStrikePrice} {product?.investCurrency}
+                                {product?.gtStrikePrice}{' '}
+                                {product
+                                  ? product.type === 'CALL'
+                                    ? product?.strikeCurrency
+                                    : product?.investCurrency
+                                  : ''}
                               </Box>
                             </Card>
                             <Card gray>
                               <Box padding="16px" fontSize={14}>
                                 Settlement price &lt; {product?.strikePrice ?? '-'}, will not be exercised. Estimated
-                                return {product?.ltStrikePrice} {product?.strikeCurrency}
+                                return {product?.ltStrikePrice}{' '}
+                                {product
+                                  ? product.type === 'CALL'
+                                    ? product?.investCurrency
+                                    : product?.strikeCurrency
+                                  : ''}
                               </Box>
                             </Card>
                           </Box>
