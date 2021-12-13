@@ -122,7 +122,7 @@ export default function DualInvestMgmt() {
   }, [])
 
   const handleInput = useCallback(e => {
-    setAmount(Math.floor(+e.target.value) + '')
+    setAmount(e.target.value ? Math.floor(+e.target.value) + '' : '')
   }, [])
 
   const hideDeposit = useCallback(() => {
@@ -378,9 +378,11 @@ export default function DualInvestMgmt() {
                       disabled={!product || !account || isConfirmed}
                       value={amount}
                       onMax={() => {
-                        setAmount(
-                          balance ? `${Math.floor(+balance / ((product ? +product?.multiplier : 1) * multiplier))}` : ''
-                        )
+                        if (!product) return
+                        const maxAvailable = balance
+                          ? Math.floor(+balance / ((product ? +product?.multiplier : 1) * multiplier))
+                          : 0
+                        setAmount(`${maxAvailable > +product?.orderLimit ? product.orderLimit : maxAvailable}`)
                       }}
                       label={'Subscription Amount'}
                       onChange={handleInput}

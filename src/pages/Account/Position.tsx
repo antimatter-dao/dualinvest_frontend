@@ -94,13 +94,14 @@ export default function Position() {
         productId,
         deliveryPrice,
         investStatus,
-        multiplier
+        multiplier,
+        investCurrency
       }) => {
         return {
           summary: [
-            `${amount * +multiplier} ${currency}`,
+            `${amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)} ${investCurrency}`,
             <Typography color="primary" key="1" variant="inherit">
-              {+annualRor * 100}%
+              {(+annualRor * 100).toFixed(2)}%
             </Typography>,
             dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
             strikePrice,

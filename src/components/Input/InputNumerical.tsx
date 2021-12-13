@@ -83,7 +83,7 @@ export default function NumericalInput({
         spellCheck="false"
         endAdornment={
           onMax && (
-            <Box gap="20px" display="flex" alignItems="center" paddingLeft="20px" paddingBottom="2px">
+            <Box gap="20px" display="flex" alignItems="center" paddingLeft="10px" paddingBottom="2px">
               {endAdornment ? endAdornment : unit && <span>{unit ?? 'MATTER'}</span>}
               <SecondaryButton
                 disabled={props.disabled === true ? true : false}

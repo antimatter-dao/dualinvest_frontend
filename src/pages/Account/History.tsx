@@ -39,9 +39,11 @@ export default function History() {
         expiredAt,
         ts,
         deliveryPrice,
-        currency
+        currency,
+        multiplier,
+        investCurrency
       }) => [
-        amount,
+        `${amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)} ${investCurrency}`,
         <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
           {(+annualRor * 100).toFixed(2)}%
         </Typography>,

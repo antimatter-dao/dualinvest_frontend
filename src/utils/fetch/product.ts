@@ -84,6 +84,7 @@ export interface OrderRecord {
   hash: string
   indexPrice: string
   investStatus: number
+  investCurrency: string
   isLiquidated: string
   multiplier: string
   orderId: number
