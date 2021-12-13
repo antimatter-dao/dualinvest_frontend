@@ -124,13 +124,11 @@ export default function Position() {
                   finishOrderCallback(orderId + '', productId + '')
                     .then(r => {
                       hideModal()
-
                       addTransaction(r, {
                         summary: `Claim ${earn} ${currency}`
                       })
                       el.innerHTML = 'Claim'
                       el.disabled = false
-                      console.log(78787, r)
                     })
                     .catch(err => {
                       hideModal()

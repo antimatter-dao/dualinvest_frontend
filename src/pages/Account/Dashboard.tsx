@@ -25,6 +25,7 @@ import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
 import { usePrice } from 'hooks/usePriceSet'
 import { useAccountBalances } from 'hooks/useAccountBalance'
+import { toChecksumAddress } from 'web3-utils'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -96,7 +97,7 @@ export default function Dashboard() {
 
     return records.map(record => {
       const scanLink = chainId ? getEtherscanLink(chainId, record.hash, 'transaction') : ''
-      const token = chainId ? new Token(chainId, record.currency, 18, record.symbol) : undefined
+      const token = chainId ? new Token(chainId, toChecksumAddress(record.currency), 18, record.symbol) : undefined
 
       return [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
