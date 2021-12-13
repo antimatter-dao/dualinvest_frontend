@@ -106,7 +106,7 @@ export default function DualInvestMgmt() {
   const { showModal } = useModal()
   const { account } = useActiveWeb3React()
   const balance = useDualInvestBalance(currentCurrency)
-  const { createOrderCallback } = useDualInvestCallback()
+  const { createOrderCallback, checkOrderStatusCallback } = useDualInvestCallback()
   const product = useProduct(id)
   const toggleWallet = useWalletModalToggle()
   const addPopup = useAddPopup()
@@ -118,11 +118,6 @@ export default function DualInvestMgmt() {
     setIsConfirmOpen(true)
   }, [])
   const hideConfirm = useCallback(() => {
-    setIsConfirmOpen(false)
-  }, [])
-
-  const handleConfirm = useCallback(() => {
-    setIsConfirmed(true)
     setIsConfirmOpen(false)
   }, [])
 
@@ -151,7 +146,7 @@ export default function DualInvestMgmt() {
   )
 
   const handleSubscribe = useCallback(async () => {
-    if (!product || !amount || !createOrderCallback) return
+    if (!product || !amount || !createOrderCallback || !checkOrderStatusCallback) return
     const val = tryParseAmount((+amount * +product?.multiplier).toString(), currentCurrency)?.raw?.toString()
     if (!val) return
     try {
@@ -168,6 +163,10 @@ export default function DualInvestMgmt() {
       if (backendCall.data.code !== 200) throw Error('Backend Error')
       if (!backendCall.data.data) throw Error(backendCall.data.msg)
       const { orderId, productId } = backendCall.data.data
+      const orderStatusRes = await checkOrderStatusCallback(orderId)
+      if (orderStatusRes.status !== 0) {
+        throw Error('Order Exist')
+      }
       await createOrderCallback(orderId, productId, val, currentCurrency.address)
       let fail = 0
       const polling = new Promise((resolve, reject) => {
@@ -227,7 +226,24 @@ export default function DualInvestMgmt() {
       showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
       console.error(e)
     }
-  }, [account, addPopup, amount, createOrderCallback, currentCurrency, id, multiplier, product, showModal])
+  }, [
+    account,
+    addPopup,
+    amount,
+    checkOrderStatusCallback,
+    createOrderCallback,
+    currentCurrency,
+    id,
+    multiplier,
+    product,
+    showModal
+  ])
+
+  const handleConfirm = useCallback(() => {
+    setIsConfirmed(true)
+    setIsConfirmOpen(false)
+    handleSubscribe()
+  }, [handleSubscribe])
 
   const error = useMemo(() => {
     if (!product || !balance) return ''
@@ -513,7 +529,7 @@ export default function DualInvestMgmt() {
                       maxHeight="100%"
                       height="100%"
                       gap={20}
-                      display={{ xs: 'grid', md: 'flex', maxWidth: '100vw' }}
+                      display={{ xs: 'grid', md: 'flex', maxWidth: 'calc(100vw - 100px)' }}
                     >
                       <Grid
                         item

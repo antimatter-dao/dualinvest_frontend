@@ -48,9 +48,15 @@ export default function ConfirmModal({
           Subscription Amount
         </Typography>
         <Box display="flex" justifyContent="space-between" mb={30}>
-          <Typography fontSize={44} fontWeight={700}>
-            {amount}
-          </Typography>
+          {product && (
+            <Typography fontSize={44} fontWeight={700}>
+              {(
+                +product.multiplier *
+                +amount *
+                (product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
+              ).toFixed(2)}
+            </Typography>
+          )}
           <Typography fontSize={24}>{product?.investCurrency}</Typography>
         </Box>
         <Divider sx={{ opacity: 0.1 }} />

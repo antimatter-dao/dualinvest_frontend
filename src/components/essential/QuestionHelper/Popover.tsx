@@ -19,7 +19,7 @@ const ReferenceElement = styled('div')({
   display: 'inline-block'
 })
 
-const Arrow = styled('div')(({ theme }) => ({
+const Arrow = styled('div')(({}) => ({
   width: '8px',
   height: '8px',
   zIndex: 9998,

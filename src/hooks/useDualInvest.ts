@@ -27,6 +27,7 @@ export function useDualInvestCallback(): {
     | undefined
     | ((orderId: string | number, productId: string, amount: string, currencyAddress: string) => Promise<any>)
   finishOrderCallback: undefined | ((orderId: string, productId: string) => Promise<any>)
+  checkOrderStatusCallback: undefined | ((orderId: number) => Promise<any>)
 } {
   const { account, chainId } = useActiveWeb3React()
   const contract = useDualInvestContract()
@@ -86,6 +87,16 @@ export function useDualInvestCallback(): {
     [account, chainId, contract]
   )
 
+  const checkOrderStatus = useCallback(
+    async (orderId): Promise<any> => {
+      if (!contract) {
+        throw Error('no contract')
+      }
+      return contract.orders(orderId)
+    },
+    [contract]
+  )
+
   const createOrder = useCallback(
     async (orderId, productId, amount, currencyAddress): Promise<any> => {
       if (!contract) return undefined
@@ -103,7 +114,7 @@ export function useDualInvestCallback(): {
   )
 
   const finishOrder = useCallback(
-    async (orderId, productId): Promise<any> => {
+    async (orderId): Promise<any> => {
       if (!contract || !account || !chainId || !orderId) return undefined
       const signRes = await retry(
         () =>
@@ -147,9 +158,10 @@ export function useDualInvestCallback(): {
       depositCallback: deposit,
       withdrawCallback: withdraw,
       createOrderCallback: createOrder,
-      finishOrderCallback: finishOrder
+      finishOrderCallback: finishOrder,
+      checkOrderStatusCallback: checkOrderStatus
     }
-  }, [createOrder, deposit, finishOrder, withdraw])
+  }, [checkOrderStatus, createOrder, deposit, finishOrder, withdraw])
 
   return res
 }

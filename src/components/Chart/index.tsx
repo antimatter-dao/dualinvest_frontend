@@ -214,7 +214,7 @@ export default function LineChart({
     const resizeFunction = () => {
       const chartEl = document.getElementById(id + '-chart')
       if (!chartEl || !chart) return
-      const resizeWidth = isDownMd ? window.innerWidth - 60 : width ? width : chartEl.getBoundingClientRect().width
+      const resizeWidth = isDownMd ? window.innerWidth - 100 : width ? width : chartEl.getBoundingClientRect().width
       chart.resize(resizeWidth, height || 174)
       handleStrikeLine()
     }
