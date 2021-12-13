@@ -15,7 +15,7 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import ActionButton from 'components/Button/ActionButton'
 import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import { tryParseAmount } from 'utils/parseAmount'
-import ConfirmModal from './ConfirmModal'
+// import ConfirmModal from './ConfirmModal'
 import { useTransaction } from 'state/transactions/hooks'
 import { OutlinedCard } from 'components/Card/Card'
 import { DUAL_INVEST_ADDRESS } from 'constants/index'
@@ -44,9 +44,9 @@ export default function ActionModal({
   onDismiss: () => void
 }) {
   const [val, setVal] = useState('')
-  const [isConfirmed, setIsConfrirmed] = useState(false)
+  // const [isConfirmed, setIsConfrirmed] = useState(false)
   // const [selectedCur, setSelectedCur] = useState('ETH')
-  const [confirmModalOpen, setConfirmModalOpen] = useState(false)
+  // const [confirmModalOpen, setConfirmModalOpen] = useState(false)
   const actionStr = type === ActionType.DEPOSIT ? 'Deposit' : 'Withdraw'
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
@@ -78,7 +78,7 @@ export default function ActionModal({
     setVal('')
     setHash('')
     setPending(false)
-    setIsConfrirmed(false)
+    // setIsConfrirmed(false)
     // setSelectedCur('ETH')
     onDismiss()
   }, [onDismiss])
@@ -161,7 +161,7 @@ export default function ActionModal({
         setVal('')
         setHash('')
         setPending(false)
-        setIsConfrirmed(false)
+        // setIsConfrirmed(false)
       }
     }
   }, [handleDismiss, handleSucccessModal, hash, onDismiss, showModal, txn])
@@ -184,7 +184,7 @@ export default function ActionModal({
 
   return (
     <>
-      <ConfirmModal
+      {/* <ConfirmModal
         actionStr={actionStr}
         isOpen={confirmModalOpen}
         onDismiss={() => {
@@ -193,7 +193,7 @@ export default function ActionModal({
         }}
       >
         {actionStr} {val} {token?.symbol}
-      </ConfirmModal>
+      </ConfirmModal> */}
 
       <Modal customIsOpen={isOpen} customOnDismiss={handleDismiss} closeIcon>
         <Box display="grid" padding="20px 32px" gap="32px">
@@ -216,7 +216,7 @@ export default function ActionModal({
           )} */}
           <Box display="grid" gap="12px">
             <NumericalInput
-              disabled={isConfirmed}
+              disabled={pending}
               label={`${actionStr} Amount`}
               value={val}
               onChange={e => {
@@ -248,7 +248,7 @@ export default function ActionModal({
           )}
           <Box display={{ xs: 'grid', sm: 'flex' }} gap="16px">
             <OutlineButton onClick={handleDismiss}>Cancel</OutlineButton>
-            {!isConfirmed && (
+            {/* {!isConfirmed && (
               <ActionButton
                 error={error ? error : val ? undefined : 'Amount required'}
                 disableAction={!Number(val)}
@@ -257,9 +257,11 @@ export default function ActionModal({
                   setConfirmModalOpen(true)
                 }}
               />
-            )}
-            {isConfirmed && approvalState !== ApprovalState.APPROVED && type === ActionType.DEPOSIT && (
+            )} */}
+            {/*isConfirmed &&*/ approvalState !== ApprovalState.APPROVED && type === ActionType.DEPOSIT && (
               <ActionButton
+                error={error ? error : val ? undefined : 'Amount required'}
+                disableAction={!Number(val)}
                 pending={approvalState === ApprovalState.PENDING}
                 pendingText="Approving"
                 onAction={() => {
@@ -269,9 +271,9 @@ export default function ActionModal({
                 actionText="Approve"
               />
             )}
-            {isConfirmed && (approvalState === ApprovalState.APPROVED || type === ActionType.WITHDRAW) && (
+            {/*isConfirmed && */ (approvalState === ApprovalState.APPROVED || type === ActionType.WITHDRAW) && (
               <ActionButton
-                error={!token ? 'No token' : undefined}
+                error={error ? error : val ? (!token ? 'No token' : undefined) : 'Amount required'}
                 onAction={() => {
                   if (!token) return
                   if (type === ActionType.DEPOSIT) {

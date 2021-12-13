@@ -119,6 +119,7 @@ export default function DualInvestMgmt() {
 
   const handleConfirm = useCallback(() => {
     setIsConfirmed(true)
+    setIsConfirmOpen(false)
   }, [])
 
   const handleInput = useCallback(e => {
