@@ -47,8 +47,9 @@ export function usePrice(symbol: string | undefined) {
 
   useEffect(() => {
     if (!symbol) return undefined
-    const id = setInterval(() => {
-      fetch(`https://api.binance.com/api/v3/avgPrice?symbol=${symbol}USDT`, {
+
+    const call = () => {
+      return fetch(`https://api.binance.com/api/v3/avgPrice?symbol=${symbol}USDT`, {
         method: 'GET',
         mode: 'cors',
         headers: {}
@@ -60,7 +61,9 @@ export function usePrice(symbol: string | undefined) {
           setPrice(json.price)
         })
         .catch(e => console.error(e))
-    }, 3000)
+    }
+    call()
+    const id = setInterval(call, 3000)
 
     return () => {
       clearInterval(id)

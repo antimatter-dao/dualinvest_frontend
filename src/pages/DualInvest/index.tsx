@@ -255,24 +255,24 @@ export default function DualInvest() {
           background: theme => theme.palette.background.paper,
           borderRadius: 2,
           padding: '34px 24px',
-          maxWidth: theme => ({ xs: `calc(100vw - 40px)`, md: theme.width.maxContent })
+          maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
         }}
       >
-        <Box display={{ xs: 'grid', md: 'flex' }} alignContent="center" justifyContent="space-between">
+        <Box display={{ xs: 'grid', sm: 'flex' }} alignContent="center" justifyContent="space-between">
           <Box display="grid" columnGap={20} rowGap={8}>
             <CurrencyLogo
               currency={USDT}
               size="64px"
               style={{
                 gridRowStart: 1,
-                gridRowEnd: isDownMd ? 'span 1' : 'span 2',
-                marginBottom: isDownMd ? 12 : 0
+                gridRowEnd: isDownSm ? 'span 1' : 'span 2',
+                marginBottom: isDownSm ? 12 : 0
               }}
             />
             <Typography
               fontWeight={700}
               sx={{
-                gridColumnStart: isDownMd ? 1 : 2,
+                gridColumnStart: isDownSm ? 1 : 2,
                 gridColumnEnd: 'span 1',
                 fontSize: 24
               }}
