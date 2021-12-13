@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 export default function usePollingWithMaxRetries(
   fn: () => Promise<any>,
   callback: (r: any) => void,
-  delay = 5000,
+  delay = 10000,
   retries = 5
 ) {
   const savedFn = useRef(fn)
