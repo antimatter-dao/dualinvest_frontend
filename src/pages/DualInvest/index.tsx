@@ -31,8 +31,10 @@ const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
       cursor: 'pointer'
     }
   },
+  flexShrink: 1,
   [theme.breakpoints.down('md')]: {
-    width: 'calc(100vw - 50px)'
+    width: 'calc(100vw - 80px)',
+    margin: '0 auto'
   }
 }))
 
@@ -77,6 +79,7 @@ const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => voi
 
 export default function DualInvest() {
   const history = useHistory()
+  const isDownSm = useBreakpoint('sm')
   const isDownMd = useBreakpoint('md')
   const productList = useProductList()
 
@@ -114,14 +117,14 @@ export default function DualInvest() {
         sx={{
           width: '100%',
           background: theme => theme.palette.background.paper,
-          padding: { xs: '20px', md: '44px 61px' }
+          padding: { xs: '20px', md: '40px', lg: '44px 61px' }
         }}
       >
         <Box
-          sx={{ maxWidth: theme => theme.width.maxContent }}
+          sx={{ maxWidth: theme => ({ xs: 'calc(100vw - 88px)', md: theme.width.maxContent }) }}
           width="100%"
-          display={{ xs: 'grid', md: 'flex' }}
-          justifyContent="space-between"
+          display={{ xs: 'grid', sm: 'flex' }}
+          justifyContent={{ sm: 'center', md: 'space-between' }}
           alignItems="center"
         >
           <Box display="grid" gap={12}>
@@ -181,24 +184,24 @@ export default function DualInvest() {
           background: theme => theme.palette.background.paper,
           borderRadius: 2,
           padding: '34px 24px',
-          maxWidth: theme => ({ xs: `calc(100vw - 40px)`, md: theme.width.maxContent })
+          maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
         }}
       >
-        <Box display={{ xs: 'grid', md: 'flex' }} alignContent="center" justifyContent="space-between">
+        <Box display={{ xs: 'grid', sm: 'flex' }} alignContent="center" justifyContent="space-between">
           <Box display="grid" columnGap={20} rowGap={8}>
             <CurrencyLogo
               currency={BTC}
               size="64px"
               style={{
                 gridRowStart: 1,
-                gridRowEnd: isDownMd ? 'span 1' : 'span 2',
-                marginBottom: isDownMd ? 12 : 0
+                gridRowEnd: isDownSm ? 'span 1' : 'span 2',
+                marginBottom: isDownSm ? 12 : 0
               }}
             />
             <Typography
               fontWeight={700}
               sx={{
-                gridColumnStart: isDownMd ? 1 : 2,
+                gridColumnStart: isDownSm ? 1 : 2,
                 gridColumnEnd: 'span 1',
                 fontSize: 24
               }}
