@@ -55,7 +55,7 @@ const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => voi
       {(+data.apy * 100).toFixed(2)}%
     </RowStr>,
     <RowStr key={1}>{dayjs(data.expiredAt).format('DD MMM YYYY')}</RowStr>,
-    <RowStr key={1}>7 Days</RowStr>,
+    <RowStr key={1}>{Math.floor((data.expiredAt - data.ts) / 86400000)} Days</RowStr>,
     // <CastValue key={1} unit="BTC" val={15.08} total={50} />,
     <Box
       width="100%"
@@ -277,7 +277,7 @@ export default function DualInvest() {
                 fontSize: 24
               }}
             >
-              USDT financial management&nbsp;
+              BTC financial management&nbsp;
               <Box component="span" sx={{ fontWeight: 400 }}>
                 {isDownMd && <br />}[drop exercise]
               </Box>
@@ -360,7 +360,7 @@ function DataTable({
       {productList ? (
         <Table
           variant="outlined"
-          header={['Exercise Price', 'APY', 'Delivery Date', 'Holding Days', '']}
+          header={['Exercise Price', 'APY', 'Delivery Date', 'Time Left', '']}
           rows={
             productList
               ? productList.map((item: Product) => formatData(item, isDownMd, onSubscribe(item.productId)))

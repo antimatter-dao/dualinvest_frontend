@@ -42,7 +42,7 @@ export function usePriceSet(symbol: string | undefined) {
   return priceSet
 }
 
-export function usePrice(symbol: string | undefined) {
+export function usePrice(symbol: string | undefined, delay = 3000) {
   const [price, setPrice] = useState<undefined | string>(undefined)
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export function usePrice(symbol: string | undefined) {
         .catch(e => console.error(e))
     }
     call()
-    const id = setInterval(call, 3000)
+    const id = setInterval(call, delay)
 
     return () => {
       clearInterval(id)

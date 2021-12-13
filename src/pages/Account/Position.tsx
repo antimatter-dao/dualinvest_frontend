@@ -99,7 +99,7 @@ export default function Position() {
           summary: [
             `${amount} ${currency}`,
             <Typography color="primary" key="1" variant="inherit">
-              {annualRor}%
+              {+annualRor * 100}%
             </Typography>,
             dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
             strikePrice,

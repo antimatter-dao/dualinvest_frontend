@@ -112,7 +112,7 @@ export const productFormatter = (raw: ProductRaw): Product => {
     currency: raw.currency,
     investCurrency: raw.invest_currency,
     orderLimit: raw.order_limit,
-    ts: raw.ts,
+    ts: raw.ts * 1000,
     gtStrikePrice: raw.gt_strike_price,
     ltStrikePrice: raw.lt_strike_price,
     strikeCurrency: raw.strike_currency

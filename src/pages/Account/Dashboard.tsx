@@ -65,7 +65,7 @@ export default function Dashboard() {
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
   const [page, setPage] = useState(1)
-  const btcPrice = usePrice('BTC')
+  const btcPrice = usePrice('BTC', 30000)
   const accountBalances = useAccountBalances()
   const { accountRecord, pageParams } = useAccountRecord(page)
 
