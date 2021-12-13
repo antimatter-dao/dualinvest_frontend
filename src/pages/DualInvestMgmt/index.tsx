@@ -65,9 +65,13 @@ const StyledOrderList = styled('ol')(({ theme }) => ({
   listStyle: 'none',
   counterReset: 'counterReset',
   position: 'relative',
+  marginBlockEnd: '0px',
   paddingLeft: 36,
+  paddingRight: `calc( 100vw * 0.2 )`,
   '& li': {
-    paddingBottom: '24px'
+    paddingBottom: '24px',
+    paddingLeft: '12px',
+    marginLeft: '12px'
   },
   '& li:before': {
     counterIncrement: 'counterReset',
@@ -79,7 +83,7 @@ const StyledOrderList = styled('ol')(({ theme }) => ({
     border: '1px solid #31B047',
     float: 'left',
     textAlign: 'center',
-    marginRight: 12,
+    marginLeft: '24px',
     position: 'absolute',
     left: '-1px'
   }
@@ -288,7 +292,7 @@ export default function DualInvestMgmt() {
         alignContent="flex-start"
         marginBottom="auto"
         justifyItems="center"
-        padding={isDownMd ? '24px 20px' : 0}
+        padding={{ xs: '24px 20px', md: 0 }}
       >
         <Box
           sx={{
@@ -303,7 +307,7 @@ export default function DualInvestMgmt() {
           <Box maxWidth={theme.width.maxContent} width="100%">
             <NavLink to={routes.dualInvest} style={{ textDecoration: 'none' }}>
               <ArrowLeft />
-              <Typography component="span" color={theme.bgColor.bg1} fontSize={14} ml={16}>
+              <Typography component="span" color={theme.bgColor.bg1} fontSize={{ xs: 12, md: 14 }} ml={16}>
                 Go Back
               </Typography>
             </NavLink>
@@ -311,10 +315,10 @@ export default function DualInvestMgmt() {
         </Box>
         <Box padding={isDownMd ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
           <Box mb={isDownMd ? 24 : 60} display="flex" gap={8} flexDirection={isDownMd ? 'column' : 'row'}>
-            <Typography fontSize={isDownMd ? 24 : 44} fontWeight={700}>
+            <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
               {product?.investCurrency} Financial Management
             </Typography>
-            <Typography fontSize={44} fontWeight={400} component="span" ml={8}>
+            <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={400} component="span">
               [{product?.type === 'CALL' ? 'upward' : 'drop'} exercise]
             </Typography>
           </Box>
@@ -339,11 +343,13 @@ export default function DualInvestMgmt() {
                   <Spinner size={60} />
                 </Box>
               )}
-              <Card width="100%" padding="36px 24px" style={{ height: '100%' }}>
-                <Box display="flex" flexDirection="column" gap={20} height="100%">
+              <Card style={{ height: '100%' }}>
+                <Box display="grid" flexDirection="column" gap={20} height="100%" width="100%" padding="36px 24px">
                   {Object.keys(data).map((key, idx) => (
                     <Box key={idx} display="flex" justifyContent="space-between">
-                      <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
+                      <Typography fontSize={16} sx={{ opacity: 0.8 }}>
+                        {key}
+                      </Typography>
                       {/* {key === 'Current Progress' ? (
                       <SimpleProgress key={1} val={0.16} total={1} />
                     ) : ( */}
@@ -466,16 +472,25 @@ export default function DualInvestMgmt() {
                 </Box>
               </Card>
             </Grid>
+
             <Grid xs={12} md={8} item>
-              <Card width="100%" padding="32px 24px" style={{ height: '100%' }}>
-                <Box display="flex" flexDirection="column" gap="20px" maxWidth={'100%'} height="100%">
+              <Card style={{ height: '100%' }}>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  gap="20px"
+                  maxWidth="100%"
+                  height="100%"
+                  width="100%"
+                  padding="32px 24px"
+                >
                   <Box
                     display="flex"
                     justifyContent={isDownMd ? 'flex-start' : 'space-between'}
                     flexDirection={isDownMd ? 'column' : 'row'}
                     gap={18}
                   >
-                    <Typography fontSize={24} fontWeight={700}>
+                    <Typography fontSize={{ xs: 20, md: 24 }} fontWeight={700}>
                       Purchase expected income graph
                     </Typography>
                     <Box display="flex" alignItems="center" gap={24}>
@@ -551,51 +566,57 @@ export default function DualInvestMgmt() {
                     </Box>
                   </Box>
                   {isDownMd ? (
-                    returnOnInvestment
+                    <Box>
+                      <Divider extension={24} sx={{ opacity: 0.1, marginBottom: 20 }} />
+                      {returnOnInvestment}
+                    </Box>
                   ) : (
                     <OutlinedCard padding="16px 20px">{returnOnInvestment}</OutlinedCard>
                   )}
                 </Box>
               </Card>
             </Grid>
+
             <Grid xs={12} item>
-              <Card width="100%" padding="32px 24px">
-                <Box display="flex" alignItems="center" gap={11.68}>
+              <Card style={{ height: '100%' }}>
+                <Box display="flex" alignItems="center" gap={11.68} width="100%" padding="32px 24px">
                   <RiskStatementIcon />
-                  <Typography fontSize={24} fontWeight={700}>
+                  <Typography fontSize={{ xs: 20, md: 24 }} fontWeight={700}>
                     Risk statement
                   </Typography>
                 </Box>
-                <StyledOrderList>
-                  <li>
-                    This product is a non-principal-guaranteed wealth management product. Market fluctuations may result
-                    in a loss of principal. Please invest with caution.
-                  </li>
-                  <li>
-                    The investment amount is calculated in real time with the market, please refer to the actual
-                    purchase transaction.
-                  </li>
-                  <li>
-                    The annualized rate of return changes in real time with the market, please refer to the actual rate
-                    of return of the purchase transaction.
-                  </li>
-                  <li>
-                    The average spot price of the last 30 minutes at 12:00 (UTC+8) on the delivery date will be used as
-                    the settlement price.
-                  </li>
-                  <li>Early redemption is not supported, and users can only get rewards after the expiry date.</li>
-                  <li>
-                    After the product is purchased, you can view it on my currency holding page, and the payment will be
-                    automatically issued to the Account after the delivery.
-                  </li>
-                </StyledOrderList>
+                <Box>
+                  <StyledOrderList>
+                    <li>
+                      This product is a non-principal-guaranteed wealth management product. Market fluctuations may
+                      result in a loss of principal. Please invest with caution.
+                    </li>
+                    <li>
+                      The investment amount is calculated in real time with the market, please refer to the actual
+                      purchase transaction.
+                    </li>
+                    <li>
+                      The annualized rate of return changes in real time with the market, please refer to the actual
+                      rate of return of the purchase transaction.
+                    </li>
+                    <li>
+                      The average spot price of the last 30 minutes at 12:00 (UTC+8) on the delivery date will be used
+                      as the settlement price.
+                    </li>
+                    <li>Early redemption is not supported, and users can only get rewards after the expiry date.</li>
+                    <li>
+                      After the product is purchased, you can view it on my currency holding page, and the payment will
+                      be automatically issued to the Account after the delivery.
+                    </li>
+                  </StyledOrderList>
+                </Box>
               </Card>
             </Grid>
             <Grid xs={12} item>
-              <Card width="100%" padding="32px 24px">
-                <Box display="flex" alignItems="center" gap={11.68}>
+              <Card style={{ height: '100%' }} padding="32px 24px">
+                <Box display="flex" alignItems="center" gap={11.68} width="100%">
                   <Faq />
-                  <Typography fontSize={24} fontWeight={700}>
+                  <Typography fontSize={{ xs: 20, md: 24 }} fontWeight={700}>
                     FAQ
                   </Typography>
                 </Box>
@@ -604,7 +625,7 @@ export default function DualInvestMgmt() {
                     {
                       summary: 'What is Dual Investment?',
                       details: (
-                        <AccordionDetailText>
+                        <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
                           Antimatter Dual Investment is an advanced options derivative based on a decentralised
                           protocol. The product has a &quot;market-neutral, returns guaranteed&quot; feature, where the
                           yield is clear and fixed at the time of purchase, while the settlement currency is uncertain.
@@ -645,6 +666,10 @@ export default function DualInvestMgmt() {
                       )
                     },
                     {
+                      summary: 'Are the Strike Price and APY fixed?',
+                      details: <AccordionDetailText>Lorem ipsum</AccordionDetailText>
+                    },
+                    {
                       summary:
                         'What are “Strike Price”, “Underlying Asset”, “Deposit Currency”, “Alternate Currency”, “Deposit Days”, and “Settlement Price”?',
                       details: (
@@ -675,6 +700,10 @@ export default function DualInvestMgmt() {
                           </p>
                         </AccordionDetailText>
                       )
+                    },
+                    {
+                      summary: 'How can I view my subscriptions and their status?',
+                      details: <AccordionDetailText>Lorem ipsum</AccordionDetailText>
                     }
                   ].map(({ summary, details }, idx) => (
                     <Accordion
