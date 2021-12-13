@@ -607,7 +607,7 @@ export default function DualInvestMgmt() {
                     Risk statement
                   </Typography>
                 </Box>
-                <Box>
+                <Box fontSize={{ xs: 14, md: 16 }}>
                   <StyledOrderList>
                     <li>
                       This product is a non-principal-guaranteed wealth management product. Market fluctuations may
@@ -659,7 +659,7 @@ export default function DualInvestMgmt() {
                     {
                       summary: 'How is my return calculated?',
                       details: (
-                        <AccordionDetailText>
+                        <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
                           <p>
                             When a product is &quot;exercised&quot;, the subscription amount and yields will be swapped
                             at the strike price in the alternative currency.
@@ -689,13 +689,21 @@ export default function DualInvestMgmt() {
                     },
                     {
                       summary: 'Are the Strike Price and APY fixed?',
-                      details: <AccordionDetailText>Lorem ipsum</AccordionDetailText>
+                      details: (
+                        <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
+                          <p>
+                            <b>Yes</b>, when a user successfully subscribes to a Dual Investment, it means that the APY
+                            at the time of placing the order and the predetermined Strike Price is settled and will not
+                            change until the delivery date.
+                          </p>
+                        </AccordionDetailText>
+                      )
                     },
                     {
                       summary:
                         'What are “Strike Price”, “Underlying Asset”, “Deposit Currency”, “Alternate Currency”, “Deposit Days”, and “Settlement Price”?',
                       details: (
-                        <AccordionDetailText>
+                        <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
                           <p>
                             <b>Strike Price</b> - A set price at which deposit currency will be converted into alternate
                             currency if the product is exercised.
@@ -725,7 +733,16 @@ export default function DualInvestMgmt() {
                     },
                     {
                       summary: 'How can I view my subscriptions and their status?',
-                      details: <AccordionDetailText>Lorem ipsum</AccordionDetailText>
+                      details: (
+                        <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
+                          <p>
+                            <b>1.</b> Navigate to &quot;Account&quot; page
+                          </p>
+                          <p>
+                            <b>2.</b> Select the &quot;Position&quot; tab
+                          </p>
+                        </AccordionDetailText>
+                      )
                     }
                   ].map(({ summary, details }, idx) => (
                     <Accordion
