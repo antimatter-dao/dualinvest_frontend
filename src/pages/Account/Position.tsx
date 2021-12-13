@@ -17,6 +17,7 @@ import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
 import { usePrice } from 'hooks/usePriceSet'
 import { useDualInvestCallback } from 'hooks/useDualInvest'
+import { OrderRecord } from 'utils/fetch/product'
 
 enum PositionTableHeaderIndex {
   investAmount,
@@ -53,7 +54,15 @@ export default function Position() {
   const { orderList } = useOrderRecords(undefined, undefined, 999999)
 
   const filteredOrderList = useMemo(() => {
-    return orderList?.filter(order => [InvestStatus.Ordered, InvestStatus.ReadyToSettle].includes(order.investStatus))
+    return orderList?.reduce((acc, order) => {
+      if (order.investStatus === InvestStatus.Ordered) {
+        acc.push(order)
+      }
+      if (order.investStatus === InvestStatus.ReadyToSettle) {
+        acc.unshift(order)
+      }
+      return acc
+    }, [] as OrderRecord[])
   }, [orderList])
 
   const pageCount = useMemo(() => {
@@ -97,6 +106,7 @@ export default function Position() {
                 width={isDownMd ? 120 : 100}
               />
               <ClaimButton
+                disabled={!(investStatus === InvestStatus.ReadyToSettle)}
                 onClick={() => {
                   if (!finishOrderCallback) return
                   finishOrderCallback(orderId + '', productId + '')
@@ -252,9 +262,14 @@ function PositionTableCards({ data }: { data: { summary: any[]; details: any[] }
   )
 }
 
-function ClaimButton({ width, onClick }: { width?: number; onClick: () => void }) {
+function ClaimButton({ width, onClick, disabled }: { width?: number; onClick: () => void; disabled: boolean }) {
   return (
-    <Button onClick={onClick} fontSize={14} style={{ width: width || 60, borderRadius: 4, height: 36 }}>
+    <Button
+      disabled={disabled}
+      onClick={onClick}
+      fontSize={14}
+      style={{ width: width || 60, borderRadius: 4, height: 36 }}
+    >
       Claim
     </Button>
   )

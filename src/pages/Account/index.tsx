@@ -14,7 +14,7 @@ export default function Account() {
     <Box
       sx={{
         maxWidth: theme => theme.width.maxContent,
-        margin: { xs: '0 0 auto', md: '62px 24px auto' },
+        margin: { xs: '0 0 auto', md: '62px 0 auto' },
         width: '100%',
         padding: { xs: 20, md: 0 }
       }}

@@ -69,7 +69,6 @@ export interface Product {
 export interface ProductList {
   call: Product[]
   put: Product[]
-  btcPrice: string
 }
 
 export interface OrderRecord {
@@ -129,11 +128,8 @@ export const productListFormatter = (raw: ProductRaw[]): ProductList => {
       } else {
         acc.put.push(res)
       }
-      if (item.currency === 'BTC') {
-        acc.btcPrice = item.index_price
-      }
       return acc
     },
-    { call: [], put: [], btcPrice: '-' } as { call: any[]; put: any[]; btcPrice: string }
+    { call: [], put: [] } as { call: any[]; put: any[] }
   )
 }

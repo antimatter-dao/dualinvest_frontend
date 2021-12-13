@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 export default function usePollingWithMaxRetries(
   fn: () => Promise<any>,
   callback: (r: any) => void,
-  delay = 3000,
+  delay = 5000,
   retries = 5
 ) {
   const savedFn = useRef(fn)
@@ -12,6 +12,16 @@ export default function usePollingWithMaxRetries(
   useEffect(() => {
     savedFn.current = fn
     savedCallback.current = callback
+    fn()
+      .then(r => {
+        if (r.data.code !== 200) {
+          throw Error(r.data.msg)
+        }
+        callback(r)
+      })
+      .catch(e => {
+        console.error(e)
+      })
   }, [fn, callback])
 
   useEffect(() => {

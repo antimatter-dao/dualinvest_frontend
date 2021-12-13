@@ -1,13 +1,13 @@
 import axios, { AxiosResponse, AxiosPromise } from 'axios'
 
 const axiosInstance = axios.create({
-  baseURL: 'http://47.241.92.57:8080/web/',
+  baseURL: 'https://dualinvest-testapi.antimatter.finance/web/',
   timeout: 10000,
   headers: { 'content-type': 'application/json', accept: 'application/json' }
 })
 
 const axiosInstanceSignature = axios.create({
-  baseURL: 'http://47.241.92.57:8081/web/',
+  baseURL: 'https://dualinvest-testapi.antimatter.finance:8081/web/',
   timeout: 10000,
   headers: { 'content-type': 'application/json', accept: 'application/json' }
 })

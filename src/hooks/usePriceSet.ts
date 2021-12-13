@@ -19,9 +19,6 @@ export function usePriceSet(symbol: string | undefined) {
       })
       .then(json => {
         const formatted = priceFormatter(json)
-        if (price) {
-          formatted[formatted.length - 1].value = +price
-        }
         setPriceSetList(formatted)
       })
       .catch(e => console.error(e))
@@ -30,7 +27,18 @@ export function usePriceSet(symbol: string | undefined) {
     // return () => {
     //   clearInterval(id)
     // }
-  }, [price, symbol])
+  }, [symbol])
+
+  useEffect(() => {
+    if (price) {
+      setPriceSetList(list => {
+        if (!list) return list
+        list[list.length - 1].value = +price
+        return list
+      })
+    }
+  }, [price])
+
   return priceSet
 }
 
