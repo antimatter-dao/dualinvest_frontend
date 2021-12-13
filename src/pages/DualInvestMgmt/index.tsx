@@ -610,7 +610,7 @@ export default function DualInvestMgmt() {
                     Risk statement
                   </Typography>
                 </Box>
-                <Box>
+                <Box fontSize={{ xs: 14, md: 16 }}>
                   <StyledOrderList>
                     <li>
                       This product is a non-principal-guaranteed wealth management product. Market fluctuations may
@@ -662,7 +662,7 @@ export default function DualInvestMgmt() {
                     {
                       summary: 'How is my return calculated?',
                       details: (
-                        <AccordionDetailText>
+                        <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
                           <p>
                             When a product is &quot;exercised&quot;, the subscription amount and yields will be swapped
                             at the strike price in the alternative currency.
@@ -694,7 +694,7 @@ export default function DualInvestMgmt() {
                       summary:
                         'What are “Strike Price”, “Underlying Asset”, “Deposit Currency”, “Alternate Currency”, “Deposit Days”, and “Settlement Price”?',
                       details: (
-                        <AccordionDetailText>
+                        <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
                           <p>
                             <b>Strike Price</b> - A set price at which deposit currency will be converted into alternate
                             currency if the product is exercised.

@@ -191,7 +191,11 @@ export default function DualInvest() {
           maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
         }}
       >
-        <Box display={{ xs: 'grid', sm: 'flex' }} alignContent="center" justifyContent="space-between">
+        <Box
+          display={{ xs: 'grid', sm: 'flex' }}
+          alignContent="center"
+          justifyContent={{ xs: 'stretch', sm: 'space-between' }}
+        >
           <Box display="grid" columnGap={20} rowGap={8}>
             <CurrencyLogo
               currency={BTC}
