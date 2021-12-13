@@ -104,12 +104,23 @@ export default function Dashboard() {
           {record.symbol}
         </Box>,
         <Box key={1} display="flex" alignItems="center">
-          <Typography component="span">${record.amount}</Typography>
-          <Box component="span" sx={{ ml: 5, display: 'flex', alignItems: 'center' }}>
-            <ExternalLink href={scanLink}>
-              <UpperRightIcon />
-            </ExternalLink>
-          </Box>
+          <ExternalLink
+            href={scanLink}
+            sx={{
+              display: 'flex',
+              color: theme => theme.palette.text.primary,
+              '&:hover': {
+                color: theme => theme.palette.primary.main
+              }
+            }}
+          >
+            <Typography component="span" sx={{}}>
+              ${record.amount}
+            </Typography>
+            <Box component="span" sx={{ ml: 5, display: 'flex', alignItems: 'center' }}>
+              <UpperRightIcon style={{ color: 'currentColor' }} />
+            </Box>
+          </ExternalLink>
         </Box>,
         dayjs(+record.timestamp * 1000).format('MMM DD, YYYY hh:mm:ss A'),
         <>{!isDownMd && <StatusTag key="status" status="completed" />}</>
