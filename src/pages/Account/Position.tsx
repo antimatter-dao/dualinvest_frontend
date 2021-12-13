@@ -51,9 +51,10 @@ export default function Position() {
   const price = usePrice('BTC')
   const { finishOrderCallback } = useDualInvestCallback()
   const { orderList } = useOrderRecords(undefined, undefined, 999999)
-  const filteredOrderList = orderList?.filter(order =>
-    [InvestStatus.Ordered, InvestStatus.ReadyToSettle].includes(order.investStatus)
-  )
+
+  const filteredOrderList = useMemo(() => {
+    return orderList?.filter(order => [InvestStatus.Ordered, InvestStatus.ReadyToSettle].includes(order.investStatus))
+  }, [orderList])
 
   const pageCount = useMemo(() => {
     if (!filteredOrderList) return 0
@@ -74,7 +75,7 @@ export default function Position() {
         expiredAt,
         strikePrice,
         earn,
-        createdAt,
+        ts,
         orderId,
         productId,
         deliveryPrice,
@@ -89,7 +90,7 @@ export default function Position() {
             dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
             strikePrice,
             earn,
-            dayjs(+createdAt * 1000).format('MMM DD, YYYY hh:mm:ss A'),
+            dayjs(+ts * 1000).format('MMM DD, YYYY hh:mm:ss A'),
             <Box display="flex" key="action" gap={isDownMd ? 10 : 8} sx={{ mr: -15 }}>
               <StatusTag
                 status={investStatus === InvestStatus.Ordered ? 'progressing' : 'finished'}
@@ -110,7 +111,7 @@ export default function Position() {
               />
             </Box>
           ],
-          details: [orderId, productId, `${dayjs().diff(dayjs(createdAt * 1000), 'day')} days`, deliveryPrice]
+          details: [orderId, productId, `${dayjs().diff(dayjs(ts * 1000), 'day')} days`, deliveryPrice]
         }
       }
     )

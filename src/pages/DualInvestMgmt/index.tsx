@@ -280,7 +280,7 @@ export default function DualInvestMgmt() {
 
   return (
     <>
-      <ConfirmModal isOpen={isConfirmOpen} onDismiss={hideConfirm} onConfirm={handleConfirm} />
+      <ConfirmModal isOpen={isConfirmOpen} onDismiss={hideConfirm} onConfirm={handleConfirm} amount={amount} />
       <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
       <Box
         display="grid"
