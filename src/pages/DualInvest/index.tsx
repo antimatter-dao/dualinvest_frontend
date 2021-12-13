@@ -160,7 +160,7 @@ export default function DualInvest() {
                   value={statistics?.totalInvestment ?? '-'}
                   unit="USDT"
                   border
-                  subValue="Total investment amount"
+                  subValue="Cumulative Deposit Amount"
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -169,7 +169,7 @@ export default function DualInvest() {
                   value={statistics?.subscribedInvestment ?? '-'}
                   unit="USDT"
                   border
-                  subValue="Amount of subscribed investment"
+                  subValue="Cumulative Investment Amount"
                 />
               </Grid>
             </Grid>
@@ -214,7 +214,7 @@ export default function DualInvest() {
                 fontSize: 24
               }}
             >
-              BTC financial management&nbsp;
+              BTC Financial Management&nbsp;
               <Box component="span" sx={{ fontWeight: 400 }}>
                 {isDownMd && <br />}[upward exercise]
               </Box>
@@ -281,9 +281,9 @@ export default function DualInvest() {
                 fontSize: 24
               }}
             >
-              BTC financial management&nbsp;
+              BTC Financial Management&nbsp;
               <Box component="span" sx={{ fontWeight: 400 }}>
-                {isDownMd && <br />}[drop exercise]
+                {isDownMd && <br />}[down exercise]
               </Box>
             </Typography>
             <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>

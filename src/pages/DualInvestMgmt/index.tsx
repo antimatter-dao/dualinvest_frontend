@@ -262,6 +262,7 @@ export default function DualInvestMgmt() {
   useEffect(() => {
     product?.type === 'CALL' ? setCurrentCurrency(BTC) : setCurrentCurrency(USDT)
   }, [product?.type])
+
   const returnOnInvestment = useMemo(() => {
     return (
       <div>
@@ -688,18 +689,6 @@ export default function DualInvestMgmt() {
                       )
                     },
                     {
-                      summary: 'Are the Strike Price and APY fixed?',
-                      details: (
-                        <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
-                          <p>
-                            <b>Yes</b>, when a user successfully subscribes to a Dual Investment, it means that the APY
-                            at the time of placing the order and the predetermined Strike Price is settled and will not
-                            change until the delivery date.
-                          </p>
-                        </AccordionDetailText>
-                      )
-                    },
-                    {
                       summary:
                         'What are “Strike Price”, “Underlying Asset”, “Deposit Currency”, “Alternate Currency”, “Deposit Days”, and “Settlement Price”?',
                       details: (
@@ -727,19 +716,6 @@ export default function DualInvestMgmt() {
                             <b>Settlement Price</b> - Average of the spot price in the last 30 minutes before 08:00
                             (UTC) on the delivery date. Settlement price and strike price determines whether a product
                             is exercised or not.
-                          </p>
-                        </AccordionDetailText>
-                      )
-                    },
-                    {
-                      summary: 'How can I view my subscriptions and their status?',
-                      details: (
-                        <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
-                          <p>
-                            <b>1.</b> Navigate to &quot;Account&quot; page
-                          </p>
-                          <p>
-                            <b>2.</b> Select the &quot;Position&quot; tab
                           </p>
                         </AccordionDetailText>
                       )

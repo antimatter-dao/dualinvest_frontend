@@ -46,11 +46,10 @@ export function useAccountRecord(pageNum = 1, pageSize = 8) {
     total: 0
   })
 
-  const promiseFn = useCallback(() => Axios.get('getAccountRecord', { address: account, pageNum, pageSize }), [
-    account,
-    pageNum,
-    pageSize
-  ])
+  const promiseFn = useCallback(() => {
+    if (!account) return new Promise((resolve, reject) => reject('No account'))
+    return Axios.get('getAccountRecord', { account, pageNum, pageSize })
+  }, [account, pageNum, pageSize])
   const callbackFn = useCallback(r => {
     setAccountRecord(r.data.data)
     setPageParams({

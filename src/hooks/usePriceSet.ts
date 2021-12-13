@@ -68,6 +68,6 @@ export function usePrice(symbol: string | undefined, delay = 3000) {
     return () => {
       clearInterval(id)
     }
-  }, [symbol])
+  }, [delay, symbol])
   return price
 }

@@ -93,11 +93,12 @@ export default function Position() {
         orderId,
         productId,
         deliveryPrice,
-        investStatus
+        investStatus,
+        multiplier
       }) => {
         return {
           summary: [
-            `${amount} ${currency}`,
+            `${amount * +multiplier} ${currency}`,
             <Typography color="primary" key="1" variant="inherit">
               {+annualRor * 100}%
             </Typography>,

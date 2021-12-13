@@ -36,11 +36,11 @@ enum BalanceTableHeaderIndex {
 }
 
 const RecordType: { [key in number]: 'withdraw' | 'deposit' } = {
-  1: 'withdraw',
-  2: 'deposit'
+  1: 'deposit',
+  2: 'withdraw'
 }
 
-const BalanceTableHeader = ['Token', 'Available', 'Amount', 'Cumulative Invest', 'PnL', '']
+const BalanceTableHeader = ['', 'Deposit Amount', 'Available', 'Investing(Locked)', 'PnL', '']
 const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
 
 function TokenHeader({ token }: { token: Currency }) {
@@ -71,7 +71,8 @@ export default function Dashboard() {
 
   const indexPrices = useMemo(() => {
     return {
-      BTC: btcPrice
+      BTC: btcPrice,
+      USDT: 1
     }
   }, [btcPrice])
 
@@ -104,12 +105,23 @@ export default function Dashboard() {
           {record.symbol}
         </Box>,
         <Box key={1} display="flex" alignItems="center">
-          <Typography component="span">${record.amount}</Typography>
-          <Box component="span" sx={{ ml: 5, display: 'flex', alignItems: 'center' }}>
-            <ExternalLink href={scanLink}>
-              <UpperRightIcon />
-            </ExternalLink>
-          </Box>
+          <ExternalLink
+            href={scanLink}
+            sx={{
+              display: 'flex',
+              color: theme => theme.palette.text.primary,
+              '&:hover': {
+                color: theme => theme.palette.primary.main
+              }
+            }}
+          >
+            <Typography component="span" sx={{}}>
+              {record.amount}
+            </Typography>
+            <Box component="span" sx={{ ml: 5, display: 'flex', alignItems: 'center' }}>
+              <UpperRightIcon style={{ color: 'currentColor' }} />
+            </Box>
+          </ExternalLink>
         </Box>,
         dayjs(+record.timestamp * 1000).format('MMM DD, YYYY hh:mm:ss A'),
         <>{!isDownMd && <StatusTag key="status" status="completed" />}</>
@@ -136,9 +148,9 @@ export default function Dashboard() {
       ? [
           [
             <TokenHeader key="btc" token={BTC} />,
+            accountBalances?.BTC?.totalInvest ?? '-',
             accountBalances?.BTC?.availableBalance ?? '-',
             accountBalances?.BTC?.lockedBalance ?? '-',
-            accountBalances?.BTC?.totalInvest ?? '-',
             accountBalances?.BTC?.earned ?? '-',
             <BalanceActions
               key="1"
