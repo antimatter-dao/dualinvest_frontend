@@ -151,21 +151,20 @@ export default function LineChart({
       }
     })
     chartEl.applyOptions({
-      leftPriceScale: { autoScale: true, visible: true, drawTicks: false, borderColor: 'transparent' },
+      layout: {
+        fontFamily: 'SF Pro'
+      },
+      leftPriceScale: { autoScale: true, visible: true, drawTicks: false, borderColor: 'rgba(0, 0, 0, 0.2)' },
       rightPriceScale: { visible: false },
       timeScale: {
         fixLeftEdge: true,
         rightOffset: 1,
-        borderColor: 'rgba(242, 245, 250, 1)',
+        borderColor: 'rgba(0, 0, 0, 0.2)',
         timeVisible: true,
         secondsVisible: true,
         shiftVisibleRangeOnNewBar: true,
         tickMarkFormatter: (time: any) => {
-          const date = new Date(time)
-          const year = date.getUTCFullYear()
-          const month = date.getUTCMonth() + 1
-          const day = date.getUTCDate()
-          return year + '/' + month + '/' + day
+          return dayjs(time).format('DD MMM')
         }
       },
       crosshair: {
@@ -278,7 +277,7 @@ export default function LineChart({
     if (!priceLine) {
       const pl = chart?.addLineSeries({
         lineType: LineType.Simple,
-        lineStyle: LineStyle.LargeDashed,
+        lineStyle: LineStyle.Dashed,
         lineWidth: 1,
         color: secondaryColor,
         crosshairMarkerVisible: false
@@ -296,14 +295,14 @@ export default function LineChart({
             <Divider
               orientation="vertical"
               sx={{
-                width: '2px',
+                width: '1px',
                 top: 0,
                 position: 'absolute',
                 zIndex: 10,
                 borderColor: '#31B047',
                 height: strikeLineHeight,
-                left: strikeLineLeft,
-                borderWidth: '1px'
+                left: strikeLineLeft
+                // borderWidth: '1px'
               }}
             />
             <Box
@@ -317,10 +316,10 @@ export default function LineChart({
                 color: theme => theme.palette.primary.main
               }}
             >
-              <Typography align="center" noWrap fontSize={12} fontWeight={700}>
+              <Typography align="center" noWrap fontSize={12} fontWeight={500}>
                 {dayjs(strikeData.time as number).format('DD MMM YYYY')}
               </Typography>
-              <Typography align="center" noWrap fontSize={12} fontWeight={700}>
+              <Typography align="center" noWrap fontSize={12} fontWeight={500}>
                 (Delivery Date)
               </Typography>
             </Box>
