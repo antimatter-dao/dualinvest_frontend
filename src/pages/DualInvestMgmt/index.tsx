@@ -147,7 +147,7 @@ export default function DualInvestMgmt() {
 
   const handleSubscribe = useCallback(async () => {
     if (!product || !amount || !createOrderCallback || !checkOrderStatusCallback) return
-    const val = tryParseAmount((+amount * +product?.multiplier).toString(), currentCurrency)?.raw?.toString()
+    const val = tryParseAmount((+amount * +product?.multiplier).toFixed(2), currentCurrency)?.raw?.toString()
     if (!val) return
     try {
       setPending(true)
