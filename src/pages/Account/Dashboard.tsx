@@ -36,11 +36,11 @@ enum BalanceTableHeaderIndex {
 }
 
 const RecordType: { [key in number]: 'withdraw' | 'deposit' } = {
-  1: 'withdraw',
-  2: 'deposit'
+  1: 'deposit',
+  2: 'withdraw'
 }
 
-const BalanceTableHeader = ['Token', 'Available', 'Amount', 'Cumulative Invest', 'PnL', '']
+const BalanceTableHeader = ['', 'Deposit Amount', 'Available', 'Investing(Locked)', 'PnL', '']
 const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
 
 function TokenHeader({ token }: { token: Currency }) {
@@ -71,7 +71,8 @@ export default function Dashboard() {
 
   const indexPrices = useMemo(() => {
     return {
-      BTC: btcPrice
+      BTC: btcPrice,
+      USDT: 1
     }
   }, [btcPrice])
 
@@ -115,7 +116,7 @@ export default function Dashboard() {
             }}
           >
             <Typography component="span" sx={{}}>
-              ${record.amount}
+              {record.amount}
             </Typography>
             <Box component="span" sx={{ ml: 5, display: 'flex', alignItems: 'center' }}>
               <UpperRightIcon style={{ color: 'currentColor' }} />
@@ -147,9 +148,9 @@ export default function Dashboard() {
       ? [
           [
             <TokenHeader key="btc" token={BTC} />,
+            accountBalances?.BTC?.totalInvest ?? '-',
             accountBalances?.BTC?.availableBalance ?? '-',
             accountBalances?.BTC?.lockedBalance ?? '-',
-            accountBalances?.BTC?.totalInvest ?? '-',
             accountBalances?.BTC?.earned ?? '-',
             <BalanceActions
               key="1"

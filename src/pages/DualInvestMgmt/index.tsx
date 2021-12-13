@@ -262,6 +262,7 @@ export default function DualInvestMgmt() {
   useEffect(() => {
     product?.type === 'CALL' ? setCurrentCurrency(BTC) : setCurrentCurrency(USDT)
   }, [product?.type])
+
   const returnOnInvestment = useMemo(() => {
     return (
       <div>
@@ -688,10 +689,6 @@ export default function DualInvestMgmt() {
                       )
                     },
                     {
-                      summary: 'Are the Strike Price and APY fixed?',
-                      details: <AccordionDetailText>Lorem ipsum</AccordionDetailText>
-                    },
-                    {
                       summary:
                         'What are “Strike Price”, “Underlying Asset”, “Deposit Currency”, “Alternate Currency”, “Deposit Days”, and “Settlement Price”?',
                       details: (
@@ -722,10 +719,6 @@ export default function DualInvestMgmt() {
                           </p>
                         </AccordionDetailText>
                       )
-                    },
-                    {
-                      summary: 'How can I view my subscriptions and their status?',
-                      details: <AccordionDetailText>Lorem ipsum</AccordionDetailText>
                     }
                   ].map(({ summary, details }, idx) => (
                     <Accordion
