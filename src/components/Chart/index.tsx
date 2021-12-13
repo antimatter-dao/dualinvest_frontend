@@ -110,7 +110,7 @@ export default function LineChart({
   const isDownMd = useBreakpoint('md')
 
   const handleStrikeLine = useCallback(() => {
-    if (!strikeData || !chart) {
+    if (!strikeData) {
       return
     }
     const widthEl: HTMLTableCellElement | null = document.querySelector(
@@ -120,7 +120,7 @@ export default function LineChart({
     const width = rect?.width || 0
     const height = rect?.height || 0
 
-    const left = chart.timeScale()?.timeToCoordinate?.(strikeData.time)
+    const left = chart?.timeScale()?.timeToCoordinate?.(strikeData.time)
     if (!left) return
 
     setStrikeLineLeft((left as number) + width)
@@ -216,7 +216,7 @@ export default function LineChart({
       if (!chartEl || !chart) return
       const resizeWidth = isDownMd ? window.innerWidth - 100 : width ? width : chartEl.getBoundingClientRect().width
       chart.resize(resizeWidth, height || 174)
-      handleStrikeLine()
+      chart.timeScale().fitContent()
     }
     window.addEventListener('resize', resizeFunction)
 
@@ -237,16 +237,15 @@ export default function LineChart({
   //   return () => chart.unsubscribeCrosshairMove(crossHairfunction)
   // }, [chart, lineSeries, lineSeries2, unit, unit2])
 
-  // useEffect(() => {
-  //   if (!chart || !strikeData) return
-  //   chart.subscribeCrosshairMove(handleStrikeLine)
-  //   return () => chart.unsubscribeCrosshairMove(handleStrikeLine)
-  // }, [chart, id, lineSeries, strikeData, handleStrikeLine])
+  useEffect(() => {
+    if (!chart || !strikeData) return
+    chart.timeScale().subscribeVisibleTimeRangeChange(handleStrikeLine)
+    return () => chart.timeScale().unsubscribeVisibleTimeRangeChange(handleStrikeLine)
+  }, [chart, id, lineSeries, strikeData, handleStrikeLine])
 
   useEffect(() => {
     if (lineSeries) {
       lineSeries.setData(lineSeriesData)
-      handleStrikeLine()
     }
     if (chart) {
       chart.timeScale().fitContent()

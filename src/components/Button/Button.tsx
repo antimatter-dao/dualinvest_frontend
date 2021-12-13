@@ -3,7 +3,7 @@ import { ButtonBase, Theme, useTheme } from '@mui/material'
 import { SxProps } from '@mui/system'
 
 interface Props {
-  onClick?: () => void
+  onClick?: ((e: React.MouseEvent<HTMLButtonElement>) => void) | (() => void)
   width?: string
   height?: string
   backgroundColor?: string

@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useState, useMemo } from 'react'
 import { Box, Typography, useTheme, IconButton, Container } from '@mui/material'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
@@ -18,6 +18,9 @@ import Spinner from 'components/Spinner'
 import { usePrice } from 'hooks/usePriceSet'
 import { useDualInvestCallback } from 'hooks/useDualInvest'
 import { OrderRecord } from 'utils/fetch/product'
+import useModal from 'hooks/useModal'
+import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
+import { useTransactionAdder } from 'state/transactions/hooks'
 
 enum PositionTableHeaderIndex {
   investAmount,
@@ -52,6 +55,8 @@ export default function Position() {
   const price = usePrice('BTC')
   const { finishOrderCallback } = useDualInvestCallback()
   const { orderList } = useOrderRecords(undefined, undefined, 999999)
+  const { showModal, hideModal } = useModal()
+  const addTransaction = useTransactionAdder()
 
   const filteredOrderList = useMemo(() => {
     return orderList?.reduce((acc, order) => {
@@ -107,14 +112,29 @@ export default function Position() {
               />
               <ClaimButton
                 disabled={!(investStatus === InvestStatus.ReadyToSettle)}
-                onClick={() => {
+                onClick={e => {
                   if (!finishOrderCallback) return
+                  const el = e.target as HTMLButtonElement
+                  el.innerHTML =
+                    '<span class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-z0i010-MuiCircularProgress-root" role="progressbar" style="width: 16px; height: 16px; position: relative"><svg class="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg" viewBox="22 22 44 44" color="#ffffff"><circle class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle" cx="44" cy="44" r="20.5" fill="none" stroke-width="3"></circle></svg></span>'
+                  el.disabled = true
+                  showModal(<TransacitonPendingModal />)
                   finishOrderCallback(orderId + '', productId + '')
                     .then(r => {
+                      hideModal()
+
+                      addTransaction(r, {
+                        summary: `Claim ${earn} ${currency}`
+                      })
+                      el.innerHTML = 'Claim'
+                      el.disabled = false
                       console.log(78787, r)
                     })
-                    .catch(e => {
-                      console.error(e)
+                    .catch(err => {
+                      hideModal()
+                      console.error(err)
+                      el.innerHTML = 'Claim'
+                      el.disabled = false
                     })
                 }}
                 width={isDownMd ? 84 : 68}
@@ -125,7 +145,7 @@ export default function Position() {
         }
       }
     )
-  }, [filteredOrderList, page, isDownMd, finishOrderCallback])
+  }, [filteredOrderList, page, isDownMd, finishOrderCallback, hideModal, addTransaction, showModal])
 
   const hiddenParts = useCallback(() => {
     return data.map(datum => (
@@ -212,7 +232,7 @@ function PositionTableCards({ data }: { data: { summary: any[]; details: any[] }
             {dataRow.summary.map((datum, idx2) => {
               if (idx2 === PositionTableHeaderIndex.status) {
                 return (
-                  <Box display="flex" alignItems="center" gap={14}>
+                  <Box display="flex" alignItems="center" gap={14} key={idx2}>
                     {datum}
                     <AccordionButton
                       onClick={() => {
@@ -226,10 +246,10 @@ function PositionTableCards({ data }: { data: { summary: any[]; details: any[] }
 
               return (
                 <Box key={idx2} display="flex" justifyContent="space-between">
-                  <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
+                  <Typography component="div" fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
                     {PositionTableHeader[idx2]}
                   </Typography>
-                  <Typography fontSize={12} fontWeight={600}>
+                  <Typography fontSize={12} fontWeight={600} component="div">
                     {datum}
                   </Typography>
                 </Box>
@@ -262,7 +282,15 @@ function PositionTableCards({ data }: { data: { summary: any[]; details: any[] }
   )
 }
 
-function ClaimButton({ width, onClick, disabled }: { width?: number; onClick: () => void; disabled: boolean }) {
+function ClaimButton({
+  width,
+  onClick,
+  disabled
+}: {
+  width?: number
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
+  disabled: boolean
+}) {
   return (
     <Button
       disabled={disabled}

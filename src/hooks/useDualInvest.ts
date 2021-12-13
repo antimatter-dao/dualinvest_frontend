@@ -128,7 +128,6 @@ export function useDualInvestCallback(): {
       if (!signRes.data.data) {
         throw Error('Cannot get signature')
       }
-      console.log(999, signRes)
       const {
         orderId: orderIdR,
         productId: productIdR,
@@ -148,7 +147,6 @@ export function useDualInvestCallback(): {
         fee,
         [[signatory, signV, signR, signS]]
       ]
-      console.log(args)
       const estimatedGas = await contract.estimateGas.finishOrder(...args).catch((error: Error) => {
         console.debug('Failed to create order', error)
         throw error
