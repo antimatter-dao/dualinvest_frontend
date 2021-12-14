@@ -34,6 +34,8 @@ import ActionModal, { ActionType } from 'pages/Account/ActionModal'
 import { usePriceSet } from 'hooks/usePriceSet'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import useBreakpoint from 'hooks/useBreakpoint'
+import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
+import { useTransactionAdder } from 'state/transactions/hooks'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -103,16 +105,25 @@ export default function DualInvestMgmt() {
   useOnClickOutside(node, () => setExpanded(null))
 
   const { id } = useParams<{ id: string }>()
-  const { showModal } = useModal()
+  const { showModal, hideModal } = useModal()
   const { account } = useActiveWeb3React()
   const balance = useDualInvestBalance(currentCurrency)
   const { createOrderCallback, checkOrderStatusCallback } = useDualInvestCallback()
   const product = useProduct(id)
   const toggleWallet = useWalletModalToggle()
   const addPopup = useAddPopup()
+  const addTransaction = useTransactionAdder()
   const priceSet = usePriceSet(product?.currency)
-  const multiplier = product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1
   const isDownMd = useBreakpoint('md')
+  const strikePrice = product?.strikePrice ?? '-'
+  const multiplier = product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1
+  const type = product?.type
+  const gtStr = `${product && amount ? +product.gtStrikePrice * +amount : '-'} ${
+    product ? (product.type === 'CALL' ? product?.strikeCurrency : product?.investCurrency) : ''
+  } `
+  const ltStr = `${product && amount ? +product?.ltStrikePrice * +amount : '-'} ${
+    product ? (product.type === 'CALL' ? product?.investCurrency : product?.strikeCurrency) : ''
+  }`
 
   const showConfirm = useCallback(() => {
     setIsConfirmOpen(true)
@@ -136,21 +147,25 @@ export default function DualInvestMgmt() {
     () => ({
       ['Spot Price']: product?.currentPrice ?? '-' + ' USDT',
       ['APY']: product?.apy ? (+product.apy * 100).toFixed(2) + '%' : '- %',
-      ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
+      ['Strike Price']: strikePrice + ' USDT',
       ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') : '-',
       // ['Current Progress']: 0.16,
       minAmount: product ? +product.multiplier * multiplier + ' ' + product.investCurrency : '-',
       maxAmount: product ? +product.orderLimit * +product.multiplier * multiplier + ' ' + product.investCurrency : '-'
     }),
-    [multiplier, product]
+    [multiplier, product, strikePrice]
   )
 
   const handleSubscribe = useCallback(async () => {
     if (!product || !amount || !createOrderCallback || !checkOrderStatusCallback) return
-    const val = tryParseAmount((+amount * +product?.multiplier).toFixed(2), currentCurrency)?.raw?.toString()
+    const val = tryParseAmount(
+      (+amount * +product?.multiplier * multiplier).toFixed(2),
+      currentCurrency
+    )?.raw?.toString()
     if (!val) return
     try {
       setPending(true)
+      showModal(<TransacitonPendingModal />)
       const backendCall = await Axios.post<any>(
         'createOrder',
         {},
@@ -167,7 +182,17 @@ export default function DualInvestMgmt() {
       if (orderStatusRes.status !== 0) {
         throw Error('Order Exist')
       }
-      await createOrderCallback(orderId, productId, val, currentCurrency.address)
+
+      const createOrderRes = await createOrderCallback(orderId, productId, val, currentCurrency.address)
+      addTransaction(createOrderRes, {
+        createOrder: true,
+        summary: ''
+      })
+      hideModal()
+      setPending(false)
+      setIsConfirmed(false)
+      setAmount('')
+      showModal(<TransactionSubmittedModal />)
       let fail = 0
       const polling = new Promise((resolve, reject) => {
         const timeoutId = setInterval(() => {
@@ -182,18 +207,18 @@ export default function DualInvestMgmt() {
               if (InvesStatus[statusCode] === InvesStatusType.SUCCESS) {
                 clearInterval(timeoutId)
                 resolve(() => {})
-                setAmount('')
-                showModal(
-                  <TransactionSubmittedModal header={'Successful Subscription!'}>
-                    <Typography fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
-                      {`You have successfully subscribed ${+product?.multiplier * +amount * multiplier} ${
-                        product?.currency
-                      } to ${product.investCurrency}[${product?.type === 'CALL' ? 'upward' : 'drop'} exercise] ${
-                        product.strikePrice
-                      } ${dayjs(product.expiredAt).format()}`}
-                    </Typography>
-                  </TransactionSubmittedModal>
-                )
+
+                // showModal(
+                //   <TransactionSubmittedModal header={'Successful Subscription!'}>
+                //     <Typography fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
+                //       {`You have successfully subscribed ${+product?.multiplier * +amount * multiplier} ${
+                //         product?.currency
+                //       } to ${product.investCurrency}[${type === 'CALL' ? 'upward' : 'drop'} exercise] ${
+                //         product.strikePrice
+                //       } ${dayjs(product.expiredAt).format()}`}
+                //     </Typography>
+                //   </TransactionSubmittedModal>
+                // )
               }
             })
             .catch(() => {
@@ -212,12 +237,16 @@ export default function DualInvestMgmt() {
         {
           txn: {
             success: true,
-            summary: `Subscribe successful, order ID:${orderId}`
+            summary: `Subscribed ${(+amount * +product?.multiplier * multiplier).toFixed(2)} ${
+              product.investCurrency
+            } successfully to ${product?.currency} [${
+              product?.type === 'CALL' ? 'upward' : 'drop'
+            }], order ID:${orderId}`
           }
         },
         orderId + ''
       )
-      setPending(false)
+
       setIsConfirmed(false)
     } catch (e) {
       setPending(false)
@@ -229,10 +258,12 @@ export default function DualInvestMgmt() {
   }, [
     account,
     addPopup,
+    addTransaction,
     amount,
     checkOrderStatusCallback,
     createOrderCallback,
     currentCurrency,
+    hideModal,
     id,
     multiplier,
     product,
@@ -260,8 +291,8 @@ export default function DualInvestMgmt() {
   }, [product?.expiredAt, product?.strikePrice])
 
   useEffect(() => {
-    product?.type === 'CALL' ? setCurrentCurrency(BTC) : setCurrentCurrency(USDT)
-  }, [product?.type])
+    type === 'CALL' ? setCurrentCurrency(BTC) : setCurrentCurrency(USDT)
+  }, [type])
 
   const returnOnInvestment = useMemo(() => {
     return (
@@ -271,20 +302,12 @@ export default function DualInvestMgmt() {
         </Typography>
         <StyledUnorderList>
           <li>
-            When the final settlement price ≥ {product?.strikePrice ?? '-'} USDT, you will receive{' '}
-            <span style={{ color: theme.palette.text.primary }}>
-              {product?.gtStrikePrice}{' '}
-              {product ? (product.type === 'CALL' ? product?.strikeCurrency : product?.investCurrency) : ''}
-            </span>
-            .
+            When the final settlement price ≥ {strikePrice} USDT, you will receive{' '}
+            <span style={{ color: theme.palette.text.primary }}>{gtStr}</span>.
           </li>
           <li>
-            When the settlement price is &lt; {product?.strikePrice ?? '-'} USDT, you will receive{' '}
-            <span style={{ color: theme.palette.text.primary }}>
-              {product?.ltStrikePrice}{' '}
-              {product ? (product.type === 'CALL' ? product?.investCurrency : product?.strikeCurrency) : ''}
-            </span>
-            .
+            When the settlement price is &lt; {strikePrice} USDT, you will receive{' '}
+            <span style={{ color: theme.palette.text.primary }}>{ltStr}</span>.
           </li>
           <li>
             APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully complete the
@@ -293,7 +316,7 @@ export default function DualInvestMgmt() {
         </StyledUnorderList>
       </div>
     )
-  }, [product])
+  }, [gtStr, ltStr, strikePrice])
 
   return (
     <>
@@ -329,10 +352,10 @@ export default function DualInvestMgmt() {
         <Box padding={isDownMd ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
           <Box mb={isDownMd ? 24 : 60} display="flex" gap={8} flexDirection={isDownMd ? 'column' : 'row'}>
             <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
-              {product?.investCurrency} Financial Management
+              {product?.currency} Financial Management
             </Typography>
             <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={400} component="span">
-              [{product?.type === 'CALL' ? 'upward' : 'drop'} exercise]
+              [{type === 'CALL' ? 'upward' : 'drop'} exercise]
             </Typography>
           </Box>
           <Grid container spacing={20}>
@@ -565,24 +588,12 @@ export default function DualInvestMgmt() {
                           <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
                             <Card gray>
                               <Box padding="16px" fontSize={14}>
-                                Settlement price ≥ {product?.strikePrice ?? '-'}, will be exercised. Estimated return{' '}
-                                {product?.gtStrikePrice}{' '}
-                                {product
-                                  ? product.type === 'CALL'
-                                    ? product?.strikeCurrency
-                                    : product?.investCurrency
-                                  : ''}
+                                Settlement price ≥ {strikePrice}, will be exercised. Estimated return {gtStr}
                               </Box>
                             </Card>
                             <Card gray>
                               <Box padding="16px" fontSize={14}>
-                                Settlement price &lt; {product?.strikePrice ?? '-'}, will not be exercised. Estimated
-                                return {product?.ltStrikePrice}{' '}
-                                {product
-                                  ? product.type === 'CALL'
-                                    ? product?.investCurrency
-                                    : product?.strikeCurrency
-                                  : ''}
+                                Settlement price &lt; {strikePrice}, will not be exercised. Estimated return {ltStr}
                               </Box>
                             </Card>
                           </Box>

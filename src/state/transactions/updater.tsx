@@ -66,7 +66,9 @@ export default function Updater(): null {
                   }
                 })
               )
-
+              if (transactions[hash].createOrder) {
+                return
+              }
               addPopup(
                 {
                   txn: {
