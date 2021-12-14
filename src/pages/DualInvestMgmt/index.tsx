@@ -1,46 +1,19 @@
-import { useState, useRef, useMemo, useCallback, useEffect } from 'react'
+import { useState, useRef, useMemo, useCallback } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 import { Box, Typography, Grid, styled } from '@mui/material'
-import dayjs from 'dayjs'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import { Time } from 'lightweight-charts'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
-import { ReactComponent as RiskStatementIcon } from 'assets/svg/risk_statement.svg'
-import { ReactComponent as Faq } from 'assets/svg/faq.svg'
 import { routes } from 'constants/routes'
 import theme from 'theme'
 import Card, { OutlinedCard } from 'components/Card/Card'
-import Accordion from 'components/Accordion'
 import Divider from 'components/Divider'
-import InputNumerical from 'components/Input/InputNumerical'
-import { BlackButton } from 'components/Button/Button'
-// import { SimpleProgress } from 'components/Progress'
-import ConfirmModal from './ConfirmModal'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import LineChart from 'components/Chart'
-import { Time } from 'lightweight-charts'
 import { useProduct } from 'hooks/useDualInvestData'
-import { useActiveWeb3React } from 'hooks'
-import { BTC, USDT } from 'constants/index'
-import { Axios } from 'utils/axios'
 import Spinner from 'components/Spinner'
-import { useDualInvestBalance, useDualInvestCallback } from 'hooks/useDualInvest'
-import { tryParseAmount } from 'utils/parseAmount'
-import { useAddPopup, useWalletModalToggle } from 'state/application/hooks'
-import ActionButton from 'components/Button/ActionButton'
-import { InvesStatus, InvesStatusType, OrderRecord } from 'utils/fetch/product'
-import MessageBox from 'components/Modal/TransactionModals/MessageBox'
-import useModal from 'hooks/useModal'
-import ActionModal, { ActionType } from 'pages/Account/ActionModal'
 import { usePriceSet } from 'hooks/usePriceSet'
-import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import useBreakpoint from 'hooks/useBreakpoint'
-import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
-import { useTransactionAdder } from 'state/transactions/hooks'
-
-enum ErrorType {
-  insufficientBalance = 'Insufficient Balance',
-  singleLimitExceed = 'Single Limit Exceeded'
-}
+import SubscribeForm from './SubscribeForm'
+import { RiskStatement, FAQ } from './stableContent'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '18px',
@@ -53,70 +26,18 @@ const StyledUnorderList = styled('ul')(({ theme }) => ({
   }
 }))
 
-const AccordionDetailText = styled(Box)({
-  opacity: 0.5,
-  display: 'grid',
-  gap: 8,
-  '& p': {
-    margin: 0
-  }
-})
-
-const StyledOrderList = styled('ol')(({ theme }) => ({
-  display: 'block',
-  listStyle: 'none',
-  counterReset: 'counterReset',
-  position: 'relative',
-  marginBlockEnd: '0px',
-  paddingLeft: 36,
-  paddingRight: `calc( 100vw * 0.2 )`,
-  '& li': {
-    paddingBottom: '24px',
-    paddingLeft: '12px',
-    marginLeft: '12px'
-  },
-  '& li:before': {
-    counterIncrement: 'counterReset',
-    content: 'counter(counterReset)',
-    color: theme.palette.primary.main,
-    width: '24px',
-    height: '24px',
-    borderRadius: '50%',
-    border: '1px solid #31B047',
-    float: 'left',
-    textAlign: 'center',
-    marginLeft: '24px',
-    position: 'absolute',
-    left: '-1px'
-  }
-}))
-
 export default function DualInvestMgmt() {
   const [amount, setAmount] = useState('')
-  const [pending, setPending] = useState(false)
-  const [expanded, setExpanded] = useState<number | null>(null)
-  const [isDepositOpen, setIsDepositOpen] = useState(false)
-  const [currentCurrency, setCurrentCurrency] = useState(BTC)
-  const [isConfirmed, setIsConfirmed] = useState(false)
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
   const graphContainer = useRef<HTMLDivElement>(null)
-  const node = useRef<any>()
-  useOnClickOutside(node, () => setExpanded(null))
 
   const { id } = useParams<{ id: string }>()
-  const { showModal, hideModal } = useModal()
-  const { account } = useActiveWeb3React()
-  const balance = useDualInvestBalance(currentCurrency)
-  const { createOrderCallback, checkOrderStatusCallback } = useDualInvestCallback()
+
   const product = useProduct(id)
-  const toggleWallet = useWalletModalToggle()
-  const addPopup = useAddPopup()
-  const addTransaction = useTransactionAdder()
+
   const priceSet = usePriceSet(product?.currency)
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
-  const multiplier = product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1
   const type = product?.type
   const gtStr = `${product && amount ? +product.gtStrikePrice * +amount : '-'} ${
     product ? (product.type === 'CALL' ? product?.strikeCurrency : product?.investCurrency) : ''
@@ -125,174 +46,15 @@ export default function DualInvestMgmt() {
     product ? (product.type === 'CALL' ? product?.investCurrency : product?.strikeCurrency) : ''
   }`
 
-  const showConfirm = useCallback(() => {
-    setIsConfirmOpen(true)
+  const handleInput = useCallback(val => {
+    setAmount(val)
   }, [])
-  const hideConfirm = useCallback(() => {
-    setIsConfirmOpen(false)
-  }, [])
-
-  const handleInput = useCallback(e => {
-    setAmount(e.target.value ? Math.floor(+e.target.value) + '' : '')
-  }, [])
-
-  const hideDeposit = useCallback(() => {
-    setIsDepositOpen(false)
-  }, [])
-  const showDeposit = useCallback(() => {
-    setIsDepositOpen(true)
-  }, [])
-
-  const data = useMemo(
-    () => ({
-      ['Spot Price']: product?.currentPrice ?? '-' + ' USDT',
-      ['APY']: product?.apy ? (+product.apy * 100).toFixed(2) + '%' : '- %',
-      ['Strike Price']: strikePrice + ' USDT',
-      ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') : '-',
-      // ['Current Progress']: 0.16,
-      minAmount: product ? +product.multiplier * multiplier + ' ' + product.investCurrency : '-',
-      maxAmount: product ? +product.orderLimit * +product.multiplier * multiplier + ' ' + product.investCurrency : '-'
-    }),
-    [multiplier, product, strikePrice]
-  )
-
-  const handleSubscribe = useCallback(async () => {
-    if (!product || !amount || !createOrderCallback || !checkOrderStatusCallback) return
-    const val = tryParseAmount(
-      (+amount * +product?.multiplier * multiplier).toFixed(2),
-      currentCurrency
-    )?.raw?.toString()
-    if (!val) return
-    try {
-      setPending(true)
-      showModal(<TransacitonPendingModal />)
-      const backendCall = await Axios.post<any>(
-        'createOrder',
-        {},
-        {
-          account,
-          amount,
-          product_id: id
-        }
-      )
-      if (backendCall.data.code !== 200) throw Error('Backend Error')
-      if (!backendCall.data.data) throw Error(backendCall.data.msg)
-      const { orderId, productId } = backendCall.data.data
-      const orderStatusRes = await checkOrderStatusCallback(orderId)
-      if (orderStatusRes.status !== 0) {
-        throw Error('Order Exist')
-      }
-
-      const createOrderRes = await createOrderCallback(orderId, productId, val, currentCurrency.address)
-      addTransaction(createOrderRes, {
-        createOrder: true,
-        summary: ''
-      })
-      hideModal()
-      setPending(false)
-      setIsConfirmed(false)
-      setAmount('')
-      showModal(<TransactionSubmittedModal />)
-      let fail = 0
-      const polling = new Promise((resolve, reject) => {
-        const timeoutId = setInterval(() => {
-          Axios.get<{ records: OrderRecord[] }>('getOrderRecord?orderId=' + orderId, { address: account })
-            .then(r => {
-              const statusCode = r.data.data.records[0].investStatus as keyof typeof InvesStatus
-              if (InvesStatus[statusCode] === InvesStatusType.ERROR) {
-                clearInterval(timeoutId)
-                reject('Order fail')
-                throw Error('Order fail')
-              }
-              if (InvesStatus[statusCode] === InvesStatusType.SUCCESS) {
-                clearInterval(timeoutId)
-                resolve(() => {})
-
-                // showModal(
-                //   <TransactionSubmittedModal header={'Successful Subscription!'}>
-                //     <Typography fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
-                //       {`You have successfully subscribed ${+product?.multiplier * +amount * multiplier} ${
-                //         product?.currency
-                //       } to ${product.investCurrency}[${type === 'CALL' ? 'upward' : 'drop'} exercise] ${
-                //         product.strikePrice
-                //       } ${dayjs(product.expiredAt).format()}`}
-                //     </Typography>
-                //   </TransactionSubmittedModal>
-                // )
-              }
-            })
-            .catch(() => {
-              if (fail > 6) {
-                clearInterval(timeoutId)
-                reject('Confirm Order timeout')
-                throw Error('Confirm Order timeout')
-              }
-              fail++
-            })
-        }, 3000)
-      })
-      await polling
-
-      addPopup(
-        {
-          txn: {
-            success: true,
-            summary: `Subscribed ${(+amount * +product?.multiplier * multiplier).toFixed(2)} ${
-              product.investCurrency
-            } successfully to ${product?.currency} [${
-              product?.type === 'CALL' ? 'upward' : 'drop'
-            }], order ID:${orderId}`
-          }
-        },
-        orderId + ''
-      )
-
-      setIsConfirmed(false)
-    } catch (e) {
-      setPending(false)
-      setIsConfirmed(false)
-      setAmount('')
-      showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
-      console.error(e)
-    }
-  }, [
-    account,
-    addPopup,
-    addTransaction,
-    amount,
-    checkOrderStatusCallback,
-    createOrderCallback,
-    currentCurrency,
-    hideModal,
-    id,
-    multiplier,
-    product,
-    showModal
-  ])
-
-  const handleConfirm = useCallback(() => {
-    setIsConfirmed(true)
-    setIsConfirmOpen(false)
-    handleSubscribe()
-  }, [handleSubscribe])
-
-  const error = useMemo(() => {
-    if (!product || !balance) return ''
-    let str = ''
-    if (amount !== '' && +balance < +amount * +product.multiplier * multiplier) str = ErrorType.insufficientBalance
-    if (amount !== '' && (+amount > +product?.orderLimit || +amount < 1)) str = ErrorType.singleLimitExceed
-    return str
-  }, [amount, balance, multiplier, product])
 
   const strikeLineData = useMemo(() => {
     return product?.expiredAt && product?.strikePrice
       ? { time: product.expiredAt as Time, value: +product.strikePrice }
       : undefined
   }, [product?.expiredAt, product?.strikePrice])
-
-  useEffect(() => {
-    type === 'CALL' ? setCurrentCurrency(BTC) : setCurrentCurrency(USDT)
-  }, [type])
 
   const returnOnInvestment = useMemo(() => {
     return (
@@ -320,8 +82,6 @@ export default function DualInvestMgmt() {
 
   return (
     <>
-      <ConfirmModal isOpen={isConfirmOpen} onDismiss={hideConfirm} onConfirm={handleConfirm} amount={amount} />
-      <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
       <Box
         display="grid"
         width="100%"
@@ -380,134 +140,7 @@ export default function DualInvestMgmt() {
                 </Box>
               )}
               <Card style={{ height: '100%' }}>
-                <Box display="grid" flexDirection="column" gap={20} height="100%" width="100%" padding="36px 24px">
-                  {Object.keys(data).map((key, idx) => (
-                    <Box key={idx} display="flex" justifyContent="space-between">
-                      <Typography fontSize={16} sx={{ opacity: 0.8 }}>
-                        {key}
-                      </Typography>
-                      {/* {key === 'Current Progress' ? (
-                      <SimpleProgress key={1} val={0.16} total={1} />
-                    ) : ( */}
-                      <Typography color={key === 'APY' ? theme.palette.primary.main : theme.palette.text.primary}>
-                        {data[key as keyof typeof data]}
-                      </Typography>
-                      {/* )} */}
-                    </Box>
-                  ))}
-                  <Divider extension={24} sx={{ opacity: 0.1 }} />
-                  <Box>
-                    <InputNumerical
-                      disabled={!product || !account || isConfirmed}
-                      value={amount}
-                      onMax={() => {
-                        if (!product) return
-                        const maxAvailable = balance
-                          ? Math.floor(+balance / ((product ? +product?.multiplier : 1) * multiplier))
-                          : 0
-                        setAmount(`${maxAvailable > +product?.orderLimit ? product.orderLimit : maxAvailable}`)
-                      }}
-                      label={'Subscription Amount'}
-                      onChange={handleInput}
-                      balance={balance || '-'}
-                      unit={product?.investCurrency ?? ''}
-                      endAdornment={
-                        <Typography noWrap fontSize={12} alignItems="center">
-                          {product && product?.multiplier && product?.investCurrency ? (
-                            <>
-                              <span style={{ margin: '0 2px' }}>X</span>
-                              {product.multiplier}
-                              {product.type === 'PUT' && (
-                                <Typography component="span" sx={{ marginLeft: '10px' }} fontSize={12}>
-                                  <span style={{ margin: '0 2px' }}>X</span>
-                                  {product.strikePrice}
-                                </Typography>
-                              )}
-                              {product.type === 'PUT' && <br />}
-                              <Typography
-                                component="span"
-                                sx={{ margin: '0 10px', marginLeft: product.type === 'PUT' ? 'auto' : undefined }}
-                                fontSize={12}
-                              >
-                                =
-                              </Typography>
-                              <Typography component="span" color="primary" fontSize={14}>
-                                {(+product.multiplier * +amount * multiplier).toFixed(2)} {product.investCurrency}
-                              </Typography>
-                            </>
-                          ) : (
-                            ''
-                          )}
-                        </Typography>
-                      }
-                      onDeposit={showDeposit}
-                      error={!!error}
-                    />
-                    <Box display="flex" mt={12} justifyContent="space-between">
-                      <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-                        <span>Min investment: {data.minAmount}</span>
-                      </Typography>
-                      <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-                        <span>Max investment: {data.maxAmount}</span>
-                      </Typography>
-                    </Box>
-                  </Box>
-                  {!account && <BlackButton onClick={toggleWallet}>Connect Wallet</BlackButton>}
-                  {!isConfirmed && account && (
-                    <ActionButton
-                      pending={pending}
-                      pendingText={'Pending'}
-                      error={!amount ? 'Please Input Amount' : ''}
-                      onAction={showConfirm}
-                      actionText=" Subscribe"
-                      disableAction={!product?.isActive ? true : !!error}
-                      successText={'Ended'}
-                      success={!product?.isActive}
-                    />
-                  )}
-                  {isConfirmed && account && (
-                    <ActionButton
-                      pending={pending}
-                      pendingText={'Pending'}
-                      error={!amount ? 'Please Input Amount' : ''}
-                      onAction={handleSubscribe}
-                      actionText=" Subscribe"
-                      disableAction={!product?.isActive ? true : !!error}
-                      successText={'Ended'}
-                      success={!product?.isActive}
-                    />
-                  )}
-                  <Box display="flex">
-                    <InfoOutlinedIcon
-                      sx={{ color: error ? theme.palette.error.main : theme.palette.primary.main, height: 12 }}
-                    />
-                    <Typography component="p" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
-                      {error ? (
-                        error === ErrorType.insufficientBalance ? (
-                          <>
-                            <Typography component="span" color="error" fontSize={12}>
-                              Insufficient Balance.
-                            </Typography>
-                            Please recharge your account first before opening wealth management
-                          </>
-                        ) : (
-                          <>
-                            <Typography component="span" color="error" fontSize={12} sx={{ display: 'block' }}>
-                              Single Limit Exceeded.
-                            </Typography>
-                            Single financial management limit is {product?.multiplier ?? '-'}～
-                            {product ? +product?.orderLimit * +product?.multiplier : '-'} BTC
-                          </>
-                        )
-                      ) : (
-                        <>
-                          Once subscribed the APY will get locked in, the product can&apos;t be cancelled after
-                          subscription.
-                        </>
-                      )}
-                    </Typography>
-                  </Box>
-                </Box>
+                <SubscribeForm product={product} setAmount={handleInput} amount={amount} id={id} />
               </Card>
             </Grid>
 
@@ -615,134 +248,12 @@ export default function DualInvestMgmt() {
 
             <Grid xs={12} item>
               <Card style={{ height: '100%' }}>
-                <Box display="flex" alignItems="center" gap={11.68} width="100%" padding="32px 24px">
-                  <RiskStatementIcon />
-                  <Typography fontSize={{ xs: 20, md: 24 }} fontWeight={700}>
-                    Risk statement
-                  </Typography>
-                </Box>
-                <Box fontSize={{ xs: 14, md: 16 }}>
-                  <StyledOrderList>
-                    <li>
-                      This product is a non-principal-guaranteed wealth management product. Market fluctuations may
-                      result in a loss of principal. Please invest with caution.
-                    </li>
-                    <li>
-                      The investment amount is calculated in real time with the market, please refer to the actual
-                      purchase transaction.
-                    </li>
-                    <li>
-                      The annualized rate of return changes in real time with the market, please refer to the actual
-                      rate of return of the purchase transaction.
-                    </li>
-                    <li>
-                      The average spot price of the last 30 minutes at 12:00 (UTC+8) on the delivery date will be used
-                      as the settlement price.
-                    </li>
-                    <li>Early redemption is not supported, and users can only get rewards after the expiry date.</li>
-                    <li>
-                      After the product is purchased, you can view it on my currency holding page, and the payment will
-                      be automatically issued to the Account after the delivery.
-                    </li>
-                  </StyledOrderList>
-                </Box>
+                <RiskStatement />
               </Card>
             </Grid>
             <Grid xs={12} item>
               <Card style={{ height: '100%' }} padding="32px 24px">
-                <Box display="flex" alignItems="center" gap={11.68} width="100%">
-                  <Faq />
-                  <Typography fontSize={{ xs: 20, md: 24 }} fontWeight={700}>
-                    FAQ
-                  </Typography>
-                </Box>
-                <Box mt={28}>
-                  {[
-                    {
-                      summary: 'What is Dual Investment?',
-                      details: (
-                        <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
-                          Antimatter Dual Investment is an advanced options derivative based on a decentralised
-                          protocol. The product has a &quot;market-neutral, returns guaranteed&quot; feature, where the
-                          yield is clear and fixed at the time of purchase, while the settlement currency is uncertain.
-                          At maturity, the settlement currency depends on the outcome of the settlement price at
-                          maturity compared to the strike price.
-                        </AccordionDetailText>
-                      )
-                    },
-                    {
-                      summary: 'How is my return calculated?',
-                      details: (
-                        <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
-                          <p>
-                            When a product is &quot;exercised&quot;, the subscription amount and yields will be swapped
-                            at the strike price in the alternative currency.
-                          </p>
-                          <p>
-                            <b>Up-and-Exercised:</b> Yields = (Subscription Amount * Strike Price) * [1 + (APY % *
-                            Period (days) / 365)]
-                          </p>
-                          <p>
-                            <b>Down-and-Exercised:</b> Yields = (Subscription Amount / Strike Price) * [1 + (APY % *
-                            Cycle (Days) / 365)]
-                          </p>
-                          <p>
-                            When a subscription is &quot;unexercised&quot;, the subscription amount and yields will not
-                            be transferred into the alternative currency and the user will receive the currency they
-                            invested.
-                          </p>
-                          <p>
-                            <b>Yields</b> = Subscription Amount * [1 + (APY% * Period (days) / 365)]
-                          </p>
-                          <p>
-                            Yields will be automatically credited to the user&apos;s account within 24 hours of
-                            settlement.
-                          </p>
-                        </AccordionDetailText>
-                      )
-                    },
-                    {
-                      summary:
-                        'What are “Strike Price”, “Underlying Asset”, “Deposit Currency”, “Alternate Currency”, “Deposit Days”, and “Settlement Price”?',
-                      details: (
-                        <AccordionDetailText sx={{ fontSize: { xs: 14, md: 16 } }}>
-                          <p>
-                            <b>Strike Price</b> - A set price at which deposit currency will be converted into alternate
-                            currency if the product is exercised.
-                          </p>
-                          <p>
-                            <b>Underlying Asset</b> - An asset on which a Dual Investment product is based. For
-                            instance, if you are making reference to BTC spot price and BTC strike price, then the
-                            underlying asset is BTC.
-                          </p>
-                          <p>
-                            <b>Deposit Currency</b> - The currency you have used to subscribe to a Dual Investment
-                            product.
-                          </p>
-                          <p>
-                            <b>Alternate Currency</b> - The currency you will be receiving if the product is exercised.
-                          </p>
-                          <p>
-                            <b>Deposit Days</b> - A number of days remaining until the delivery date.
-                          </p>
-                          <p>
-                            <b>Settlement Price</b> - Average of the spot price in the last 30 minutes before 08:00
-                            (UTC) on the delivery date. Settlement price and strike price determines whether a product
-                            is exercised or not.
-                          </p>
-                        </AccordionDetailText>
-                      )
-                    }
-                  ].map(({ summary, details }, idx) => (
-                    <Accordion
-                      key={idx}
-                      summary={summary}
-                      details={details}
-                      expanded={expanded === idx}
-                      onChange={() => setExpanded(idx)}
-                    />
-                  ))}
-                </Box>
+                <FAQ />
               </Card>
             </Grid>
           </Grid>

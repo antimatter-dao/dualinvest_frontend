@@ -157,7 +157,11 @@ export default function DualInvest() {
               <Grid item xs={12} md={6}>
                 <NumericalCard
                   width={isDownMd ? '320px' : '264px'}
-                  value={statistics?.totalInvestment ?? '-'}
+                  value={
+                    statistics && BTCPrice
+                      ? (+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit).toFixed(1)
+                      : '-'
+                  }
                   unit="USDT"
                   border
                   subValue="Cumulative Deposit Amount"
@@ -166,7 +170,7 @@ export default function DualInvest() {
               <Grid item xs={12} md={6}>
                 <NumericalCard
                   width={isDownMd ? '320px' : '264px'}
-                  value={statistics?.subscribedInvestment ?? '-'}
+                  value={statistics?.totalInvestAmount ?? '-'}
                   unit="USDT"
                   border
                   subValue="Cumulative Investment Amount"

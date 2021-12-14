@@ -4,7 +4,6 @@ import { ProductList, productListFormatter, productFormatter, Product, OrderReco
 import { AccountRecord } from 'utils/fetch/account'
 import { useActiveWeb3React } from 'hooks'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
-import { trimNumberString } from 'utils/trimNumberString'
 
 export enum InvestStatus {
   Confirming = 1,
@@ -103,21 +102,17 @@ export function useOrderRecords(investStatus?: number, pageNum?: number, pageSiz
 export function useStatistics() {
   const [statistics, setStatistics] = useState<
     | {
-        totalInvestment: string
-        subscribedInvestment: string
+        totalBtcDeposit: string
+        totalInvestAmount: string
+        totalUsdtDeposit: string
       }
     | undefined
   >(undefined)
 
   const promistFn = useCallback(() => Axios.get('getDashboard'), [])
-  const callbackFn = useCallback(
-    r =>
-      setStatistics({
-        totalInvestment: trimNumberString(r.data.data.Total_investment_amount, 0),
-        subscribedInvestment: trimNumberString(r.data.data.subscribed_investment, 0)
-      }),
-    []
-  )
+  const callbackFn = useCallback(r => {
+    setStatistics(r.data.data)
+  }, [])
 
   usePollingWithMaxRetries(promistFn, callbackFn, 600000)
 
