@@ -244,6 +244,7 @@ export default function SubscribeForm({
         <Divider extension={24} sx={{ opacity: 0.1 }} />
 
         <InputNumerical
+          placeholder="0.00"
           disabled={!product || !account || isConfirmed}
           value={amount}
           onMax={() => {
@@ -276,7 +277,7 @@ export default function SubscribeForm({
             <Box height="60px" display="flex" alignItems="center" padding="16px" justifyContent="space-between">
               {product && (
                 <>
-                  <Typography component="span" color="primary" fontSize={14}>
+                  <Typography component="span" color="primary" fontSize={16}>
                     {(+product.multiplier * +amount * multiplier).toFixed(2)} {product.investCurrency}
                   </Typography>
                   <Typography component="span" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
