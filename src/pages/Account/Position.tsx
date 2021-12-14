@@ -21,6 +21,8 @@ import { OrderRecord } from 'utils/fetch/product'
 import useModal from 'hooks/useModal'
 import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { useHistory } from 'react-router-dom'
+import { routes } from 'constants/routes'
 
 enum PositionTableHeaderIndex {
   investAmount,
@@ -57,6 +59,11 @@ export default function Position() {
   const { orderList } = useOrderRecords(undefined, undefined, 999999)
   const { showModal, hideModal } = useModal()
   const addTransaction = useTransactionAdder()
+  const history = useHistory()
+
+  const handleGoInvest = useCallback(() => {
+    history.push(routes.dualInvest)
+  }, [history])
 
   const filteredOrderList = useMemo(() => {
     return orderList?.reduce((acc, order) => {
@@ -99,7 +106,7 @@ export default function Position() {
       }) => {
         return {
           summary: [
-            `${amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)} ${investCurrency}`,
+            `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(1)} ${investCurrency}`,
             <Typography color="primary" key="1" variant="inherit">
               {(+annualRor * 100).toFixed(2)}%
             </Typography>,
@@ -174,7 +181,11 @@ export default function Position() {
       <Box sx={{ mt: 48, width: '100%' }}>
         <Card>
           <Box padding="38px 24px">
-            <NumericalCard title="BTC latest spot price" value={price} border={true} />
+            <NumericalCard
+              title="BTC latest spot price"
+              value={price ? (+price).toLocaleString() : '-'}
+              border={true}
+            />
             <Box position="relative">
               {!orderList && (
                 <Box
@@ -194,15 +205,25 @@ export default function Position() {
                 </Box>
               )}
 
-              {isDownMd ? (
-                <PositionTableCards data={data} />
+              {data.length === 0 ? (
+                <NoDataCard text={'You don’t have any positions'}>
+                  <Button style={{ marginTop: 24 }} onClick={handleGoInvest} height="44px">
+                    Go invest and earn money
+                  </Button>
+                </NoDataCard>
               ) : (
-                <Table
-                  header={PositionTableHeader}
-                  rows={data.map(datum => datum.summary)}
-                  hiddenParts={hiddenParts()}
-                  collapsible
-                />
+                <>
+                  {isDownMd ? (
+                    <PositionTableCards data={data} />
+                  ) : (
+                    <Table
+                      header={PositionTableHeader}
+                      rows={data.map(datum => datum.summary)}
+                      hiddenParts={hiddenParts()}
+                      collapsible
+                    />
+                  )}
+                </>
               )}
               <PaginationView
                 count={pageCount}
@@ -212,7 +233,6 @@ export default function Position() {
                 total={filteredOrderList?.length}
                 onChange={(event, value) => setPage(value)}
               />
-              {data.length === 0 && <NoDataCard height="20vh" />}
             </Box>
           </Box>
         </Card>

@@ -142,8 +142,8 @@ export default function SubscribeForm({
               const statusCode = r.data.data.records[0].investStatus as keyof typeof InvesStatus
               if (InvesStatus[statusCode] === InvesStatusType.ERROR) {
                 clearInterval(timeoutId)
-                reject('Order fail')
-                throw Error('Order fail')
+                reject('Subscription fail')
+                throw Error('Subscription failed, please try again later')
               }
               if (InvesStatus[statusCode] === InvesStatusType.SUCCESS) {
                 clearInterval(timeoutId)

@@ -168,9 +168,9 @@ export default function Dashboard() {
           ],
           [
             <TokenHeader key="usdt" token={USDT} />,
+            accountBalances?.USDT?.totalInvest ?? '-',
             accountBalances?.USDT?.availableBalance ?? '-',
             accountBalances?.USDT?.lockedBalance ?? '-',
-            accountBalances?.USDT?.totalInvest ?? '-',
             accountBalances?.USDT?.earned ?? '-',
             <BalanceActions
               key="1"

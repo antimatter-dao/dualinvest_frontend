@@ -1,10 +1,12 @@
 import { CircularProgress } from '@mui/material'
+import React from 'react'
 
 export default function Spinner({
   size = 16,
   thickness = 3,
   marginLeft,
   marginRight,
+  style,
   color
 }: {
   size?: string | number
@@ -12,6 +14,7 @@ export default function Spinner({
   color?: string
   marginLeft?: string | number
   marginRight?: string | number
+  style?: React.CSSProperties
 }) {
   return (
     <div
@@ -20,7 +23,8 @@ export default function Spinner({
         marginLeft: marginLeft ?? 0,
         marginRight: marginRight ?? 0,
         height: size,
-        width: size
+        width: size,
+        ...style
       }}
     >
       <CircularProgress

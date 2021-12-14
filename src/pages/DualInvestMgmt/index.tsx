@@ -39,10 +39,10 @@ export default function DualInvestMgmt() {
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
   const type = product?.type
-  const gtStr = `${product && amount ? +product.gtStrikePrice * +amount : '-'} ${
+  const gtStr = `${product && amount ? (+product.gtStrikePrice * +amount * +product.multiplier).toFixed(4) : '-'} ${
     product ? (product.type === 'CALL' ? product?.strikeCurrency : product?.investCurrency) : ''
   } `
-  const ltStr = `${product && amount ? +product?.ltStrikePrice * +amount : '-'} ${
+  const ltStr = `${product && amount ? (+product?.ltStrikePrice * +amount * +product.multiplier).toFixed(4) : '-'} ${
     product ? (product.type === 'CALL' ? product?.investCurrency : product?.strikeCurrency) : ''
   }`
 
@@ -115,7 +115,7 @@ export default function DualInvestMgmt() {
               {product?.currency} Financial Management
             </Typography>
             <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={400} component="span">
-              [{type === 'CALL' ? 'upward' : 'drop'} exercise]
+              [{type === 'CALL' ? 'upward' : 'down'} exercise]
             </Typography>
           </Box>
           <Grid container spacing={20}>
@@ -179,7 +179,7 @@ export default function DualInvestMgmt() {
                       </Box>
                     </Box>
                   </Box>
-                  <Box sx={{ maxWidth: '100vw', height: '100%', flexGrow: 1 }}>
+                  <Box sx={{ maxWidth: '100vw', height: '100%', flexGrow: 1 }} mt={20}>
                     <Box
                       maxHeight="100%"
                       height="100%"
@@ -191,7 +191,7 @@ export default function DualInvestMgmt() {
                         xs={12}
                         md={8}
                         sx={{
-                          height: { xs: '300px', md: '100%', maxWidth: '100vw', width: { xs: '100%', md: 'auto' } }
+                          height: { xs: '300px', md: '100%', maxWidth: '100%', width: { xs: '100%', md: 'auto' } }
                         }}
                         ref={graphContainer}
                       >
@@ -199,7 +199,7 @@ export default function DualInvestMgmt() {
                           <LineChart
                             lineColor="#18A0FB"
                             lineSeriesData={priceSet}
-                            unit="usdt"
+                            unit="BTC"
                             id="incomeGraph"
                             height={graphContainer?.current?.offsetHeight ?? 280}
                             strikeData={strikeLineData}

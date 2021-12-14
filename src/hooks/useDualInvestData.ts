@@ -72,16 +72,14 @@ export function useOrderRecords(investStatus?: number, pageNum?: number, pageSiz
     total: 0
   })
 
-  const promiseFn = useCallback(
-    () =>
-      Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
-        address: account,
-        investStatus,
-        pageNum,
-        pageSize
-      }),
-    [account, investStatus, pageNum, pageSize]
-  )
+  const promiseFn = useCallback(() => {
+    return Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
+      address: account ?? '1111111111',
+      investStatus,
+      pageNum,
+      pageSize
+    })
+  }, [account, investStatus, pageNum, pageSize])
   const callbackFn = useCallback(r => {
     setOrderList(r.data.data.records)
     setPageParams({

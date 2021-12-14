@@ -5,13 +5,33 @@ import noServiceUrl from 'assets/images/no_service.png'
 import Button from 'components/Button/Button'
 import { useActiveWeb3React } from 'hooks'
 import { useWalletModalToggle } from 'state/application/hooks'
+import React from 'react'
 
-export default function NoDataCard({ height = '40vh' }: { height?: string }) {
+export default function NoDataCard({
+  height = '40vh',
+  outlined,
+  text,
+  children
+}: {
+  height?: string
+  outlined?: boolean
+  text?: string
+  children?: React.ReactNode
+}) {
   const theme = useTheme()
   const { account } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
   return (
-    <Card style={{ maxHeight: 350, height: height, width: '100%', maxWidth: theme.width.maxContent, margin: '0 auto' }}>
+    <Card
+      style={{
+        maxHeight: 350,
+        height: height,
+        width: '100%',
+        maxWidth: theme.width.maxContent,
+        margin: '0 auto',
+        border: outlined ? '1px solid rgba(0, 0, 0, 0.1)' : undefined
+      }}
+    >
       <Box display="flex" justifyContent="center" alignItems="center" height="100%">
         <Box display="grid" sx={{ color: theme => theme.palette.text.secondary, fontSize: 20 }} gap={4}>
           <Typography
@@ -19,8 +39,9 @@ export default function NoDataCard({ height = '40vh' }: { height?: string }) {
             sx={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center' }}
           >
             <Image src={noServiceUrl} style={{ width: 24 }} />
-            No Data
+            {text ?? 'No Data'}
           </Typography>
+          {children}
 
           {!account && (
             <>

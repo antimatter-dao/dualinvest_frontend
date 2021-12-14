@@ -28,13 +28,16 @@ export function useCurrencyBalances(token: Token): BalanceInfo | undefined {
     const lBalance = balanceLockRes?.result?.[0]
     const e = earnedRes?.result?.[0]
     if (!aBalance || !lBalance || !e) return undefined
-    return {
+
+    const res = {
       availableBalance: aBalance ? parseBalance(aBalance, token) : undefined,
       lockedBalance: lBalance ? parseBalance(lBalance, token) : undefined,
       totalInvest:
         aBalance && lBalance ? +parseBalance(aBalance, token) + +parseBalance(lBalance, token) + '' : undefined,
       earned: e ? parseBalance(e, token) : undefined
     }
+
+    return res
   }, [balanceLockRes?.result, balanceRes?.result, earnedRes?.result, token])
 }
 

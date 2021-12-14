@@ -100,6 +100,9 @@ const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{ var
       borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
       borderRight: 'none',
       borderLeft: 'none',
+      '& .MuiTypography-root': {
+        fontSize: '16px!important'
+      },
       '&:first-of-type': {
         borderLeft: '1px solid',
         borderColor: variant === 'outlined' ? '#00000010' : 'transparent',

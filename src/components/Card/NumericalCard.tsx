@@ -51,7 +51,7 @@ export default function NumericalCard(props: Props) {
       <Box
         sx={{
           padding: padding ?? '20px',
-          gap: '15px',
+          gap: '24px',
           height: height || 'auto',
           display: 'flex',
           flexDirection: 'column',

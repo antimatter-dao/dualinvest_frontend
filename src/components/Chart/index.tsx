@@ -28,16 +28,19 @@ export type LineSeriesData = Array<{
 //   price2?: string
 // }
 
-const Chart = styled('div')(`
-  width: 100%;
-  max-width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 3px;
-  position: relative;
-  min-height: 100%;
-`)
+const Chart = styled('div')(({ theme }) => ({
+  width: '100%',
+  maxWidth: '100vw',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginLeft: '3px',
+  position: 'relative',
+  minHeight: '100%',
+  [theme.breakpoints.down('md')]: {
+    transform: 'translateX(-10px)'
+  }
+}))
 
 const secondaryColor = '#F0B90B'
 // const toolTipMargin = 48
@@ -82,7 +85,7 @@ export default function LineChart({
   lineSeriesData,
   height,
   lineColor,
-  // unit,
+  unit,
   // unit2,
   id,
   width,
@@ -94,13 +97,11 @@ export default function LineChart({
   height?: number
   lineColor?: string
   unit: string
-  unit2?: string
+  // unit2?: string
   id: string
   width?: number
 }) {
   const theme = useTheme()
-  // const toolTipRef = useRef<HTMLDivElement>(null)
-  // const [toolTipInfo, setToolTipInfo] = useState<ToolTipInfo | undefined>(undefined)
   const [strikeLineLeft, setStrikeLineLeft] = useState<number | undefined>(undefined)
   const [strikeLineHeight, setStrikeLineHeight] = useState<number | undefined>(undefined)
   const [chart, setChart] = useState<IChartApi | undefined>(undefined)
@@ -136,7 +137,7 @@ export default function LineChart({
       height: height,
       layout: {
         backgroundColor: 'transparent',
-        textColor: theme.palette.text.secondary,
+        textColor: '#00000050',
         fontSize: 10,
         fontFamily: 'SF Pro, Roboto, san-serif'
       },
@@ -213,7 +214,7 @@ export default function LineChart({
     const resizeFunction = () => {
       const chartEl = document.getElementById(id + '-chart')
       if (!chartEl || !chart) return
-      const resizeWidth = isDownMd ? window.innerWidth - 100 : width ? width : chartEl.getBoundingClientRect().width
+      const resizeWidth = isDownMd ? window.innerWidth - 120 : width ? width : chartEl.getBoundingClientRect().width
       chart.resize(resizeWidth, height || 174)
       chart.timeScale().fitContent()
     }
@@ -221,20 +222,6 @@ export default function LineChart({
 
     return () => window.removeEventListener('resize', resizeFunction)
   }, [chart, height, id, width, handleStrikeLine, isDownMd])
-
-  // useEffect(() => {
-  //   if (!chart) return
-  //   const crossHairfunction = tooltipFunction({
-  //     series: lineSeries,
-  //     series2: lineSeries2,
-  //     setToolTipInfo: info => {
-  //       setToolTipInfo(info)
-  //     }
-  //   })
-  //   chart.subscribeCrosshairMove(crossHairfunction)
-
-  //   return () => chart.unsubscribeCrosshairMove(crossHairfunction)
-  // }, [chart, lineSeries, lineSeries2, unit, unit2])
 
   useEffect(() => {
     if (!chart || !strikeData) return
@@ -249,27 +236,6 @@ export default function LineChart({
     if (chart) {
       chart.timeScale().fitContent()
     }
-
-    // if (chart) {
-    //   if (lineSeriesData2) {
-    //     const lineSeries2 = chart.addLineSeries({
-    //       color: secondaryColor,
-    //       lineWidth: 1,
-    //       crosshairMarkerVisible: true,
-    //       crosshairMarkerRadius: 4,
-    //       lineType: LineType.Simple,
-    //       crosshairMarkerBorderColor: '#ffffff',
-    //       crosshairMarkerBackgroundColor: theme.palette.text.primary,
-    //       priceFormat: {
-    //         type: 'price',
-    //         precision: 2
-    //       }
-    //     })
-    //     setLineSeries2(lineSeries2)
-    //     lineSeries2.setData(lineSeriesData2)
-    //   }
-    // chart.timeScale().fitContent()
-    // }
   }, [chart, handleStrikeLine, lineColor, lineSeries, lineSeriesData, strikeData, theme])
 
   useEffect(() => {
@@ -290,6 +256,24 @@ export default function LineChart({
   return (
     <>
       <Chart sx={{ ...style }} id={id + '-chart'}>
+        {unit && (
+          <Typography
+            sx={{ color: '#00000050', position: 'absolute', left: 8, top: -22 }}
+            fontSize={12}
+            fontWeight={700}
+          >
+            {unit} Price
+          </Typography>
+        )}
+        {/* 
+        <Typography
+          sx={{ color: '#00000050', position: 'absolute', right: -12, bottom: 3, transform: 'translateX(100%)' }}
+          fontSize={12}
+          fontWeight={700}
+        >
+          Date
+        </Typography> */}
+
         {strikeData && strikeLineLeft && strikeLineHeight ? (
           <>
             <Divider
@@ -302,24 +286,24 @@ export default function LineChart({
                 borderColor: '#31B047',
                 height: strikeLineHeight,
                 left: strikeLineLeft
-                // borderWidth: '1px'
               }}
             />
             <Box
               sx={{
                 position: 'absolute',
                 zIndex: 10,
-                top: strikeLineHeight,
+                top: 2,
                 left: strikeLineLeft,
-                transform: 'translate(-50%, 1px)',
-                background: '#ffffff',
+                transform: 'translate(-110%, 1px)',
+                // background: '#ffffff',
+                borderRadius: '100%',
                 color: theme => theme.palette.primary.main
               }}
             >
-              <Typography align="center" noWrap fontSize={12} fontWeight={500}>
-                {dayjs(strikeData.time as number).format('DD MMM YYYY')}
+              <Typography align="right" noWrap fontSize={12} fontWeight={500}>
+                {dayjs(strikeData.time as number).format('DD MMM')}
               </Typography>
-              <Typography align="center" noWrap fontSize={12} fontWeight={500}>
+              <Typography align="right" noWrap fontSize={12} fontWeight={500}>
                 (Delivery Date)
               </Typography>
             </Box>
