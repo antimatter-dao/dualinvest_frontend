@@ -64,11 +64,11 @@ export default function DualInvestMgmt() {
         </Typography>
         <StyledUnorderList>
           <li>
-            When the final settlement price ≥ {strikePrice} USDT, you will receive{' '}
+            When the final settlement price &gt; {strikePrice} USDT, you will receive{' '}
             <span style={{ color: theme.palette.text.primary }}>{gtStr}</span>.
           </li>
           <li>
-            When the settlement price is &lt; {strikePrice} USDT, you will receive{' '}
+            When the settlement price is &le; {strikePrice} USDT, you will receive{' '}
             <span style={{ color: theme.palette.text.primary }}>{ltStr}</span>.
           </li>
           <li>
@@ -221,12 +221,12 @@ export default function DualInvestMgmt() {
                           <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
                             <Card gray>
                               <Box padding="16px" fontSize={14}>
-                                Settlement price ≥ {strikePrice}, will be exercised. Estimated return {gtStr}
+                                Settlement price &gt; {strikePrice}, will be exercised. Estimated return {gtStr}
                               </Box>
                             </Card>
                             <Card gray>
                               <Box padding="16px" fontSize={14}>
-                                Settlement price &lt; {strikePrice}, will not be exercised. Estimated return {ltStr}
+                                Settlement price &le; {strikePrice}, will not be exercised. Estimated return {ltStr}
                               </Box>
                             </Card>
                           </Box>

@@ -60,7 +60,7 @@ export default function History() {
         productId,
         type
       }) => {
-        const exercised = type === 'CALL' ? !!(+deliveryPrice >= +strikePrice) : !!(+deliveryPrice <= +strikePrice)
+        const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
         const hiddenData = [
           orderId,
           productId,

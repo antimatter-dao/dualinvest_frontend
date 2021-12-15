@@ -28,7 +28,7 @@ enum PositionTableHeaderIndex {
   apy,
   deliveryDate,
   strikePrice,
-  estimatedReceive,
+  refundAmount,
   date,
   status
 }
@@ -38,7 +38,7 @@ const PositionTableHeader = [
   'APY',
   'Delivery Date',
   'Strike Price',
-  'Estimated Receive',
+  'Refund Amount',
   'Date',
   'Status',
   ''
@@ -81,7 +81,8 @@ export default function Position() {
         investStatus,
         multiplier,
         investCurrency,
-        returnedCurrency
+        returnedCurrency,
+        returnedAmount
       }) => {
         return {
           summary: [
@@ -91,7 +92,7 @@ export default function Position() {
             </Typography>,
             dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
             strikePrice,
-            earn + ' ' + returnedCurrency,
+            +returnedAmount > 0 ? +returnedAmount + returnedCurrency : '--',
             dayjs(+ts * 1000).format('MMM DD, YYYY hh:mm:ss A'),
             <Box display="flex" key="action" gap={isDownMd ? 10 : 8} sx={{ mr: -15 }}>
               <StatusTag
