@@ -161,7 +161,10 @@ export default function DualInvest() {
                   width={isDownMd ? '320px' : '264px'}
                   value={
                     statistics && BTCPrice
-                      ? (+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit).toFixed(1)
+                      ? trimNumberString(
+                          (+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit).toLocaleString(),
+                          1
+                        )
                       : '-'
                   }
                   unit="USDT"
@@ -172,7 +175,7 @@ export default function DualInvest() {
               <Grid item xs={12} md={6}>
                 <NumericalCard
                   width={isDownMd ? '320px' : '264px'}
-                  value={statistics?.totalInvestAmount ?? '-'}
+                  value={statistics ? trimNumberString((+statistics.totalInvestAmount).toLocaleString(), 1) : '-'}
                   unit="USDT"
                   border
                   subValue="Cumulative Investment Amount"
@@ -337,21 +340,32 @@ export default function DualInvest() {
         <Grid container sx={{ justifyContent: 'space-between' }} spacing={20}>
           <Grid item xs={12} md={4}>
             <FeatureCard
-              icon={<Image src={securityUrl} />}
+              icon={
+                <Image
+                  src={securityUrl}
+                  style={{
+                    width: 56,
+                    height: 56,
+                    objectFit: 'contain',
+                    WebkitTransform: 'scaleX(-1)',
+                    transform: 'scaleX(-1)'
+                  }}
+                />
+              }
               title="Security"
               content="Top-level security infrastructure and risk control measures to protect asset safety"
             />
           </Grid>
           <Grid item xs={12} md={4}>
             <FeatureCard
-              icon={<Image src={highReturnUrl} />}
+              icon={<Image src={highReturnUrl} style={{ width: 56, height: 56, objectFit: 'contain' }} />}
               title="High Return"
               content="We ensure your APY gets locked in on subscription. Enjoy high fixed yield!"
             />
           </Grid>
           <Grid item xs={12} md={4}>
             <FeatureCard
-              icon={<Image src={flexibleUrl} />}
+              icon={<Image src={flexibleUrl} style={{ width: 56, height: 56, objectFit: 'contain' }} />}
               title="Flexible Experience"
               content="High flexibility and low barriers for participation "
             />
