@@ -39,6 +39,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     '&.Mui-disabled': {
       WebkitTextFillColor: theme.palette.text.secondary,
       color: theme.palette.text.secondary
+    },
+    '&::placeholder': {
+      fontSize: 13
     }
   },
   [`&.${inputBaseClasses.disabled}`]: {

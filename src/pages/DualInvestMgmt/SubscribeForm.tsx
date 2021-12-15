@@ -244,7 +244,9 @@ export default function SubscribeForm({
         <Divider extension={24} sx={{ opacity: 0.1 }} />
 
         <InputNumerical
-          placeholder="0.00"
+          placeholder={`Each value represents ${
+            product ? (+product.multiplier * multiplier).toFixed(1) : '-'
+          } ${product?.investCurrency || ''}`}
           disabled={!product || !account || isConfirmed}
           value={amount}
           onMax={() => {
