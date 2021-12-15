@@ -117,10 +117,10 @@ function HistoryTableCards({ data }: { data: any[][] }) {
             {dataRow.map((datum, idx) => {
               return (
                 <Box key={idx} display="flex" justifyContent="space-between">
-                  <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
+                  <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }} component={'div'}>
                     {HistoryTableHeader[idx]}
                   </Typography>
-                  <Typography fontSize={12} fontWeight={600}>
+                  <Typography fontSize={12} fontWeight={600} component={'div'}>
                     {datum}
                   </Typography>
                 </Box>

@@ -75,6 +75,21 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
     '& .link': { marginRight: 15 },
     padding: '0 24px 0 0'
   },
+  [theme.breakpoints.down('md')]: {
+    position: 'fixed'
+  },
+  [theme.breakpoints.down('sm')]: {
+    height: theme.height.mobileHeader,
+    padding: '0 20px'
+  }
+}))
+
+const Filler = styled('div')(({ theme }) => ({
+  display: 'none',
+  [theme.breakpoints.down('md')]: {
+    height: theme.height.header,
+    display: 'block'
+  },
   [theme.breakpoints.down('sm')]: {
     height: theme.height.mobileHeader,
     padding: '0 20px'
@@ -113,7 +128,7 @@ export default function Header() {
           setMobileMenuOpen(false)
         }}
       />
-
+      <Filler />
       <StyledAppBar>
         <Box display="flex" alignItems="center">
           <MainLogo id={'antimatter'} to={'/'}>

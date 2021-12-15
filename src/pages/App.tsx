@@ -1,5 +1,5 @@
-import { Suspense } from 'react'
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Suspense, useEffect } from 'react'
+import { Route, Switch, Redirect, useLocation } from 'react-router-dom'
 import { styled } from '@mui/material'
 import Header from '../components/Header'
 import Polling from '../components/essential/Polling'
@@ -20,14 +20,14 @@ const AppWrapper = styled('div')(({ theme }) => ({
   alignItems: 'flex-start',
   overflowX: 'auto',
   [theme.breakpoints.down('md')]: {
-    flexDirection: 'column',
-    height: '100vh'
+    flexDirection: 'column'
+    // height: '100vh'
   }
 }))
 
 const ContentWrapper = styled('div')({
   width: '100%',
-  maxHeight: '100vh',
+  // maxHeight: '100vh',
   overflow: 'auto',
   alignItems: 'center'
 })
@@ -62,6 +62,7 @@ export default function App() {
               <Popups />
               <Polling />
               <WarningModal />
+              <ScrollToTop />
               <Web3ReactManager>
                 <LocatoinVerification resource={resource}>
                   <Switch>
@@ -92,4 +93,14 @@ function LocatoinVerification({ resource, children }: { resource: { read(): any 
       {location === 'US' || location === 'CN' || !location || location === 'Not found' ? children : children}
     </Suspense>
   )
+}
+
+export function ScrollToTop() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
+  return null
 }
