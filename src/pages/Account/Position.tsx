@@ -17,7 +17,6 @@ import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
 import { usePrice } from 'hooks/usePriceSet'
 import { useDualInvestCallback } from 'hooks/useDualInvest'
-import { OrderRecord } from 'utils/fetch/product'
 import useModal from 'hooks/useModal'
 import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -46,8 +45,7 @@ const PositionTableHeader = [
 ]
 
 const PositionMoreHeader = ['Order ID', 'Product ID', 'Holding Days', 'Settlement Price']
-
-const PageSize = 8
+const statusArr = [InvestStatus.Ordered, InvestStatus.ReadyToSettle]
 
 export default function Position() {
   const theme = useTheme()
@@ -56,7 +54,7 @@ export default function Position() {
   const { account } = useActiveWeb3React()
   const price = usePrice('BTC')
   const { finishOrderCallback } = useDualInvestCallback()
-  const { orderList } = useOrderRecords(undefined, undefined, 999999)
+  const { orderList, pageParams } = useOrderRecords(statusArr, page, 999999)
   const { showModal, hideModal } = useModal()
   const addTransaction = useTransactionAdder()
   const history = useHistory()
@@ -65,30 +63,10 @@ export default function Position() {
     history.push(routes.dualInvest)
   }, [history])
 
-  const filteredOrderList = useMemo(() => {
-    return orderList?.reduce((acc, order) => {
-      if (order.investStatus === InvestStatus.Ordered) {
-        acc.push(order)
-      }
-      if (order.investStatus === InvestStatus.ReadyToSettle) {
-        acc.unshift(order)
-      }
-      return acc
-    }, [] as OrderRecord[])
-  }, [orderList])
-
-  const pageCount = useMemo(() => {
-    if (!filteredOrderList) return 0
-
-    return Math.ceil(filteredOrderList.length / PageSize)
-  }, [filteredOrderList])
-
   const data = useMemo(() => {
-    if (!filteredOrderList) return []
+    if (!orderList) return []
 
-    const currentPageList = filteredOrderList.slice((page - 1) * PageSize, page * PageSize)
-
-    return currentPageList.map(
+    return orderList.map(
       ({
         amount,
         currency,
@@ -102,7 +80,8 @@ export default function Position() {
         deliveryPrice,
         investStatus,
         multiplier,
-        investCurrency
+        investCurrency,
+        returnedCurrency
       }) => {
         return {
           summary: [
@@ -112,7 +91,7 @@ export default function Position() {
             </Typography>,
             dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
             strikePrice,
-            earn,
+            earn + ' ' + returnedCurrency,
             dayjs(+ts * 1000).format('MMM DD, YYYY hh:mm:ss A'),
             <Box display="flex" key="action" gap={isDownMd ? 10 : 8} sx={{ mr: -15 }}>
               <StatusTag
@@ -135,7 +114,6 @@ export default function Position() {
                         summary: `Claim ${earn} ${currency}`
                       })
                       el.innerHTML = 'Claim'
-                      el.disabled = false
                     })
                     .catch(err => {
                       hideModal()
@@ -152,7 +130,7 @@ export default function Position() {
         }
       }
     )
-  }, [filteredOrderList, page, isDownMd, finishOrderCallback, hideModal, addTransaction, showModal])
+  }, [orderList, isDownMd, finishOrderCallback, hideModal, addTransaction, showModal])
 
   const hiddenParts = useCallback(() => {
     return data.map(datum => (
@@ -226,11 +204,11 @@ export default function Position() {
                 </>
               )}
               <PaginationView
-                count={pageCount}
+                count={pageParams.count}
                 page={page}
-                perPage={PageSize}
+                perPage={pageParams?.perPage}
                 boundaryCount={0}
-                total={filteredOrderList?.length}
+                total={pageParams?.total}
                 onChange={(event, value) => setPage(value)}
               />
             </Box>
@@ -277,25 +255,33 @@ function PositionTableCards({ data }: { data: { summary: any[]; details: any[] }
             })}
           </Box>
 
-          {expanded === idx && dataRow.details && (
-            <>
-              <Divider extension={16} color="1px solid #252525" />
-              <Box display="flex" flexDirection="column" gap={16} mt={20}>
-                {dataRow.details.map((datum, idx) => {
-                  return (
-                    <Box key={idx} display="flex" justifyContent="space-between">
-                      <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                        {PositionMoreHeader[idx]}
-                      </Typography>
-                      <Typography fontSize={12} fontWeight={600}>
-                        {datum}
-                      </Typography>
-                    </Box>
-                  )
-                })}
-              </Box>
-            </>
-          )}
+          <>
+            <Divider
+              extension={16}
+              color="1px solid #252525"
+              sx={{ display: expanded === idx && dataRow.details ? 'auto' : 'none' }}
+            />
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={16}
+              mt={20}
+              sx={{ display: expanded === idx && dataRow.details ? 'flex' : 'none' }}
+            >
+              {dataRow.details.map((datum, idx) => {
+                return (
+                  <Box key={idx} display="flex" justifyContent="space-between">
+                    <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
+                      {PositionMoreHeader[idx]}
+                    </Typography>
+                    <Typography fontSize={12} fontWeight={600}>
+                      {datum}
+                    </Typography>
+                  </Box>
+                )
+              })}
+            </Box>
+          </>
         </Card>
       ))}
     </Box>
@@ -323,6 +309,16 @@ function ClaimButton({
   )
 }
 
-function AccordionButton({ onClick, expanded }: { onClick: () => void; expanded: boolean }) {
-  return <IconButton onClick={onClick}>{expanded ? <AccordionArrowUpIcon /> : <AccordionArrowDownIcon />}</IconButton>
+export function AccordionButton({ onClick, expanded }: { onClick: () => void; expanded: boolean }) {
+  return (
+    <IconButton
+      onClick={onClick}
+      sx={{
+        width: 'max-content',
+        height: 'max-content'
+      }}
+    >
+      {expanded ? <AccordionArrowUpIcon /> : <AccordionArrowDownIcon />}
+    </IconButton>
+  )
 }

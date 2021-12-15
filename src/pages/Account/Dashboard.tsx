@@ -144,6 +144,8 @@ export default function Dashboard() {
     setCurrentCurrency(undefined)
   }, [])
 
+  const handlePage = useCallback((event, value) => setPage(value), [])
+
   const balanceData = useMemo(() => {
     return accountBalances
       ? [
@@ -318,7 +320,7 @@ export default function Dashboard() {
                       perPage={pageParams?.perPage}
                       boundaryCount={0}
                       total={pageParams.total}
-                      onChange={(event, value) => setPage(value)}
+                      onChange={handlePage}
                     />
                   </>
                 ) : (

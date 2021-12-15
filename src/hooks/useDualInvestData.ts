@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { Axios } from 'utils/axios'
 import { ProductList, productListFormatter, productFormatter, Product, OrderRecord } from 'utils/fetch/product'
 import { AccountRecord } from 'utils/fetch/account'
@@ -11,7 +11,8 @@ export enum InvestStatus {
   ReadyToSettle = 3,
   Settled = 4,
   OrderFailed = 5,
-  OrderSuccess = 6
+  OrderSuccess = 6,
+  EverythingFailed = 7
 }
 
 export function useProductList() {
@@ -49,6 +50,7 @@ export function useAccountRecord(pageNum = 1, pageSize = 8) {
     if (!account) return new Promise((resolve, reject) => reject('No account'))
     return Axios.get('getAccountRecord', { account, pageNum, pageSize })
   }, [account, pageNum, pageSize])
+
   const callbackFn = useCallback(r => {
     setAccountRecord(r.data.data)
     setPageParams({
@@ -60,10 +62,14 @@ export function useAccountRecord(pageNum = 1, pageSize = 8) {
 
   usePollingWithMaxRetries(promiseFn, callbackFn)
 
-  return { accountRecord, pageParams }
+  return useMemo(() => {
+    return { accountRecord, pageParams }
+  }, [accountRecord, pageParams])
 }
 
-export function useOrderRecords(investStatus?: number, pageNum?: number, pageSize?: number) {
+const PageSize = 8
+
+export function useOrderRecords(investStatus?: number | number[], pageNum?: number, pageSize?: number) {
   const { account } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
   const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
@@ -72,14 +78,40 @@ export function useOrderRecords(investStatus?: number, pageNum?: number, pageSiz
     total: 0
   })
 
+  const filteredOrderList = useMemo(() => {
+    if (!Array.isArray(investStatus)) return []
+    return orderList?.reduce((acc, order) => {
+      if (investStatus.includes(order.investStatus) && order.investStatus === InvestStatus.ReadyToSettle) {
+        acc.unshift(order)
+        return acc
+      }
+      if (investStatus.includes(order.investStatus)) {
+        acc.push(order)
+        return acc
+      }
+      return acc
+    }, [] as OrderRecord[])
+  }, [investStatus, orderList])
+
+  const pageCount = useMemo(() => {
+    if (!filteredOrderList) return 0
+
+    return Math.ceil(filteredOrderList.length / PageSize)
+  }, [filteredOrderList])
+
   const promiseFn = useCallback(() => {
+    if (!account)
+      return new Promise(resolve => {
+        resolve('no account')
+      })
     return Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
-      address: account ?? '1111111111',
-      investStatus,
-      pageNum,
+      address: account,
+      investStatus: Array.isArray(investStatus) ? undefined : investStatus,
+      pageNum: Array.isArray(investStatus) ? undefined : pageNum,
       pageSize
     })
   }, [account, investStatus, pageNum, pageSize])
+
   const callbackFn = useCallback(r => {
     setOrderList(r.data.data.records)
     setPageParams({
@@ -91,10 +123,20 @@ export function useOrderRecords(investStatus?: number, pageNum?: number, pageSiz
 
   usePollingWithMaxRetries(promiseFn, callbackFn)
 
-  return {
-    orderList,
-    pageParams
-  }
+  return useMemo(() => {
+    if (Array.isArray(investStatus)) {
+      return {
+        orderList:
+          pageNum && filteredOrderList ? filteredOrderList.slice((pageNum - 1) * PageSize, pageNum * PageSize) : [],
+        pageParams: { count: pageCount, perPage: PageSize, total: filteredOrderList?.length ?? 0 }
+      }
+    } else {
+      return {
+        orderList,
+        pageParams
+      }
+    }
+  }, [filteredOrderList, investStatus, orderList, pageCount, pageNum, pageParams])
 }
 
 export function useStatistics() {

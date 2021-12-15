@@ -66,6 +66,7 @@ export default function Modal(props: Props) {
             ...(!isCardOnMobile
               ? {
                   [theme.breakpoints.down('sm')]: {
+                    margin: 0,
                     border: 'none',
                     width: '100%!important',
                     maxWidth: 'unset!important',
