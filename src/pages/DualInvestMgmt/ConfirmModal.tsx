@@ -42,7 +42,7 @@ export default function ConfirmModal({
           {product?.investCurrency} Financial Management
         </Typography>
         <Typography fontSize={20} fontWeight={500} color="#31B047" textAlign="center">
-          [{product?.type === 'CALL' ? 'upward' : 'drop'} exercise]
+          [{product?.type === 'CALL' ? 'upward' : 'down'} exercise]
         </Typography>
         <Typography fontSize={18} fontWeight={500} sx={{ opacity: 0.4 }} mt={30} mb={16}>
           Subscription Amount

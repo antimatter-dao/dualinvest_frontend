@@ -154,7 +154,7 @@ export default function SubscribeForm({
                 //     <Typography fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
                 //       {`You have successfully subscribed ${+product?.multiplier * +amount * multiplier} ${
                 //         product?.currency
-                //       } to ${product.investCurrency}[${type === 'CALL' ? 'upward' : 'drop'} exercise] ${
+                //       } to ${product.investCurrency}[${type === 'CALL' ? 'upward' : 'down'} exercise] ${
                 //         product.strikePrice
                 //       } ${dayjs(product.expiredAt).format()}`}
                 //     </Typography>
@@ -181,7 +181,7 @@ export default function SubscribeForm({
             summary: `Subscribed ${(+amount * +product?.multiplier * multiplier).toFixed(2)} ${
               product.investCurrency
             } successfully to ${product?.currency} [${
-              product?.type === 'CALL' ? 'upward' : 'drop'
+              product?.type === 'CALL' ? 'upward' : 'down'
             }], order ID:${orderId}`
           }
         },
