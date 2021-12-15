@@ -1,7 +1,7 @@
 interface assetBalanceRaw {
-  Amount: string
-  Cumulative_Invest: string
+  Investing: string
   Available: string
+  Deposit_Amount: string
   PnL: string
 }
 
@@ -15,8 +15,8 @@ export interface BalanceInfo {
 export function assetBalanceFormatter(data: assetBalanceRaw) {
   return {
     available: data.Available,
-    locked: data.Amount,
+    locked: data.Investing,
     pnl: data.PnL,
-    totalInvest: data.Cumulative_Invest
+    totalInvest: data.Deposit_Amount
   }
 }
