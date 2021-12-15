@@ -150,9 +150,9 @@ export default function Dashboard() {
           [
             <TokenHeader key="btc" token={BTC} />,
             accountBalances?.BTC?.totalInvest ?? '-',
-            accountBalances?.BTC?.availableBalance ?? '-',
-            accountBalances?.BTC?.lockedBalance ?? '-',
-            accountBalances?.BTC?.earned ?? '-',
+            accountBalances?.BTC?.available ?? '-',
+            accountBalances?.BTC?.locked ?? '-',
+            accountBalances?.BTC?.pnl ?? '-',
             <BalanceActions
               key="1"
               onDeposit={() => {
@@ -169,9 +169,9 @@ export default function Dashboard() {
           [
             <TokenHeader key="usdt" token={USDT} />,
             accountBalances?.USDT?.totalInvest ?? '-',
-            accountBalances?.USDT?.availableBalance ?? '-',
-            accountBalances?.USDT?.lockedBalance ?? '-',
-            accountBalances?.USDT?.earned ?? '-',
+            accountBalances?.USDT?.available ?? '-',
+            accountBalances?.USDT?.locked ?? '-',
+            accountBalances?.USDT?.pnl ?? '-',
             <BalanceActions
               key="1"
               onDeposit={() => {
