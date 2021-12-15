@@ -15,7 +15,8 @@ export const InvesStatus = {
   [3]: InvesStatusType.SUCCESS,
   [4]: InvesStatusType.SUCCESS,
   [5]: InvesStatusType.ERROR,
-  [6]: InvesStatusType.PENDING
+  [6]: InvesStatusType.PENDING,
+  [7]: InvesStatusType.ERROR
 }
 
 export interface createOrder {
