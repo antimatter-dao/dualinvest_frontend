@@ -25,6 +25,7 @@ import { useAddPopup, useWalletModalToggle } from 'state/application/hooks'
 import { InvesStatus, InvesStatusType, OrderRecord } from 'utils/fetch/product'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useDualInvestCallback } from 'hooks/useDualInvest'
+import { trimNumberString } from 'utils/trimNumberString'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -57,6 +58,12 @@ export default function SubscribeForm({
   const addPopup = useAddPopup()
   const addTransaction = useTransactionAdder()
   const { createOrderCallback, checkOrderStatusCallback } = useDualInvestCallback()
+
+  const handleMax = useCallback(() => {
+    if (!product) return
+    const maxAvailable = balance ? Math.floor(+balance / ((product ? +product?.multiplier : 1) * multiplier)) : 0
+    setAmount(trimNumberString(`${maxAvailable > +product?.orderLimit ? product.orderLimit : maxAvailable}`, 0))
+  }, [balance, multiplier, product, setAmount])
 
   const handleChange = useCallback(
     e => {
@@ -249,13 +256,7 @@ export default function SubscribeForm({
           } ${product?.investCurrency || ''}`}
           disabled={!product || !account || isConfirmed}
           value={amount}
-          onMax={() => {
-            if (!product) return
-            const maxAvailable = balance
-              ? Math.floor(+balance / ((product ? +product?.multiplier : 1) * multiplier))
-              : 0
-            setAmount(`${maxAvailable > +product?.orderLimit ? product.orderLimit : maxAvailable}`)
-          }}
+          onMax={handleMax}
           label={'Subscription Amount'}
           onChange={handleChange}
           error={!!error}
