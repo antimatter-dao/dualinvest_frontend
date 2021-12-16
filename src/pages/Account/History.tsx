@@ -84,7 +84,7 @@ export default function History() {
           </React.Fragment>
         )
         return [
-          `${amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)} ${investCurrency}`,
+          `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(1)} ${investCurrency}`,
           <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
             {(+annualRor * 100).toFixed(2)}%
           </Typography>,
