@@ -140,11 +140,11 @@ export function useDualInvestCallback(): {
         signS
       } = signRes.data.data
       const args = [
-        orderIdR,
-        productIdR,
+        orderIdR + '',
+        productIdR + '',
         returnedCurrency,
-        returnedAmount + '',
-        fee,
+        returnedAmount,
+        fee + '',
         [[signatory, signV, signR, signS]]
       ]
       const estimatedGas = await contract.estimateGas.finishOrder(...args).catch((error: Error) => {
