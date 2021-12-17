@@ -87,7 +87,6 @@ export default function Position() {
         annualRor,
         expiredAt,
         strikePrice,
-        earn,
         ts,
         orderId,
         productId,
