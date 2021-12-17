@@ -14,6 +14,8 @@ interface Props {
   customOnDismiss?: () => void
   padding?: string
   hasBorder?: boolean
+  background?: string
+  backdropColor?: string
 }
 
 export default function Modal(props: Props) {
@@ -26,7 +28,9 @@ export default function Modal(props: Props) {
     hasBorder = true,
     width,
     maxWidth,
-    padding
+    padding,
+    background,
+    backdropColor
   } = props
   const { isOpen, hideModal } = useModal()
   const node = useRef<any>()
@@ -51,7 +55,7 @@ export default function Modal(props: Props) {
             ...{
               width: { xs: 'calc(100vw - 32px)!important', sm: width || 488 },
               maxWidth: maxWidth || 488,
-              background: theme => theme.palette.background.paper,
+              background: theme => background ?? theme.palette.background.paper,
               border: hasBorder ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid transparent',
               boxShadow: 'unset',
               padding: padding || 0,
@@ -75,17 +79,17 @@ export default function Modal(props: Props) {
                     borderRadius: '0',
                     marginTop: theme.height.mobileHeader,
                     marginBottom: 0,
-                    pb: '20px',
+                    pb: '50px',
                     pt: '10px'
                   }
                 }
-              : {})
+              : { [theme.breakpoints.down('sm')]: { margin: 0, pb: '20px', borderRadius: '0', maxHeight: 'unset' } })
           }
         }}
         BackdropProps={{
           sx: {
             ...{
-              backgroundColor: 'rgba(0,0,0,0.6)',
+              backgroundColor: backdropColor || 'rgba(0,0,0,0.6)',
               [theme.breakpoints.down('sm')]: { top: theme.height.mobileHeader }
             }
           }

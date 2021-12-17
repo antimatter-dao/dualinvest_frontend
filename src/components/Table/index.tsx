@@ -82,50 +82,51 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
   }
 }))
 
-const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{ variant: 'outlined' | 'grey' }>(
-  ({ variant, theme }) => ({
-    height: 80,
-    borderRadius: '16px',
-    overflow: 'hidden',
-    position: 'relative',
-    background: variant === 'outlined' ? 'transparent' : theme.palette.background.default,
-    '& + tr .MuiCollapse-root': {
-      background: variant === 'outlined' ? 'transparent' : theme.palette.background.default
+const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{
+  variant: 'outlined' | 'grey'
+  fontSize?: string
+}>(({ variant, theme, fontSize }) => ({
+  height: 80,
+  borderRadius: '16px',
+  overflow: 'hidden',
+  position: 'relative',
+  background: variant === 'outlined' ? 'transparent' : theme.palette.background.default,
+  '& + tr .MuiCollapse-root': {
+    background: variant === 'outlined' ? 'transparent' : theme.palette.background.default
+  },
+  '& .MuiTableCell-root': {
+    fontSize: fontSize ?? '16px',
+    justifyContent: 'flex-start',
+    paddingLeft: 0,
+    border: '1px solid',
+    borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
+    borderRight: 'none',
+    borderLeft: 'none',
+    '& .MuiTypography-root': {
+      fontSize: fontSize ?? '16px!important'
     },
-    '& .MuiTableCell-root': {
-      fontSize: '16px',
-      justifyContent: 'flex-start',
-      paddingLeft: 0,
-      border: '1px solid',
+    '&:first-of-type': {
+      borderLeft: '1px solid',
       borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
-      borderRight: 'none',
-      borderLeft: 'none',
-      '& .MuiTypography-root': {
-        fontSize: '16px!important'
-      },
-      '&:first-of-type': {
-        borderLeft: '1px solid',
-        borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
-        paddingLeft: '20px',
-        borderTopLeftRadius: 16,
-        borderBottomLeftRadius: 16
-      },
-      '&:last-child': {
-        borderRight: '1px solid',
-        borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
-        paddingRight: '20px',
-        borderTopRightRadius: 16,
-        borderBottomRightRadius: 16
-      }
+      paddingLeft: '20px',
+      borderTopLeftRadius: 16,
+      borderBottomLeftRadius: 16
     },
-    '&:hover': {
-      '& + tr .MuiCollapse-root': {
-        backgroundColor: variant === 'outlined' ? '#E2E7F020' : '#E2E7F0'
-      },
-      backgroundColor: variant === 'outlined' ? '#E2E7F020' : '#E2E7F0'
+    '&:last-child': {
+      borderRight: '1px solid',
+      borderColor: variant === 'outlined' ? '#00000010' : 'transparent',
+      paddingRight: '20px',
+      borderTopRightRadius: 16,
+      borderBottomRightRadius: 16
     }
-  })
-)
+  },
+  '&:hover': {
+    '& + tr .MuiCollapse-root': {
+      backgroundColor: variant === 'outlined' ? '#E2E7F020' : '#E2E7F0'
+    },
+    backgroundColor: variant === 'outlined' ? '#E2E7F020' : '#E2E7F0'
+  }
+}))
 
 const Card = styled('div')({
   backgroundColor: 'rgba(255, 255, 255, 0.08)',
@@ -157,13 +158,15 @@ export default function Table({
   rows,
   variant = 'grey',
   collapsible,
-  hiddenParts
+  hiddenParts,
+  fontSize
 }: {
   header: string[]
   rows: (string | number | JSX.Element)[][]
   variant?: 'outlined' | 'grey'
   collapsible?: boolean
   hiddenParts?: JSX.Element[]
+  fontSize?: string
 }) {
   const matches = useBreakpoint('md')
 
@@ -212,6 +215,7 @@ export default function Table({
             <TableBody>
               {rows.map((row, idx) => (
                 <Row
+                  fontSize={fontSize}
                   row={row}
                   collapsible={collapsible}
                   key={row[0].toString() + idx}
@@ -231,18 +235,21 @@ function Row({
   row,
   variant,
   collapsible,
-  hiddenPart
+  hiddenPart,
+  fontSize
 }: {
   row: (string | number | JSX.Element)[]
   variant: 'outlined' | 'grey'
   collapsible?: boolean
   hiddenPart?: JSX.Element
+  fontSize?: string
 }) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
     <>
       <StyledTableRow
+        fontSize={fontSize}
         variant={variant}
         sx={
           isOpen
@@ -288,7 +295,6 @@ function Row({
             >
               <Box
                 sx={{
-                  // backgroundColor: '#E2E7F0',
                   padding: 28,
                   borderTop: '1px solid rgba(0, 0, 0, 0.1)',
                   transition: '.5s',
@@ -296,9 +302,6 @@ function Row({
                   alignItems: 'center',
                   justifyContent: 'space-between'
                 }}
-                // display="flex"
-                // alignItems="center"
-                // justifyContent="space-between"
               >
                 {hiddenPart}
               </Box>

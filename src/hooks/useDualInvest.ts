@@ -148,11 +148,19 @@ export function useDualInvestCallback(): {
         [[signatory, signV, signR, signS]]
       ]
       const estimatedGas = await contract.estimateGas.finishOrder(...args).catch((error: Error) => {
-        console.debug('Failed to create order', error)
+        console.debug('Failed to finish order', error)
         throw error
       })
-      return contract?.finishOrder(...args, {
-        gasLimit: calculateGasMargin(estimatedGas)
+      return new Promise((resolve, reject) => {
+        contract
+          ?.finishOrder(...args, {
+            gasLimit: calculateGasMargin(estimatedGas)
+          })
+          .then((r: any) => resolve({ r, returnedCurrency, returnedAmount }))
+          .catch((e: any) => {
+            reject(e)
+            throw Error(e)
+          })
       })
     },
     [account, chainId, contract]

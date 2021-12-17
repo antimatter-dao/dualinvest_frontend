@@ -79,8 +79,8 @@ export function useOrderRecords(investStatus?: number | number[], pageNum?: numb
   })
 
   const filteredOrderList = useMemo(() => {
-    if (!Array.isArray(investStatus)) return []
-    return orderList?.reduce((acc, order) => {
+    if (!Array.isArray(investStatus) || !orderList) return undefined
+    return orderList.reduce((acc, order) => {
       if (investStatus.includes(order.investStatus) && order.investStatus === InvestStatus.ReadyToSettle) {
         acc.unshift(order)
         return acc
@@ -127,7 +127,9 @@ export function useOrderRecords(investStatus?: number | number[], pageNum?: numb
     if (Array.isArray(investStatus)) {
       return {
         orderList:
-          pageNum && filteredOrderList ? filteredOrderList.slice((pageNum - 1) * PageSize, pageNum * PageSize) : [],
+          pageNum && filteredOrderList
+            ? filteredOrderList.slice((pageNum - 1) * PageSize, pageNum * PageSize)
+            : undefined,
         pageParams: { count: pageCount, perPage: PageSize, total: filteredOrderList?.length ?? 0 }
       }
     } else {

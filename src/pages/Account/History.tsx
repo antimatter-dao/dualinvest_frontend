@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react'
-import { Box, Typography, Container } from '@mui/material'
+import { useMemo, useState } from 'react'
+import { Box, Typography, Container, Collapse } from '@mui/material'
 import Card from 'components/Card/Card'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
@@ -16,21 +16,23 @@ import StatusTag from 'components/Status/StatusTag'
 enum HistoryMoreHeaderIndex {
   OrderID,
   ProductID,
+  SettlementPrice,
+  SettlementTime,
   Status
 }
 
 const HistoryTableHeader = [
   'Invest Amount',
+  'Subscribed Time',
   'APY',
-  'Refund Amount',
   'Delivery Date',
-  'Holding Days',
   'Strike Price',
-  'Settlement Price',
-  'Date'
+  'Exercise',
+  'Holding Days',
+  'Refund Amount'
 ]
 
-const HistoryMoreHeader = ['Order ID', 'Product ID', '']
+const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '']
 
 export default function History() {
   const isDownMd = useBreakpoint('md')
@@ -53,7 +55,6 @@ export default function History() {
         expiredAt,
         ts,
         deliveryPrice,
-        currency,
         multiplier,
         investCurrency,
         orderId,
@@ -64,36 +65,57 @@ export default function History() {
         const hiddenData = [
           orderId,
           productId,
-          <StatusTag key={orderId} status={exercised ? 'exercised' : 'unexercised'} />
+          deliveryPrice,
+          `${dayjs(expiredAt * 1000).format('MMM DD, YYYY hh:mm A')}`,
+          <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
         ]
         hiddenList.push(hiddenData)
         hiddenPartsList.push(
-          <React.Fragment key={orderId}>
-            {hiddenData.map((datum, idx) =>
-              idx === HistoryMoreHeaderIndex.Status ? (
-                datum
-              ) : (
-                <Box key={idx}>
-                  <Typography sx={{ color: theme => theme.palette.text.secondary }} component="span" mr={8}>
-                    {HistoryMoreHeader[idx] ? HistoryMoreHeader[idx] : ''}
-                  </Typography>
-                  <Typography component="span">{datum}</Typography>
-                </Box>
-              )
-            )}
-          </React.Fragment>
+          <Box
+            display="grid"
+            key={orderId}
+            gridTemplateColumns={'1fr 1fr 1fr'}
+            width="100%"
+            gridTemplateRows={'1fr 1fr'}
+          >
+            {hiddenData.map((datum, idx) => (
+              <Box
+                key={idx}
+                sx={{
+                  gridColumnStart: Math.ceil((idx + 1) / 2),
+                  gridColumnEnd: 'span 1',
+                  gridRowStart: (idx + 1) % 2,
+                  gridRowEnd: 'span 1'
+                }}
+              >
+                {idx === HistoryMoreHeaderIndex.Status ? (
+                  <Box margin="0 auto" width="max-content">
+                    {datum}
+                  </Box>
+                ) : (
+                  <>
+                    <Typography sx={{ color: theme => theme.palette.text.secondary }} component="span" mr={8}>
+                      {HistoryMoreHeader[idx] ?? ''}
+                    </Typography>
+                    <Typography component="span">{datum}</Typography>
+                  </>
+                )}
+              </Box>
+            ))}
+          </Box>
         )
         return [
           `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(1)} ${investCurrency}`,
+          dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A'),
           <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
             {(+annualRor * 100).toFixed(2)}%
           </Typography>,
-          `${returnedAmount} ${returnedCurrency}`,
+
           dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
-          `${dayjs().diff(dayjs(ts * 1000), 'day')} days`,
           strikePrice,
-          `${deliveryPrice} ${currency}`,
-          dayjs(+ts * 1000).format('MMM DD, YYYY hh:mm:ss A')
+          type === 'CALL' ? 'Upward' : 'Down',
+          `${dayjs().diff(dayjs(ts * 1000), 'day')} days`,
+          `${returnedAmount} ${returnedCurrency}`
         ]
       }
     )
@@ -133,7 +155,13 @@ export default function History() {
             <HistoryTableCards data={data} />
           ) : data.summaryList.length ? (
             <>
-              <Table header={HistoryTableHeader} rows={data.summaryList} hiddenParts={hiddenParts} collapsible />
+              <Table
+                header={HistoryTableHeader}
+                rows={data.summaryList}
+                hiddenParts={hiddenParts}
+                collapsible
+                fontSize="14px"
+              />
               <PaginationView
                 count={pageParams?.count}
                 page={page}
@@ -161,20 +189,6 @@ function HistoryTableCards({ data }: { data: { summaryList: any[][]; hiddenList:
         <Card key={idx} color="#F2F5FA" padding="17px 16px">
           <Box display="flex" flexDirection="column" gap={16}>
             {dataRow.map((datum, idx2) => {
-              // if (idx2 === HistoryTableHeaderIndex.Date) {
-              //   return (
-              //     <Box display="flex" alignItems="center" gap={14} key={idx2}>
-              //       {datum}
-              //       <AccordionButton
-              //         onClick={() => {
-              //           expanded === idx ? setExpanded(null) : setExpanded(idx)
-              //         }}
-              //         expanded={expanded === idx}
-              //       />
-              //     </Box>
-              //   )
-              // }
-
               return (
                 <Box key={idx2} display="flex" justifyContent="space-between">
                   <Typography component="div" fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
@@ -196,25 +210,23 @@ function HistoryTableCards({ data }: { data: { summaryList: any[][]; hiddenList:
             </Box>
           </Box>
 
-          {expanded === idx && data.hiddenList[idx] && (
-            <>
-              <Divider extension={16} color="1px solid #252525" />
-              <Box display="flex" flexDirection="column" gap={16} mt={20}>
-                {data.hiddenList[idx].map((datum, idx) => {
-                  return (
-                    <Box key={idx} display="flex" justifyContent="space-between">
-                      <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                        {HistoryMoreHeader[idx]}
-                      </Typography>
-                      <Typography fontSize={12} fontWeight={600}>
-                        {datum}
-                      </Typography>
-                    </Box>
-                  )
-                })}
-              </Box>
-            </>
-          )}
+          <Collapse in={expanded === idx && !!data.hiddenList[idx]}>
+            <Divider extension={16} color="1px solid #252525" />
+            <Box display="flex" flexDirection="column" gap={16} mt={20}>
+              {data.hiddenList[idx].map((datum, idx) => {
+                return (
+                  <Box key={idx} display="flex" justifyContent="space-between">
+                    <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
+                      {HistoryMoreHeader[idx]}
+                    </Typography>
+                    <Typography fontSize={12} fontWeight={600}>
+                      {datum}
+                    </Typography>
+                  </Box>
+                )
+              })}
+            </Box>
+          </Collapse>
         </Card>
       ))}
     </Box>
