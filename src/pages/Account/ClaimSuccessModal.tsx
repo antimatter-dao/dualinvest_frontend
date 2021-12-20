@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { isMobile } from 'react-device-detect'
+import CryptoJs from 'crypto-js'
 import { FacebookIcon, FacebookShareButton, TwitterIcon, TwitterShareButton } from 'react-share'
 import { Box, ButtonBase, IconButton, Typography } from '@mui/material'
 import MuiCloseIcon from '@mui/icons-material/Close'
@@ -265,7 +266,12 @@ export default function ClaimSuccessModal({
             </Button>
             <Box display="flex" gap="8px">
               <FacebookShareButton
-                url={SHARE_URL.replace(':id', productId).replace(':orderId', orderId)}
+                url={SHARE_URL.replace(':id', productId).replace(
+                  ':orderId',
+                  CryptoJs.AES.encrypt(orderId, 'Antimatter dual')
+                    .toString()
+                    .replaceAll('/', '+')
+                )}
                 quote={`Antimattter Dual Investment | The benefits are great ! +${earn} ${returnedCurrency}, APY:${apy}`}
                 style={{ backgroundColor: '#161616', borderRadius: 10 }}
               >
@@ -275,7 +281,12 @@ export default function ClaimSuccessModal({
                 </Box>
               </FacebookShareButton>
               <TwitterShareButton
-                url={SHARE_URL.replace(':id', productId).replace(':orderId', orderId)}
+                url={SHARE_URL.replace(':id', productId).replace(
+                  ':orderId',
+                  CryptoJs.AES.encrypt(orderId, 'Antimatter dual')
+                    .toString()
+                    .replaceAll('/', '+')
+                )}
                 title={`Antimattter Dual Investment | The benefits are great ! +${earn} ${returnedCurrency}, APY:${apy}`}
                 style={{ backgroundColor: '#161616', borderRadius: 10 }}
               >

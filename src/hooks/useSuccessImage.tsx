@@ -1,11 +1,12 @@
 import ClaimSuccessModal from 'pages/Account/ClaimSuccessModal'
 import { useCallback, useMemo, useState } from 'react'
+import dayjs from 'dayjs'
+import CryptoJs from 'crypto-js'
 import { Axios } from 'utils/axios'
 import { OrderRecord } from 'utils/fetch/product'
 import useModal from './useModal'
 import { USDT, BTC } from 'constants/index'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
-import dayjs from 'dayjs'
 
 export function useSuccessImage(orderId: string) {
   const [, setOrder] = useState(undefined)
@@ -17,8 +18,9 @@ export function useSuccessImage(orderId: string) {
       return new Promise((r, reject) => {
         reject('')
       })
+    const id = CryptoJs.AES.decrypt(orderId.replaceAll('+', '/'), 'Antimatter dual').toString()
     return Axios.get<{ records: OrderRecord[] }>('getOrderRecord', {
-      orderId: orderId
+      orderId: id
     })
   }, [orderId])
 
@@ -37,6 +39,7 @@ export function useSuccessImage(orderId: string) {
         deliveryPrice,
         multiplier,
         investCurrency,
+        orderId,
         type
       } = r.data.data.records[0]
       if (+returnedAmount === 0) return
@@ -82,7 +85,7 @@ export function useSuccessImage(orderId: string) {
       // document.getElementsByTagName('head')[0].appendChild(meta1)
       // document.getElementsByTagName('head')[0].appendChild(meta2)
     },
-    [orderId, showModal]
+    [showModal]
   )
 
   usePollingWithMaxRetries(promiseFn, callbackFn)
