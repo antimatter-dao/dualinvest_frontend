@@ -66,21 +66,21 @@ export function useSuccessImage(orderId: string) {
           returnedCurrency={returnedCurrency == BTC.address ? BTC.symbol ?? '' : USDT.symbol ?? ''}
         />
       )
-      const meta1 = document.createElement('meta')
-      meta1.name = 'twitter:card'
-      meta1.content = 'summary_large_image'
+      // const meta1 = document.createElement('meta')
+      // meta1.name = 'twitter:card'
+      // meta1.content = 'summary_large_image'
 
-      const meta2 = document.createElement('meta')
-      meta2.name = 'twitter:image'
-      meta2.content =
-        'http://graphics8.nytimes.com/images/2012/02/19/us/19whitney-span/19whitney-span-articleLarge.jpg"'
+      // const meta2 = document.createElement('meta')
+      // meta2.name = 'twitter:image'
+      // meta2.content =
+      //   'http://graphics8.nytimes.com/images/2012/02/19/us/19whitney-span/19whitney-span-articleLarge.jpg"'
 
-      const meta3 = document.createElement('meta')
-      meta3.name = 'twitter:title'
-      meta3.content = `Antimattter Dual Investment | The benefits are great ! +${earned} ${returnedCurrency}, APY:${apy}`
+      // const meta3 = document.createElement('meta')
+      // meta3.name = 'twitter:title'
+      // meta3.content = `Antimattter Dual Investment | The benefits are great ! +${earned} ${returnedCurrency}, APY:${apy}`
 
-      document.getElementsByTagName('head')[0].appendChild(meta1)
-      document.getElementsByTagName('head')[0].appendChild(meta2)
+      // document.getElementsByTagName('head')[0].appendChild(meta1)
+      // document.getElementsByTagName('head')[0].appendChild(meta2)
     },
     [orderId, showModal]
   )
