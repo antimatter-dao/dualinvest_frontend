@@ -4,3 +4,6 @@ export const routes = {
   account: '/account',
   noService: 'no_service'
 }
+
+export const SHARE_URL = 'https://dualinvest.netlify.app/#/dual_invest_mgmt/:id'
+export const MAIN_URL = 'https://dualinvest.netlify.app/#/dual_invest'

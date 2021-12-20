@@ -74,7 +74,7 @@ export default function Modal(props: Props) {
                     border: 'none',
                     width: '100%!important',
                     maxWidth: 'unset!important',
-                    maxHeight: 'unset',
+                    maxHeight: `calc(100vh - ${theme.height.mobileHeader})`,
                     height: 'auto',
                     borderRadius: '0',
                     marginTop: theme.height.mobileHeader,
@@ -83,7 +83,7 @@ export default function Modal(props: Props) {
                     pt: '10px'
                   }
                 }
-              : { [theme.breakpoints.down('sm')]: { margin: 0, pb: '20px', borderRadius: '0', maxHeight: 'unset' } })
+              : { [theme.breakpoints.down('sm')]: { margin: 0, pb: '20px', borderRadius: '0' } })
           }
         }}
         BackdropProps={{

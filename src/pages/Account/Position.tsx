@@ -62,7 +62,6 @@ const statusArr = [InvestStatus.Ordered, InvestStatus.ReadyToSettle]
 
 export default function Position() {
   const [page, setPage] = useState(1)
-  const [claimSuccessIsOpen] = useState(true)
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   const price = usePrice('BTC')
@@ -172,7 +171,10 @@ export default function Position() {
                 showModal(<TransacitonPendingModal />)
                 finishOrderCallback(orderId + '', productId + '')
                   .then(({ r, returnedAmount, returnedCurrency }) => {
-                    const earned = parseBalance(returnedAmount, returnedCurrency == BTC.address ? BTC : USDT)
+                    const earned = parseBalance(
+                      `${+returnedAmount - +investAmount}`,
+                      returnedCurrency == BTC.address ? BTC : USDT
+                    )
                     hideModal()
                     addTransaction(r, {
                       summary: `Claim ${earned} ${currency}`
@@ -181,7 +183,7 @@ export default function Position() {
 
                     showModal(
                       <ClaimSuccessModal
-                        isOpen={claimSuccessIsOpen}
+                        productId={productId + ''}
                         apy={apy}
                         strikePrice={strikePrice}
                         type={type}
@@ -208,7 +210,7 @@ export default function Position() {
     )
 
     return { hiddenList, summaryList, hiddenParts: hiddenPartsList }
-  }, [orderList, isDownMd, showModal, claimSuccessIsOpen, finishOrderCallback, hideModal, addTransaction])
+  }, [orderList, isDownMd, showModal, finishOrderCallback, hideModal, addTransaction])
 
   if (!account)
     return (
