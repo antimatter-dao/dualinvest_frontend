@@ -171,10 +171,10 @@ export default function Position() {
                 showModal(<TransacitonPendingModal />)
                 finishOrderCallback(orderId + '', productId + '')
                   .then(({ r, returnedAmount, returnedCurrency }) => {
-                    const earned = parseBalance(
-                      `${+returnedAmount - +investAmount}`,
-                      returnedCurrency == BTC.address ? BTC : USDT
-                    )
+                    const earned =
+                      +parseBalance(returnedAmount, returnedCurrency == BTC.address ? BTC : USDT) -
+                      amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1) +
+                      ''
                     hideModal()
                     addTransaction(r, {
                       summary: `Claim ${earned} ${currency}`
@@ -183,6 +183,8 @@ export default function Position() {
 
                     showModal(
                       <ClaimSuccessModal
+                        orderId={orderId + ''}
+                        exercised={exercised}
                         productId={productId + ''}
                         apy={apy}
                         strikePrice={strikePrice}

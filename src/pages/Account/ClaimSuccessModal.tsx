@@ -32,7 +32,10 @@ export default function ClaimSuccessModal({
   investAmount,
   earn,
   returnedCurrency,
-  productId
+  productId,
+  exercised,
+  orderId,
+  showShare = true
 }: {
   apy: string
   strikePrice: string
@@ -43,6 +46,9 @@ export default function ClaimSuccessModal({
   earn: string
   returnedCurrency: string
   productId: string
+  exercised: boolean
+  orderId: string
+  showShare?: boolean
 }) {
   const [img, setImg] = useState<string | undefined>(undefined)
   const [imgSize, setImgSize] = useState({ w: '400px', h: '458px' })
@@ -192,7 +198,7 @@ export default function ClaimSuccessModal({
                   {currency}-{type === 'CALL' ? 'Upward' : 'Down'}
                 </Typography>
                 <Divider orientation="vertical" color="#00000024" />
-                <Typography color="primary">Exercised</Typography>
+                <Typography color="primary">{exercised ? 'Exercised' : 'Unexercised'}</Typography>
               </Box>
               <Typography color="primary" fontWeight={600} fontSize={30}>
                 +{earn} {returnedCurrency}
@@ -238,47 +244,49 @@ export default function ClaimSuccessModal({
           </Card>
         </Box>
 
-        <Box
-          width="100%"
-          maxWidth="100%"
-          padding="0px 28px 32px"
-          display="flex"
-          justifyContent={'space-between'}
-          gap="8px"
-          flexWrap={'wrap'}
-        >
-          <Button
-            height="40px"
-            fontSize={14}
-            width="max-content"
-            style={{ padding: '12px 24px', whiteSpace: 'nowrap' }}
-            onClick={handleClick}
+        {showShare && (
+          <Box
+            width="100%"
+            maxWidth="100%"
+            padding="0px 28px 32px"
+            display="flex"
+            justifyContent={'space-between'}
+            gap="8px"
+            flexWrap={'wrap'}
           >
-            {pending ? <Spinner marginLeft={'10px'} color="#ffffff" /> : ' Save Image'}
-          </Button>
-          <Box display="flex" gap="8px">
-            <FacebookShareButton
-              url={SHARE_URL.replace(':id', productId)}
-              quote={`Antimattter Dual Investment | The benefits are great ! +${earn} ${returnedCurrency}, APY:${apy}`}
-              style={{ backgroundColor: '#161616', borderRadius: 10 }}
+            <Button
+              height="40px"
+              fontSize={14}
+              width="max-content"
+              style={{ padding: '12px 24px', whiteSpace: 'nowrap' }}
+              onClick={handleClick}
             >
-              <Box display="flex" alignItems="center" height={40} padding="0 15px 0 5px">
-                <FacebookIcon size={25} round={true} bgStyle={{ fill: 'transparent' }} />
-                <Typography color="#ffffff"> Share</Typography>
-              </Box>
-            </FacebookShareButton>
-            <TwitterShareButton
-              url={SHARE_URL.replace(':id', productId)}
-              title={`Antimattter Dual Investment | The benefits are great ! +${earn} ${returnedCurrency}, APY:${apy}`}
-              style={{ backgroundColor: '#161616', borderRadius: 10 }}
-            >
-              <Box display="flex" alignItems="center" height={40} padding="0 15px 0 5px">
-                <TwitterIcon size={25} round={true} bgStyle={{ fill: 'transparent' }} />
-                <Typography color="#ffffff"> Share</Typography>
-              </Box>
-            </TwitterShareButton>
+              {pending ? <Spinner marginLeft={'10px'} color="#ffffff" /> : ' Save Image'}
+            </Button>
+            <Box display="flex" gap="8px">
+              <FacebookShareButton
+                url={SHARE_URL.replace(':id', productId).replace(':orderId', orderId)}
+                quote={`Antimattter Dual Investment | The benefits are great ! +${earn} ${returnedCurrency}, APY:${apy}`}
+                style={{ backgroundColor: '#161616', borderRadius: 10 }}
+              >
+                <Box display="flex" alignItems="center" height={40} padding="0 15px 0 5px">
+                  <FacebookIcon size={25} round={true} bgStyle={{ fill: 'transparent' }} />
+                  <Typography color="#ffffff"> Share</Typography>
+                </Box>
+              </FacebookShareButton>
+              <TwitterShareButton
+                url={SHARE_URL.replace(':id', productId).replace(':orderId', orderId)}
+                title={`Antimattter Dual Investment | The benefits are great ! +${earn} ${returnedCurrency}, APY:${apy}`}
+                style={{ backgroundColor: '#161616', borderRadius: 10 }}
+              >
+                <Box display="flex" alignItems="center" height={40} padding="0 15px 0 5px">
+                  <TwitterIcon size={25} round={true} bgStyle={{ fill: 'transparent' }} />
+                  <Typography color="#ffffff"> Share</Typography>
+                </Box>
+              </TwitterShareButton>
+            </Box>
           </Box>
-        </Box>
+        )}
       </Modal>
     </>
   )

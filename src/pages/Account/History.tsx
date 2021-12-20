@@ -11,14 +11,17 @@ import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
 import { AccordionButton } from './Position'
 import Divider from 'components/Divider'
+import Button from 'components/Button/Button'
 import StatusTag from 'components/Status/StatusTag'
+import { useShowClaimSuccessModal } from 'hooks/useSuccessImage'
 
 enum HistoryMoreHeaderIndex {
   OrderID,
   ProductID,
   SettlementPrice,
   SettlementTime,
-  Status
+  Status,
+  Share
 }
 
 const HistoryTableHeader = [
@@ -32,7 +35,7 @@ const HistoryTableHeader = [
   'Refund Amount'
 ]
 
-const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '']
+const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '', '']
 
 export default function History() {
   const isDownMd = useBreakpoint('md')
@@ -40,13 +43,14 @@ export default function History() {
   const [page, setPage] = useState(1)
   const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled, page, 8)
   const [hiddenParts, setHiddenParts] = useState<JSX.Element[]>([])
+  const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
 
   const data = useMemo(() => {
     if (!orderList) return { hiddenList: [], summaryList: [] }
     const hiddenList: any[][] = []
     const hiddenPartsList: JSX.Element[] = []
-    const summaryList = orderList.map(
-      ({
+    const summaryList = orderList.map(order => {
+      const {
         amount,
         annualRor,
         returnedAmount,
@@ -60,68 +64,71 @@ export default function History() {
         orderId,
         productId,
         type
-      }) => {
-        const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
-        const hiddenData = [
-          orderId,
-          productId,
-          deliveryPrice,
-          `${dayjs(expiredAt * 1000).format('MMM DD, YYYY hh:mm A')}`,
-          <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
-        ]
-        hiddenList.push(hiddenData)
-        hiddenPartsList.push(
-          <Box
-            display="grid"
-            key={orderId}
-            gridTemplateColumns={'1fr 1fr 1fr'}
-            width="100%"
-            gridTemplateRows={'1fr 1fr'}
+      } = order
+      const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
+      const hiddenData = [
+        orderId,
+        productId,
+        deliveryPrice,
+        `${dayjs(expiredAt * 1000).format('MMM DD, YYYY hh:mm A')}`,
+        <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />,
+        <Box key="orderId" margin="0 auto" width="max-content" display="inline-block" mt="5px">
+          <Button
+            height={'36px'}
+            width="100px"
+            onClick={showClaimSuccessModalCallback(order)}
+            style={{ margin: '0 auto' }}
           >
-            {hiddenData.map((datum, idx) => (
-              <Box
-                key={idx}
-                sx={{
-                  gridColumnStart: Math.ceil((idx + 1) / 2),
-                  gridColumnEnd: 'span 1',
-                  gridRowStart: (idx + 1) % 2,
-                  gridRowEnd: 'span 1'
-                }}
-              >
-                {idx === HistoryMoreHeaderIndex.Status ? (
-                  <Box margin="0 auto" width="max-content">
-                    {datum}
-                  </Box>
-                ) : (
-                  <>
-                    <Typography sx={{ color: theme => theme.palette.text.secondary }} component="span" mr={8}>
-                      {HistoryMoreHeader[idx] ?? ''}
-                    </Typography>
-                    <Typography component="span">{datum}</Typography>
-                  </>
-                )}
-              </Box>
-            ))}
-          </Box>
-        )
-        return [
-          `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(1)} ${investCurrency}`,
-          dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A'),
-          <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
-            {(+annualRor * 100).toFixed(2)}%
-          </Typography>,
+            Share
+          </Button>
+        </Box>
+      ]
+      hiddenList.push(hiddenData)
+      hiddenPartsList.push(
+        <Box display="grid" key={orderId} gridTemplateColumns={'1fr 1fr 1fr'} width="100%" gridTemplateRows={'1fr 1fr'}>
+          {hiddenData.map((datum, idx) => (
+            <Box
+              key={idx}
+              sx={{
+                gridColumnStart: Math.ceil((idx + 1) / 2),
+                gridColumnEnd: 'span 1',
+                gridRowStart: (idx + 1) % 2,
+                gridRowEnd: 'span 1'
+              }}
+            >
+              {idx === HistoryMoreHeaderIndex.Status || idx === HistoryMoreHeaderIndex.Share ? (
+                <Box margin="0 auto" width="max-content">
+                  {datum}
+                </Box>
+              ) : (
+                <>
+                  <Typography sx={{ color: theme => theme.palette.text.secondary }} component="span" mr={8}>
+                    {HistoryMoreHeader[idx] ?? ''}
+                  </Typography>
+                  <Typography component="span">{datum}</Typography>
+                </>
+              )}
+            </Box>
+          ))}
+        </Box>
+      )
+      return [
+        `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(1)} ${investCurrency}`,
+        dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A'),
+        <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
+          {(+annualRor * 100).toFixed(2)}%
+        </Typography>,
 
-          dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
-          strikePrice,
-          type === 'CALL' ? 'Upward' : 'Down',
-          `${dayjs().diff(dayjs(ts * 1000), 'day')} days`,
-          `${returnedAmount} ${returnedCurrency}`
-        ]
-      }
-    )
+        dayjs(+expiredAt * 1000).format('MMM DD, YYYY'),
+        strikePrice,
+        type === 'CALL' ? 'Upward' : 'Down',
+        `${dayjs().diff(dayjs(ts * 1000), 'day')} days`,
+        `${returnedAmount} ${returnedCurrency}`
+      ]
+    })
     setHiddenParts(hiddenPartsList)
     return { hiddenList, summaryList }
-  }, [orderList])
+  }, [orderList, showClaimSuccessModalCallback])
 
   if (!account)
     return (

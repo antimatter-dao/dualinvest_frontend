@@ -70,6 +70,7 @@ export default function App() {
                     <Route exact strict path={routes.account} component={Account} />
                     <Route exact strict path={routes.dualInvest} component={DualInvest} />
                     <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
+                    <Route exact strict path={routes.dualInvestMgmtImg} component={DualInvestMgmt} />
                     <Route path="/">
                       <Redirect to={routes.dualInvest} />
                     </Route>

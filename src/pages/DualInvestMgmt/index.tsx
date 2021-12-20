@@ -14,6 +14,7 @@ import { usePriceSet } from 'hooks/usePriceSet'
 import useBreakpoint from 'hooks/useBreakpoint'
 import SubscribeForm from './SubscribeForm'
 import { RiskStatement, FAQ } from './stableContent'
+import { useSuccessImage } from 'hooks/useSuccessImage'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '18px',
@@ -31,9 +32,10 @@ export default function DualInvestMgmt() {
 
   const graphContainer = useRef<HTMLDivElement>(null)
 
-  const { id } = useParams<{ id: string }>()
+  const { id, orderId } = useParams<{ id: string; orderId: string }>()
 
   const product = useProduct(id)
+  useSuccessImage(orderId)
 
   const priceSet = usePriceSet(product?.currency)
   const isDownMd = useBreakpoint('md')
