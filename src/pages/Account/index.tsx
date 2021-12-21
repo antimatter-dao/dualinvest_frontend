@@ -4,9 +4,11 @@ import Image from 'components/Image'
 import Dashboard from './Dashboard'
 import Position from './Position'
 import History from './History'
+import Referral from './Referral'
 import dashboardUrl from 'assets/images/dashboard.png'
 import positionUrl from 'assets/images/position.png'
 import historyUrl from 'assets/images/history.png'
+import referralUrl from 'assets/images/referral.png'
 import useBreakpoint from 'hooks/useBreakpoint'
 
 export default function Account() {
@@ -23,9 +25,15 @@ export default function Account() {
         titles={[
           <Tab text="Dashboard" iconUrl={dashboardUrl} key="dashboard" />,
           <Tab text="Position" iconUrl={positionUrl} key="position" />,
+          <Tab text="Referral" iconUrl={referralUrl} key="referral" />,
           <Tab text="History" iconUrl={historyUrl} key="history" />
         ]}
-        contents={[<Dashboard key="dashboard" />, <Position key="position" />, <History key="history" />]}
+        contents={[
+          <Dashboard key="dashboard" />,
+          <Position key="position" />,
+          <Referral key="referral" />,
+          <History key="history" />
+        ]}
       />
     </Box>
   )
