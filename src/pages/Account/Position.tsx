@@ -173,7 +173,7 @@ export default function Position() {
                   .then(({ r, returnedAmount, returnedCurrency }) => {
                     const earned =
                       +parseBalance(returnedAmount, returnedCurrency == BTC.address ? BTC : USDT) -
-                      amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1) +
+                      +(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(6) +
                       ''
                     hideModal()
                     addTransaction(r, {

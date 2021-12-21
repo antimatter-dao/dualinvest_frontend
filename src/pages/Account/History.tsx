@@ -11,9 +11,9 @@ import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
 import { AccordionButton } from './Position'
 import Divider from 'components/Divider'
-import Button from 'components/Button/Button'
+// import Button from 'components/Button/Button'
 import StatusTag from 'components/Status/StatusTag'
-import { useShowClaimSuccessModal } from 'hooks/useSuccessImage'
+// import { useShowClaimSuccessModal } from 'hooks/useSuccessImage'
 
 enum HistoryMoreHeaderIndex {
   OrderID,
@@ -43,7 +43,7 @@ export default function History() {
   const [page, setPage] = useState(1)
   const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled, page, 8)
   const [hiddenParts, setHiddenParts] = useState<JSX.Element[]>([])
-  const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
+  // const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
 
   const data = useMemo(() => {
     if (!orderList) return { hiddenList: [], summaryList: [] }
@@ -71,17 +71,17 @@ export default function History() {
         productId,
         deliveryPrice,
         `${dayjs(expiredAt * 1000).format('MMM DD, YYYY hh:mm A')}`,
-        <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />,
-        <Box key="orderId" margin="0 auto" width="max-content" display="inline-block" mt="5px">
-          <Button
-            height={'36px'}
-            width="100px"
-            onClick={showClaimSuccessModalCallback(order)}
-            style={{ margin: '0 auto' }}
-          >
-            Share
-          </Button>
-        </Box>
+        <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
+        // <Box key="orderId" margin="0 auto" width="max-content" display="inline-block" mt="5px">
+        //   <Button
+        //     height={'36px'}
+        //     width="100px"
+        //     onClick={showClaimSuccessModalCallback(order)}
+        //     style={{ margin: '0 auto' }}
+        //   >
+        //     Share
+        //   </Button>
+        // </Box>
       ]
       hiddenList.push(hiddenData)
       hiddenPartsList.push(
@@ -128,7 +128,7 @@ export default function History() {
     })
     setHiddenParts(hiddenPartsList)
     return { hiddenList, summaryList }
-  }, [orderList, showClaimSuccessModalCallback])
+  }, [orderList])
 
   if (!account)
     return (
