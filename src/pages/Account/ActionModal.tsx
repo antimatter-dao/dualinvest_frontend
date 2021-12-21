@@ -87,9 +87,11 @@ export default function ActionModal({
     hideModal()
     handleDismiss()
     showModal(
-      <TransactionSubmittedModal header={actionStr + ' Successfully!'}>
+      <TransactionSubmittedModal
+        header={actionStr === 'Withdraw' ? actionStr + 'al Successful!' : actionStr + ' Successful!'}
+      >
         <Typography fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
-          You have successfully {type + 'ed'} {val} {token?.symbol}
+          You have successfully {type === ActionType.DEPOSIT ? type + 'ed' : type + 'n'} {val} {token?.symbol}
         </Typography>
       </TransactionSubmittedModal>
     )
