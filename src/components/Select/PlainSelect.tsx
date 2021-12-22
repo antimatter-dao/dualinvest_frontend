@@ -5,6 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 interface Props {
   children?: React.ReactNode
   placeholder: string
+  autoFocus?: boolean
 }
 
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
@@ -35,7 +36,7 @@ const StyledSelect = styled(MuiSelect)(({ theme }) => ({
 }))
 
 export default function Select(props: Props) {
-  const { children, placeholder } = props
+  const { children, placeholder, autoFocus } = props
 
   return (
     <StyledSelect
@@ -48,6 +49,7 @@ export default function Select(props: Props) {
           fontWeight: 400
         }
       }}
+      autoFocus={autoFocus}
       autoWidth
       placeholder={placeholder}
       MenuProps={{

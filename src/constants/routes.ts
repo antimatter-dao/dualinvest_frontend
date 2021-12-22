@@ -2,7 +2,7 @@ export const routes = {
   dualInvest: '/dual_invest',
   dualInvestMgmt: '/dual_invest_mgmt/:id',
   dualInvestMgmtImg: '/dual_invest_mgmt/:id/:orderId',
-  account: '/account',
+  account: '/account/:tab',
   noService: 'no_service'
 }
 

@@ -1,4 +1,6 @@
+import { useCallback, useState, useEffect } from 'react'
 import { Box, Typography } from '@mui/material'
+import { useParams, useHistory } from 'react-router-dom'
 import Tabs from 'components/Tabs/Tabs'
 import Image from 'components/Image'
 import Dashboard from './Dashboard'
@@ -10,8 +12,41 @@ import positionUrl from 'assets/images/position.png'
 import historyUrl from 'assets/images/history.png'
 import referralUrl from 'assets/images/referral.png'
 import useBreakpoint from 'hooks/useBreakpoint'
+import { routes } from 'constants/routes'
+
+export enum AccountTabs {
+  dashboard = 0,
+  position = 1,
+  referral = 2,
+  history = 3
+}
+
+export const AccountTabsRoute = {
+  [AccountTabs.dashboard]: 'dashboard',
+  [AccountTabs.position]: 'position',
+  [AccountTabs.referral]: 'referral',
+  [AccountTabs.history]: 'history'
+}
 
 export default function Account() {
+  const history = useHistory()
+  const { tab } = useParams<{ tab: string }>()
+  const [currentTab, setCurrentTab] = useState(AccountTabs.dashboard)
+
+  const handleTabClick = useCallback(
+    tabNum => {
+      setCurrentTab(tabNum)
+      history.push(routes.account.replace(':tab', AccountTabsRoute[tabNum as keyof typeof AccountTabsRoute]))
+    },
+    [history]
+  )
+
+  useEffect(() => {
+    if (tab) {
+      setCurrentTab(AccountTabs[tab as keyof typeof AccountTabs])
+    }
+  }, [tab])
+
   return (
     <Box
       sx={{
@@ -22,6 +57,8 @@ export default function Account() {
       }}
     >
       <Tabs
+        customCurrentTab={currentTab}
+        customOnChange={handleTabClick}
         titles={[
           <Tab text="Dashboard" iconUrl={dashboardUrl} key="dashboard" />,
           <Tab text="Position" iconUrl={positionUrl} key="position" />,

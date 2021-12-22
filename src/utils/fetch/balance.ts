@@ -13,6 +13,7 @@ export interface BalanceInfo {
 }
 
 export function assetBalanceFormatter(data: assetBalanceRaw) {
+  if (!data) return undefined
   return {
     available: data.Available,
     locked: data.Investing,

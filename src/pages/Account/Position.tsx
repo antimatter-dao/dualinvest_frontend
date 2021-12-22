@@ -22,7 +22,7 @@ import TransacitonPendingModal from 'components/Modal/TransactionModals/Transact
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
-import ClaimSuccessModal from './ClaimSuccessModal'
+import ClaimSuccessModal from './modals/ClaimSuccessModal'
 import { parseBalance } from 'utils/parseAmount'
 import { BTC, USDT } from 'constants/index'
 

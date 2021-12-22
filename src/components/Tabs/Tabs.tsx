@@ -4,6 +4,8 @@ import { Tabs as MuiTabs, Tab, Box } from '@mui/material'
 interface Props {
   titles: string[] | JSX.Element[]
   contents: React.ReactNode[]
+  customCurrentTab?: number
+  customOnChange?: (val: number) => void
 }
 
 function TabPanel({ children, value, index }: { children: React.ReactNode; value: number; index: number }) {
@@ -11,17 +13,20 @@ function TabPanel({ children, value, index }: { children: React.ReactNode; value
 }
 
 export default function Tabs(props: Props) {
-  const { titles, contents } = props
+  const { titles, contents, customCurrentTab, customOnChange } = props
   const [value, setValue] = React.useState(0)
 
-  const onChange = useCallback((e: React.ChangeEvent<any>, value: any) => {
-    setValue(value)
-  }, [])
+  const onChange = useCallback(
+    (e: React.ChangeEvent<any>, value: any) => {
+      customOnChange ? customOnChange(value) : setValue(value)
+    },
+    [customOnChange]
+  )
 
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <MuiTabs value={value} onChange={onChange} sx={{ mb: -1 }}>
+        <MuiTabs value={customCurrentTab !== undefined ? customCurrentTab : value} onChange={onChange} sx={{ mb: -1 }}>
           {titles.map((tab, idx) => (
             <Tab
               disableRipple
@@ -43,7 +48,7 @@ export default function Tabs(props: Props) {
         </MuiTabs>
       </Box>
       {contents.map((content, idx) => (
-        <TabPanel value={value} index={idx} key={idx}>
+        <TabPanel value={customCurrentTab !== undefined ? customCurrentTab : value} index={idx} key={idx}>
           {content}
         </TabPanel>
       ))}

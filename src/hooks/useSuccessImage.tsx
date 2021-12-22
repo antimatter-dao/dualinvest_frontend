@@ -1,4 +1,4 @@
-import ClaimSuccessModal from 'pages/Account/ClaimSuccessModal'
+import ClaimSuccessModal from 'pages/Account/modals/ClaimSuccessModal'
 import { useCallback, useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 import CryptoJs from 'crypto-js'

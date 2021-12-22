@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { NavLink } from 'react-router-dom'
-import { AppBar, Box, IconButton, MenuItem, styled as muiStyled, styled } from '@mui/material'
+import { AppBar, Box, IconButton, MenuItem, styled as muiStyled, styled, Button as MuiButton } from '@mui/material'
 import { ExternalLink } from 'theme/components'
 import Web3Status from './Web3Status'
 import { HideOnMobile, ShowOnMobile } from 'theme/index'
@@ -10,6 +10,8 @@ import antimatter from '../../assets/svg/antimatter.svg'
 import { routes } from 'constants/routes'
 import MobileMenu from './MobileMenu'
 import NetworkSelect from './NetworkSelect'
+import referralUrl from 'assets/images/referral.png'
+import { useReferalModal } from 'hooks/useReferralModal'
 
 interface TabContent {
   title: string
@@ -24,9 +26,19 @@ interface Tab extends TabContent {
 
 export const Tabs: Tab[] = [
   { title: 'Dual Investment', route: routes.dualInvest },
-  { title: 'Account', route: routes.account },
+  { title: 'Account', route: routes.account.replace(':tab', 'dashboard') },
   { title: 'DAO', link: 'https://dao.antimatter.finance/#/' },
   { title: 'Docs', link: 'https://docs.antimatter.finance/' },
+  {
+    title: 'Referral',
+    titleContent: (
+      <>
+        Referral
+        <Image src={referralUrl} style={{ height: 14, width: 14, marginLeft: 3 }} />
+      </>
+    ),
+    route: '/referal'
+  },
   {
     title: 'Labs',
     subTab: [
@@ -119,6 +131,11 @@ const LinksWrapper = muiStyled('div')(({ theme }) => ({
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { openReferralModal } = useReferalModal()
+
+  const handleReferral = useCallback(() => {
+    openReferralModal(true)
+  }, [openReferralModal])
 
   return (
     <>
@@ -138,10 +155,14 @@ export default function Header() {
             <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
                 subTab ? (
-                  <PlainSelect placeholder={title} key={title + idx}>
+                  <PlainSelect placeholder={title} key={title + idx} autoFocus={false}>
                     {subTab.map((sub, idx) =>
                       sub.link ? (
-                        <MenuItem key={sub.link + idx}>
+                        <MenuItem
+                          key={sub.link + idx}
+                          sx={{ backgroundColor: 'transparent!important', background: 'transparent!important' }}
+                          selected={false}
+                        >
                           <ExternalLink
                             href={sub.link}
                             className={'link'}
@@ -168,6 +189,18 @@ export default function Header() {
                   <ExternalLink href={link} className={'link'} key={link + idx} style={{ fontSize: 14 }}>
                     {titleContent ?? title}
                   </ExternalLink>
+                ) : title === 'Referral' ? (
+                  <MuiButton
+                    key={'referral'}
+                    disableRipple={true}
+                    variant="text"
+                    sx={{ padding: 0, marginTop: 'auto', display: 'inline' }}
+                    className={'link'}
+                    style={{ padding: 0 }}
+                    onClick={handleReferral}
+                  >
+                    {titleContent}
+                  </MuiButton>
                 ) : (
                   <NavLink key={title + idx} id={`${route}-nav-link`} to={route ?? ''} className={'link'}>
                     {titleContent ?? title}

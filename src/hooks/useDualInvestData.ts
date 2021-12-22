@@ -47,7 +47,7 @@ export function useAccountRecord(pageNum = 1, pageSize = 8) {
   })
 
   const promiseFn = useCallback(() => {
-    if (!account) return new Promise((resolve, reject) => reject('No account'))
+    if (!account) return new Promise((resolve, reject) => reject(null))
     return Axios.get('getAccountRecord', { account, pageNum, pageSize })
   }, [account, pageNum, pageSize])
 
@@ -101,8 +101,8 @@ export function useOrderRecords(investStatus?: number | number[], pageNum?: numb
 
   const promiseFn = useCallback(() => {
     if (!account)
-      return new Promise(resolve => {
-        resolve('no account')
+      return new Promise((resolve, reject) => {
+        reject(null)
       })
     return Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
       address: account,

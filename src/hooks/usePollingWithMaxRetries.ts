@@ -34,6 +34,10 @@ export default function usePollingWithMaxRetries(
       savedFn
         .current()
         .then(r => {
+          if (r === null) {
+            clearInterval(id)
+            return
+          }
           if (r.data.code !== 200) {
             throw Error(r.data.msg)
           }

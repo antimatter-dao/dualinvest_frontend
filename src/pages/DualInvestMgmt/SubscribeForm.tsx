@@ -15,7 +15,7 @@ import { useActiveWeb3React } from 'hooks'
 import { BTC, USDT } from 'constants/index'
 import { Axios } from 'utils/axios'
 import useModal from 'hooks/useModal'
-import ActionModal, { ActionType } from 'pages/Account/ActionModal'
+import ActionModal, { ActionType } from 'pages/Account/modals/ActionModal'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
@@ -251,6 +251,7 @@ export default function SubscribeForm({
         <Divider extension={24} sx={{ opacity: 0.1 }} />
 
         <InputNumerical
+          smallPlaceholder
           placeholder={`Each value represents ${
             product ? (+product.multiplier * multiplier).toFixed(1) : '-'
           } ${product?.investCurrency || ''}`}
