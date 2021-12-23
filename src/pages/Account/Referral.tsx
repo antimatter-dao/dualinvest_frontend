@@ -12,14 +12,17 @@ import { useReferral } from 'hooks/useReferral'
 import { useActiveWeb3React } from 'hooks'
 import NoDataCard from 'components/Card/NoDataCard'
 import TextButton from 'components/Button/TextButton'
+import { usePrice } from 'hooks/usePriceSet'
+import { trimNumberString } from 'utils/trimNumberString'
 
 export default function Referral() {
   const theme = useTheme()
   const { account } = useActiveWeb3React()
   const { openReferralModal } = useReferalModal()
-  const { invitation } = useReferral()
+  const { invitation, inviteCount, usdtBalance, btcBalance } = useReferral()
   const { showBindModal } = useBindModal()
-
+  const btcPrice = usePrice('BTC', 60000)
+  console.log(usdtBalance, btcBalance)
   const handleOpenReferal = useCallback(() => {
     openReferralModal(false)
   }, [openReferralModal])
@@ -74,8 +77,18 @@ export default function Referral() {
           </Box>
         </Box>
         <Box display="grid" gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr' }} gap={22} mt={34}>
-          <NumericalCard title="total Referral reward Value" value="123" unit="$" border fontSize="44px" />
-          <NumericalCard title="Number of referral accounts" value="123" border fontSize="44px">
+          <NumericalCard
+            title="total Referral reward Value"
+            value={
+              btcPrice && usdtBalance !== '-' && btcBalance !== '-'
+                ? trimNumberString((+btcBalance * +btcPrice).toFixed(4))
+                : '-'
+            }
+            unit="$"
+            border
+            fontSize="44px"
+          />
+          <NumericalCard title="Number of referral accounts" value={inviteCount ?? '-'} border fontSize="44px">
             <Button
               style={{ position: 'absolute', width: 148, height: 44, right: 20, bottom: 20, fontSize: 14 }}
               onClick={handleOpenReferal}
@@ -86,13 +99,13 @@ export default function Referral() {
           <Card padding="16px 22px 28px" gray>
             <LogoText logo={<CurrencyLogo currency={BTC} />} text="BTC" />
             <Typography fontSize={24} fontWeight={700} mt={19}>
-              6.00
+              {btcBalance}
             </Typography>
           </Card>
           <Card padding="16px 22px 28px" gray>
             <LogoText logo={<CurrencyLogo currency={USDT} />} text="USDT" />
             <Typography fontSize={24} fontWeight={700} mt={19}>
-              235,987
+              {usdtBalance}
             </Typography>
           </Card>
         </Box>

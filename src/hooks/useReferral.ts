@@ -1,15 +1,27 @@
+import { useCallback, useMemo, useState } from 'react'
 import { useActiveWeb3React } from 'hooks'
-import { useCallback, useMemo } from 'react'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { calculateGasMargin } from 'utils'
+import { Axios } from 'utils/axios'
 import { useDualInvestContract } from './useContract'
+import { BTC, USDT } from 'constants/index'
+import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 
-export function useReferral(): { invitation: undefined | string; bindCallback: (address: string) => Promise<any> } {
-  const { account } = useActiveWeb3React()
+export function useReferral(): {
+  invitation: undefined | string
+  bindCallback: (address: string) => Promise<any>
+  inviteCount: undefined | any
+  usdtBalance: string
+  btcBalance: string
+} {
+  const [btcBalance, setBtcBalance] = useState('-')
+  const [usdtBalance, setUsdtBalance] = useState('-')
+  const { account, chainId } = useActiveWeb3React()
   const contract = useDualInvestContract()
   const args = useMemo(() => [account ?? undefined], [account])
 
   const invitationRes = useSingleCallResult(contract, 'invitation', args)
+  const inviteCountRes = useSingleCallResult(contract, 'inviteCount', args)
 
   const bindCallback = useCallback(
     async (inviter: string): Promise<any> => {
@@ -25,11 +37,43 @@ export function useReferral(): { invitation: undefined | string; bindCallback: (
     [contract]
   )
 
+  const BtcPromiseFn = useCallback(() => {
+    if (!account) return new Promise((resolve, reject) => reject(null))
+    return Axios.post('getUserAssets', {}, { account, chainId, currency: BTC.address, symbol: BTC.symbol })
+  }, [account, chainId])
+
+  const BtcCallbackFn = useCallback(r => {
+    if (r?.data?.data?.balance === undefined) {
+      setBtcBalance('0')
+    } else {
+      setBtcBalance(r.data.data.balance)
+    }
+  }, [])
+
+  const UsdtPromiseFn = useCallback(() => {
+    if (!account) return new Promise((resolve, reject) => reject(null))
+    return Axios.post('getUserAssets', {}, { account, chainId, currency: USDT.address, symbol: USDT.symbol })
+  }, [account, chainId])
+
+  const UsdtCallbackFn = useCallback(r => {
+    if (r?.data?.data?.balance === undefined) {
+      setUsdtBalance('0')
+    } else {
+      setUsdtBalance(r.data.data.balance)
+    }
+  }, [])
+
+  usePollingWithMaxRetries(BtcPromiseFn, BtcCallbackFn, 300000)
+  usePollingWithMaxRetries(UsdtPromiseFn, UsdtCallbackFn, 300000)
+
   return useMemo(
     () => ({
       invitation: invitationRes?.result?.[0],
+      inviteCount: inviteCountRes?.result?.[0]?.toString(),
+      usdtBalance,
+      btcBalance,
       bindCallback
     }),
-    [bindCallback, invitationRes?.result]
+    [bindCallback, btcBalance, invitationRes?.result, inviteCountRes?.result, usdtBalance]
   )
 }
