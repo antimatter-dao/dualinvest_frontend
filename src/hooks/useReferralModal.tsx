@@ -1,5 +1,7 @@
+import { useCallback, useContext, useEffect, useMemo } from 'react'
+import { useParams } from 'react-router'
+import { BindModalContext } from 'context/BindContext'
 import ReferalModal from 'pages/Account/modals/ReferalModal'
-import { useCallback, useMemo } from 'react'
 import useModal from './useModal'
 
 export function useReferalModal() {
@@ -23,4 +25,15 @@ export function useReferalModal() {
     }),
     [closeReferalModal, openReferralModal]
   )
+}
+
+export function useBindModal() {
+  const context = useContext(BindModalContext)
+  const { referrer } = useParams<{ referrer: string }>()
+
+  useEffect(() => {
+    context.setReferrerParam(referrer)
+  }, [context, referrer])
+
+  return context
 }

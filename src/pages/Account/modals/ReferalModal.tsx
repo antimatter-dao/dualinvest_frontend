@@ -10,9 +10,11 @@ import useModal from 'hooks/useModal'
 import SecondaryButton from 'components/Button/SecondaryButton'
 import Divider from 'components/Divider'
 import useCopyClipboard from 'hooks/useCopyClipboard'
+import { useActiveWeb3React } from 'hooks'
 
 export default function ReferalModal({ showRedirectButton = true }: { showRedirectButton?: boolean }) {
-  const [link] = useState('https://referral.antimatter.finance/#/341199999999922222223333333')
+  const { account } = useActiveWeb3React()
+  const [link] = useState(window.location.origin.toString() + '/#/' + account)
   const [, setCopied] = useCopyClipboard()
   const history = useHistory()
   const { hideModal } = useModal()

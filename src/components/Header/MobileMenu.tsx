@@ -1,11 +1,13 @@
-import { useState, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { ExpandMore } from '@mui/icons-material'
 import { NavLink } from 'react-router-dom'
-import { Box, MenuItem, styled, Theme, Drawer } from '@mui/material'
+import { Box, MenuItem, styled, Theme, Drawer, Button as MuiButton } from '@mui/material'
 
 import { ExternalLink } from 'theme/components'
 
 import { Tabs } from '.'
+import { useReferalModal } from 'hooks/useReferralModal'
+import { useActiveWeb3React } from 'hooks'
 
 const StyledNavLink = styled(NavLink)({})
 
@@ -28,6 +30,14 @@ const navLinkSx = {
 } as const
 
 export default function MobileMenu({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
+  const { openReferralModal } = useReferalModal()
+  const { account } = useActiveWeb3React()
+
+  const handleReferral = useCallback(() => {
+    openReferralModal(true)
+    onDismiss()
+  }, [onDismiss, openReferralModal])
+
   return (
     <Drawer
       open={isOpen}
@@ -71,6 +81,14 @@ export default function MobileMenu({ isOpen, onDismiss }: { isOpen: boolean; onD
             <ExternalLink href={link} sx={navLinkSx} key={link}>
               {content}
             </ExternalLink>
+          ) : title === 'Referral' ? (
+            <React.Fragment key={'referral'}>
+              {account && (
+                <MuiButton disableRipple={true} variant="text" sx={navLinkSx} onClick={handleReferral}>
+                  {titleContent}
+                </MuiButton>
+              )}
+            </React.Fragment>
           ) : (
             route && (
               <StyledNavLink key={title} id={`${route}-nav-link`} to={route} sx={navLinkSx} onClick={onDismiss}>

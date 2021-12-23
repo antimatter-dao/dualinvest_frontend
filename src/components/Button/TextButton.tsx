@@ -1,6 +1,19 @@
 import React from 'react'
-import { ButtonBase, useTheme } from '@mui/material'
-interface Props {
+import { ButtonBase, Theme, useTheme } from '@mui/material'
+import { SxProps } from '@mui/system'
+
+export default function TextButton({
+  onClick,
+  style,
+  disabled,
+  underline,
+  primary,
+  fontSize,
+  fontWeight,
+  opacity,
+  color,
+  children
+}: {
   onClick?: (e?: any) => void
   children: React.ReactNode
   fontSize?: string | number
@@ -8,18 +21,16 @@ interface Props {
   primary?: boolean
   underline?: boolean
   opacity?: number
-  style?: React.CSSProperties
+  style?: React.CSSProperties | SxProps<Theme>
   disabled?: boolean
   classname?: string
   color?: string
-}
-
-export default function TextButton(props: Props) {
-  const { onClick, style, disabled, underline, primary, fontSize, fontWeight, opacity, color } = props
+}) {
   const theme = useTheme()
 
   return (
     <ButtonBase
+      disableRipple
       onClick={onClick}
       disabled={disabled}
       sx={{
@@ -35,7 +46,7 @@ export default function TextButton(props: Props) {
         ...style
       }}
     >
-      {props.children}
+      {children}
     </ButtonBase>
   )
 }

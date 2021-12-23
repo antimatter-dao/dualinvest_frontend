@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { NavLink } from 'react-router-dom'
 import { AppBar, Box, IconButton, MenuItem, styled as muiStyled, styled, Button as MuiButton } from '@mui/material'
 import { ExternalLink } from 'theme/components'
@@ -12,6 +12,7 @@ import MobileMenu from './MobileMenu'
 import NetworkSelect from './NetworkSelect'
 import referralUrl from 'assets/images/referral.png'
 import { useReferalModal } from 'hooks/useReferralModal'
+import { useActiveWeb3React } from 'hooks'
 
 interface TabContent {
   title: string
@@ -132,19 +133,19 @@ const LinksWrapper = muiStyled('div')(({ theme }) => ({
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { openReferralModal } = useReferalModal()
+  const { account } = useActiveWeb3React()
 
   const handleReferral = useCallback(() => {
     openReferralModal(true)
   }, [openReferralModal])
 
+  const handleMobileMenueDismiss = useCallback(() => {
+    setMobileMenuOpen(false)
+  }, [])
+
   return (
     <>
-      <MobileMenu
-        isOpen={mobileMenuOpen}
-        onDismiss={() => {
-          setMobileMenuOpen(false)
-        }}
-      />
+      <MobileMenu isOpen={mobileMenuOpen} onDismiss={handleMobileMenueDismiss} />
       <Filler />
       <StyledAppBar>
         <Box display="flex" alignItems="center">
@@ -190,17 +191,20 @@ export default function Header() {
                     {titleContent ?? title}
                   </ExternalLink>
                 ) : title === 'Referral' ? (
-                  <MuiButton
-                    key={'referral'}
-                    disableRipple={true}
-                    variant="text"
-                    sx={{ padding: 0, marginTop: 'auto', display: 'inline' }}
-                    className={'link'}
-                    style={{ padding: 0 }}
-                    onClick={handleReferral}
-                  >
-                    {titleContent}
-                  </MuiButton>
+                  <React.Fragment key={'referral'}>
+                    {account && (
+                      <MuiButton
+                        disableRipple={true}
+                        variant="text"
+                        sx={{ padding: 0, marginTop: 'auto', display: 'inline' }}
+                        className={'link'}
+                        style={{ padding: 0 }}
+                        onClick={handleReferral}
+                      >
+                        {titleContent}
+                      </MuiButton>
+                    )}
+                  </React.Fragment>
                 ) : (
                   <NavLink key={title + idx} id={`${route}-nav-link`} to={route ?? ''} className={'link'}>
                     {titleContent ?? title}

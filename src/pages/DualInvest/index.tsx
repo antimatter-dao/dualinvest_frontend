@@ -25,6 +25,7 @@ import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { usePrice } from 'hooks/usePriceSet'
 import { trimNumberString } from 'utils/trimNumberString'
 import NoDataCard from 'components/Card/NoDataCard'
+import { useBindModal } from 'hooks/useReferralModal'
 
 const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
   marginBottom: 13,
@@ -88,6 +89,7 @@ export default function DualInvest() {
   const productList = useProductList()
   const statistics = useStatistics()
   const BTCPrice = usePrice('BTC')
+  useBindModal()
 
   const handleSubscribe = useCallback(
     (id: number) => () => {

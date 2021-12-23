@@ -19,7 +19,10 @@ export function useProductList() {
   const [productList, setProductList] = useState<ProductList | undefined>(undefined)
 
   const promiseFn = useCallback(() => Axios.get('getProducts'), [])
-  const callbackFn = useCallback(r => setProductList(productListFormatter(r.data.data)), [])
+  const callbackFn = useCallback(r => {
+    if (!r.data.data || !Array.isArray(r.data.data)) return
+    setProductList(productListFormatter(r.data.data))
+  }, [])
 
   usePollingWithMaxRetries(promiseFn, callbackFn)
 

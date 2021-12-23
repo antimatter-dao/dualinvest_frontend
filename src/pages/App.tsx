@@ -14,6 +14,7 @@ import NoService from './NoService'
 import Spinner from 'components/Spinner'
 import { fetchLocation } from 'utils/fetch/location'
 import Account from './Account'
+import { BindModalProvider } from 'context/BindContext'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -64,18 +65,21 @@ export default function App() {
               <WarningModal />
               <ScrollToTop />
               <Web3ReactManager>
-                <LocatoinVerification resource={resource}>
-                  <Switch>
-                    <Route exact strict path={routes.noService} component={NoService} />
-                    <Route exact strict path={routes.account} component={Account} />
-                    <Route exact strict path={routes.dualInvest} component={DualInvest} />
-                    <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
-                    <Route exact strict path={routes.dualInvestMgmtImg} component={DualInvestMgmt} />
-                    <Route path="/">
-                      <Redirect to={routes.dualInvest} />
-                    </Route>
-                  </Switch>
-                </LocatoinVerification>
+                <BindModalProvider>
+                  <LocatoinVerification resource={resource}>
+                    <Switch>
+                      <Route exact strict path={routes.noService} component={NoService} />
+                      <Route exact strict path={routes.account} component={Account} />
+                      <Route exact strict path={routes.referral} component={DualInvest} />
+                      <Route exact strict path={routes.dualInvest} component={DualInvest} />
+                      <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
+                      <Route exact strict path={routes.dualInvestMgmtImg} component={DualInvestMgmt} />
+                      <Route path="/">
+                        <Redirect to={routes.dualInvest} />
+                      </Route>
+                    </Switch>
+                  </LocatoinVerification>
+                </BindModalProvider>
               </Web3ReactManager>
             </BodyWrapper>
           </ContentWrapper>

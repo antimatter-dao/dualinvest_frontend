@@ -19,8 +19,8 @@ export interface InputProps {
   smallPlaceholder?: boolean
 }
 
-const StyledInputBase = styled(InputBase, { shouldForwardProp: () => true })<{ smallPlaceholder?: boolean }>(
-  ({ theme, smallPlaceholder }) => ({
+const StyledInputBase = styled(InputBase, { shouldForwardProp: () => true })<{ smallplaceholder?: boolean }>(
+  ({ theme, smallplaceholder }) => ({
     [`&.${inputBaseClasses.root}`]: {
       fontSize: 16,
       color: theme.palette.text.primary,
@@ -32,6 +32,7 @@ const StyledInputBase = styled(InputBase, { shouldForwardProp: () => true })<{ s
     },
     [`&.${inputBaseClasses.focused}`]: { border: `1px solid ${theme.palette.primary.main} !important` },
     [`& .${inputBaseClasses.input}`]: {
+      maxWidth: '100%',
       '&::-webkit-outer-spin-button': {
         WebkitAppearance: 'none'
       },
@@ -43,8 +44,10 @@ const StyledInputBase = styled(InputBase, { shouldForwardProp: () => true })<{ s
         color: theme.palette.text.secondary
       },
       '&::placeholder': {
-        fontSize: smallPlaceholder ? 13 : 16,
-        textOverflow: 'ellipsis'
+        fontSize: smallplaceholder ? 13 : 16,
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden'
       }
     },
     [`&.${inputBaseClasses.disabled}`]: {
@@ -73,12 +76,12 @@ export default function Input({
     <div style={{ width: '100%', maxWidth: maxWidth || 'unset' }}>
       {label && <InputLabel>{label}</InputLabel>}
       <StyledInputBase
-        smallPlaceholder={smallPlaceholder}
+        smallplaceholder={smallPlaceholder}
         sx={{
           height: height || 60,
           [`&.${inputBaseClasses.root}`]: {
             border: theme =>
-              `1px solid ${outlined ? 'rgba(255,255,255,.4)' : error ? theme.palette.primary.main : 'transparent'}`
+              `1px solid ${outlined ? 'rgba(255,255,255,.4)' : error ? theme.palette.error.main : 'transparent'}`
           },
           [`&.${inputBaseClasses.focused}`]: {
             borderColor: theme =>
