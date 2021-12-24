@@ -22,7 +22,7 @@ export default function Referral() {
   const { invitation, inviteCount, usdtBalance, btcBalance } = useReferral()
   const { showBindModal } = useBindModal()
   const btcPrice = usePrice('BTC', 60000)
-  console.log(usdtBalance, btcBalance)
+
   const handleOpenReferal = useCallback(() => {
     openReferralModal(false)
   }, [openReferralModal])

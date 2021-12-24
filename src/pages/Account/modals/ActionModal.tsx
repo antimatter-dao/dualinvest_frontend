@@ -231,11 +231,11 @@ export default function ActionModal({
             <OutlinedCard padding="12px 16px">
               <Box display="flex" justifyContent="space-between" color={theme.palette.text.secondary}>
                 <Typography>Wallet Balance</Typography>
-                <Typography>{balance && token ? balance.toExact() + ' ' + token.symbol : '-'}</Typography>
+                <Typography>{balance && token ? balance.toFixed(4) + ' ' + token.symbol : '-'}</Typography>
               </Box>
               <Box display="flex" justifyContent="space-between" color={theme.palette.text.secondary}>
                 <Typography>Account Balance</Typography>
-                <Typography>{token ? contractBalance + ' ' + token.symbol : '-'}</Typography>
+                <Typography>{token ? (+contractBalance).toFixed(4) + ' ' + token.symbol : '-'}</Typography>
               </Box>
             </OutlinedCard>
           </Box>

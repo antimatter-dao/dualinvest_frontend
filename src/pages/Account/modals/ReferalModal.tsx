@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Box, Typography } from '@mui/material'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
@@ -24,9 +24,19 @@ export default function ReferalModal({ showRedirectButton = true }: { showRedire
     hideModal()
   }, [hideModal, history])
 
-  const handleCopy = useCallback(() => {
-    setCopied(link)
-  }, [link, setCopied])
+  const handleCopy = useCallback(
+    (e: React.MouseEvent) => {
+      setCopied(link)
+      if (e.target) {
+        const target = e.target as HTMLButtonElement
+        target.innerHTML = 'Copied'
+        setTimeout(() => {
+          target.innerHTML = 'Copy'
+        }, 900)
+      }
+    },
+    [link, setCopied]
+  )
 
   return (
     <Modal closeIcon>

@@ -15,6 +15,8 @@ import useModal from 'hooks/useModal'
 import { useTransaction, useTransactionAdder } from 'state/transactions/hooks'
 import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
+import { BlackButton } from 'components/Button/Button'
+import { useWalletModalToggle } from 'state/application/hooks'
 
 export default function BindModal({
   isOpen,
@@ -37,6 +39,7 @@ export default function BindModal({
   const { showModal, hideModal } = useModal()
   const addTransaction = useTransactionAdder()
   const txn = useTransaction(hash)
+  const toggleWallet = useWalletModalToggle()
 
   const check = useCallback(
     val => {
@@ -70,10 +73,10 @@ export default function BindModal({
 
   const handleDismiss = useCallback(() => {
     setValue('')
-    setHash('')
+    setHash(tempReferrer ?? '')
     setPending(false)
     onDismiss()
-  }, [onDismiss])
+  }, [onDismiss, tempReferrer])
 
   const handleSucccessModal = useCallback(() => {
     hideModal()
@@ -146,6 +149,9 @@ export default function BindModal({
 
   useEffect(() => {
     setPlaceholder(referer ? referer : tempReferrer ? tempReferrer : 'Please input referrer address')
+    if (tempReferrer) {
+      setValue(tempReferrer)
+    }
   }, [referer, tempReferrer])
 
   useEffect(() => {
@@ -157,13 +163,13 @@ export default function BindModal({
         handleSucccessModal()
       }
       if (txn?.receipt?.status !== 1) {
-        setValue('')
+        setValue(tempReferrer ?? '')
         setHash('')
         setPending(false)
         // setIsConfrirmed(false)
       }
     }
-  }, [handleDismiss, handleSucccessModal, hash, onDismiss, showModal, txn])
+  }, [handleDismiss, handleSucccessModal, hash, onDismiss, showModal, tempReferrer, txn])
 
   return (
     <Modal closeIcon customIsOpen={isOpen} customOnDismiss={onDismiss}>
@@ -193,6 +199,7 @@ export default function BindModal({
             </Typography>
           </Box>
         </Box>
+        {!account && <BlackButton onClick={toggleWallet}>Connect Wallet</BlackButton>}
         {invitation && invitation === NO_REFERRER && (
           <ActionButton
             actionText="Confirm"

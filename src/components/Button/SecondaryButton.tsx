@@ -2,7 +2,7 @@ import React from 'react'
 import { ButtonBase, useTheme } from '@mui/material'
 
 interface Props {
-  onClick?: () => void
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
   primary?: boolean
   children: React.ReactNode
   width?: string | number

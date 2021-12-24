@@ -35,11 +35,16 @@ export const BindModalProvider = ({ children }: { children: React.ReactNode }) =
   }, [invitation])
 
   useEffect(() => {
-    if (referrerParam && isAddress(referrerParam) && referrerParam !== NO_REFERRER) {
+    if (
+      referrerParam &&
+      isAddress(referrerParam) &&
+      referrerParam !== NO_REFERRER &&
+      (invitation === undefined || invitation === NO_REFERRER)
+    ) {
       setTempReferer(referrerParam)
       setIsOpen(true)
     }
-  }, [referrerParam])
+  }, [referrerParam, invitation])
 
   const hideBindModal = useCallback(() => {
     setIsOpen(false)
