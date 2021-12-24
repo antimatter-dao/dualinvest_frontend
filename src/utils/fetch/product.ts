@@ -125,6 +125,7 @@ export const productListFormatter = (raw: ProductRaw[]): ProductList => {
   return raw.reduce(
     (acc, item) => {
       const res = productFormatter(item)
+      if (item.is_active === false) return acc
       if (item.type === TYPE.call) {
         acc.call.push(res)
       } else {
