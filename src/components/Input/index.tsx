@@ -19,42 +19,34 @@ export interface InputProps {
   smallPlaceholder?: boolean
 }
 
-const StyledInputBase = styled(InputBase, { shouldForwardProp: () => true })<{ smallplaceholder?: boolean }>(
-  ({ theme, smallplaceholder }) => ({
-    [`&.${inputBaseClasses.root}`]: {
-      fontSize: 16,
-      color: theme.palette.text.primary,
-      fontFamily: 'SF Pro',
-      fontWeight: 400,
-      backgroundColor: theme.palette.background.default,
-      paddingLeft: 20,
-      borderRadius: 14
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  [`&.${inputBaseClasses.root}`]: {
+    fontSize: 16,
+    color: theme.palette.text.primary,
+    fontFamily: 'SF Pro',
+    fontWeight: 400,
+    backgroundColor: theme.palette.background.default,
+    paddingLeft: 20,
+    borderRadius: 14
+  },
+  [`&.${inputBaseClasses.focused}`]: { border: `1px solid ${theme.palette.primary.main} !important` },
+  [`& .${inputBaseClasses.input}`]: {
+    maxWidth: '100%',
+    '&::-webkit-outer-spin-button': {
+      WebkitAppearance: 'none'
     },
-    [`&.${inputBaseClasses.focused}`]: { border: `1px solid ${theme.palette.primary.main} !important` },
-    [`& .${inputBaseClasses.input}`]: {
-      maxWidth: '100%',
-      '&::-webkit-outer-spin-button': {
-        WebkitAppearance: 'none'
-      },
-      '&::-webkit-inner-spin-button': {
-        WebkitAppearance: 'none'
-      },
-      '&.Mui-disabled': {
-        WebkitTextFillColor: theme.palette.text.secondary,
-        color: theme.palette.text.secondary
-      },
-      '&::placeholder': {
-        fontSize: smallplaceholder ? 13 : 16,
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden'
-      }
+    '&::-webkit-inner-spin-button': {
+      WebkitAppearance: 'none'
     },
-    [`&.${inputBaseClasses.disabled}`]: {
-      cursor: 'not-allowed'
+    '&.Mui-disabled': {
+      WebkitTextFillColor: theme.palette.text.secondary,
+      color: theme.palette.text.secondary
     }
-  })
-)
+  },
+  [`&.${inputBaseClasses.disabled}`]: {
+    cursor: 'not-allowed'
+  }
+}))
 
 export default function Input({
   focused,
@@ -76,7 +68,6 @@ export default function Input({
     <div style={{ width: '100%', maxWidth: maxWidth || 'unset' }}>
       {label && <InputLabel>{label}</InputLabel>}
       <StyledInputBase
-        smallplaceholder={smallPlaceholder}
         sx={{
           height: height || 60,
           [`&.${inputBaseClasses.root}`]: {
@@ -86,6 +77,14 @@ export default function Input({
           [`&.${inputBaseClasses.focused}`]: {
             borderColor: theme =>
               error ? `${theme.palette.error.main}!important` : `${theme.palette.primary.main}!important`
+          },
+          [`& .${inputBaseClasses.input}`]: {
+            '&::placeholder': {
+              fontSize: smallPlaceholder ? 13 : 16,
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden'
+            }
           }
         }}
         color={error ? 'error' : 'primary'}

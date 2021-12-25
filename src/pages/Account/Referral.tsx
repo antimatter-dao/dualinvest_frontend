@@ -14,6 +14,7 @@ import NoDataCard from 'components/Card/NoDataCard'
 import TextButton from 'components/Button/TextButton'
 import { usePrice } from 'hooks/usePriceSet'
 import { trimNumberString } from 'utils/trimNumberString'
+import { shortenAddress } from 'utils'
 
 export default function Referral() {
   const theme = useTheme()
@@ -54,7 +55,7 @@ export default function Referral() {
                 alignItems="center"
                 align="right"
               >
-                My referrer: 0x344...A507
+                My referrer: {shortenAddress(invitation)}
               </Typography>
             ) : (
               <TextButton

@@ -239,13 +239,19 @@ export default function Dashboard() {
 
                 {isDownMd ? (
                   <InvestmentValueCard
-                    value={(+totalInvest).toLocaleString()}
+                    value={(+totalInvest).toLocaleString(undefined, {
+                      minimumFractionDigits: 4,
+                      maximumFractionDigits: 4
+                    })}
                     unit="$"
                     // dayChange="+ 8.91% / $350.28 "
                   />
                 ) : (
                   <NumericalCard
-                    value={(+totalInvest).toLocaleString()}
+                    value={(+totalInvest).toLocaleString(undefined, {
+                      minimumFractionDigits: 4,
+                      maximumFractionDigits: 4
+                    })}
                     border
                     title="Portfolio Value"
                     unit="$"

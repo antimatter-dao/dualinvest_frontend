@@ -26,6 +26,8 @@ import ClaimSuccessModal from './modals/ClaimSuccessModal'
 import { parseBalance } from 'utils/parseAmount'
 import { BTC, USDT } from 'constants/index'
 
+const THIRTY_MINUTES_MS = 1800000
+
 enum PositionMoreHeaderIndex {
   OrderID,
   ProductID,
@@ -97,6 +99,10 @@ export default function Position() {
         returnedAmount,
         type
       }) => {
+        const status =
+          investStatus === InvestStatus.Ordered && Date.now() > +expiredAt * 1000 + THIRTY_MINUTES_MS
+            ? 'progressing'
+            : 'finished'
         const apy = `${(+annualRor * 100).toFixed(2)}%`
         const investAmount = `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
           1
@@ -156,12 +162,9 @@ export default function Position() {
           type === 'CALL' ? 'Upward' : 'Down',
           +returnedAmount > 0 ? +returnedAmount + returnedCurrency : '--',
           <Box display="flex" key="action" gap={isDownMd ? 10 : 8} sx={{ mr: -15 }}>
-            <StatusTag
-              status={investStatus === InvestStatus.Ordered ? 'progressing' : 'finished'}
-              width={isDownMd ? 120 : 100}
-            />
+            <StatusTag status={status} width={isDownMd ? 120 : 100} />
             <ClaimButton
-              disabled={!(investStatus === InvestStatus.ReadyToSettle)}
+              disabled={status === 'progressing'}
               onClick={e => {
                 if (!finishOrderCallback) return
                 const el = e.target as HTMLButtonElement
@@ -228,7 +231,9 @@ export default function Position() {
           <Box padding="38px 24px">
             <NumericalCard
               title="BTC latest spot price"
-              value={price ? (+price).toLocaleString() : '-'}
+              value={
+                price ? (+price).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 }) : '-'
+              }
               border={true}
             />
             <Box position="relative">
