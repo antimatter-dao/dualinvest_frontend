@@ -125,7 +125,11 @@ export default function BindModal({
           </MessageBox>
         )
       } else {
-        showModal(<MessageBox type="error">{e.message}</MessageBox>)
+        showModal(
+          <MessageBox type="error" width="100%">
+            {e.message.include('Already invite') ? 'Already bound' : e.message}
+          </MessageBox>
+        )
       }
     },
     [connector, handleDismiss, hideModal, showModal]
