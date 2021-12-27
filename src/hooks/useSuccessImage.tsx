@@ -109,7 +109,7 @@ export function useShowClaimSuccessModal() {
         multiplier,
         investCurrency,
         type,
-        earned,
+        earn,
         orderId
       } = order
       if (+returnedAmount === 0) return
@@ -130,7 +130,7 @@ export function useShowClaimSuccessModal() {
           currency={currency}
           deliveryDate={deliveryDate}
           investAmount={investAmount}
-          earn={earned}
+          earn={earn}
           exercised={exercised}
           returnedCurrency={returnedCurrency == BTC.address ? BTC.symbol ?? '' : USDT.symbol ?? ''}
         />
