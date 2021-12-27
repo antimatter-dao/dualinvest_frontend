@@ -240,8 +240,8 @@ export default function Dashboard() {
                 {isDownMd ? (
                   <InvestmentValueCard
                     value={(+totalInvest).toLocaleString(undefined, {
-                      minimumFractionDigits: 4,
-                      maximumFractionDigits: 4
+                      minimumFractionDigits: 6,
+                      maximumFractionDigits: 6
                     })}
                     unit="$"
                     // dayChange="+ 8.91% / $350.28 "
@@ -249,8 +249,8 @@ export default function Dashboard() {
                 ) : (
                   <NumericalCard
                     value={(+totalInvest).toLocaleString(undefined, {
-                      minimumFractionDigits: 4,
-                      maximumFractionDigits: 4
+                      minimumFractionDigits: 6,
+                      maximumFractionDigits: 6
                     })}
                     border
                     title="Portfolio Value"

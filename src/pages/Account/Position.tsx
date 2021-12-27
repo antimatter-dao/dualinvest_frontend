@@ -174,10 +174,13 @@ export default function Position() {
                 showModal(<TransacitonPendingModal />)
                 finishOrderCallback(orderId + '', productId + '')
                   .then(({ r, returnedAmount, returnedCurrency }) => {
-                    const earned =
+                    const earned = (
                       +parseBalance(returnedAmount, returnedCurrency == BTC.address ? BTC : USDT) -
-                      +(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(4) +
-                      ''
+                      +(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(6)
+                    ).toFixed(6)
+                    console.log(3, earned)
+                    console.log(2, +(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(6))
+                    console.log(1, +parseBalance(returnedAmount, returnedCurrency == BTC.address ? BTC : USDT))
                     hideModal()
                     addTransaction(r, {
                       summary: `Claim ${returnedAmount} ${returnedCurrency}`
@@ -232,7 +235,7 @@ export default function Position() {
             <NumericalCard
               title="BTC latest spot price"
               value={
-                price ? (+price).toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 }) : '-'
+                price ? (+price).toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 }) : '-'
               }
               border={true}
             />
