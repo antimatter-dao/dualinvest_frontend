@@ -14,13 +14,15 @@ interface Props {
   classname?: string
   style?: React.CSSProperties & SxProps<Theme>
   active?: boolean
+  disableRipple?: boolean
 }
 
 export default function Button(props: Props) {
-  const { onClick, disabled, style, width, height, fontSize, backgroundColor, color } = props
+  const { onClick, disabled, style, width, height, fontSize, backgroundColor, color, disableRipple } = props
   const theme = useTheme()
   return (
     <ButtonBase
+      disableRipple={disableRipple}
       onClick={onClick}
       disabled={disabled}
       sx={{

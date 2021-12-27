@@ -133,6 +133,7 @@ export function useDualInvestCallback(): {
         productId: productIdR,
         returnedCurrency,
         returnedAmount,
+        earned,
         fee,
         signatory,
         signV,
@@ -156,10 +157,10 @@ export function useDualInvestCallback(): {
           ?.finishOrder(...args, {
             gasLimit: calculateGasMargin(estimatedGas)
           })
-          .then((r: any) => resolve({ r, returnedCurrency, returnedAmount }))
+          .then((r: any) => resolve({ r, returnedCurrency, returnedAmount, earned }))
           .catch((e: any) => {
             reject(e)
-            throw Error(e)
+            // throw Error(e)
           })
       })
     },

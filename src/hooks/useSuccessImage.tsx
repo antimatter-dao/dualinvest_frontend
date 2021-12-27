@@ -40,6 +40,7 @@ export function useSuccessImage(orderId: string) {
         multiplier,
         investCurrency,
         orderId,
+        earned,
         type
       } = r.data.data.records[0]
       if (+returnedAmount === 0) return
@@ -49,9 +50,6 @@ export function useSuccessImage(orderId: string) {
       )} ${investCurrency}`
       const deliveryDate = dayjs(+expiredAt * 1000).format('MMM DD, YYYY')
       const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
-      const earned = (+returnedAmount - amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
-        6
-      )
 
       showModal(
         <ClaimSuccessModal
@@ -111,6 +109,7 @@ export function useShowClaimSuccessModal() {
         multiplier,
         investCurrency,
         type,
+        earned,
         orderId
       } = order
       if (+returnedAmount === 0) return
@@ -120,9 +119,6 @@ export function useShowClaimSuccessModal() {
       )} ${investCurrency}`
       const deliveryDate = dayjs(+expiredAt * 1000).format('MMM DD, YYYY')
       const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
-      const earned = (+returnedAmount - amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
-        6
-      )
 
       showModal(
         <ClaimSuccessModal

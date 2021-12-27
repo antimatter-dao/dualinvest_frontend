@@ -48,7 +48,7 @@ enum PositionTableHeaderIndex {
 }
 
 const PositionTableHeader = [
-  'Invest Amount',
+  'Invest Amount\n(Subscription Amount)',
   'Subscribed Time',
   'APY',
   'Delivery Date',
@@ -100,9 +100,9 @@ export default function Position() {
         type
       }) => {
         const status =
-          investStatus === InvestStatus.Ordered && Date.now() > +expiredAt * 1000 + THIRTY_MINUTES_MS
-            ? 'progressing'
-            : 'finished'
+          investStatus === InvestStatus.ReadyToSettle && Date.now() > +expiredAt * 1000 + THIRTY_MINUTES_MS
+            ? 'finished'
+            : 'progressing'
         const apy = `${(+annualRor * 100).toFixed(2)}%`
         const investAmount = `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
           1
@@ -114,7 +114,7 @@ export default function Position() {
           productId,
           deliveryPrice,
           `${dayjs(expiredAt * 1000).format('MMM DD, YYYY hh:mm A')}`,
-          <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
+          status === 'progressing' ? null : <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
         ]
         hiddenList.push(hiddenData)
         hiddenPartsList.push(
@@ -152,7 +152,7 @@ export default function Position() {
           </Box>
         )
         return [
-          investAmount,
+          `${investAmount}(${amount})`,
           dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A'),
           <Typography color="primary" key="1" variant="inherit">
             {apy}
@@ -173,17 +173,14 @@ export default function Position() {
                 el.disabled = true
                 showModal(<TransacitonPendingModal />)
                 finishOrderCallback(orderId + '', productId + '')
-                  .then(({ r, returnedAmount, returnedCurrency }) => {
-                    const earned = (
-                      +parseBalance(returnedAmount, returnedCurrency == BTC.address ? BTC : USDT) -
-                      +(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(6)
-                    ).toFixed(6)
-                    console.log(3, earned)
-                    console.log(2, +(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(6))
-                    console.log(1, +parseBalance(returnedAmount, returnedCurrency == BTC.address ? BTC : USDT))
+                  .then(({ r, returnedAmount, returnedCurrency, earned }) => {
                     hideModal()
                     addTransaction(r, {
-                      summary: `Claim ${returnedAmount} ${returnedCurrency}`
+                      summary: `Claim ${parseBalance(
+                        returnedAmount,
+                        returnedCurrency == BTC.address ? BTC : USDT,
+                        6
+                      )} ${returnedCurrency == BTC.address ? BTC.symbol : USDT.symbol}`
                     })
                     el.innerHTML = 'Claim'
 
@@ -365,6 +362,7 @@ function ClaimButton({
 }) {
   return (
     <Button
+      disableRipple={true}
       disabled={disabled}
       onClick={onClick}
       fontSize={14}

@@ -25,7 +25,7 @@ enum HistoryMoreHeaderIndex {
 }
 
 const HistoryTableHeader = [
-  'Invest Amount',
+  'Invest Amount\n(Subscription Amount)',
   'Subscribed Time',
   'APY',
   'Delivery Date',
@@ -113,7 +113,9 @@ export default function History() {
         </Box>
       )
       return [
-        `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(1)} ${investCurrency}`,
+        `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
+          1
+        )} ${investCurrency} (${amount})`,
         dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A'),
         <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
           {(+annualRor * 100).toFixed(2)}%

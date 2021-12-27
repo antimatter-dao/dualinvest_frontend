@@ -66,7 +66,8 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
   overflow: 'hidden',
   '& .MuiTableCell-root': {
     fontSize: '12px',
-    whiteSpace: 'nowrap',
+    whiteSpace: 'pre',
+    lineHeight: '12px',
     background: 'rgba(255, 255, 255, 0.08)',
     padding: '12px 20px 12px 0',
     color: theme.palette.text.secondary,
