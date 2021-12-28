@@ -24,7 +24,7 @@ export default function Referral() {
   const { showBindModal } = useBindModal()
   const btcPrice = usePrice('BTC', 60000)
 
-  const handleOpenReferal = useCallback(() => {
+  const handleOpenReferral = useCallback(() => {
     openReferralModal(false)
   }, [openReferralModal])
 
@@ -40,7 +40,7 @@ export default function Referral() {
         <Box display={{ xs: 'grid', sm: 'flex' }} justifyContent="space-between" gap={20}>
           <Box display="grid" gap={8}>
             <Typography color={theme.palette.text.primary} fontSize={24} fontWeight={700}>
-              My Referral reward
+              My Referral Reward
             </Typography>
             <Typography color={theme.palette.text.secondary} fontSize={16}>
               Recharge to Account to start dual currency wealth management
@@ -79,7 +79,7 @@ export default function Referral() {
         </Box>
         <Box display="grid" gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr' }} gap={22} mt={34}>
           <NumericalCard
-            title="total Referral reward Value"
+            title="Total Referral Reward Value"
             value={
               btcPrice && usdtBalance !== '-' && btcBalance !== '-'
                 ? trimNumberString((+btcBalance * +btcPrice).toFixed(4))
@@ -89,12 +89,12 @@ export default function Referral() {
             border
             fontSize="44px"
           />
-          <NumericalCard title="Number of referral accounts" value={inviteCount ?? '-'} border fontSize="44px">
+          <NumericalCard title="Number of Referral Accounts" value={inviteCount ?? '-'} border fontSize="44px">
             <Button
               style={{ position: 'absolute', width: 148, height: 44, right: 20, bottom: 20, fontSize: 14 }}
-              onClick={handleOpenReferal}
+              onClick={handleOpenReferral}
             >
-              referral link
+              Referral Link
             </Button>
           </NumericalCard>
           <Card padding="16px 22px 28px" gray>
