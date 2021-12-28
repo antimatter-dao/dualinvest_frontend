@@ -56,6 +56,7 @@ export default function ActionModal({
   const { hideModal, showModal } = useModal()
   const contractBalance = useDualInvestBalance(token)
   const balance = useTokenBalance(account ?? undefined, token)
+  console.log(token)
   const txn = useTransaction(hash)
   const [approvalState, approveCallback] = useApproveCallback(tryParseAmount(val, token), DUAL_INVEST_ADDRESS)
 
