@@ -1,24 +1,24 @@
 import { Chain } from 'models/chain'
-import { ReactComponent as ETH } from 'assets/svg/eth_logo.svg'
-import EthUrl from 'assets/svg/eth_logo.svg'
+// import { ReactComponent as ETH } from 'assets/svg/eth_logo.svg'
+// import EthUrl from 'assets/svg/eth_logo.svg'
 import BSCUrl from 'assets/svg/binance.svg'
 import { ReactComponent as BSCInvert } from 'assets/svg/binance.svg'
 
 export enum ChainId {
   // MAINNET = 1,
-  ROPSTEN = 3,
+  // ROPSTEN = 3,
   BSC = 56
 }
 
 export const ChainList = [
-  {
-    icon: <ETH />,
-    logo: EthUrl,
-    symbol: 'Ropsten',
-    name: 'Ropsten Test Network',
-    id: ChainId.ROPSTEN,
-    hex: '0x3'
-  },
+  // {
+  //   icon: <ETH />,
+  //   logo: EthUrl,
+  //   symbol: 'Ropsten',
+  //   name: 'Ropsten Test Network',
+  //   id: ChainId.ROPSTEN,
+  //   hex: '0x3'
+  // },
   {
     icon: <BSCInvert height={20} width={20} />,
     logo: BSCUrl,
@@ -60,17 +60,17 @@ export const SUPPORTED_NETWORKS: {
   //   rpcUrls: ['https://mainnet.infura.io/v3'],
   //   blockExplorerUrls: ['https://etherscan.com']
   // },
-  [ChainId.ROPSTEN]: {
-    chainId: '0x3',
-    chainName: 'Ropsten',
-    nativeCurrency: {
-      name: 'Ropsten',
-      symbol: 'ETH',
-      decimals: 18
-    },
-    rpcUrls: ['https://ropsten.infura.io/v3/'],
-    blockExplorerUrls: ['https://ropsten.etherscan.io/']
-  },
+  // [ChainId.ROPSTEN]: {
+  //   chainId: '0x3',
+  //   chainName: 'Ropsten',
+  //   nativeCurrency: {
+  //     name: 'Ropsten',
+  //     symbol: 'ETH',
+  //     decimals: 18
+  //   },
+  //   rpcUrls: ['https://ropsten.infura.io/v3/'],
+  //   blockExplorerUrls: ['https://ropsten.etherscan.io/']
+  // },
   [ChainId.BSC]: {
     chainId: '0x38',
     chainName: 'Binance Smart Chain',

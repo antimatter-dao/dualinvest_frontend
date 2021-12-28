@@ -19,7 +19,7 @@ import UNISOCKS_ABI from '../constants/abis/unisocks.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
-import { ChainId } from '../constants/chain'
+// import { ChainId } from '../constants/chain'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -48,12 +48,12 @@ export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contrac
   const { chainId } = useActiveWeb3React()
   let address: string | undefined
   if (chainId) {
-    switch (chainId) {
-      // case ChainId.MAINNET:
-      case ChainId.ROPSTEN:
-        address = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
-        break
-    }
+    // switch (chainId) {
+    // case ChainId.MAINNET:
+    // case ChainId.ROPSTEN:
+    // address = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
+    // break
+    //}
   }
   return useContract(address, ENS_ABI, withSignerIfPossible)
 }
