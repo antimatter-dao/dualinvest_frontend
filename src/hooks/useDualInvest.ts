@@ -6,8 +6,7 @@ import { calculateGasMargin } from 'utils'
 import { Axios } from 'utils/axios'
 import { parseBalance } from 'utils/parseAmount'
 import { useDualInvestContract } from './useContract'
-import { Signature, SignatureRequest, SignatureRequest2 } from 'utils/fetch/signature'
-import { retry } from 'utils/retry'
+import { Signature, SignatureRequest, SignatureRequestClaim, SignatureResponseClaim } from 'utils/fetch/signature'
 
 export function useDualInvestBalance(token?: Token) {
   const contract = useDualInvestContract()
@@ -53,25 +52,22 @@ export function useDualInvestCallback(): {
             throw Error('withdraw fail')
           }
           const nonce = await contract?.withdrawNonces(account)
-          const signRes = await retry(
-            () =>
-              getWithdrawSignature({
-                account: account,
-                amount: +amount,
-                chainId: chainId,
-                currency: currency,
-                nonce: nonce.toString()
-              }),
-            { n: 5, minWait: 5000, maxWait: 5000 }
-          ).promise
+          const signRes = await Axios.getSignatures<SignatureRequest, Signature>(
+            {
+              account: account,
+              amount: +amount,
+              chainId: chainId,
+              currency: currency,
+              nonce: nonce.toString()
+            },
+            1,
+            'getWithdrawSign'
+          )
 
-          if (signRes.status !== 200) {
-            throw Error('get signature error')
-          }
           const withdrawArgs = [
             amount,
             currency,
-            [signRes.data.data.signatory, signRes.data.data.signV, signRes.data.data.signR, signRes.data.data.signS]
+            [signRes[0].signatory, signRes[0].signV, signRes[0].signR, signRes[0].signS]
           ]
           const estimatedGas = await contract.estimateGas.withdraw(...withdrawArgs).catch((error: Error) => {
             console.debug('Failed to create order', error)
@@ -116,53 +112,47 @@ export function useDualInvestCallback(): {
   const finishOrder = useCallback(
     async (orderId): Promise<any> => {
       if (!contract || !account || !chainId || !orderId) return undefined
-      const signRes = await retry(
-        () =>
-          getFinishOrderSignature({
+      try {
+        const signRes = await Axios.getSignatures<SignatureRequestClaim, SignatureResponseClaim>(
+          {
             account: account,
             chainId: chainId,
             orderId: orderId
-          }),
-        { n: 5, minWait: 2000, maxWait: 2000 }
-      ).promise
-      if (!signRes.data.data) {
-        throw Error('Cannot get signature')
+          },
+          3,
+          'getFinishOrderSign'
+        )
+
+        const { orderId: orderIdR, productId: productIdR, returnedCurrency, returnedAmount, earned, fee } = signRes[0]
+        const args = [
+          orderIdR + '',
+          productIdR + '',
+          returnedCurrency,
+          returnedAmount,
+          fee + '',
+          [
+            [signRes[0].signatory, signRes[0].signV, signRes[0].signR, signRes[0].signS],
+            [signRes[1].signatory, signRes[1].signV, signRes[1].signR, signRes[1].signS],
+            [signRes[2].signatory, signRes[2].signV, signRes[2].signR, signRes[2].signS]
+          ]
+        ]
+        const estimatedGas = await contract.estimateGas.finishOrder(...args).catch((error: Error) => {
+          console.debug('Failed to finish order', error)
+          throw error
+        })
+        return new Promise((resolve, reject) => {
+          contract
+            ?.finishOrder(...args, {
+              gasLimit: calculateGasMargin(estimatedGas)
+            })
+            .then((r: any) => resolve({ r, returnedCurrency, returnedAmount, earned }))
+            .catch((e: any) => {
+              reject(e)
+            })
+        })
+      } catch (e) {
+        throw e
       }
-      const {
-        orderId: orderIdR,
-        productId: productIdR,
-        returnedCurrency,
-        returnedAmount,
-        earned,
-        fee,
-        signatory,
-        signV,
-        signR,
-        signS
-      } = signRes.data.data
-      const args = [
-        orderIdR + '',
-        productIdR + '',
-        returnedCurrency,
-        returnedAmount,
-        fee + '',
-        [[signatory, signV, signR, signS]]
-      ]
-      const estimatedGas = await contract.estimateGas.finishOrder(...args).catch((error: Error) => {
-        console.debug('Failed to finish order', error)
-        throw error
-      })
-      return new Promise((resolve, reject) => {
-        contract
-          ?.finishOrder(...args, {
-            gasLimit: calculateGasMargin(estimatedGas)
-          })
-          .then((r: any) => resolve({ r, returnedCurrency, returnedAmount, earned }))
-          .catch((e: any) => {
-            reject(e)
-            // throw Error(e)
-          })
-      })
     },
     [account, chainId, contract]
   )
@@ -180,6 +170,6 @@ export function useDualInvestCallback(): {
   return res
 }
 
-const getWithdrawSignature = (data: SignatureRequest) => Axios.getSignature<Signature>('getWithdrawSign', data)
+// const getWithdrawSignature = (data: SignatureRequest) => Axios.getSignature<Signature>('getWithdrawSign', data)
 
-const getFinishOrderSignature = (data: SignatureRequest2) => Axios.getSignature<any>('getFinishOrderSign', data)
+// const getFinishOrderSignature = (data: SignatureRequest2) => Axios.getSignature<any>('getFinishOrderSign', data)

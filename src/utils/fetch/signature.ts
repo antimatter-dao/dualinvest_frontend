@@ -16,8 +16,21 @@ export interface SignatureRequest {
   nonce: number
 }
 
-export interface SignatureRequest2 {
+export interface SignatureRequestClaim {
   account: string
   chainId: number
   orderId: string
+}
+
+export interface SignatureResponseClaim {
+  earned: string
+  fee: number
+  orderId: number
+  productId: number
+  returnedAmount: string
+  returnedCurrency: string
+  signR: string
+  signS: string
+  signV: string
+  signatory: string
 }

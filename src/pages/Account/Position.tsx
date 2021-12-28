@@ -25,6 +25,7 @@ import { routes } from 'constants/routes'
 import ClaimSuccessModal from './modals/ClaimSuccessModal'
 import { parseBalance } from 'utils/parseAmount'
 import { BTC, USDT } from 'constants/index'
+import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 
 const THIRTY_MINUTES_MS = 1800000
 
@@ -202,6 +203,7 @@ export default function Position() {
                   })
                   .catch(err => {
                     hideModal()
+                    showModal(<MessageBox type="error">Cliam failed</MessageBox>)
                     console.error(err)
                     el.innerHTML = 'Claim'
                     el.disabled = false
