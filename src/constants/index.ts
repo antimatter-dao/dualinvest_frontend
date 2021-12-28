@@ -121,20 +121,8 @@ export const BLOCKED_ADDRESSES: string[] = [
 
 export const DUAL_INVEST_ADDRESS = '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16'
 
-export const BTC = new Token(
-  56,
-  '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
-  18,
-  'BTCB',
-  'Binance-Peg BTCB Token (BTCB)'
-)
+export const BTC = new Token(56, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'Binance-Peg BTCB Token')
 
-export const USDT = new Token(
-  56,
-  '0x55d398326f99059fF775485246999027B3197955',
-  18,
-  'BUSD',
-  'Binance-Peg BSC-USD (BSC-USD)'
-)
+export const USDT = new Token(56, '0x55d398326f99059fF775485246999027B3197955', 18, 'UST', 'Binance-Peg BSC-USD')
 
 export const NO_REFERRER = '0x0000000000000000000000000000000000000000'
