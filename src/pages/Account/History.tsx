@@ -70,7 +70,7 @@ export default function History() {
         orderId,
         productId,
         deliveryPrice,
-        `${dayjs(expiredAt * 1000).format('MMM DD, YYYY hh:mm A')}`,
+        `${dayjs(expiredAt * 1000).format('MMM DD, YYYY hh:mm A')} UTC+8`,
         <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
         // <Box key="orderId" margin="0 auto" width="max-content" display="inline-block" mt="5px">
         //   <Button
@@ -116,7 +116,7 @@ export default function History() {
         `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
           1
         )} ${investCurrency} (${amount})`,
-        dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A'),
+        dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC+8',
         <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
           {(+annualRor * 100).toFixed(2)}%
         </Typography>,

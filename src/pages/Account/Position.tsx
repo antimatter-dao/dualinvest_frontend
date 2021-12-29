@@ -27,7 +27,7 @@ import { parseBalance } from 'utils/parseAmount'
 import { BTC, USDT } from 'constants/index'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 
-const THIRTY_MINUTES_MS = 1800000
+export const THIRTY_MINUTES_MS = 1800000
 
 enum PositionMoreHeaderIndex {
   OrderID,
@@ -108,13 +108,13 @@ export default function Position() {
         const investAmount = `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
           1
         )} ${investCurrency}`
-        const deliveryDate = dayjs(+expiredAt * 1000).format('MMM DD, YYYY')
+        const deliveryDate = dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + ' UTC+8'
         const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
         const hiddenData = [
           orderId,
           productId,
           deliveryPrice,
-          `${dayjs(expiredAt * 1000).format('MMM DD, YYYY hh:mm A')}`,
+          `${dayjs(expiredAt * 1000).format('MMM DD, YYYY hh:mm A')} UTC+8`,
           status === 'progressing' ? null : <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
         ]
         hiddenList.push(hiddenData)
@@ -154,7 +154,7 @@ export default function Position() {
         )
         return [
           `${investAmount}(${amount})`,
-          dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A'),
+          dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC+8',
           <Typography color="primary" key="1" variant="inherit">
             {apy}
           </Typography>,
