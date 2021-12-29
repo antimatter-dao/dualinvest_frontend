@@ -32,7 +32,7 @@ const HistoryTableHeader = [
   'Strike Price',
   'Exercise',
   'Holding Days',
-  'Refund Amount'
+  'Execute Amount'
 ]
 
 const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '', '']
