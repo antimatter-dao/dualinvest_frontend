@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import ReactGA from 'react-ga'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
@@ -75,19 +76,34 @@ export default function WalletModal({
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
   const tryActivation = useCallback(
-    async (connector: AbstractConnector | undefined) => {
-      setPendingWallet(connector) // set wallet for pending view
+    async (connector: (() => Promise<AbstractConnector>) | AbstractConnector | undefined) => {
+      let name = ''
+      const conn = typeof connector === 'function' ? await connector() : connector
+
+      Object.keys(SUPPORTED_WALLETS).map(key => {
+        if (connector === SUPPORTED_WALLETS[key].connector) {
+          return (name = SUPPORTED_WALLETS[key].name)
+        }
+        return true
+      })
+      // log selected wallet
+      ReactGA.event({
+        category: 'Wallet',
+        action: 'Change Wallet',
+        label: name
+      })
+      setPendingWallet(conn) // set wallet for pending view
       setWalletView(WALLET_VIEWS.PENDING)
 
       // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-      if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
-        connector.walletConnectProvider = undefined
+      if (conn instanceof WalletConnectConnector && conn.walletConnectProvider?.wc?.uri) {
+        conn.walletConnectProvider = undefined
       }
 
-      connector &&
-        activate(connector, undefined, true).catch(error => {
+      conn &&
+        activate(conn, undefined, true).catch(error => {
           if (error instanceof UnsupportedChainIdError) {
-            activate(connector) // a little janky...can't use setError because the connector isn't set
+            activate(conn) // a little janky...can't use setError because the connector isn't set
           } else {
             setPendingError(true)
           }

@@ -1,6 +1,6 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Token } from './token'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+import { binance, injected, walletconnect, walletlink } from '../connectors'
 import JSBI from 'jsbi'
 import { ChainId } from './chain'
 
@@ -28,7 +28,7 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const GOVERNANCE_ADDRESS = '0x78fC5460737EB07Ce9e7d954B294ecA7E6203D19'
 
 export interface WalletInfo {
-  connector?: AbstractConnector
+  connector?: (() => Promise<AbstractConnector>) | AbstractConnector
   name: string
   iconName: string
   description: string
@@ -57,6 +57,15 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: null,
     color: '#E8831D'
   },
+  BINANCE: {
+    connector: binance,
+    name: 'Binance',
+    iconName: 'bsc.jpg',
+    description: 'Login using Binance hosted wallet',
+    href: null,
+    color: '#F0B90B',
+    mobile: true
+  },
   WALLET_CONNECT: {
     connector: walletconnect,
     name: 'WalletConnect',
@@ -82,24 +91,6 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#315CF5',
     mobile: true,
     mobileOnly: true
-  },
-  FORTMATIC: {
-    connector: fortmatic,
-    name: 'Fortmatic',
-    iconName: 'fortmaticIcon.png',
-    description: 'Login using Fortmatic hosted wallet',
-    href: null,
-    color: '#6748FF',
-    mobile: true
-  },
-  Portis: {
-    connector: portis,
-    name: 'Portis',
-    iconName: 'portisIcon.png',
-    description: 'Login using Portis hosted wallet',
-    href: null,
-    color: '#4A6C9B',
-    mobile: true
   }
 }
 
