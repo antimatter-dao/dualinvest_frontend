@@ -124,7 +124,7 @@ export default function Dashboard() {
             </Box>
           </ExternalLink>
         </Box>,
-        dayjs(+record.timestamp * 1000).format('MMM DD, YYYY hh:mm:ss A'),
+        dayjs(+record.timestamp * 1000).format('MMM DD, YYYY hh:mm:ss A') + ' UTC+8',
         <>{!isDownMd && <StatusTag key="status" status="completed" />}</>
       ]
     })
