@@ -70,7 +70,9 @@ export default function ReferalModal({ showRedirectButton = true }: { showRedire
         {showRedirectButton && (
           <Box ml="auto">
             <Button onClick={handleRedirect} width="172px" height="36px" fontSize={'14px'} style={{ borderRadius: 5 }}>
-              My Referral reward ➡️
+              <Box display="flex" alignItems="center">
+                My Referral reward &nbsp;➡️
+              </Box>
             </Button>
           </Box>
         )}
