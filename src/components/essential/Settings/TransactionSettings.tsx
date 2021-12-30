@@ -184,7 +184,7 @@ export default function TransactionSettings({
             }}
             active={rawSlippage === 100}
           >
-            1.5%
+            1%
           </Option>
           <OptionCustom active={![10, 50, 100].includes(rawSlippage)} warning={!slippageInputIsValid} tabIndex={-1}>
             <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">

@@ -70,7 +70,7 @@ export default function ConfirmModal({
                       {key}
                     </Typography>
                     <span>
-                      <QuestionHelper text="The platform will charge 1.5% of the profit as a service fee" size={11} />
+                      <QuestionHelper text="The platform will charge 2.0% of the profit as a service fee" size={11} />
                     </span>
                   </Box>
                 ) : (

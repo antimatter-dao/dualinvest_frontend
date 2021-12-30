@@ -55,7 +55,7 @@ const PositionTableHeader = [
   'Delivery Date',
   'Strike Price',
   'Exercise',
-  'Refund Amount',
+  'Execute Amount',
   'Status',
   ''
 ]

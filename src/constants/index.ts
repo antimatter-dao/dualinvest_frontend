@@ -59,7 +59,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   },
   BINANCE: {
     connector: binance,
-    name: 'Binance',
+    name: 'Binance Wallet',
     iconName: 'bsc.jpg',
     description: 'Login using Binance hosted wallet',
     href: null,
