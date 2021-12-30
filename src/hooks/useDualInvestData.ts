@@ -108,7 +108,7 @@ export function useOrderRecords(investStatus?: number | number[], pageNum?: numb
         reject(null)
       })
     return Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
-      address: account ? '0x6159346204E3c7D427A1C499Af7438AeC5588E2f' : '0x6159346204E3c7D427A1C499Af7438AeC5588E2f',
+      address: account,
       investStatus: Array.isArray(investStatus) ? undefined : investStatus,
       pageNum: Array.isArray(investStatus) ? undefined : pageNum,
       pageSize
