@@ -82,7 +82,15 @@ export function ExpireDateAQuestionHelper({ expireAt, showIcon }: { expireAt: nu
   return (
     <QuestionHelper
       text={dayjs(expireAt).format('MMM-DD-YYYY') + ' 08:30:00 AM UTC'}
-      title={showIcon ? undefined : <Typography color="#161616">{dayjs(expireAt).format('DD MMM YYYY')}</Typography>}
+      title={
+        showIcon ? (
+          undefined
+        ) : (
+          <Typography color="#161616" component="span">
+            {dayjs(expireAt).format('DD MMM YYYY')}
+          </Typography>
+        )
+      }
     />
   )
 }

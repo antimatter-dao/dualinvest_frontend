@@ -44,7 +44,7 @@ const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
   }
 }))
 
-const RowStr = styled(Typography)(({ theme }) => ({
+const RowStr = styled(Typography)<{ component?: string }>(({ theme }) => ({
   fontWeight: 400,
   [theme.breakpoints.down('md')]: {
     fontWeight: 600,
@@ -72,7 +72,7 @@ const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => voi
     <RowStr key={1} minWidth={'50px'} color="#31B047">
       {(+data.apy * 100).toFixed(2)}%
     </RowStr>,
-    <RowStr key={1}>
+    <RowStr key={1} component="div">
       <ExpireDateAQuestionHelper expireAt={data.expiredAt} showIcon={false} />
       {/* <QuestionHelper
         text={dayjs(data.expiredAt).format('MMM-DD-YYYY') + ' 08:30:00 AM UTC'}
