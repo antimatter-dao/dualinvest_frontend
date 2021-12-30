@@ -108,13 +108,13 @@ export default function Position() {
         const investAmount = `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
           1
         )} ${investCurrency}`
-        const deliveryDate = dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + ' UTC+8'
+        const deliveryDate = dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + ' UTC'
         const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
         const hiddenData = [
           orderId,
           productId,
           deliveryPrice,
-          `${dayjs(expiredAt * 1000).format('MMM DD, YYYY hh:mm A')} UTC+8`,
+          `${dayjs(expiredAt * 1000).format('MMM DD, YYYY hh:mm A')} UTC`,
           status === 'progressing' ? null : <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
         ]
         hiddenList.push(hiddenData)
@@ -154,7 +154,7 @@ export default function Position() {
         )
         return [
           `${investAmount}(${amount})`,
-          dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC+8',
+          dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC',
           <Typography color="primary" key="1" variant="inherit">
             {apy}
           </Typography>,
