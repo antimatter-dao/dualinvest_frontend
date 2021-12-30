@@ -8,12 +8,14 @@ import {
   Typography,
   styled,
   IconButton,
-  Collapse
+  Collapse,
+  TableSortLabel
 } from '@mui/material'
 import { useState } from 'react'
 import useBreakpoint from '../../hooks/useBreakpoint'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+// import { visuallyHidden } from '@mui/utils'
 
 const Profile = styled('div')(`
   display: flex;
@@ -72,6 +74,11 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
     padding: '12px 20px 12px 0',
     color: theme.palette.text.secondary,
     borderBottom: 'none',
+    '& .MuiTableSortLabel-root': {
+      fontWeight: 400,
+      fontSize: '12px!important',
+      color: theme.palette.text.secondary
+    },
     '&:first-of-type': {
       paddingLeft: 20,
       borderTopLeftRadius: 8
@@ -96,7 +103,7 @@ const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{
     background: variant === 'outlined' ? 'transparent' : theme.palette.background.default
   },
   '& .MuiTableCell-root': {
-    fontSize: fontSize ?? '16px',
+    fontSize: (fontSize ?? '16px') + '!important',
     justifyContent: 'flex-start',
     paddingLeft: 0,
     border: '1px solid',
@@ -104,7 +111,7 @@ const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{
     borderRight: 'none',
     borderLeft: 'none',
     '& .MuiTypography-root': {
-      fontSize: fontSize ?? '16px!important'
+      fontSize: (fontSize ?? '16px') + '!important'
     },
     '&:first-of-type': {
       borderLeft: '1px solid',
@@ -139,6 +146,21 @@ const Card = styled('div')({
   }
 })
 
+const sortIcon = ({ className }: { className: string }) => (
+  <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path
+      className="sort-down"
+      d="M1.0875 6.5791L3 8.48743L4.9125 6.5791L5.5 7.1666L3 9.6666L0.5 7.1666L1.0875 6.5791Z"
+      fill="#00000099"
+    />
+    <path
+      className="sort-up"
+      d="M1.0875 3.421L3 1.51266L4.9125 3.421L5.5 2.8335L3 0.333496L0.5 2.8335L1.0875 3.421Z"
+      fill="#00000099"
+    />
+  </svg>
+)
+
 const CardRow = styled('div')(`
   display: flex;
   justify-content: space-between;
@@ -160,14 +182,22 @@ export default function Table({
   variant = 'grey',
   collapsible,
   hiddenParts,
-  fontSize
+  fontSize,
+  sortHeaders,
+  order,
+  orderBy,
+  createSortfunction
 }: {
+  sortHeaders?: string[]
   header: string[]
   rows: (string | number | JSX.Element)[][]
   variant?: 'outlined' | 'grey'
   collapsible?: boolean
   hiddenParts?: JSX.Element[]
   fontSize?: string
+  order?: 'asc' | 'desc'
+  orderBy?: string
+  createSortfunction?: (label: string) => () => void
 }) {
   const matches = useBreakpoint('md')
 
@@ -209,7 +239,46 @@ export default function Table({
             <StyledTableHead>
               <TableRow>
                 {header.map((string, idx) => (
-                  <TableCell key={idx}>{string}</TableCell>
+                  <TableCell key={idx}>
+                    {sortHeaders && sortHeaders.includes(string) && order && orderBy && createSortfunction ? (
+                      <TableSortLabel
+                        active={orderBy === string}
+                        direction={orderBy === string ? order : 'asc'}
+                        onClick={createSortfunction(string)}
+                        IconComponent={sortIcon}
+                        sx={{
+                          '& .MuiTableSortLabel-icon': {
+                            transform: 'none',
+                            opacity: 1
+                          },
+                          '& .MuiTableSortLabel-iconDirectionDesc .sort-down': {
+                            fill: theme =>
+                              orderBy === string
+                                ? order === 'desc'
+                                  ? theme.palette.primary.main
+                                  : '#00000099'
+                                : '#00000099'
+                          },
+                          '& .MuiTableSortLabel-iconDirectionAsc .sort-up': {
+                            fill: theme =>
+                              orderBy === string
+                                ? order === 'asc'
+                                  ? theme.palette.primary.main
+                                  : '#00000099'
+                                : '#00000099'
+                          }
+                        }}
+                      >
+                        {string}
+
+                        {/* <Box component="span" sx={visuallyHidden}>
+                          {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                        </Box> */}
+                      </TableSortLabel>
+                    ) : (
+                      string
+                    )}
+                  </TableCell>
                 ))}
               </TableRow>
             </StyledTableHead>

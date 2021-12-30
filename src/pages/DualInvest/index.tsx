@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useHistory } from 'react-router'
 import { Box, Typography, styled, Grid } from '@mui/material'
 import { ReactComponent as DualInvestGuide } from 'assets/svg/dualInvestGuide.svg'
@@ -26,6 +26,7 @@ import { usePrice } from 'hooks/usePriceSet'
 import { trimNumberString } from 'utils/trimNumberString'
 import NoDataCard from 'components/Card/NoDataCard'
 import { useBindModal } from 'hooks/useReferralModal'
+import { ExpireDateAQuestionHelper } from 'components/essential/QuestionHelper'
 
 const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
   marginBottom: 13,
@@ -51,13 +52,33 @@ const RowStr = styled(Typography)(({ theme }) => ({
   }
 }))
 
+const headers = ['Exercise Price', 'APY', 'Delivery Date', 'Time Left', '']
+
+const comparisonFormatter = {
+  [headers[0]]: (content: any) => {
+    return content.props.children[0]
+  },
+  [headers[1]]: (content: any) => {
+    return +content.props.children[0].slice(0, -1)
+  },
+  [headers[2]]: (content: any) => {
+    return dayjs(content.props.children).valueOf()
+  }
+}
+
 const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => void) => {
   return [
     <RowStr key={1}>{data.strikePrice} USDT</RowStr>,
     <RowStr key={1} minWidth={'50px'} color="#31B047">
       {(+data.apy * 100).toFixed(2)}%
     </RowStr>,
-    <RowStr key={1}>{dayjs(data.expiredAt).format('DD MMM YYYY')}</RowStr>,
+    <RowStr key={1}>
+      <ExpireDateAQuestionHelper expireAt={data.expiredAt} showIcon={false} />
+      {/* <QuestionHelper
+        text={dayjs(data.expiredAt).format('MMM-DD-YYYY') + ' 08:30:00 AM UTC'}
+        title={<Typography color="#161616">{dayjs(data.expiredAt).format('DD MMM YYYY')}</Typography>}
+      /> */}
+    </RowStr>,
     <RowStr key={1}>{Math.floor((data.expiredAt - data.ts) / 86400000)} Days</RowStr>,
     // <CastValue key={1} unit="BTC" val={15.08} total={50} />,
     <Box
@@ -388,20 +409,51 @@ function DataTable({
   onSubscribe: (id: number) => () => void
   productList: Product[] | undefined
 }) {
+  const [orderBy, setOrderBy] = useState(headers[0])
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc')
   const isDownMd = useBreakpoint('md')
+
+  const formattedData = useMemo(() => {
+    return productList
+      ? productList.map((item: Product) => formatData(item, isDownMd, onSubscribe(item.productId)))
+      : []
+  }, [isDownMd, onSubscribe, productList])
+
+  const sortedData = useMemo(() => {
+    const idx = headers.findIndex(item => item === orderBy)
+    if (idx === undefined) return formattedData
+    return formattedData?.sort((el1, el2) => {
+      if (comparisonFormatter[orderBy](el1[idx]) > comparisonFormatter[orderBy](el2[idx])) {
+        return order === 'asc' ? 1 : -1
+      } else {
+        return order === 'asc' ? -1 : 1
+      }
+    })
+  }, [formattedData, order, orderBy])
+
+  const createSortfunction = useCallback((sortLabel: string) => {
+    const idx = headers.findIndex(item => item === sortLabel)
+    if (idx === undefined) return () => {}
+    return () => {
+      setOrderBy(sortLabel)
+      setOrder(prevOrder => {
+        return prevOrder === 'asc' ? 'desc' : 'asc'
+      })
+    }
+  }, [])
 
   return (
     <>
       {productList ? (
         <>
           <Table
+            createSortfunction={createSortfunction}
+            order={order}
+            orderBy={orderBy}
+            sortHeaders={['Exercise Price', 'APY', 'Delivery Date']}
             variant="outlined"
-            header={['Exercise Price', 'APY', 'Delivery Date', 'Time Left', '']}
-            rows={
-              productList
-                ? productList.map((item: Product) => formatData(item, isDownMd, onSubscribe(item.productId)))
-                : []
-            }
+            header={headers}
+            rows={sortedData}
           />
           {productList.length <= 0 && <NoDataCard outlined />}
         </>
