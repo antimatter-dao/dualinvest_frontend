@@ -154,11 +154,7 @@ export default function Position() {
         )
         return [
           `${investAmount}(${amount})`,
-<<<<<<< HEAD
-          dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC+8',
-=======
           dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC',
->>>>>>> e288831ef6fba91fd97c13e4564e041baaac78af
           <Typography color="primary" key="1" variant="inherit">
             {apy}
           </Typography>,
