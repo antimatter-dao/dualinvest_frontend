@@ -198,7 +198,7 @@ export default function Header() {
                         variant="text"
                         sx={{ padding: 0, marginTop: 'auto', display: 'inline' }}
                         className={'link'}
-                        style={{ padding: 0 }}
+                        style={{ padding: 0, marginBottom: 0, borderBottom: 0 }}
                         onClick={handleReferral}
                       >
                         {titleContent}

@@ -30,7 +30,7 @@ export default function ConfirmModal({
       ['Spot Price']: product?.currentPrice ?? '-' + ' USDT',
       ['APY']: product?.apy ? (+product.apy * 100).toFixed(2) + '%' : '- %',
       ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
-      ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') : '-'
+      ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') + ' 08:30:00 AM UTC' : '-'
     }),
     [product]
   )

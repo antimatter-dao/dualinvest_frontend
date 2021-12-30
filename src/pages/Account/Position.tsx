@@ -50,12 +50,12 @@ enum PositionTableHeaderIndex {
 
 const PositionTableHeader = [
   'Invest Amount\n(Subscription Amount)',
-  'Subscribed Time',
   'APY',
   'Delivery Date',
   'Strike Price',
   'Exercise',
   'Execute Amount',
+  'Subscribed Time',
   'Status',
   ''
 ]
@@ -108,13 +108,13 @@ export default function Position() {
         const investAmount = `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
           1
         )} ${investCurrency}`
-        const deliveryDate = dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + ' UTC+8'
+        const deliveryDate = dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + ' 08:30 AM UTC'
         const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
         const hiddenData = [
           orderId,
           productId,
           deliveryPrice,
-          `${dayjs(expiredAt * 1000).format('MMM DD, YYYY hh:mm A')} UTC+8`,
+          `${dayjs(expiredAt * 1000).format('MMM DD, YYYY')} 08:00 AM UTC`,
           status === 'progressing' ? null : <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
         ]
         hiddenList.push(hiddenData)
@@ -154,7 +154,6 @@ export default function Position() {
         )
         return [
           `${investAmount}(${amount})`,
-          dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC+8',
           <Typography color="primary" key="1" variant="inherit">
             {apy}
           </Typography>,
@@ -162,6 +161,7 @@ export default function Position() {
           strikePrice,
           type === 'CALL' ? 'Upward' : 'Down',
           +returnedAmount > 0 ? +returnedAmount + returnedCurrency : '--',
+          dayjs(ts * 1000).format('MMM DD, YYYY'),
           <Box display="flex" key="action" gap={isDownMd ? 10 : 8} sx={{ mr: -15 }}>
             <StatusTag status={status} width={isDownMd ? 120 : 100} />
             <ClaimButton

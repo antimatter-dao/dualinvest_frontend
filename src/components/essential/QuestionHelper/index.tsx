@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
-import { styled } from '@mui/material'
+import { styled, Typography } from '@mui/material'
 import Tooltip from './Tooltip'
+import dayjs from 'dayjs'
 
 const QuestionWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -43,7 +44,7 @@ const QuestionMark = styled('span')({
   fontSize: '1rem'
 })
 
-export default function QuestionHelper({ text, size = 14 }: { text: string; size?: number }) {
+export default function QuestionHelper({ text, size = 14, title }: { text: string; size?: number; title?: any }) {
   const [show, setShow] = useState<boolean>(false)
 
   const open = useCallback(() => setShow(true), [setShow])
@@ -53,7 +54,7 @@ export default function QuestionHelper({ text, size = 14 }: { text: string; size
     <span style={{ marginLeft: 4 }}>
       <Tooltip text={text} show={show}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <HelpOutlineOutlinedIcon sx={{ height: size, width: size }} />
+          {title ? title : <HelpOutlineOutlinedIcon sx={{ height: size, width: size }} />}
         </QuestionWrapper>
       </Tooltip>
     </span>
@@ -74,5 +75,22 @@ export function LightQuestionHelper({ text }: { text: string }) {
         </LightQuestionWrapper>
       </Tooltip>
     </span>
+  )
+}
+
+export function ExpireDateAQuestionHelper({ expireAt, showIcon }: { expireAt: number; showIcon: boolean }) {
+  return (
+    <QuestionHelper
+      text={dayjs(expireAt).format('MMM-DD-YYYY') + ' 08:30:00 AM UTC'}
+      title={
+        showIcon ? (
+          undefined
+        ) : (
+          <Typography color="#161616" component="span">
+            {dayjs(expireAt).format('DD MMM YYYY')}
+          </Typography>
+        )
+      }
+    />
   )
 }
