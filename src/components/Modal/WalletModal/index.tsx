@@ -19,6 +19,8 @@ import Option from './Option'
 import PendingView from './PendingView'
 import OutlineButton from 'components/Button/OutlineButton'
 import useBreakpoint from 'hooks/useBreakpoint'
+import Button from '../../Button/Button'
+import { ChainId, SUPPORTED_NETWORKS } from '../../../constants/chain'
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
@@ -211,6 +213,16 @@ export default function WalletModal({
               ? 'Please connect to the Binance Smart Chain.'
               : 'Error connecting. Try refreshing the page.'}
           </Box>
+          {window.ethereum && window.ethereum.isMetaMask && (
+            <Button
+              onClick={() => {
+                const params = SUPPORTED_NETWORKS[ChainId.BSC]
+                window.ethereum?.send('wallet_addEthereumChain', [params, account])
+              }}
+            >
+              Connect to BSC
+            </Button>
+          )}
         </>
       )
     }
