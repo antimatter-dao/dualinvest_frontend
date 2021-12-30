@@ -38,6 +38,7 @@ export default function AccountDetails({ toggleWalletModal, ENSName, openOptions
           SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
       )
       .map(k => SUPPORTED_WALLETS[k].name)[0]
+
     return (
       <Typography fontSize="0.825rem" fontWeight={500}>
         Connected with {name}
@@ -56,7 +57,7 @@ export default function AccountDetails({ toggleWalletModal, ENSName, openOptions
           color={theme.textColor.text3}
         >
           {formatConnectorName()}
-          {connector !== injected && connector !== walletlink && (
+          {connector !== injected && connector !== walletlink && connector?.constructor.name !== 'BscConnector' && (
             <SecondaryButton
               style={{ marginRight: '8px' }}
               onClick={() => {

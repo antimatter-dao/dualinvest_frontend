@@ -1,6 +1,6 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Token } from './token'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+import { binance, injected, walletconnect, walletlink } from '../connectors'
 import JSBI from 'jsbi'
 import { ChainId } from './chain'
 
@@ -9,7 +9,7 @@ export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16))
 
 export const BAST_TOKEN: { [chainId in ChainId]: Token } = {
   // [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'MATTER', 'Matter'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'MATTER', 'Matter'),
+  // [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'MATTER', 'Matter'),
   [ChainId.BSC]: new Token(ChainId.BSC, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'MATTER', 'Matter')
 }
 
@@ -17,7 +17,7 @@ export const ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 
 export const ANTIMATTER_ADDRESS: { [chainId in ChainId]: string } = {
   // [ChainId.MAINNET]: '0x60d0769c4940cA58648C0AA34ecdf390a10F272e',
-  [ChainId.ROPSTEN]: '0x60d0769c4940cA58648C0AA34ecdf390a10F272e',
+  // [ChainId.ROPSTEN]: '0x60d0769c4940cA58648C0AA34ecdf390a10F272e',
   [ChainId.BSC]: ''
 }
 
@@ -28,7 +28,7 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const GOVERNANCE_ADDRESS = '0x78fC5460737EB07Ce9e7d954B294ecA7E6203D19'
 
 export interface WalletInfo {
-  connector?: AbstractConnector
+  connector?: (() => Promise<AbstractConnector>) | AbstractConnector
   name: string
   iconName: string
   description: string
@@ -57,6 +57,15 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: null,
     color: '#E8831D'
   },
+  BINANCE: {
+    connector: binance,
+    name: 'Binance Wallet',
+    iconName: 'bsc.jpg',
+    description: 'Login using Binance hosted wallet',
+    href: null,
+    color: '#F0B90B',
+    mobile: true
+  },
   WALLET_CONNECT: {
     connector: walletconnect,
     name: 'WalletConnect',
@@ -82,24 +91,6 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#315CF5',
     mobile: true,
     mobileOnly: true
-  },
-  FORTMATIC: {
-    connector: fortmatic,
-    name: 'Fortmatic',
-    iconName: 'fortmaticIcon.png',
-    description: 'Login using Fortmatic hosted wallet',
-    href: null,
-    color: '#6748FF',
-    mobile: true
-  },
-  Portis: {
-    connector: portis,
-    name: 'Portis',
-    iconName: 'portisIcon.png',
-    description: 'Login using Portis hosted wallet',
-    href: null,
-    color: '#4A6C9B',
-    mobile: true
   }
 }
 
@@ -119,10 +110,10 @@ export const BLOCKED_ADDRESSES: string[] = [
   '0x8576aCC5C05D6Ce88f4e49bf65BdF0C62F91353C'
 ]
 
-export const DUAL_INVEST_ADDRESS = '0xaf20d548Bf4DAfA30d5825ba8C4C3dc1b4c0595e'
+export const DUAL_INVEST_ADDRESS = '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16'
 
-export const BTC = new Token(3, '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93', 18, 'BTC', 'Bitcoin')
+export const BTC = new Token(56, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'Binance-Peg BTCB Token')
 
-export const USDT = new Token(3, '0xE78D911B56a6321bF622172D32D916f9563e8D84', 18, 'USDT', 'Tether (USDT)')
+export const USDT = new Token(56, '0x55d398326f99059fF775485246999027B3197955', 18, 'USDT', 'Binance-Peg BSC-USDT')
 
 export const NO_REFERRER = '0x0000000000000000000000000000000000000000'

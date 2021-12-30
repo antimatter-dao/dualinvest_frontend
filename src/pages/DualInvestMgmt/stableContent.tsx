@@ -67,7 +67,7 @@ export function RiskStatement() {
             return of the purchase transaction.
           </li>
           <li>
-            The average spot price of the last 30 minutes at 12:00 (UTC+8) on the delivery date will be used as the
+            The average spot price of the last 30 minutes at 12:00 (UTC) on the delivery date will be used as the
             settlement price.
           </li>
           <li>Early redemption is not supported, and users can only get rewards after the expiry date.</li>
