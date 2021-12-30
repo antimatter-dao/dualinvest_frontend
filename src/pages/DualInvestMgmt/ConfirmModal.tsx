@@ -26,7 +26,7 @@ export default function ConfirmModal({
 
   const data = useMemo(
     () => ({
-      ['Platform service fee']: '1.5%',
+      ['Platform service fee']: '2%',
       ['Spot Price']: product?.currentPrice ?? '-' + ' USDT',
       ['APY']: product?.apy ? (+product.apy * 100).toFixed(2) + '%' : '- %',
       ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
