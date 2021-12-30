@@ -155,6 +155,11 @@ export default function SubscribeForm({
               if (InvesStatus[statusCode] === InvesStatusType.SUCCESS) {
                 clearInterval(timeoutId)
                 resolve(() => {})
+                showModal(
+                  <TransactionSubmittedModal header="Successful Subscription!">
+                    Your subscription will be shown in the position section shortly.
+                  </TransactionSubmittedModal>
+                )
 
                 // showModal(
                 //   <TransactionSubmittedModal header={'Successful Subscription!'}>

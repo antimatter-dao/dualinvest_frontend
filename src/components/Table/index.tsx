@@ -98,6 +98,7 @@ const StyledTableRow = styled(TableRow, { shouldForwardProp: () => true })<{
   borderRadius: '16px',
   overflow: 'hidden',
   position: 'relative',
+  whiteSpace: 'pre',
   background: variant === 'outlined' ? 'transparent' : theme.palette.background.default,
   '& + tr .MuiCollapse-root': {
     background: variant === 'outlined' ? 'transparent' : theme.palette.background.default
