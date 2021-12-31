@@ -72,14 +72,14 @@ const chains: ChainObject = {
   //   link: 'https://etherscan.io',
   //   builder: explorers.etherscan
   // },
-  // [ChainId.ROPSTEN]: {
-  //   link: 'https://ropsten.etherscan.io',
-  //   builder: explorers.etherscan
-  // },
-  [ChainId.BSC]: {
-    link: 'https://bscscan.com',
+  [ChainId.ROPSTEN]: {
+    link: 'https://ropsten.etherscan.io',
     builder: explorers.etherscan
   }
+  // [ChainId.BSC]: {
+  //   link: 'https://bscscan.com',
+  //   builder: explorers.etherscan
+  // }
 }
 
 export function getEtherscanLink(

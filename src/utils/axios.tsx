@@ -2,7 +2,8 @@ import axios, { AxiosResponse, AxiosPromise } from 'axios'
 import { retry } from 'utils/retry'
 
 const axiosInstance = axios.create({
-  baseURL: 'https://dualinvest-api.antimatter.finance/web/',
+  // baseURL: 'https://dualinvest-api.antimatter.finance/web/',
+  baseURL: 'https://dualinvest-testapi.antimatter.finance/web/',
   timeout: 10000,
   headers: { 'content-type': 'application/json', accept: 'application/json' }
 })
