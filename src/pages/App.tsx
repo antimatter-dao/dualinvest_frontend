@@ -1,5 +1,5 @@
 import { Suspense, useEffect } from 'react'
-import { Route, Switch, Redirect, useLocation } from 'react-router-dom'
+import { Route, Switch, useLocation } from 'react-router-dom'
 import { styled } from '@mui/material'
 import Header from '../components/Header'
 import Polling from '../components/essential/Polling'
@@ -15,6 +15,8 @@ import Spinner from 'components/Spinner'
 import { fetchLocation } from 'utils/fetch/location'
 import Account from './Account'
 import { BindModalProvider } from 'context/BindContext'
+import Home from './Home'
+import ChainOption from './ChainOption'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -74,9 +76,8 @@ export default function App() {
                       <Route exact strict path={routes.dualInvest} component={DualInvest} />
                       <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
                       <Route exact strict path={routes.dualInvestMgmtImg} component={DualInvestMgmt} />
-                      <Route path="/">
-                        <Redirect to={routes.dualInvest} />
-                      </Route>
+                      <Route exact strict path={routes.chainOption} component={ChainOption} />
+                      <Route path={routes.home} component={Home} />
                     </Switch>
                   </LocatoinVerification>
                 </BindModalProvider>

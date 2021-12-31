@@ -26,7 +26,14 @@ interface Tab extends TabContent {
 }
 
 export const Tabs: Tab[] = [
-  { title: 'Dual Investment', route: routes.dualInvest },
+  {
+    title: 'Invest',
+    subTab: [
+      { title: 'Dual Investment', route: routes.dualInvest },
+      { title: 'Chain-type Option', route: routes.chainOption }
+    ]
+  },
+  // { title: 'Dual Investment', route: routes.dualInvest },
   { title: 'Account', route: routes.account.replace(':tab', 'dashboard') },
   { title: 'DAO', link: 'https://dao.antimatter.finance/#/' },
   { title: 'Docs', link: 'https://docs.antimatter.finance/' },
@@ -57,7 +64,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   boxShadow: 'none',
-  padding: '0 60px 0 0',
+  padding: '0 60px 0 0!important',
   zIndex: theme.zIndex.drawer,
   borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
   // [theme.breakpoints.down('md')]: {
@@ -86,14 +93,14 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   },
   [theme.breakpoints.down('lg')]: {
     '& .link': { marginRight: 15 },
-    padding: '0 24px 0 0'
+    padding: '0 24px 0 0!important'
   },
   [theme.breakpoints.down('md')]: {
     position: 'fixed'
   },
   [theme.breakpoints.down('sm')]: {
     height: theme.height.mobileHeader,
-    padding: '0 20px'
+    padding: '0 20px!important'
   }
 }))
 
@@ -124,9 +131,9 @@ const MainLogo = styled(NavLink)(({ theme }) => ({
 }))
 
 const LinksWrapper = muiStyled('div')(({ theme }) => ({
-  marginLeft: 60.2,
+  marginLeft: 60,
   [theme.breakpoints.down('lg')]: {
-    marginLeft: 20
+    marginLeft: 0
   }
 }))
 
@@ -156,36 +163,43 @@ export default function Header() {
             <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
                 subTab ? (
-                  <PlainSelect placeholder={title} key={title + idx} autoFocus={false}>
-                    {subTab.map((sub, idx) =>
-                      sub.link ? (
-                        <MenuItem
-                          key={sub.link + idx}
-                          sx={{ backgroundColor: 'transparent!important', background: 'transparent!important' }}
-                          selected={false}
-                        >
-                          <ExternalLink
-                            href={sub.link}
-                            className={'link'}
-                            color="#00000050"
-                            sx={{
-                              '&:hover': {
-                                color: '#232323!important'
-                              }
-                            }}
+                  <Box sx={{ marginRight: { xs: 15, lg: 48 }, display: 'inline-block' }}>
+                    <PlainSelect
+                      placeholder={title}
+                      key={title + idx}
+                      autoFocus={false}
+                      width={title === 'Invest' ? '70px' : undefined}
+                    >
+                      {subTab.map((sub, idx) =>
+                        sub.link ? (
+                          <MenuItem
+                            key={sub.link + idx}
+                            sx={{ backgroundColor: 'transparent!important', background: 'transparent!important' }}
+                            selected={false}
                           >
-                            {sub.titleContent ?? sub.title}
-                          </ExternalLink>
-                        </MenuItem>
-                      ) : (
-                        <MenuItem key={sub.title + idx}>
-                          <NavLink to={sub.route ?? ''} className={'link'}>
-                            {sub.titleContent ?? sub.title}
-                          </NavLink>
-                        </MenuItem>
-                      )
-                    )}
-                  </PlainSelect>
+                            <ExternalLink
+                              href={sub.link}
+                              className={'link'}
+                              color="#00000050"
+                              sx={{
+                                '&:hover': {
+                                  color: '#232323!important'
+                                }
+                              }}
+                            >
+                              {sub.titleContent ?? sub.title}
+                            </ExternalLink>
+                          </MenuItem>
+                        ) : (
+                          <MenuItem key={sub.title + idx}>
+                            <NavLink to={sub.route ?? ''} className={'link'}>
+                              {sub.titleContent ?? sub.title}
+                            </NavLink>
+                          </MenuItem>
+                        )
+                      )}
+                    </PlainSelect>
+                  </Box>
                 ) : link ? (
                   <ExternalLink href={link} className={'link'} key={link + idx} style={{ fontSize: 14 }}>
                     {titleContent ?? title}
