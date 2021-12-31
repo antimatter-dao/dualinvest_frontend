@@ -9,6 +9,8 @@ import dayjs from 'dayjs'
 import QuestionHelper from 'components/essential/QuestionHelper'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 
+const feeRate = '3%'
+
 export default function ConfirmModal({
   isOpen,
   onDismiss,
@@ -26,7 +28,7 @@ export default function ConfirmModal({
 
   const data = useMemo(
     () => ({
-      ['Platform service fee']: '3%',
+      ['Platform service fee']: feeRate,
       ['Spot Price']: product?.currentPrice ?? '-' + ' USDT',
       ['APY']: product?.apy ? (+product.apy * 100).toFixed(2) + '%' : '- %',
       ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
@@ -70,7 +72,10 @@ export default function ConfirmModal({
                       {key}
                     </Typography>
                     <span>
-                      <QuestionHelper text="The platform will charge 2.0% of the profit as a service fee" size={11} />
+                      <QuestionHelper
+                        text={`The platform will charge ${feeRate} of the profit as a service fee`}
+                        size={11}
+                      />
                     </span>
                   </Box>
                 ) : (
