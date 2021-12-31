@@ -133,6 +133,7 @@ export default function ChainOption() {
 
   return (
     <Box
+      id="chain_option"
       display="grid"
       justifyItems={{ xs: 'flex-start', md: 'center' }}
       width="100%"
@@ -158,22 +159,14 @@ export default function ChainOption() {
         >
           <Box display="grid" gap={12}>
             <Typography component="h1" sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700 }}>
-              Dual Investment
+              Chain-type Option
             </Typography>
             <Box display={{ xs: 'grid', md: 'flex' }} gap={{ xs: 8, md: 32 }} paddingBottom={{ xs: 16, md: 30 }}>
               <LogoText
                 logo={<Image src={checkUrl} />}
                 text={
                   <Typography sx={{ fontSize: { xs: 14, md: 18 }, opacity: 0.8 }}>
-                    Earn fixed yield on idle assets
-                  </Typography>
-                }
-              />
-              <LogoText
-                logo={<Image src={checkUrl} />}
-                text={
-                  <Typography sx={{ fontSize: { xs: 14, md: 18 }, opacity: 0.8 }}>
-                    Earn on both ups and downs
+                    Easy to access，enjoy high returns
                   </Typography>
                 }
               />

@@ -1,5 +1,5 @@
 import { Suspense, useEffect } from 'react'
-import { Route, Switch, useLocation } from 'react-router-dom'
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { styled } from '@mui/material'
 import Header from '../components/Header'
 import Polling from '../components/essential/Polling'
@@ -70,14 +70,17 @@ export default function App() {
                 <BindModalProvider>
                   <LocatoinVerification resource={resource}>
                     <Switch>
+                      <Route exact strict path={routes.home} component={Home} />
+                      <Route exact strict path={routes.chainOption} component={ChainOption} />
                       <Route exact strict path={routes.noService} component={NoService} />
                       <Route exact strict path={routes.account} component={Account} />
                       <Route exact strict path={routes.referral} component={DualInvest} />
                       <Route exact strict path={routes.dualInvest} component={DualInvest} />
                       <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
                       <Route exact strict path={routes.dualInvestMgmtImg} component={DualInvestMgmt} />
-                      <Route exact strict path={routes.chainOption} component={ChainOption} />
-                      <Route path={routes.home} component={Home} />
+                      <Route path="/">
+                        <Redirect to={routes.home} />
+                      </Route>
                     </Switch>
                   </LocatoinVerification>
                 </BindModalProvider>

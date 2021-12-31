@@ -4,10 +4,12 @@ import LogoText from 'components/LogoText'
 import checkUrl from 'assets/images/check.png'
 import Image from 'components/Image'
 import NumericalCard from 'components/Card/NumericalCard'
-
+import Button from 'components/Button/Button'
 import securityUrl from 'assets/images/security.png'
 import highReturnUrl from 'assets/images/high_return.png'
 import flexibleUrl from 'assets/images/flexible.png'
+import dualInvestUrl from 'assets/svg/home_dual_invest.svg'
+import chainOptionUrl from 'assets/svg/home_chain_option.svg'
 import Card from 'components/Card/Card'
 
 const StyledHomeSvg = styled(HomeSvg)(({ theme }) => ({
@@ -75,7 +77,7 @@ export default function Home() {
         id="up"
         display="grid"
         width="100%"
-        gap={8}
+        gap={80}
         margin={{ xs: '0px 20px' }}
         sx={{
           maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
@@ -120,14 +122,46 @@ export default function Home() {
             />
           </Grid>
         </Grid>
+        <Box display="grid" gap={32}>
+          <Typography fontSize={48} fontWeight={700}>
+            Dual Investment
+          </Typography>
+          <Grid container spacing={20}>
+            <ProductCard
+              src={dualInvestUrl}
+              title="Dual Investment"
+              synospis="Earn both ups and downs within a fluctuation range"
+            />
+            <ProductCard
+              disabled
+              src={dualInvestUrl}
+              title="Dual Investment Plus"
+              synospis="Dual Investment standard + advanced settings"
+            />
+          </Grid>
+        </Box>
+        <Box display="grid" gap={32}>
+          <Typography fontSize={48} fontWeight={700}>
+            Chain Option
+          </Typography>
+          <Grid container spacing={20}>
+            <ProductCard
+              src={chainOptionUrl}
+              title="Saddle Options"
+              synospis="Suitable to buy wh en the price will fluctuate for a period of time"
+            />
+            <ProductCard
+              src={chainOptionUrl}
+              title="Tiered Options"
+              synospis="Suitable for buying when the price will continue to rise or fall for a period of time"
+            />
+          </Grid>
+        </Box>
 
-        <Box
-          display="flex"
-          alignContent="center"
-          justifyContent="center"
-          maxWidth={theme => ({ xs: `calc(100vw - 40px)`, md: theme.width.maxContent })}
-          margin={{ xs: '0px 20px' }}
-        >
+        <Box display="grid" gap={32}>
+          <Typography fontSize={48} fontWeight={700}>
+            Features
+          </Typography>
           <Grid container sx={{ justifyContent: 'space-between' }} spacing={20}>
             <Grid item xs={12} md={4}>
               <FeatureCard
@@ -179,5 +213,54 @@ function FeatureCard({ icon, title, content }: { icon: JSX.Element; title: strin
         <Typography sx={{ color: theme => theme.palette.text.secondary, fontSize: 16 }}>{content}</Typography>
       </Box>
     </Card>
+  )
+}
+
+function ProductCard({
+  src,
+  title,
+  synospis,
+  disabled,
+  actionText
+}: {
+  src: string
+  title: string
+  synospis: string
+  disabled?: boolean
+  actionText?: string
+}) {
+  return (
+    <Grid item xs={12} sm={6}>
+      <Card>
+        <Box
+          padding="32px 24px"
+          display="grid"
+          gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }}
+          rowGap={25}
+          columnGap={20}
+        >
+          <Box>
+            <Typography fontSize={24} fontWeight={700}>
+              {title}
+            </Typography>
+            <Typography sx={{ color: theme => theme.palette.text.secondary }}>{synospis}</Typography>
+          </Box>
+
+          <Button disabled={disabled}>{disabled ? 'Coming soon' : actionText ?? 'Start now'}</Button>
+          <Image
+            src={src}
+            style={{
+              opacity: disabled ? 0.5 : 1,
+              marginLeft: 'auto',
+              gridRowStart: { xs: '2', md: '1' },
+              gridRowEnd: { xs: 'span 1', md: 'span 2' },
+              height: '100%',
+              width: '100%',
+              gridColumnStart: { xs: 'unset', md: '2' }
+            }}
+          />
+        </Box>
+      </Card>
+    </Grid>
   )
 }
