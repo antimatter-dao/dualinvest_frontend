@@ -84,6 +84,7 @@ export default function Select(props: Props) {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
+        onClick={handleClose}
         TransitionComponent={Fade}
         sx={{
           '& .MuiPaper-root': {

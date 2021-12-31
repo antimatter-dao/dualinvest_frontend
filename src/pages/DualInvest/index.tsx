@@ -10,9 +10,6 @@ import NumericalCard from 'components/Card/NumericalCard'
 import Button from 'components/Button/Button'
 // import antimatterBlackCircle from 'assets/svg/antimatter_circle_black.svg'
 import Card from 'components/Card/Card'
-import securityUrl from 'assets/images/security.png'
-import highReturnUrl from 'assets/images/high_return.png'
-import flexibleUrl from 'assets/images/flexible.png'
 // import { Progress, SimpleProgress } from 'components/Progress'
 import { routes } from 'constants/routes'
 import useBreakpoint from 'hooks/useBreakpoint'
@@ -356,48 +353,6 @@ export default function DualInvest() {
         </Box>
         <DataTable onSubscribe={handleSubscribe} productList={productList?.put} />
       </Box>
-      <Box
-        display="flex"
-        alignContent="center"
-        justifyContent="center"
-        maxWidth={theme => ({ xs: `calc(100vw - 40px)`, md: theme.width.maxContent })}
-        margin={{ xs: '0px 20px' }}
-      >
-        <Grid container sx={{ justifyContent: 'space-between' }} spacing={20}>
-          <Grid item xs={12} md={4}>
-            <FeatureCard
-              icon={
-                <Image
-                  src={securityUrl}
-                  style={{
-                    width: 56,
-                    height: 56,
-                    objectFit: 'contain',
-                    WebkitTransform: 'scaleX(-1)',
-                    transform: 'scaleX(-1)'
-                  }}
-                />
-              }
-              title="Security"
-              content="Top-level security infrastructure and risk control measures to protect asset safety"
-            />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <FeatureCard
-              icon={<Image src={highReturnUrl} style={{ width: 56, height: 56, objectFit: 'contain' }} />}
-              title="High Return"
-              content="We ensure your APY gets locked in on subscription. Enjoy high fixed yield!"
-            />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <FeatureCard
-              icon={<Image src={flexibleUrl} style={{ width: 56, height: 56, objectFit: 'contain' }} />}
-              title="Flexible Experience"
-              content="High flexibility and low barriers for participation "
-            />
-          </Grid>
-        </Grid>
-      </Box>
     </Box>
   )
 }
@@ -461,20 +416,6 @@ function DataTable({
         <Spinner marginLeft="auto" marginRight="auto" size={60} style={{ marginTop: '40px' }} />
       )}
     </>
-  )
-}
-
-function FeatureCard({ icon, title, content }: { icon: JSX.Element; title: string; content: string }) {
-  return (
-    <Card style={{ height: '100%' }}>
-      <Box display="grid" sx={{ '& img': { mixBlendMode: 'multiply' }, padding: '30px 24px' }} height="100%" gap={15}>
-        {icon}
-        <Typography sx={{ mt: 20 }} fontWeight={700} fontSize={24}>
-          {title}
-        </Typography>
-        <Typography sx={{ color: theme => theme.palette.text.secondary, fontSize: 16 }}>{content}</Typography>
-      </Box>
-    </Card>
   )
 }
 

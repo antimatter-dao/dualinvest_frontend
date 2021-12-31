@@ -56,6 +56,18 @@ export const Tabs: Tab[] = [
   }
 ]
 
+const navLinkSX = ({ theme }: any) => ({
+  textDecoration: 'none',
+  fontSize: 14,
+  color: theme.palette.text.primary,
+  opacity: 0.5,
+  '&:hover': {
+    opacity: 1
+  }
+})
+
+const StyledNavLink = styled(NavLink)(navLinkSX)
+
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   position: 'relative',
   height: theme.height.header,
@@ -192,9 +204,7 @@ export default function Header() {
                           </MenuItem>
                         ) : (
                           <MenuItem key={sub.title + idx}>
-                            <NavLink to={sub.route ?? ''} className={'link'}>
-                              {sub.titleContent ?? sub.title}
-                            </NavLink>
+                            <StyledNavLink to={sub.route ?? ''}>{sub.titleContent ?? sub.title}</StyledNavLink>
                           </MenuItem>
                         )
                       )}
