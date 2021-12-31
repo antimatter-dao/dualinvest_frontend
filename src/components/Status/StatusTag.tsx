@@ -21,7 +21,7 @@ const statusStyles: { [key in StatusType]: Style } = {
     borderColor: '#18A0FB'
   },
   finished: {
-    statusText: 'Recruited',
+    statusText: 'Finished',
     color: '#31B047',
     bgColor: 'transparent',
     borderColor: '#31B047'
