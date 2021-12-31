@@ -216,7 +216,7 @@ export default function WalletModal({
           {window.ethereum && window.ethereum.isMetaMask && (
             <Button
               onClick={() => {
-                const params = SUPPORTED_NETWORKS[ChainId.BSC]
+                const params = SUPPORTED_NETWORKS[ChainId.ROPSTEN]
                 window.ethereum?.send('wallet_addEthereumChain', [params, account])
               }}
             >
