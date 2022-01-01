@@ -50,8 +50,8 @@ function TokenHeader({ token }: { token: Currency }) {
       <CurrencyLogo currency={token} size="32px" />
       <Box>
         <Typography fontSize={16}>{token.symbol}</Typography>
-        <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-          {token.name}
+        <Typography fontSize={12} sx={{}}>
+          <span style={{ opacity: 0.5, fontSize: '12px' }}>{token.name}</span>
         </Typography>
       </Box>
     </Box>
@@ -422,7 +422,7 @@ function BalanceActions({
   buyHref: string
 }) {
   return (
-    <Box display="flex" key="action" gap={10} pl={30}>
+    <Box display="flex" key="action" gap={10} pl={20}>
       <Button fontSize={14} style={{ maxWidth: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
         Deposit
       </Button>
