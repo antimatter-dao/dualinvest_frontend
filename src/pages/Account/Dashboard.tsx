@@ -422,7 +422,7 @@ function BalanceActions({
   buyHref: string
 }) {
   return (
-    <Box display="flex" key="action" gap={10}>
+    <Box display="flex" key="action" gap={10} pl={30}>
       <Button fontSize={14} style={{ maxWidth: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
         Deposit
       </Button>
