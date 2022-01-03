@@ -19,7 +19,7 @@ import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
 import { useAccountRecord } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
-import { BTC, USDT } from 'constants/index'
+import { BTC, ETH, USDT, MATTER } from 'constants/index'
 import Spinner from 'components/Spinner'
 import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
@@ -67,15 +67,19 @@ export default function Dashboard() {
   const isDownMd = useBreakpoint('md')
   const [page, setPage] = useState(1)
   const btcPrice = usePrice('BTC', 30000)
+  const ethPrice = usePrice('ETH', 30000)
+  const matterPrice = usePrice('MATTER', 30000)
   const accountBalances = useAccountBalances()
   const { accountRecord, pageParams } = useAccountRecord(page)
 
   const indexPrices = useMemo(() => {
     return {
       BTC: btcPrice,
+      ETH: ethPrice,
+      MATTER: matterPrice,
       USDT: 1
     }
-  }, [btcPrice])
+  }, [btcPrice, ethPrice, matterPrice])
 
   const totalInvest = useMemo(() => {
     if (!accountBalances) return '-'
@@ -169,6 +173,25 @@ export default function Dashboard() {
             />
           ],
           [
+            <TokenHeader key="eth" token={ETH} />,
+            accountBalances?.ETH?.totalInvest ?? '-',
+            accountBalances?.ETH?.available ?? '-',
+            accountBalances?.ETH?.locked ?? '-',
+            accountBalances?.ETH?.pnl ?? '-',
+            <BalanceActions
+              key="1"
+              onDeposit={() => {
+                setCurrentCurrency(ETH)
+                handleDepositOpen()
+              }}
+              onWithdraw={() => {
+                setCurrentCurrency(ETH)
+                handleWithdrawOpen()
+              }}
+              buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x2170ed0880ac9a755fd29b2688956bd959f933f8"
+            />
+          ],
+          [
             <TokenHeader key="usdt" token={USDT} />,
             accountBalances?.USDT?.totalInvest ?? '-',
             accountBalances?.USDT?.available ?? '-',
@@ -185,6 +208,25 @@ export default function Dashboard() {
                 handleWithdrawOpen()
               }}
               buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x55d398326f99059ff775485246999027b3197955"
+            />
+          ],
+          [
+            <TokenHeader key="matter" token={MATTER} />,
+            accountBalances?.MATTER?.totalInvest ?? '-',
+            accountBalances?.MATTER?.available ?? '-',
+            accountBalances?.MATTER?.locked ?? '-',
+            accountBalances?.MATTER?.pnl ?? '-',
+            <BalanceActions
+              key="1"
+              onDeposit={() => {
+                setCurrentCurrency(MATTER)
+                handleDepositOpen()
+              }}
+              onWithdraw={() => {
+                setCurrentCurrency(MATTER)
+                handleWithdrawOpen()
+              }}
+              buyHref="https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x9b99cca871be05119b2012fd4474731dd653febe"
             />
           ]
         ]
