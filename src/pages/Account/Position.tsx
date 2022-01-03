@@ -114,7 +114,7 @@ export default function Position() {
           orderId,
           productId,
           deliveryPrice,
-          `${dayjs(expiredAt * 1000).format('MMM DD, YYYY')} 08:00 AM UTC`,
+          `${dayjs(expiredAt * 1000).format('MMM DD, YYYY')} 08:30 AM UTC`,
           status === 'progressing' ? null : <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
         ]
         hiddenList.push(hiddenData)
