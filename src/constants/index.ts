@@ -116,4 +116,9 @@ export const BTC = new Token(3, '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93', 18
 
 export const USDT = new Token(3, '0xE78D911B56a6321bF622172D32D916f9563e8D84', 18, 'USDT', 'Tether (USDT)')
 
+export const ETH = new Token(3, '0x81b7E08F65Bdf5648606c89998A9CC8164397647', 18, 'ETH', 'Ethereum')
+
+//Test-Matter address
+export const MATTER = new Token(3, '0x60d0769c4940cA58648C0AA34ecdf390a10F272e', 18, 'MATTER', 'Antimatter')
+
 export const NO_REFERRER = '0x0000000000000000000000000000000000000000'
