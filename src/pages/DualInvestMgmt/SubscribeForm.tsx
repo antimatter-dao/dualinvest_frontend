@@ -12,7 +12,6 @@ import { BlackButton } from 'components/Button/Button'
 import { OutlinedCard } from 'components/Card/Card'
 import ConfirmModal from './ConfirmModal'
 import { useActiveWeb3React } from 'hooks'
-import { BTC, USDT } from 'constants/index'
 import { Axios } from 'utils/axios'
 import useModal from 'hooks/useModal'
 import ActionModal, { ActionType } from 'pages/Account/modals/ActionModal'
@@ -26,6 +25,7 @@ import { InvesStatus, InvesStatusType, OrderRecord } from 'utils/fetch/product'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useDualInvestCallback } from 'hooks/useDualInvest'
 import { trimNumberString } from 'utils/trimNumberString'
+import { CURRENCIES } from 'constants/currencies'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -46,7 +46,7 @@ export default function SubscribeForm({
   const theme = useTheme()
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
-  const [currentCurrency, setCurrentCurrency] = useState(BTC)
+  const [currentCurrency, setCurrentCurrency] = useState(CURRENCIES.BTC)
   const [pending, setPending] = useState(false)
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const multiplier = product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1
@@ -231,14 +231,16 @@ export default function SubscribeForm({
   }, [handleSubscribe])
 
   useEffect(() => {
-    product?.type === 'CALL' ? setCurrentCurrency(BTC) : setCurrentCurrency(USDT)
-  }, [product?.type])
+    product?.type === 'CALL'
+      ? setCurrentCurrency(CURRENCIES[product.strikeCurrency])
+      : setCurrentCurrency(CURRENCIES.USDT)
+  }, [product?.strikeCurrency, product?.type])
 
   return (
     <>
       <ConfirmModal isOpen={isConfirmOpen} onDismiss={hideConfirm} onConfirm={handleConfirm} amount={amount} />
       <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
-      <Box display="grid" flexDirection="column" gap={16} height="100%" width="100%" padding="36px 24px">
+      <Box display="flex" flexDirection="column" gap={16} height="100%" width="100%" padding="36px 24px">
         {Object.keys(data).map((key, idx) => (
           <Box key={idx} display="flex" justifyContent="space-between">
             <Typography fontSize={16} sx={{ opacity: 0.8 }}>

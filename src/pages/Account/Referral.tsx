@@ -3,7 +3,7 @@ import { Typography, useTheme, Box, Container } from '@mui/material'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import Card from 'components/Card/Card'
 import NumericalCard from 'components/Card/NumericalCard'
-import { BTC, NO_REFERRER, USDT } from 'constants/index'
+import { NO_REFERRER } from 'constants/index'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import LogoText from 'components/LogoText'
 import Button from 'components/Button/Button'
@@ -15,6 +15,7 @@ import TextButton from 'components/Button/TextButton'
 import { usePrice } from 'hooks/usePriceSet'
 import { trimNumberString } from 'utils/trimNumberString'
 import { shortenAddress } from 'utils'
+import { CURRENCIES } from 'constants/currencies'
 
 export default function Referral() {
   const theme = useTheme()
@@ -98,13 +99,13 @@ export default function Referral() {
             </Button>
           </NumericalCard>
           <Card padding="16px 22px 28px" gray>
-            <LogoText logo={<CurrencyLogo currency={BTC} />} text="BTC" />
+            <LogoText logo={<CurrencyLogo currency={CURRENCIES.BTC} />} text="BTC" />
             <Typography fontSize={24} fontWeight={700} mt={19}>
               {btcBalance}
             </Typography>
           </Card>
           <Card padding="16px 22px 28px" gray>
-            <LogoText logo={<CurrencyLogo currency={USDT} />} text="USDT" />
+            <LogoText logo={<CurrencyLogo currency={CURRENCIES.USDT} />} text="USDT" />
             <Typography fontSize={24} fontWeight={700} mt={19}>
               {usdtBalance}
             </Typography>

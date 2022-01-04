@@ -24,8 +24,8 @@ import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
 import ClaimSuccessModal from './modals/ClaimSuccessModal'
 import { parseBalance } from 'utils/parseAmount'
-import { BTC, USDT } from 'constants/index'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
+import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
 
 export const THIRTY_MINUTES_MS = 1800000
 
@@ -177,11 +177,9 @@ export default function Position() {
                   .then(({ r, returnedAmount, returnedCurrency, earned }) => {
                     hideModal()
                     addTransaction(r, {
-                      summary: `Claim ${parseBalance(
-                        returnedAmount,
-                        returnedCurrency == BTC.address ? BTC : USDT,
-                        6
-                      )} ${returnedCurrency == BTC.address ? BTC.symbol : USDT.symbol}`
+                      summary: `Claim ${parseBalance(returnedAmount, CURRENCY_ADDRESS_MAP[returnedCurrency], 6)} ${
+                        CURRENCY_ADDRESS_MAP[returnedCurrency]?.symbol
+                      }`
                     })
                     el.innerHTML = 'Claim'
 
@@ -197,7 +195,11 @@ export default function Position() {
                         deliveryDate={deliveryDate}
                         investAmount={investAmount}
                         earn={earned}
-                        returnedCurrency={returnedCurrency == BTC.address ? BTC.symbol ?? '' : USDT.symbol ?? ''}
+                        returnedCurrency={
+                          CURRENCY_ADDRESS_MAP[returnedCurrency]
+                            ? CURRENCY_ADDRESS_MAP[returnedCurrency]?.symbol ?? ''
+                            : ''
+                        }
                       />
                     )
                   })

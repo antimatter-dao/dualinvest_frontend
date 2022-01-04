@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
+import dayjs from 'dayjs'
 import { Container, Box, Typography, useTheme } from '@mui/material'
 import Card from 'components/Card/Card'
 import Table from 'components/Table'
@@ -18,14 +19,13 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
 import { useAccountRecord } from 'hooks/useDualInvestData'
-import dayjs from 'dayjs'
-import { BTC, USDT } from 'constants/index'
 import Spinner from 'components/Spinner'
 import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
 import { usePrice } from 'hooks/usePriceSet'
 import { useAccountBalances } from 'hooks/useAccountBalance'
 import { toChecksumAddress } from 'web3-utils'
+import { CURRENCIES } from 'constants/currencies'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -150,7 +150,7 @@ export default function Dashboard() {
     return accountBalances
       ? [
           [
-            <TokenHeader key="btc" token={BTC} />,
+            <TokenHeader key="btc" token={CURRENCIES.BTC} />,
             accountBalances?.BTC?.totalInvest ?? '-',
             accountBalances?.BTC?.available ?? '-',
             accountBalances?.BTC?.locked ?? '-',
@@ -158,18 +158,18 @@ export default function Dashboard() {
             <BalanceActions
               key="1"
               onDeposit={() => {
-                setCurrentCurrency(BTC)
+                setCurrentCurrency(CURRENCIES.BTC)
                 handleDepositOpen()
               }}
               onWithdraw={() => {
-                setCurrentCurrency(BTC)
+                setCurrentCurrency(CURRENCIES.BTC)
                 handleWithdrawOpen()
               }}
               buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c"
             />
           ],
           [
-            <TokenHeader key="usdt" token={USDT} />,
+            <TokenHeader key="usdt" token={CURRENCIES.USDT} />,
             accountBalances?.USDT?.totalInvest ?? '-',
             accountBalances?.USDT?.available ?? '-',
             accountBalances?.USDT?.locked ?? '-',
@@ -177,11 +177,11 @@ export default function Dashboard() {
             <BalanceActions
               key="1"
               onDeposit={() => {
-                setCurrentCurrency(USDT)
+                setCurrentCurrency(CURRENCIES.USDT)
                 handleDepositOpen()
               }}
               onWithdraw={() => {
-                setCurrentCurrency(USDT)
+                setCurrentCurrency(CURRENCIES.USDT)
                 handleWithdrawOpen()
               }}
               buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x55d398326f99059ff775485246999027b3197955"
