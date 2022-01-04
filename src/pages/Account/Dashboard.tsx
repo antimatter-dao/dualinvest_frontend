@@ -50,8 +50,8 @@ function TokenHeader({ token }: { token: Currency }) {
       <CurrencyLogo currency={token} size="32px" />
       <Box>
         <Typography fontSize={16}>{token.symbol}</Typography>
-        <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-          {token.name}
+        <Typography fontSize={12} sx={{}}>
+          <span style={{ opacity: 0.5, fontSize: '12px' }}>{token.name}</span>
         </Typography>
       </Box>
     </Box>
@@ -265,7 +265,7 @@ export default function Dashboard() {
                       }}
                       style={{
                         position: 'absolute',
-                        right: '24px',
+                        right: '180px',
                         bottom: '20px',
                         width: 148,
                         height: 44,
@@ -274,6 +274,20 @@ export default function Dashboard() {
                     >
                       Invest
                     </Button>
+                    <OutlineButton
+                      href={'https://exchange.chainswap.com/'}
+                      primary
+                      style={{
+                        position: 'absolute',
+                        right: '20px',
+                        bottom: '20px',
+                        width: 148,
+                        height: 44,
+                        fontSize: 14
+                      }}
+                    >
+                      Bridge
+                    </OutlineButton>
                   </NumericalCard>
                 )}
 
@@ -422,17 +436,17 @@ function BalanceActions({
   buyHref: string
 }) {
   return (
-    <Box display="flex" key="action" gap={10}>
-      <Button fontSize={14} style={{ maxWidth: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
+    <Box display="flex" key="action" gap={10} pl={20}>
+      <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
         Deposit
       </Button>
-      <Button fontSize={14} style={{ maxWidth: 92, borderRadius: 4, height: 36 }} onClick={onWithdraw}>
+      <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onWithdraw}>
         Withdraw
       </Button>
       <OutlineButton
         href={buyHref}
         fontSize={14}
-        style={{ maxWidth: 92, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
+        style={{ width: 72, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
         primary
       >
         Swap

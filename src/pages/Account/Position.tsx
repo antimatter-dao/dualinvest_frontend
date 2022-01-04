@@ -51,11 +51,11 @@ enum PositionTableHeaderIndex {
 const PositionTableHeader = [
   'Invest Amount\n(Subscription Amount)',
   'APY',
-  'Delivery Date',
+  'Subscribed Time',
   'Strike Price',
   'Exercise',
   'Execute Amount',
-  'Subscribed Time',
+  'Delivery Date',
   'Status',
   ''
 ]
@@ -114,7 +114,7 @@ export default function Position() {
           orderId,
           productId,
           deliveryPrice,
-          `${dayjs(expiredAt * 1000).format('MMM DD, YYYY')} 08:00 AM UTC`,
+          `${dayjs(expiredAt * 1000).format('MMM DD, YYYY')} 08:30 AM UTC`,
           status === 'progressing' ? null : <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
         ]
         hiddenList.push(hiddenData)
@@ -157,11 +157,11 @@ export default function Position() {
           <Typography color="primary" key="1" variant="inherit">
             {apy}
           </Typography>,
-          deliveryDate,
+          dayjs(ts * 1000).format('MMM DD, YYYY'),
           strikePrice,
           type === 'CALL' ? 'Upward' : 'Down',
           +returnedAmount > 0 ? +returnedAmount + returnedCurrency : '--',
-          dayjs(ts * 1000).format('MMM DD, YYYY'),
+          deliveryDate,
           <Box display="flex" key="action" gap={isDownMd ? 10 : 8} sx={{ mr: -15 }}>
             <StatusTag status={status} width={isDownMd ? 120 : 100} />
             <ClaimButton

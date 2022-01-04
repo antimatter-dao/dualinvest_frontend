@@ -23,6 +23,9 @@ export default function CurrencyLogo({
     if (currency?.symbol === BTC.symbol) {
       return [BtcLogo]
     }
+    if (currency?.symbol === 'BTCB') {
+      return [BtcLogo]
+    }
     if (currency?.symbol === USDT.symbol) {
       return [UsdtLogo]
     }

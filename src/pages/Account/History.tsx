@@ -27,12 +27,12 @@ enum HistoryMoreHeaderIndex {
 const HistoryTableHeader = [
   'Invest Amount\n(Subscription Amount)',
   'APY',
-  'Delivery Date',
+  'Subscribed Time',
   'Strike Price',
   'Exercise',
   'Holding Days',
   'Execute Amount',
-  'Subscribed Time'
+  'Delivery Date'
 ]
 
 const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '', '']
@@ -70,7 +70,7 @@ export default function History() {
         orderId,
         productId,
         deliveryPrice,
-        `${dayjs(expiredAt * 1000).format('MMM DD, YYYY')} 08:00 AM UTC`,
+        `${dayjs(expiredAt * 1000).format('MMM DD, YYYY')} 08:30 AM UTC`,
         <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
         // <Box key="orderId" margin="0 auto" width="max-content" display="inline-block" mt="5px">
         //   <Button
@@ -119,12 +119,12 @@ export default function History() {
         <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
           {(+annualRor * 100).toFixed(2)}%
         </Typography>,
-        dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + '\n08:30 AM UTC',
+        dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC',
         strikePrice,
         type === 'CALL' ? 'Upward' : 'Down',
         `${dayjs().diff(dayjs(ts * 1000), 'day')} days`,
         `${returnedAmount} ${returnedCurrency}`,
-        dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC'
+        dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + '\n08:30 AM UTC'
       ]
     })
     setHiddenParts(hiddenPartsList)

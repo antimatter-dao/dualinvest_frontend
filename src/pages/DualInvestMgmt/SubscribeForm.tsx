@@ -257,7 +257,7 @@ export default function SubscribeForm({
 
         <InputNumerical
           smallPlaceholder
-          placeholder={`Each value represents ${
+          placeholder={`Each unit represents ${
             product ? (+product.multiplier * multiplier).toFixed(1) : '-'
           } ${product?.investCurrency || ''}`}
           disabled={!product || !account || isConfirmed}
