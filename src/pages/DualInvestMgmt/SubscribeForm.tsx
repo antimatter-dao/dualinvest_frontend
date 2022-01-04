@@ -6,7 +6,7 @@ import InputLabel from 'components/Input/InputLabel'
 import TextButton from 'components/Button/TextButton'
 import { OutlinedCard } from 'components/Card/Card'
 import { useActiveWeb3React } from 'hooks'
-import { BTC, feeRate, USDT } from 'constants/index'
+import { feeRate } from 'constants/index'
 import { Axios } from 'utils/axios'
 import useModal from 'hooks/useModal'
 import ActionModal, { ActionType } from 'pages/Account/modals/ActionModal'
@@ -21,6 +21,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { useDualInvestCallback } from 'hooks/useDualInvest'
 import { trimNumberString } from 'utils/trimNumberString'
 import { MgmtForm } from 'components/MgmtForm'
+import { CURRENCIES } from 'constants/currencies'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -38,7 +39,7 @@ export default function SubscribeForm({
   setAmount: (val: string) => void
   id: string
 }) {
-  const [currentCurrency, setCurrentCurrency] = useState(BTC)
+  const [currentCurrency, setCurrentCurrency] = useState(CURRENCIES.BTC)
   const [pending, setPending] = useState(false)
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const multiplier = product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1
@@ -211,8 +212,10 @@ export default function SubscribeForm({
   )
 
   useEffect(() => {
-    product?.type === 'CALL' ? setCurrentCurrency(BTC) : setCurrentCurrency(USDT)
-  }, [product?.type])
+    product?.type === 'CALL'
+      ? setCurrentCurrency(CURRENCIES[product.strikeCurrency])
+      : setCurrentCurrency(CURRENCIES.USDT)
+  }, [product?.strikeCurrency, product?.type])
 
   return (
     <>

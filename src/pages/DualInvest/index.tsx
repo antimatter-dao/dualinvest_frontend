@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useHistory } from 'react-router'
+import dayjs from 'dayjs'
 import { Box, Typography, styled, Grid } from '@mui/material'
 import { ReactComponent as DualInvestGuide } from 'assets/svg/dualInvestGuide.svg'
 import checkUrl from 'assets/images/check.png'
@@ -16,14 +17,13 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import { Product } from 'utils/fetch/product'
 import Spinner from 'components/Spinner'
 import { useProductList, useStatistics } from 'hooks/useDualInvestData'
-import dayjs from 'dayjs'
-import { BTC, USDT } from 'constants/index'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { usePrice } from 'hooks/usePriceSet'
 import { trimNumberString } from 'utils/trimNumberString'
 import NoDataCard from 'components/Card/NoDataCard'
 import { useBindModal } from 'hooks/useReferralModal'
 import { ExpireDateAQuestionHelper } from 'components/essential/QuestionHelper'
+import { CURRENCIES } from 'constants/currencies'
 
 const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
   marginBottom: 13,
@@ -228,7 +228,7 @@ export default function DualInvest() {
         >
           <Box display="grid" columnGap={20} rowGap={8}>
             <CurrencyLogo
-              currency={BTC}
+              currency={CURRENCIES.BTC}
               size="64px"
               style={{
                 gridRowStart: 1,
@@ -303,7 +303,7 @@ export default function DualInvest() {
         >
           <Box display="grid" columnGap={20} rowGap={8}>
             <CurrencyLogo
-              currency={USDT}
+              currency={CURRENCIES.USDT}
               size="64px"
               style={{
                 gridRowStart: 1,

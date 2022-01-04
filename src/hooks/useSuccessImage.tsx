@@ -5,8 +5,8 @@ import CryptoJs from 'crypto-js'
 import { Axios } from 'utils/axios'
 import { OrderRecord } from 'utils/fetch/product'
 import useModal from './useModal'
-import { USDT, BTC } from 'constants/index'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
+import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
 
 export function useSuccessImage(orderId: string) {
   const [, setOrder] = useState(undefined)
@@ -64,7 +64,9 @@ export function useSuccessImage(orderId: string) {
           investAmount={investAmount}
           earn={earned}
           exercised={exercised}
-          returnedCurrency={returnedCurrency == BTC.address ? BTC.symbol ?? '' : USDT.symbol ?? ''}
+          returnedCurrency={
+            CURRENCY_ADDRESS_MAP[returnedCurrency] ? CURRENCY_ADDRESS_MAP[returnedCurrency]?.symbol ?? '' : ''
+          }
         />
       )
       // const meta1 = document.createElement('meta')
@@ -132,7 +134,9 @@ export function useShowClaimSuccessModal() {
           investAmount={investAmount}
           earn={earn}
           exercised={exercised}
-          returnedCurrency={returnedCurrency == BTC.address ? BTC.symbol ?? '' : USDT.symbol ?? ''}
+          returnedCurrency={
+            CURRENCY_ADDRESS_MAP[returnedCurrency] ? CURRENCY_ADDRESS_MAP[returnedCurrency]?.symbol ?? '' : ''
+          }
         />
       )
     },
