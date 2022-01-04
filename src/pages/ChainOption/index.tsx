@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useHistory } from 'react-router'
-import { Box, Typography, styled, Grid } from '@mui/material'
+import { Box, Typography, styled, Grid, ButtonBase } from '@mui/material'
 import { ReactComponent as DualInvestGuide } from 'assets/svg/dualInvestGuide.svg'
 import checkUrl from 'assets/images/check.png'
 import Image from 'components/Image'
@@ -195,6 +195,16 @@ export default function ChainOption() {
       </Box>
 
       <Box
+        display="flex"
+        gap={20}
+        width="100%"
+        sx={{ maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent }) }}
+      >
+        <OptionTab text="Saddle Option" selected onClick={() => {}} />
+        <OptionTab text="Tiered Option" onClick={() => {}} />
+      </Box>
+
+      <Box
         display="grid"
         width="100%"
         gap={8}
@@ -271,5 +281,23 @@ function DataTable({
         <Spinner marginLeft="auto" marginRight="auto" size={60} style={{ marginTop: '40px' }} />
       )}
     </>
+  )
+}
+
+function OptionTab({ text, selected, onClick }: { text: string; selected?: boolean; onClick: () => void }) {
+  return (
+    <ButtonBase
+      onClick={onClick}
+      sx={{
+        width: 144,
+        height: 44,
+        background: theme => theme.palette.background.paper,
+        borderRadius: '10px',
+        border: theme => (selected ? `1px solid ${theme.palette.primary.main}` : 'none'),
+        color: theme => (selected ? theme.palette.text.primary : theme.palette.text.secondary)
+      }}
+    >
+      {text}
+    </ButtonBase>
   )
 }
