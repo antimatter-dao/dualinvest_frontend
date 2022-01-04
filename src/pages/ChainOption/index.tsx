@@ -105,7 +105,7 @@ export default function ChainOption() {
 
   const handleSubscribe = useCallback(
     (id: number) => () => {
-      history.push(routes.dualInvestMgmt.replace(':id', id + ''))
+      history.push(routes.chainOptionMgmt.replace(':id', id + ''))
     },
     [history]
   )
