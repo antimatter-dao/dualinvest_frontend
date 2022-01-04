@@ -42,7 +42,7 @@ export function usePriceSet(symbol: string | undefined) {
   return priceSet
 }
 
-export function usePrice(symbol: string | undefined, delay = 3000) {
+export function usePrice(symbol: string | undefined, delay = 5000) {
   const [price, setPrice] = useState<undefined | string>(undefined)
 
   useEffect(() => {
