@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useCallback } from 'react'
+import React, { ChangeEvent, useState, useCallback } from 'react'
 import { Box, Typography, useTheme } from '@mui/material'
 import Divider from 'components/Divider'
 import InputNumerical from 'components/Input/InputNumerical'
@@ -6,38 +6,57 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import ActionButton from 'components/Button/ActionButton'
 import { BlackButton } from 'components/Button/Button'
 import ActionModal, { ActionType } from 'pages/Account/modals/ActionModal'
+import { useWalletModalToggle } from 'state/application/hooks'
+import { Token } from 'constants/token'
+import { Product } from 'utils/fetch/product'
+import ConfirmModal from 'pages/DualInvestMgmt/ConfirmModal'
+
+enum ErrorType {
+  insufficientBalance = 'Insufficient Balance',
+  singleLimitExceed = 'Single Limit Exceeded'
+}
 
 export function MgmtForm({
   data,
   inputPlaceholder,
-  inputDisabled,
-  actionDisabled,
   amount,
   onChange,
   onMax,
   error,
   children,
-  isConfirmed,
   account,
   pending,
-  onSubscribe
+  onSubscribe,
+  currentCurrency,
+  product,
+  confirmData
 }: {
   data: { [key: string]: any }
+  confirmData: { [key: string]: any }
   inputPlaceholder: string
-  inputDisabled: boolean
   amount: string
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   onMax: () => void
   error: string | undefined
   children: React.ReactNode
-  isConfirmed: boolean
-  account: string | undefined
+  account: string | undefined | null
   pending: boolean
-  onSubscribe: () => void
+  onSubscribe: (setIsConfirmed: (isConfirmed: boolean) => void) => void
+  currentCurrency: Token
+  product: Product | undefined
 }) {
   const [isDepositOpen, setIsDepositOpen] = useState(false)
+  const [isConfirmed, setIsConfirmed] = useState(false)
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const theme = useTheme()
   const toggleWallet = useWalletModalToggle()
+
+  const showConfirm = useCallback(() => {
+    setIsConfirmOpen(true)
+  }, [])
+  const hideConfirm = useCallback(() => {
+    setIsConfirmOpen(false)
+  }, [])
 
   const showDeposit = useCallback(() => {
     setIsDepositOpen(true)
@@ -47,8 +66,25 @@ export function MgmtForm({
     setIsDepositOpen(false)
   }, [])
 
+  const handleSubscribe = useCallback(() => {
+    onSubscribe(boolean => setIsConfirmed(boolean))
+  }, [onSubscribe])
+
+  const handleConfirm = useCallback(() => {
+    setIsConfirmed(true)
+    setIsConfirmOpen(false)
+    handleSubscribe
+  }, [handleSubscribe])
+
   return (
     <>
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        onDismiss={hideConfirm}
+        onConfirm={handleConfirm}
+        amount={amount}
+        data={confirmData}
+      />
       <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
       <Box display="grid" flexDirection="column" gap={16} height="100%" width="100%" padding="36px 24px">
         {Object.keys(data).map((key, idx) => (
@@ -69,8 +105,9 @@ export function MgmtForm({
 
         <InputNumerical
           smallPlaceholder
+          onDeposit={children ? undefined : showDeposit}
           placeholder={inputPlaceholder}
-          disabled={disabled}
+          disabled={!product || !account || isConfirmed}
           value={amount}
           onMax={onMax}
           label={'Subscription Amount'}
@@ -96,7 +133,7 @@ export function MgmtForm({
             pending={pending}
             pendingText={'Pending'}
             error={!amount ? 'Please Input Amount' : ''}
-            onAction={onSubscribe}
+            onAction={handleSubscribe}
             actionText=" Subscribe"
             disableAction={!product?.isActive ? true : !!error}
             successText={'Ended'}

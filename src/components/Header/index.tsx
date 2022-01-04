@@ -175,13 +175,8 @@ export default function Header() {
             <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
                 subTab ? (
-                  <Box sx={{ marginRight: { xs: 15, lg: 48 }, display: 'inline-block' }}>
-                    <PlainSelect
-                      placeholder={title}
-                      key={title + idx}
-                      autoFocus={false}
-                      width={title === 'Invest' ? '70px' : undefined}
-                    >
+                  <Box sx={{ marginRight: { xs: 15, lg: 48 }, display: 'inline-block' }} key={title + idx}>
+                    <PlainSelect placeholder={title} autoFocus={false} width={title === 'Invest' ? '70px' : undefined}>
                       {subTab.map((sub, idx) =>
                         sub.link ? (
                           <MenuItem
@@ -215,7 +210,7 @@ export default function Header() {
                     {titleContent ?? title}
                   </ExternalLink>
                 ) : title === 'Referral' ? (
-                  <React.Fragment key={'referral'}>
+                  <React.Fragment key={'referral' + idx}>
                     {account && (
                       <MuiButton
                         disableRipple={true}

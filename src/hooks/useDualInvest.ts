@@ -12,6 +12,7 @@ export function useDualInvestBalance(token?: Token) {
   const contract = useDualInvestContract()
   const { account } = useActiveWeb3React()
   const args = useMemo(() => [token?.address ?? '', account ?? undefined], [account, token])
+
   const balanceRes = useSingleCallResult(token ? contract : null, 'balances', args)
 
   return useMemo(() => {
