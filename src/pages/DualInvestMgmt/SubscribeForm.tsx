@@ -235,6 +235,7 @@ export default function SubscribeForm({
         pending={pending}
         onSubscribe={handleSubscribe}
         currentCurrency={currentCurrency}
+        infoText={"Once subscribed the APY will get locked in, the product can't be cancelled after subscription."}
       >
         <Box>
           <Box display="flex" justifyContent="space-between">

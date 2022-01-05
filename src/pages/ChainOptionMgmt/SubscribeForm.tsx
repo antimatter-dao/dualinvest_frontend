@@ -85,10 +85,11 @@ export default function SubscribeForm({
 
   const data = useMemo(
     () => ({
-      ['Spot Price']: product?.currentPrice ?? '-' + ' USDT',
-      ['APY']: product?.apy ? (+product.apy * 100).toFixed(2) + '%' : '- %',
-      ['Strike Price']: product?.strikePrice || '-' + ' USDT',
-      ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') + ' 08:30:00 AM UTC' : '-'
+      ['Estimated APY']: '140.25%',
+      ['Upper Limit']: '500 USDT',
+      ['Starting Time']: dayjs('2022-11-11').format('DD MMM YYYY HH:MM A'),
+      ['Time Interval']: '1 Hour',
+      ['Cycle']: '24 Hours'
     }),
     [product]
   )
@@ -224,9 +225,7 @@ export default function SubscribeForm({
         confirmData={confirmData}
         product={product}
         data={data}
-        inputPlaceholder={`Each unit represents ${
-          product ? (+product.multiplier * multiplier).toFixed(1) : '-'
-        } ${product?.investCurrency || ''}`}
+        inputPlaceholder={'0.00'}
         amount={amount}
         onChange={handleChange}
         onMax={handleMax}
@@ -235,50 +234,11 @@ export default function SubscribeForm({
         pending={pending}
         onSubscribe={handleSubscribe}
         currentCurrency={currentCurrency}
-      >
-        <Box>
-          <Box display="flex" justifyContent="space-between">
-            <InputLabel>Investment Amount</InputLabel>
-            <Box display="flex" alignItems="baseline">
-              {!!balance && (
-                <InputLabel style={{ fontSize: '12px' }}>
-                  Available: {balance || '-'} {product ? product.investCurrency : ''}
-                </InputLabel>
-              )}
-
-              <TextButton fontSize={12} color="#11BF2D" style={{ marginLeft: 8 }} onClick={showDeposit}>
-                Deposit
-              </TextButton>
-            </Box>
-          </Box>
-          <OutlinedCard>
-            <Box height="60px" display="flex" alignItems="center" padding="16px" justifyContent="space-between">
-              {product && (
-                <>
-                  <Typography component="span" color="primary" fontSize={16}>
-                    {(+product.multiplier * +amount * multiplier).toFixed(2)} {product.investCurrency}
-                  </Typography>
-                  <Typography component="span" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
-                    ={+amount}*{product.multiplier} {product.currency}
-                    {product?.type !== 'CALL' ? `*${product.strikePrice}` : ''}
-                  </Typography>
-                </>
-              )}
-            </Box>
-          </OutlinedCard>
-          <Box display="flex" mt={12} justifyContent="space-between">
-            <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-              <span>Min: {product ? +product.multiplier * multiplier + ' ' + product.investCurrency : '-'}</span>
-            </Typography>
-            <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-              <span>
-                Max:{' '}
-                {product ? +product.orderLimit * +product.multiplier * multiplier + ' ' + product.investCurrency : '-'}
-              </span>
-            </Typography>
-          </Box>
-        </Box>
-      </MgmtForm>
+        balance={'3087.09'}
+        subStr={'Amount per serving: 100.00 USDT'}
+        unit={'Serving'}
+        infoText={'Once subscribed, the subscribed products cannot be cancelled.'}
+      />
     </>
   )
 }

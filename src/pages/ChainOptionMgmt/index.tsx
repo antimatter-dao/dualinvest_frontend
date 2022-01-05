@@ -65,17 +65,15 @@ export default function DualInvestMgmt() {
           Return on investment:
         </Typography>
         <StyledUnorderList>
+          <li>Start at 11-29 09:00.</li>
           <li>
-            When the final settlement price &gt; {strikePrice} USDT, you will receive{' '}
-            <span style={{ color: theme.palette.text.primary }}>{gtStr}</span>.
+            If the BTC price can stay within the following range within 24 hours, that is, Start price-500≤BTC/USDT
+            price≤Start price+500, you will receive{' '}
+            <span style={{ color: theme.palette.text.primary }}>220.00USDT</span>.
           </li>
           <li>
-            When the settlement price is &le; {strikePrice} USDT, you will receive{' '}
-            <span style={{ color: theme.palette.text.primary }}>{ltStr}</span>.
-          </li>
-          <li>
-            APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully complete the
-            subscription.
+            If the BTC price exceeds the above range within 24 hours, it will be knocked out and your total income will
+            be settled.
           </li>
         </StyledUnorderList>
       </div>
@@ -114,11 +112,11 @@ export default function DualInvestMgmt() {
         <Box padding={isDownMd ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
           <Box mb={isDownMd ? 24 : 60} display="flex" gap={8} flexDirection={isDownMd ? 'column' : 'row'}>
             <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
-              {product?.currency} Financial Management
+              {product?.currency} Saddle Option
             </Typography>
-            <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={400} component="span">
+            {/* <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={400} component="span">
               [{type === 'CALL' ? 'upward' : 'down'} exercise]
-            </Typography>
+            </Typography> */}
           </Box>
           <Grid container spacing={20}>
             <Grid xs={12} md={4} item position="relative">
@@ -166,19 +164,11 @@ export default function DualInvestMgmt() {
                     <Typography fontSize={{ xs: 20, md: 24 }} fontWeight={700}>
                       Purchase expected income graph
                     </Typography>
-                    <Box display="flex" alignItems="center" gap={24}>
-                      <Box display="flex" alignItems="center" gap={8}>
-                        <Box height={10} width={10} borderRadius="50%" bgcolor="#18A0FB" />
-                        <Typography fontSize={12} color="#18A0FB">
-                          Spot Price
-                        </Typography>
-                      </Box>
-                      <Box fontSize={12} display="flex" alignItems="center" gap={8}>
-                        <Box height={10} width={10} borderRadius="50%" bgcolor="#F0B90B" />
-                        <Typography fontSize={12} color="#F0B90B">
-                          Strike Price
-                        </Typography>
-                      </Box>
+                    <Box display="flex" alignItems="center" gap={8}>
+                      <Box height={10} width={10} borderRadius="50%" bgcolor="#18A0FB" />
+                      <Typography fontSize={12} color="#18A0FB">
+                        Spot Price
+                      </Typography>
                     </Box>
                   </Box>
                   <Box sx={{ maxWidth: '100vw', height: '100%', flexGrow: 1 }} mt={20}>
