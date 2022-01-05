@@ -1,6 +1,8 @@
 import { Token } from './token'
 import BtcLogo from 'assets/svg/btc_logo.svg'
 import UsdtLogo from 'assets/svg/usdt_logo.svg'
+import EthLogo from 'assets/svg/eth_logo.svg'
+import MatterLogo from 'assets/svg/antimatter_circle_black.svg'
 
 export const SYMBOL_MAP = {
   BTC: 'BTC',
@@ -31,6 +33,20 @@ export const SUPPORTED_CURRENCIES: {
     symbol: 'USDT',
     name: 'Binance-Peg BSC-USDT',
     logoUrl: UsdtLogo
+  },
+  ETH: {
+    address: '0x81b7E08F65Bdf5648606c89998A9CC8164397647',
+    decimals: 18,
+    symbol: 'ETH',
+    name: 'Ethereum',
+    logoUrl: EthLogo
+  },
+  MATTER: {
+    address: '0x60d0769c4940cA58648C0AA34ecdf390a10F272e',
+    decimals: 18,
+    symbol: 'MATTER',
+    name: 'Antimatter',
+    logoUrl: MatterLogo
   }
 }
 

@@ -87,7 +87,13 @@ export function useAccountBalances(): {
   const usdtCallbackFn = useCallback(r => setUsdtRes(assetBalanceFormatter(r.data.data)), [])
 
   const ethPromiseFn = useCallback(
-    () => Axios.post('getUserAssets', undefined, { account, chainId, currency: ETH.address, symbol: ETH.symbol }),
+    () =>
+      Axios.post('getUserAssets', undefined, {
+        account,
+        chainId,
+        currency: CURRENCIES.ETH.address,
+        symbol: CURRENCIES.ETH.symbol
+      }),
     [account, chainId]
   )
   const ethCallbackFn = useCallback(r => {
@@ -95,7 +101,13 @@ export function useAccountBalances(): {
   }, [])
 
   const matterPromiseFn = useCallback(
-    () => Axios.post('getUserAssets', undefined, { account, chainId, currency: MATTER.address, symbol: MATTER.symbol }),
+    () =>
+      Axios.post('getUserAssets', undefined, {
+        account,
+        chainId,
+        currency: CURRENCIES.MATTER.address,
+        symbol: CURRENCIES.MATTER.symbol
+      }),
     [account, chainId]
   )
   const matterCallbackFn = useCallback(r => {
