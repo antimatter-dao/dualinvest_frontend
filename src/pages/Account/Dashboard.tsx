@@ -281,7 +281,7 @@ export default function Dashboard() {
 
                 {isDownMd ? (
                   <InvestmentValueCard
-                    value={(+totalInvest).toLocaleString(undefined, {
+                    value={(+totalInvest).toLocaleString('en-US', {
                       minimumFractionDigits: 6,
                       maximumFractionDigits: 6
                     })}
@@ -290,7 +290,7 @@ export default function Dashboard() {
                   />
                 ) : (
                   <NumericalCard
-                    value={(+totalInvest).toLocaleString(undefined, {
+                    value={(+totalInvest).toLocaleString('en-US', {
                       minimumFractionDigits: 6,
                       maximumFractionDigits: 6
                     })}
