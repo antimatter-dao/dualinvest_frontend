@@ -113,12 +113,6 @@ export const BLOCKED_ADDRESSES: string[] = [
 // export const DUAL_INVEST_ADDRESS = '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16'
 
 export const DUAL_INVEST_ADDRESS = '0xaf20d548Bf4DAfA30d5825ba8C4C3dc1b4c0595e'
-// ropsten
-
-export const ETH = new Token(3, '0x81b7E08F65Bdf5648606c89998A9CC8164397647', 18, 'ETH', 'Ethereum')
-
-//Test-Matter address
-export const MATTER = new Token(3, '0x60d0769c4940cA58648C0AA34ecdf390a10F272e', 18, 'MATTER', 'Antimatter')
 
 export const NO_REFERRER = '0x0000000000000000000000000000000000000000'
 
