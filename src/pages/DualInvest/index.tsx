@@ -103,7 +103,9 @@ export default function DualInvest() {
                   value={
                     statistics && BTCPrice
                       ? trimNumberString(
-                          (+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit).toLocaleString(),
+                          (+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit).toLocaleString(
+                            'en-US'
+                          ),
                           0
                         )
                       : '-'
@@ -116,7 +118,9 @@ export default function DualInvest() {
               <Grid item xs={12} md={6}>
                 <NumericalCard
                   width={isDownMd ? '320px' : '264px'}
-                  value={statistics ? trimNumberString((+statistics.totalInvestAmount).toLocaleString(), 0) : '-'}
+                  value={
+                    statistics ? trimNumberString((+statistics.totalInvestAmount).toLocaleString('en-US'), 0) : '-'
+                  }
                   unit="USDT"
                   border
                   subValue="Cumulative Investment Amount"
