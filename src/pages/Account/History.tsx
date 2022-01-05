@@ -70,7 +70,7 @@ export default function History() {
         orderId,
         productId,
         deliveryPrice,
-        `${dayjs(expiredAt * 1000).format('MMM DD, YYYY')} 08:00 AM UTC`,
+        `${dayjs(expiredAt * 1000).format('MMM DD, YYYY')} 08:30 AM UTC`,
         <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
         // <Box key="orderId" margin="0 auto" width="max-content" display="inline-block" mt="5px">
         //   <Button
