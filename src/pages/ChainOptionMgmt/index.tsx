@@ -40,7 +40,7 @@ export default function DualInvestMgmt() {
   const priceSet = usePriceSet(product?.currency)
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
-  const type = product?.type
+  // const type = product?.type
   const gtStr = `${product && amount ? (+product.gtStrikePrice * +amount * +product.multiplier).toFixed(4) : '-'} ${
     product ? (product.type === 'CALL' ? product?.strikeCurrency : product?.investCurrency) : ''
   } `

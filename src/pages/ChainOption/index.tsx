@@ -20,6 +20,11 @@ import NoDataCard from 'components/Card/NoDataCard'
 import { useBindModal } from 'hooks/useReferralModal'
 import { ExpireDateAQuestionHelper } from 'components/essential/QuestionHelper'
 
+enum TYPE {
+  Saddle = 'Saddle',
+  Tiered = 'Tiered'
+}
+
 const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
   marginBottom: 13,
   '& #dualInvestGuide': {
@@ -96,6 +101,7 @@ const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => voi
 }
 
 export default function ChainOption() {
+  const [type, setType] = useState(TYPE.Saddle)
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
   const productList = useProductList()
@@ -200,8 +206,16 @@ export default function ChainOption() {
         width="100%"
         sx={{ maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent }) }}
       >
-        <OptionTab text="Saddle Option" selected onClick={() => {}} />
-        <OptionTab text="Tiered Option" onClick={() => {}} />
+        <OptionTab
+          text={`${TYPE.Saddle} Option`}
+          selected={type === TYPE.Saddle}
+          onClick={() => setType(TYPE.Saddle)}
+        />
+        <OptionTab
+          text={`${TYPE.Tiered} Option`}
+          selected={type === TYPE.Tiered}
+          onClick={() => setType(TYPE.Tiered)}
+        />
       </Box>
 
       <Box
