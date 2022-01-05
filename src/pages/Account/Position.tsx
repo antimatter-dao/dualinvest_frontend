@@ -236,7 +236,7 @@ export default function Position() {
             <NumericalCard
               title="BTC latest spot price"
               value={
-                price ? (+price).toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 }) : '-'
+                price ? (+price).toLocaleString('en-US', { minimumFractionDigits: 6, maximumFractionDigits: 6 }) : '-'
               }
               border={true}
             />
