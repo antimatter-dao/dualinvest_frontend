@@ -1,41 +1,29 @@
-import { useMemo } from 'react'
+import { useParams } from 'react-router-dom'
 import { Box, Typography, useTheme } from '@mui/material'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import Button from 'components/Button/Button'
 import Modal from 'components/Modal'
-import { useParams } from 'react-router-dom'
 import { useProduct } from 'hooks/useDualInvestData'
 import Divider from 'components/Divider'
-import dayjs from 'dayjs'
 import QuestionHelper from 'components/essential/QuestionHelper'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-
-const feeRate = '3%'
+import { feeRate } from 'constants/index'
 
 export default function ConfirmModal({
   isOpen,
   onDismiss,
   onConfirm,
-  amount
+  amount,
+  data
 }: {
   isOpen: boolean
   onDismiss: () => void
   onConfirm: () => void
   amount: string
+  data: { [key: string]: any }
 }) {
   const { id } = useParams<{ id: string }>()
   const product = useProduct(id)
   const theme = useTheme()
-
-  const data = useMemo(
-    () => ({
-      ['Platform service fee']: feeRate,
-      ['Spot Price']: product?.currentPrice ?? '-' + ' USDT',
-      ['APY']: product?.apy ? (+product.apy * 100).toFixed(2) + '%' : '- %',
-      ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
-      ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') + ' 08:30:00 AM UTC' : '-'
-    }),
-    [product]
-  )
 
   return (
     <Modal customIsOpen={isOpen} customOnDismiss={onDismiss} padding="35px 32px 37px" closeIcon>

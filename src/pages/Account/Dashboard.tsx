@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
+import dayjs from 'dayjs'
 import { Container, Box, Typography, useTheme } from '@mui/material'
 import Card from 'components/Card/Card'
 import Table from 'components/Table'
@@ -18,14 +19,13 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
 import { useAccountRecord } from 'hooks/useDualInvestData'
-import dayjs from 'dayjs'
-import { BTC, ETH, USDT, MATTER } from 'constants/index'
 import Spinner from 'components/Spinner'
 import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
 import { usePrice } from 'hooks/usePriceSet'
 import { useAccountBalances } from 'hooks/useAccountBalance'
 import { toChecksumAddress } from 'web3-utils'
+import { CURRENCIES } from 'constants/currencies'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -50,8 +50,8 @@ function TokenHeader({ token }: { token: Currency }) {
       <CurrencyLogo currency={token} size="32px" />
       <Box>
         <Typography fontSize={16}>{token.symbol}</Typography>
-        <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-          {token.name}
+        <Typography fontSize={12} sx={{}}>
+          <span style={{ opacity: 0.5, fontSize: '12px' }}>{token.name}</span>
         </Typography>
       </Box>
     </Box>
@@ -154,7 +154,7 @@ export default function Dashboard() {
     return accountBalances
       ? [
           [
-            <TokenHeader key="btc" token={BTC} />,
+            <TokenHeader key="btc" token={CURRENCIES.BTC} />,
             accountBalances?.BTC?.totalInvest ?? '-',
             accountBalances?.BTC?.available ?? '-',
             accountBalances?.BTC?.locked ?? '-',
@@ -162,18 +162,18 @@ export default function Dashboard() {
             <BalanceActions
               key="1"
               onDeposit={() => {
-                setCurrentCurrency(BTC)
+                setCurrentCurrency(CURRENCIES.BTC)
                 handleDepositOpen()
               }}
               onWithdraw={() => {
-                setCurrentCurrency(BTC)
+                setCurrentCurrency(CURRENCIES.BTC)
                 handleWithdrawOpen()
               }}
               buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c"
             />
           ],
           [
-            <TokenHeader key="eth" token={ETH} />,
+            <TokenHeader key="eth" token={CURRENCIES.ETH} />,
             accountBalances?.ETH?.totalInvest ?? '-',
             accountBalances?.ETH?.available ?? '-',
             accountBalances?.ETH?.locked ?? '-',
@@ -181,18 +181,18 @@ export default function Dashboard() {
             <BalanceActions
               key="1"
               onDeposit={() => {
-                setCurrentCurrency(ETH)
+                setCurrentCurrency(CURRENCIES.ETH)
                 handleDepositOpen()
               }}
               onWithdraw={() => {
-                setCurrentCurrency(ETH)
+                setCurrentCurrency(CURRENCIES.ETH)
                 handleWithdrawOpen()
               }}
               buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x2170ed0880ac9a755fd29b2688956bd959f933f8"
             />
           ],
           [
-            <TokenHeader key="usdt" token={USDT} />,
+            <TokenHeader key="usdt" token={CURRENCIES.USDT} />,
             accountBalances?.USDT?.totalInvest ?? '-',
             accountBalances?.USDT?.available ?? '-',
             accountBalances?.USDT?.locked ?? '-',
@@ -200,18 +200,18 @@ export default function Dashboard() {
             <BalanceActions
               key="1"
               onDeposit={() => {
-                setCurrentCurrency(USDT)
+                setCurrentCurrency(CURRENCIES.USDT)
                 handleDepositOpen()
               }}
               onWithdraw={() => {
-                setCurrentCurrency(USDT)
+                setCurrentCurrency(CURRENCIES.USDT)
                 handleWithdrawOpen()
               }}
               buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x55d398326f99059ff775485246999027b3197955"
             />
           ],
           [
-            <TokenHeader key="matter" token={MATTER} />,
+            <TokenHeader key="matter" token={CURRENCIES.MATTER} />,
             accountBalances?.MATTER?.totalInvest ?? '-',
             accountBalances?.MATTER?.available ?? '-',
             accountBalances?.MATTER?.locked ?? '-',
@@ -219,11 +219,11 @@ export default function Dashboard() {
             <BalanceActions
               key="1"
               onDeposit={() => {
-                setCurrentCurrency(MATTER)
+                setCurrentCurrency(CURRENCIES.MATTER)
                 handleDepositOpen()
               }}
               onWithdraw={() => {
-                setCurrentCurrency(MATTER)
+                setCurrentCurrency(CURRENCIES.MATTER)
                 handleWithdrawOpen()
               }}
               buyHref="https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x9b99cca871be05119b2012fd4474731dd653febe"
@@ -307,7 +307,7 @@ export default function Dashboard() {
                       }}
                       style={{
                         position: 'absolute',
-                        right: '24px',
+                        right: '180px',
                         bottom: '20px',
                         width: 148,
                         height: 44,
@@ -316,6 +316,20 @@ export default function Dashboard() {
                     >
                       Invest
                     </Button>
+                    <OutlineButton
+                      href={'https://exchange.chainswap.com/'}
+                      primary
+                      style={{
+                        position: 'absolute',
+                        right: '20px',
+                        bottom: '20px',
+                        width: 148,
+                        height: 44,
+                        fontSize: 14
+                      }}
+                    >
+                      Bridge
+                    </OutlineButton>
                   </NumericalCard>
                 )}
 
@@ -464,17 +478,17 @@ function BalanceActions({
   buyHref: string
 }) {
   return (
-    <Box display="flex" key="action" gap={10}>
-      <Button fontSize={14} style={{ maxWidth: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
+    <Box display="flex" key="action" gap={10} pl={20}>
+      <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
         Deposit
       </Button>
-      <Button fontSize={14} style={{ maxWidth: 92, borderRadius: 4, height: 36 }} onClick={onWithdraw}>
+      <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onWithdraw}>
         Withdraw
       </Button>
       <OutlineButton
         href={buyHref}
         fontSize={14}
-        style={{ maxWidth: 92, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
+        style={{ width: 72, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
         primary
       >
         Swap

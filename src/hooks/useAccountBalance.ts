@@ -2,12 +2,12 @@ import { useActiveWeb3React } from 'hooks'
 import { useCallback, useMemo, useState } from 'react'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useDualInvestContract } from './useContract'
-import { BTC, USDT, ETH, MATTER } from 'constants/index'
 import { parseBalance } from 'utils/parseAmount'
 import { Token } from 'constants/token'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { Axios } from 'utils/axios'
 import { assetBalanceFormatter, BalanceInfo } from 'utils/fetch/balance'
+import { CURRENCIES } from 'constants/currencies'
 
 export function useCurrencyBalances(token: Token): BalanceInfo | undefined {
   const { account } = useActiveWeb3React()
@@ -62,14 +62,26 @@ export function useAccountBalances(): {
   const { account, chainId } = useActiveWeb3React()
 
   const btcPromiseFn = useCallback(
-    () => Axios.post('getUserAssets', undefined, { account, chainId, currency: BTC.address, symbol: BTC.symbol }),
+    () =>
+      Axios.post('getUserAssets', undefined, {
+        account,
+        chainId,
+        currency: CURRENCIES.BTC.address,
+        symbol: CURRENCIES.BTC.symbol
+      }),
     [account, chainId]
   )
   const btcCallbackFn = useCallback(r => {
     setBtcRes(assetBalanceFormatter(r.data.data))
   }, [])
   const usdtPromiseFn = useCallback(
-    () => Axios.post('getUserAssets', undefined, { account, chainId, currency: USDT.address, symbol: USDT.symbol }),
+    () =>
+      Axios.post('getUserAssets', undefined, {
+        account,
+        chainId,
+        currency: CURRENCIES.USDT.address,
+        symbol: CURRENCIES.USDT.symbol
+      }),
     [account, chainId]
   )
   const usdtCallbackFn = useCallback(r => setUsdtRes(assetBalanceFormatter(r.data.data)), [])

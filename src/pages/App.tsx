@@ -92,14 +92,23 @@ export default function App() {
     </Suspense>
   )
 }
-
+const isDev = process.env.NODE_ENV === 'development'
 function LocatoinVerification({ resource, children }: { resource: { read(): any }; children: React.ReactNode }) {
   const location = resource.read()
 
   return (
     <Suspense fallback={<Spinner size={100} />}>
-      {/* {location === 'US' || location === 'CN' || !location || location === 'Not found' ? <NoService /> : children} */}
-      {location === 'US' || location === 'CN' || !location || location === 'Not found' ? children : children}
+      {isDev ? (
+        location === 'US' || location === 'CN' || !location || location === 'Not found' ? (
+          children
+        ) : (
+          children
+        )
+      ) : location === 'US' || location === 'CN' || !location ? (
+        <NoService />
+      ) : (
+        children
+      )}
     </Suspense>
   )
 }

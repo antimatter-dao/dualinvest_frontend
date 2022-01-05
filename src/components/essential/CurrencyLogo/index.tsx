@@ -1,12 +1,7 @@
 import React, { useMemo } from 'react'
 import Logo from './LogoBase'
 import { Currency } from '../../../constants/token/currency'
-import { Token } from '../../../constants/token/token'
-import { BTC, USDT, ETH, MATTER } from 'constants/index'
-import BtcLogo from 'assets/svg/btc_logo.svg'
-import UsdtLogo from 'assets/svg/usdt_logo.svg'
-import EthLogo from 'assets/svg/eth_logo.svg'
-import MatterLogo from 'assets/svg/antimatter_circle_black.svg'
+import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 
 export const getTokenLogoURL = (address: string) => {
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
@@ -22,20 +17,8 @@ export default function CurrencyLogo({
   style?: React.CSSProperties
 }) {
   const srcs: string[] = useMemo(() => {
-    if (currency?.symbol === BTC.symbol) {
-      return [BtcLogo]
-    }
-    if (currency?.symbol === USDT.symbol) {
-      return [UsdtLogo]
-    }
-    if (currency?.symbol === ETH.symbol) {
-      return [EthLogo]
-    }
-    if (currency?.symbol === MATTER.symbol) {
-      return [MatterLogo]
-    }
-    if (currency instanceof Token) {
-      return [getTokenLogoURL(currency.address)]
+    if (currency?.symbol && SUPPORTED_CURRENCIES[currency.symbol]) {
+      return [SUPPORTED_CURRENCIES[currency.symbol].logoUrl]
     }
     return []
   }, [currency])
