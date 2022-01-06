@@ -8,13 +8,10 @@ import Web3ReactManager from '../components/essential/Web3ReactManager'
 import WarningModal from '../components/Modal/WarningModal'
 import { ModalProvider } from 'context/ModalContext'
 import { routes } from 'constants/routes'
-import DualInvest from './DualInvest'
-import DualInvestMgmt from './DualInvestMgmt'
-import NoService from './NoService'
 import Spinner from 'components/Spinner'
 import { fetchLocation } from 'utils/fetch/location'
-import Account from './Account'
 import { BindModalProvider } from 'context/BindContext'
+import Position from './Account/Position'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -68,14 +65,9 @@ export default function App() {
                 <BindModalProvider>
                   <LocatoinVerification resource={resource}>
                     <Switch>
-                      <Route exact strict path={routes.noService} component={NoService} />
-                      <Route exact strict path={routes.account} component={Account} />
-                      <Route exact strict path={routes.referral} component={DualInvest} />
-                      <Route exact strict path={routes.dualInvest} component={DualInvest} />
-                      <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
-                      <Route exact strict path={routes.dualInvestMgmtImg} component={DualInvestMgmt} />
+                      <Route path={routes.explorer} component={Position} />
                       <Route path="/">
-                        <Redirect to={routes.dualInvest} />
+                        <Redirect to={routes.explorer} />
                       </Route>
                     </Switch>
                   </LocatoinVerification>
@@ -94,8 +86,8 @@ function LocatoinVerification({ resource, children }: { resource: { read(): any 
 
   return (
     <Suspense fallback={<Spinner size={100} />}>
-      {location === 'US' || location === 'CN' || !location ? <NoService /> : children}
-      {/*{location === 'US' || location === 'CN' || !location || location === 'Not found' ? children : children}*/}
+      {/*{location === 'US' || location === 'CN' || !location ? <NoService /> : children}*/}
+      {location === 'US' || location === 'CN' || !location || location === 'Not found' ? children : children}
     </Suspense>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from 'react'
+import { useCallback, useState, useMemo } from 'react'
 import { Box, Typography, IconButton, Container, Collapse } from '@mui/material'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
@@ -18,14 +18,9 @@ import Spinner from 'components/Spinner'
 import { usePrice } from 'hooks/usePriceSet'
 import { useDualInvestCallback } from 'hooks/useDualInvest'
 import useModal from 'hooks/useModal'
-import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
-import ClaimSuccessModal from './modals/ClaimSuccessModal'
-import { parseBalance } from 'utils/parseAmount'
-import { BTC, USDT } from 'constants/index'
-import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 
 export const THIRTY_MINUTES_MS = 1800000
 
@@ -61,7 +56,7 @@ const PositionTableHeader = [
 ]
 
 const PositionMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '']
-const statusArr = [InvestStatus.Ordered, InvestStatus.ReadyToSettle]
+//const statusArr = [InvestStatus.Ordered, InvestStatus.ReadyToSettle]
 
 export default function Position() {
   const [page, setPage] = useState(1)
@@ -69,7 +64,7 @@ export default function Position() {
   const { account } = useActiveWeb3React()
   const price = usePrice('BTC')
   const { finishOrderCallback } = useDualInvestCallback()
-  const { orderList, pageParams } = useOrderRecords(statusArr, page, 999999)
+  const { orderList, pageParams } = useOrderRecords(undefined, page, 999999)
   const { showModal, hideModal } = useModal()
   const addTransaction = useTransactionAdder()
   const history = useHistory()
@@ -164,53 +159,6 @@ export default function Position() {
           deliveryDate,
           <Box display="flex" key="action" gap={isDownMd ? 10 : 8} sx={{ mr: -15 }}>
             <StatusTag status={status} width={isDownMd ? 120 : 100} />
-            <ClaimButton
-              disabled={status === 'progressing'}
-              onClick={e => {
-                if (!finishOrderCallback) return
-                const el = e.target as HTMLButtonElement
-                el.innerHTML =
-                  '<span class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-z0i010-MuiCircularProgress-root" role="progressbar" style="width: 16px; height: 16px; position: relative"><svg class="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg" viewBox="22 22 44 44" color="#ffffff"><circle class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle" cx="44" cy="44" r="20.5" fill="none" stroke-width="3"></circle></svg></span>'
-                el.disabled = true
-                showModal(<TransacitonPendingModal />)
-                finishOrderCallback(orderId + '', productId + '')
-                  .then(({ r, returnedAmount, returnedCurrency, earned }) => {
-                    hideModal()
-                    addTransaction(r, {
-                      summary: `Claim ${parseBalance(
-                        returnedAmount,
-                        returnedCurrency == BTC.address ? BTC : USDT,
-                        6
-                      )} ${returnedCurrency == BTC.address ? BTC.symbol : USDT.symbol}`
-                    })
-                    el.innerHTML = 'Claim'
-
-                    showModal(
-                      <ClaimSuccessModal
-                        orderId={orderId + ''}
-                        exercised={exercised}
-                        productId={productId + ''}
-                        apy={apy}
-                        strikePrice={strikePrice}
-                        type={type}
-                        currency={currency}
-                        deliveryDate={deliveryDate}
-                        investAmount={investAmount}
-                        earn={earned}
-                        returnedCurrency={returnedCurrency == BTC.address ? BTC.symbol ?? '' : USDT.symbol ?? ''}
-                      />
-                    )
-                  })
-                  .catch(err => {
-                    hideModal()
-                    showModal(<MessageBox type="error">Cliam failed</MessageBox>)
-                    console.error(err)
-                    el.innerHTML = 'Claim'
-                    el.disabled = false
-                  })
-              }}
-              width={isDownMd ? 84 : 68}
-            />
           </Box>
         ]
       }
@@ -350,28 +298,6 @@ function PositionTableCards({ data }: { data: { summaryList: any[][]; hiddenList
         </Card>
       ))}
     </Box>
-  )
-}
-
-function ClaimButton({
-  width,
-  onClick,
-  disabled
-}: {
-  width?: number
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
-  disabled: boolean
-}) {
-  return (
-    <Button
-      disableRipple={true}
-      disabled={disabled}
-      onClick={onClick}
-      fontSize={14}
-      style={{ width: width || 60, borderRadius: 4, height: 36 }}
-    >
-      Claim
-    </Button>
   )
 }
 

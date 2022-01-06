@@ -73,7 +73,6 @@ export function useAccountRecord(pageNum = 1, pageSize = 8) {
 const PageSize = 8
 
 export function useOrderRecords(investStatus?: number | number[], pageNum?: number, pageSize?: number) {
-  const { account } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
   const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
     count: 0,
@@ -103,17 +102,12 @@ export function useOrderRecords(investStatus?: number | number[], pageNum?: numb
   }, [filteredOrderList])
 
   const promiseFn = useCallback(() => {
-    if (!account)
-      return new Promise((resolve, reject) => {
-        reject(null)
-      })
     return Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
-      address: account,
       investStatus: Array.isArray(investStatus) ? undefined : investStatus,
       pageNum: Array.isArray(investStatus) ? undefined : pageNum,
       pageSize
     })
-  }, [account, investStatus, pageNum, pageSize])
+  }, [investStatus, pageNum, pageSize])
 
   const callbackFn = useCallback(r => {
     setOrderList(r.data.data.records)
