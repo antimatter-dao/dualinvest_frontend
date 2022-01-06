@@ -22,7 +22,7 @@ import TransacitonPendingModal from 'components/Modal/TransactionModals/Transact
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
-import ClaimSuccessModal from './modals/ClaimSuccessModal'
+import ClaimSuccessModal from '../modals/ClaimSuccessModal'
 import { parseBalance } from 'utils/parseAmount'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
@@ -63,7 +63,7 @@ const PositionTableHeader = [
 const PositionMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '']
 const statusArr = [InvestStatus.Ordered, InvestStatus.ReadyToSettle]
 
-export default function Position() {
+export default function PositionDualInvest() {
   const [page, setPage] = useState(1)
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
