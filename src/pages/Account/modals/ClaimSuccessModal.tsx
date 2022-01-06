@@ -238,7 +238,7 @@ export default function ClaimSuccessModal({
                   <Typography color="primary" mt={10}>
                     Dual Investment
                   </Typography>
-                  <Typography fontSize={12}>14 Oct 2021 11:51PM</Typography>
+                  {/* <Typography fontSize={12}>14 Oct 2021 11:51PM</Typography> */}
                 </Box>
               </OutlinedCard>
             </Box>
