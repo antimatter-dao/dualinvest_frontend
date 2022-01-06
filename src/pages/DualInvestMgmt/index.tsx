@@ -13,7 +13,7 @@ import Spinner from 'components/Spinner'
 import { usePriceSet } from 'hooks/usePriceSet'
 import useBreakpoint from 'hooks/useBreakpoint'
 import SubscribeForm from './SubscribeForm'
-import { RiskStatement, FAQ } from './stableContent'
+import { RiskStatement, FAQ, Subject } from './stableContent'
 // import { useSuccessImage } from 'hooks/useSuccessImage'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
@@ -250,7 +250,7 @@ export default function DualInvestMgmt() {
 
             <Grid xs={12} item>
               <Card style={{ height: '100%' }}>
-                <RiskStatement />
+                <RiskStatement subject={Subject.DualInvest} />
               </Card>
             </Grid>
             <Grid xs={12} item>

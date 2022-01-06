@@ -13,7 +13,7 @@ import Spinner from 'components/Spinner'
 import { usePriceSet } from 'hooks/usePriceSet'
 import useBreakpoint from 'hooks/useBreakpoint'
 import SubscribeForm from './SubscribeForm'
-import { RiskStatement, FAQ } from '../DualInvestMgmt/stableContent'
+import { RiskStatement, FAQ, Subject } from '../DualInvestMgmt/stableContent'
 // import { useSuccessImage } from 'hooks/useSuccessImage'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
@@ -57,6 +57,23 @@ export default function DualInvestMgmt() {
       ? { time: product.expiredAt as Time, value: +product.strikePrice }
       : undefined
   }, [product?.expiredAt, product?.strikePrice])
+
+  const chart = useMemo(() => {
+    if (!priceSet || !strikeLineData) {
+      return
+    }
+
+    return (
+      <LineChart
+        lineColor="#18A0FB"
+        lineSeriesData={priceSet}
+        unit="BTC"
+        id="incomeGraph"
+        height={graphContainer?.current?.offsetHeight ?? 280}
+        strikeData={strikeLineData}
+      />
+    )
+  }, [priceSet, strikeLineData])
 
   const returnOnInvestment = useMemo(() => {
     return (
@@ -187,16 +204,7 @@ export default function DualInvestMgmt() {
                         }}
                         ref={graphContainer}
                       >
-                        {product && priceSet ? (
-                          <LineChart
-                            lineColor="#18A0FB"
-                            lineSeriesData={priceSet}
-                            unit="BTC"
-                            id="incomeGraph"
-                            height={graphContainer?.current?.offsetHeight ?? 280}
-                            strikeData={strikeLineData}
-                          />
-                        ) : (
+                        {chart ?? (
                           <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
                             <Spinner size={60} marginRight="auto" marginLeft="auto" />
                           </Box>
@@ -240,12 +248,12 @@ export default function DualInvestMgmt() {
 
             <Grid xs={12} item>
               <Card style={{ height: '100%' }}>
-                <RiskStatement />
+                <RiskStatement subject={Subject.ChainOption} />
               </Card>
             </Grid>
             <Grid xs={12} item>
               <Card style={{ height: '100%' }} padding="32px 24px">
-                <FAQ />
+                <FAQ subject={Subject.ChainOption} />
               </Card>
             </Grid>
           </Grid>
