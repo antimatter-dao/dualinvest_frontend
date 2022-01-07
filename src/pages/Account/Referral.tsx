@@ -16,6 +16,7 @@ import { usePrice } from 'hooks/usePriceSet'
 import { trimNumberString } from 'utils/trimNumberString'
 import { shortenAddress } from 'utils'
 import { CURRENCIES } from 'constants/currencies'
+import Copy from '../../components/essential/Copy'
 
 export default function Referral() {
   const theme = useTheme()
@@ -49,15 +50,19 @@ export default function Referral() {
           </Box>
           <Box display="flex" alignItems="center">
             {invitation && invitation !== NO_REFERRER ? (
-              <Typography
-                color={theme.palette.primary.main}
-                fontSize={14}
-                display="flex"
-                alignItems="center"
-                align="right"
-              >
-                My referrer: {shortenAddress(invitation)}
-              </Typography>
+              <>
+                <Typography
+                  marginRight={6}
+                  color={theme.palette.primary.main}
+                  fontSize={14}
+                  display="flex"
+                  alignItems="center"
+                  align="right"
+                >
+                  My referrer: {shortenAddress(invitation)}
+                </Typography>
+                <Copy toCopy={invitation} />
+              </>
             ) : (
               <TextButton
                 primary
