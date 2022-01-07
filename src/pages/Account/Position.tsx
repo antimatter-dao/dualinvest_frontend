@@ -16,9 +16,6 @@ import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
 import { usePrice } from 'hooks/usePriceSet'
-import { useDualInvestCallback } from 'hooks/useDualInvest'
-import useModal from 'hooks/useModal'
-import { useTransactionAdder } from 'state/transactions/hooks'
 import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
 
@@ -63,10 +60,7 @@ export default function Position() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   const price = usePrice('BTC')
-  const { finishOrderCallback } = useDualInvestCallback()
   const { orderList, pageParams } = useOrderRecords(undefined, page, 999999)
-  const { showModal, hideModal } = useModal()
-  const addTransaction = useTransactionAdder()
   const history = useHistory()
 
   const handleGoInvest = useCallback(() => {
@@ -80,7 +74,6 @@ export default function Position() {
     const summaryList = orderList.map(
       ({
         amount,
-        currency,
         annualRor,
         expiredAt,
         strikePrice,
@@ -165,7 +158,7 @@ export default function Position() {
     )
 
     return { hiddenList, summaryList, hiddenParts: hiddenPartsList }
-  }, [orderList, isDownMd, showModal, finishOrderCallback, hideModal, addTransaction])
+  }, [orderList, isDownMd])
 
   if (!account)
     return (
