@@ -1,21 +1,14 @@
 import { useState } from 'react'
 import PositionDualInvest from './PositionDualInvest'
-import { Box, styled } from '@mui/material'
+import { Box } from '@mui/material'
 import PositionChainType from './PositionChainType'
 //import Tabs from 'components/Tabs/Tabs'
-import SmallButton from 'components/Button/SmallButton'
+import TabButton from 'components/Button/TabButton'
 
 enum PositionTabs {
   dualInvest = 'Dual Investment',
   chainType = 'Chain-Type Option'
 }
-
-const TabButton = styled(SmallButton)<{ active?: boolean }>`
-  border: 1px solid #b2f355;
-  opacity: ${({ active }) => (active ? '1' : '0.5')};
-  width: 264px;
-  height: 48px;
-`
 
 export default function Position() {
   const [currentTab, setCurrentTab] = useState(PositionTabs.dualInvest)
@@ -34,6 +27,7 @@ export default function Position() {
           setCurrentTab(PositionTabs.dualInvest)
         }}
         active={currentTab === PositionTabs.dualInvest}
+        sx={{ marginRight: 20 }}
       >
         {PositionTabs.dualInvest}
       </TabButton>
