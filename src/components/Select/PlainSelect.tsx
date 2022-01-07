@@ -6,6 +6,7 @@ interface Props {
   placeholder: string
   autoFocus?: boolean
   width?: string
+  style?: React.CSSProperties
 }
 
 // const StyledSelect = styled(MuiSelect, { shouldForwardProp: () => true })<{ width?: string }>(({ theme, width }) => ({
@@ -29,7 +30,7 @@ interface Props {
 // }))
 
 export default function Select(props: Props) {
-  const { children, placeholder, autoFocus } = props
+  const { children, placeholder, autoFocus, style } = props
 
   const [anchorEl, setAnchorEl] = useState<any>(null)
   const open = Boolean(anchorEl)
@@ -44,6 +45,8 @@ export default function Select(props: Props) {
   return (
     <>
       <Button
+        component="a"
+        type="button"
         disableRipple
         id="fade-button"
         aria-controls={open ? 'fade-menu' : undefined}
@@ -51,6 +54,7 @@ export default function Select(props: Props) {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         sx={{
+          borderRadius: 0,
           padding: 0,
           color: theme => theme.palette.text.primary,
           opacity: open ? 1 : 0.5,
@@ -61,7 +65,8 @@ export default function Select(props: Props) {
           '&.Mui-focused': {
             color: theme => theme.palette.text.primary,
             opacity: 1
-          }
+          },
+          ...style
         }}
       >
         {placeholder}

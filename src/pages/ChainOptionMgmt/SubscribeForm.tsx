@@ -1,10 +1,6 @@
 import { useMemo, useState, useCallback, useEffect } from 'react'
 import dayjs from 'dayjs'
-import { Box, Typography } from '@mui/material'
 import { Product } from 'utils/fetch/product'
-import InputLabel from 'components/Input/InputLabel'
-import TextButton from 'components/Button/TextButton'
-import { OutlinedCard } from 'components/Card/Card'
 import { useActiveWeb3React } from 'hooks'
 import { feeRate } from 'constants/index'
 import { Axios } from 'utils/axios'
@@ -64,10 +60,6 @@ export default function SubscribeForm({
     [setAmount]
   )
 
-  const showDeposit = useCallback(() => {
-    setIsDepositOpen(true)
-  }, [])
-
   const hideDeposit = useCallback(() => {
     setIsDepositOpen(false)
   }, [])
@@ -91,7 +83,7 @@ export default function SubscribeForm({
       ['Time Interval']: '1 Hour',
       ['Cycle']: '24 Hours'
     }),
-    [product]
+    []
   )
   const error = useMemo(() => {
     if (!product || !balance) return ''

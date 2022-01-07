@@ -101,7 +101,7 @@ export default function DualInvestMgmt() {
         )}
       </>
     )
-  }, [priceSet, strikeLineData])
+  }, [gtStr, isDownMd, ltStr, priceSet, product, strikeLineData, strikePrice])
 
   const returnOnInvestment = useMemo(() => {
     return (
@@ -123,7 +123,7 @@ export default function DualInvestMgmt() {
         </StyledUnorderList>
       </div>
     )
-  }, [gtStr, ltStr, strikePrice])
+  }, [])
 
   return (
     <MgmtPage
