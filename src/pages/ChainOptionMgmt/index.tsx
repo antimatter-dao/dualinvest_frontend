@@ -38,7 +38,7 @@ export default function DualInvestMgmt() {
   const priceSet = usePriceSet(product?.currency)
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
-  const type = product?.type
+  // const type = product?.type
   const gtStr = `${product && amount ? (+product.gtStrikePrice * +amount * +product.multiplier).toFixed(4) : '-'} ${
     product ? (product.type === 'CALL' ? product?.strikeCurrency : product?.investCurrency) : ''
   } `
@@ -110,31 +110,28 @@ export default function DualInvestMgmt() {
           Return on investment:
         </Typography>
         <StyledUnorderList>
+          <li>Start at 11-29 09:00.</li>
           <li>
-            When the final settlement price &gt; {strikePrice} USDT, you will receive{' '}
-            <span style={{ color: theme.palette.text.primary }}>{gtStr}</span>.
+            If the BTC price can stay within the following range within 24 hours, that is, Start price-500≤BTC/USDT
+            price≤Start price+500, you will receive{' '}
+            <span style={{ color: theme.palette.text.primary }}>220.00USDT</span>.
           </li>
           <li>
-            When the settlement price is &le; {strikePrice} USDT, you will receive{' '}
-            <span style={{ color: theme.palette.text.primary }}>{ltStr}</span>.
-          </li>
-          <li>
-            APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully complete the
-            subscription.
+            If the BTC price exceeds the above range within 24 hours, it will be knocked out and your total income will
+            be settled.
           </li>
         </StyledUnorderList>
       </div>
     )
-  }, [gtStr, ltStr, strikePrice])
+  }, [])
 
   return (
     <MgmtPage
-      backLink={routes.dualInvest}
+      backLink={routes.chainOption}
       product={product}
-      pageTitle={`${product?.currency} Financial Management`}
+      pageTitle={`${product?.currency} Saddle Option`}
       returnOnInvestment={returnOnInvestment}
-      subject={Subject.DualInvest}
-      type={type}
+      subject={Subject.ChainOption}
       chart={chart}
       subscribeForm={<SubscribeForm product={product} setAmount={handleInput} amount={amount} id={id} />}
     />

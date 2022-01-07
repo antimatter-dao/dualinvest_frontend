@@ -17,6 +17,7 @@ import Account from './Account'
 import { BindModalProvider } from 'context/BindContext'
 import Home from './Home'
 import ChainOption from './ChainOption'
+import ChainOptionMgmt from './ChainOptionMgmt'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -72,6 +73,7 @@ export default function App() {
                     <Switch>
                       <Route exact strict path={routes.home} component={Home} />
                       <Route exact strict path={routes.chainOption} component={ChainOption} />
+                      <Route exact strict path={routes.chainOptionMgmt} component={ChainOptionMgmt} />
                       <Route exact strict path={routes.noService} component={NoService} />
                       <Route exact strict path={routes.account} component={Account} />
                       <Route exact strict path={routes.referral} component={DualInvest} />
@@ -98,7 +100,10 @@ function LocatoinVerification({ resource, children }: { resource: { read(): any 
 
   return (
     <Suspense fallback={<Spinner size={100} />}>
-      {isDev ? (
+      {!isDev && (location === 'US' || location === 'CN' || !location || location === 'Not found')
+        ? children
+        : children}
+      {/* {isDev ? (
         location === 'US' || location === 'CN' || !location || location === 'Not found' ? (
           children
         ) : (
@@ -108,7 +113,7 @@ function LocatoinVerification({ resource, children }: { resource: { read(): any 
         <NoService />
       ) : (
         children
-      )}
+      )} */}
     </Suspense>
   )
 }

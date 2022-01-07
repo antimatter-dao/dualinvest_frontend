@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { AppBar, Box, IconButton, MenuItem, styled as muiStyled, styled, Button as MuiButton } from '@mui/material'
 import { ExternalLink } from 'theme/components'
 import Web3Status from './Web3Status'
@@ -153,6 +153,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { openReferralModal } = useReferalModal()
   const { account } = useActiveWeb3React()
+  const { pathname } = useLocation()
 
   const handleReferral = useCallback(() => {
     openReferralModal(true)
@@ -175,8 +176,33 @@ export default function Header() {
             <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
                 subTab ? (
-                  <Box sx={{ marginRight: { xs: 15, lg: 48 }, display: 'inline-block' }} key={title + idx}>
-                    <PlainSelect placeholder={title} autoFocus={false} width={title === 'Invest' ? '70px' : undefined}>
+                  <Box
+                    sx={{
+                      marginRight: {
+                        xs: 15,
+                        lg: 48
+                      },
+                      height: 'auto',
+                      paddingBottom: '29px',
+                      borderBottom: '2px solid transparent',
+                      borderColor: theme =>
+                        (title === 'Invest' && pathname.includes(routes.chainOption)) ||
+                        pathname.includes(routes.dualInvest)
+                          ? theme.palette.text.primary
+                          : 'transparnet',
+                      display: 'inline'
+                    }}
+                    key={title + idx}
+                  >
+                    <PlainSelect
+                      key={title + idx}
+                      placeholder={title}
+                      autoFocus={false}
+                      width={title === 'Invest' ? '70px' : undefined}
+                      style={{
+                        height: '14px'
+                      }}
+                    >
                       {subTab.map((sub, idx) =>
                         sub.link ? (
                           <MenuItem
