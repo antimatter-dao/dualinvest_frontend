@@ -7,18 +7,13 @@ export default function TabButton({
   disabled,
   fontSize,
   children,
-  variant,
   active,
   sx
 }: {
   onClick?: () => void
-  background?: string
   disabled?: boolean
-  color?: string
   children?: React.ReactNode
   fontSize?: string | number
-  outlined?: boolean
-  variant?: 'primary' | 'secondary' | 'outlined'
   active?: boolean
   sx?: React.CSSProperties & SxProps<Theme>
 }) {
@@ -42,12 +37,7 @@ export default function TabButton({
         transition: '.3s',
         '&:hover': {
           borderColor: active ? theme.palette.primary.dark : 'transparent',
-          backgroundColor:
-            variant === 'outlined'
-              ? 'transparent'
-              : variant === 'secondary'
-              ? theme.palette.secondary.dark
-              : theme.palette.primary.dark
+          backgroundColor: theme.palette.primary.dark
         },
         '&:disabled': {
           opacity: theme.palette.action.disabledOpacity,
