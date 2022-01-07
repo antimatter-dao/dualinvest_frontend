@@ -18,6 +18,7 @@ export default function NumericalInput({
   unit,
   endAdornment,
   onDeposit,
+  subStr,
   ...props
 }: InputProps &
   InputHTMLAttributes<HTMLInputElement> & {
@@ -26,6 +27,7 @@ export default function NumericalInput({
     unit?: string
     endAdornment?: JSX.Element
     onDeposit?: () => void
+    subStr?: string
   }) {
   const enforcer = (nextUserInput: string) => {
     const fixed = nextUserInput.replace(/,/g, '.')
@@ -99,6 +101,7 @@ export default function NumericalInput({
             </Box>
           )
         }
+        subStr={subStr}
       />
     </Box>
   )

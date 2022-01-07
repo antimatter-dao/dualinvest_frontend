@@ -1,6 +1,7 @@
 export const routes = {
   home: '/home',
   chainOption: '/chain_option',
+  chainOptionMgmt: '/chain_option_mgmt/:id',
   dualInvest: '/dual_invest',
   dualInvestMgmt: '/dual_invest_mgmt/:id',
   dualInvestMgmtImg: '/dual_invest_mgmt/:id/:orderId',

@@ -29,7 +29,11 @@ export function MgmtForm({
   onSubscribe,
   currentCurrency,
   product,
-  confirmData
+  confirmData,
+  balance,
+  subStr,
+  unit,
+  infoText
 }: {
   data: { [key: string]: any }
   confirmData: { [key: string]: any }
@@ -38,12 +42,16 @@ export function MgmtForm({
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   onMax: () => void
   error: string | undefined
-  children: React.ReactNode
+  children?: React.ReactNode
   account: string | undefined | null
   pending: boolean
   onSubscribe: (setIsConfirmed: (isConfirmed: boolean) => void) => void
   currentCurrency: Token
   product: Product | undefined
+  balance?: string
+  subStr?: string
+  unit?: string
+  infoText: string
 }) {
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const [isConfirmed, setIsConfirmed] = useState(false)
@@ -113,6 +121,9 @@ export function MgmtForm({
           label={'Subscription Amount'}
           onChange={onChange}
           error={!!error}
+          balance={balance}
+          unit={unit}
+          subStr={subStr}
         />
         {children}
         {!account && <BlackButton onClick={toggleWallet}>Connect Wallet</BlackButton>}
@@ -161,7 +172,7 @@ export function MgmtForm({
                 </>
               )
             ) : (
-              <>Once subscribed the APY will get locked in, the product can&apos;t be cancelled after subscription.</>
+              <>{infoText}</>
             )}
           </Typography>
         </Box>
