@@ -9,7 +9,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
-import { AccordionButton } from './Position/PositionDualInvest'
+import AccordionButton from 'components/Button/AccordionButton'
 import Divider from 'components/Divider'
 // import Button from 'components/Button/Button'
 import StatusTag from 'components/Status/StatusTag'
@@ -37,7 +37,7 @@ const HistoryTableHeader = [
 
 const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '', '']
 
-export default function History() {
+export default function HistoryChainType() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
