@@ -1,15 +1,13 @@
-import React, { useCallback, useState, useMemo } from 'react'
-import { Box, Typography, IconButton, Container, Collapse } from '@mui/material'
+import { useCallback, useState, useMemo } from 'react'
+import { Box, Typography, Container, Grid } from '@mui/material'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
 import Button from 'components/Button/Button'
+import ClaimButton from 'components/Button/ClaimButton'
 import Card from 'components/Card/Card'
 import NumericalCard from 'components/Card/NumericalCard'
 import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { ReactComponent as AccordionArrowDownIcon } from 'assets/componentsIcon/accordion_arrow_down.svg'
-import { ReactComponent as AccordionArrowUpIcon } from 'assets/componentsIcon/accordion_arrow_up.svg'
-import Divider from 'components/Divider'
 import StatusTag from 'components/Status/StatusTag'
 import { useActiveWeb3React } from 'hooks'
 import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
@@ -26,48 +24,51 @@ import ClaimSuccessModal from '../modals/ClaimSuccessModal'
 import { parseBalance } from 'utils/parseAmount'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
+/* import { PositionMoreHeader, PositionMoreHeaderIndex, PositionTableHeader } from 'components/Account/PositionTableCards'
+ */ import PositionTableCards from 'components/Account/PositionTableCards'
 
 export const THIRTY_MINUTES_MS = 1800000
-
-enum PositionMoreHeaderIndex {
-  OrderID,
-  ProductID,
-  SettlementPrice,
-  SettlementTime,
-  Status
-}
-
-enum PositionTableHeaderIndex {
-  investAmount,
+export enum PositionMoreHeaderIndex {
   subscribedTime,
-  apy,
-  deliveryDate,
-  strikePrice,
-  exercies,
-  refundAmount,
+  timeInterval,
+  cycle,
+  nextSettle,
+  estEarnings,
   status
 }
 
-const PositionTableHeader = [
-  'Invest Amount\n(Subscription Amount)',
+export enum PositionTableHeaderIndex {
+  pair,
+  apy,
+  subscribedTime,
+  startPrice,
+  priceRange,
+  investAmount,
+  cumulative,
+  status
+}
+
+export const PositionTableHeader = [
+  'Pair',
   'APY',
   'Subscribed Time',
-  'Strike Price',
-  'Exercise',
-  'Execute Amount',
-  'Delivery Date',
+  'Start Price',
+  'Price Range',
+  'Invest Amount\n(Dollar Value)',
+  'Cumulative',
   'Status',
   ''
 ]
 
-const PositionMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '']
+export const PositionMoreHeader = ['Subscribed Time', 'Time Interval', 'Cycle', 'Next Settle', 'Est. Earnings']
 const statusArr = [InvestStatus.Ordered, InvestStatus.ReadyToSettle]
 
 export default function PositionChainType() {
   const [page, setPage] = useState(1)
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const price = usePrice('BTC')
+  const btcPrice = usePrice('BTC')
+  const ethPrice = usePrice('ETH')
   const { finishOrderCallback } = useDualInvestCallback()
   const { orderList, pageParams } = useOrderRecords(statusArr, page, 999999)
   const { showModal, hideModal } = useModal()
@@ -136,7 +137,7 @@ export default function PositionChainType() {
                   gridRowEnd: 'span 1'
                 }}
               >
-                {idx === PositionMoreHeaderIndex.Status ? (
+                {idx === PositionMoreHeaderIndex.status ? (
                   <Box margin="0 auto" width="max-content">
                     {datum}
                   </Box>
@@ -205,7 +206,7 @@ export default function PositionChainType() {
                   })
                   .catch(err => {
                     hideModal()
-                    showModal(<MessageBox type="error">Cliam failed</MessageBox>)
+                    showModal(<MessageBox type="error">Claim failed</MessageBox>)
                     console.error(err)
                     el.innerHTML = 'Claim'
                     el.disabled = false
@@ -233,13 +234,30 @@ export default function PositionChainType() {
       <Box sx={{ mt: 48, width: '100%' }}>
         <Card>
           <Box padding="38px 24px">
-            <NumericalCard
-              title="BTC latest spot price"
-              value={
-                price ? (+price).toLocaleString('en-US', { minimumFractionDigits: 6, maximumFractionDigits: 6 }) : '-'
-              }
-              border={true}
-            />
+            <Grid container spacing={{ xs: 8, md: 20 }}>
+              <Grid item xs={12} md={6}>
+                <NumericalCard
+                  title="BTC latest spot price"
+                  value={
+                    btcPrice
+                      ? (+btcPrice).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                      : '-'
+                  }
+                  border={true}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <NumericalCard
+                  title="ETH latest spot price"
+                  value={
+                    ethPrice
+                      ? (+ethPrice).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                      : '-'
+                  }
+                  border={true}
+                />
+              </Grid>
+            </Grid>
             <Box position="relative">
               {!orderList && (
                 <Box
@@ -269,7 +287,12 @@ export default function PositionChainType() {
               ) : (
                 <>
                   {isDownMd ? (
-                    <PositionTableCards data={data} />
+                    <PositionTableCards
+                      header={PositionTableHeader}
+                      headerIdx={PositionTableHeaderIndex}
+                      moreHeader={PositionMoreHeader}
+                      data={data}
+                    />
                   ) : (
                     <Table
                       fontSize="14px"
@@ -294,100 +317,5 @@ export default function PositionChainType() {
         </Card>
       </Box>
     </>
-  )
-}
-
-function PositionTableCards({ data }: { data: { summaryList: any[][]; hiddenList: any[][] } }) {
-  const [expanded, setExpanded] = useState<null | number>(null)
-
-  return (
-    <Box display="flex" flexDirection="column" gap={8} mt={24} mb={24}>
-      {data.summaryList.map((dataRow, idx) => (
-        <Card key={idx} color="#F2F5FA" padding="17px 16px">
-          <Box display="flex" flexDirection="column" gap={16}>
-            {dataRow.map((datum, idx2) => {
-              if (idx2 === PositionTableHeaderIndex.status) {
-                return (
-                  <Box display="flex" alignItems="center" gap={14} key={idx2}>
-                    {datum}
-                    <AccordionButton
-                      onClick={() => {
-                        expanded === idx ? setExpanded(null) : setExpanded(idx)
-                      }}
-                      expanded={expanded === idx}
-                    />
-                  </Box>
-                )
-              }
-
-              return (
-                <Box key={idx2} display="flex" justifyContent="space-between">
-                  <Typography component="div" fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                    {PositionTableHeader[idx2]}
-                  </Typography>
-                  <Typography fontSize={12} fontWeight={600} component="div">
-                    {datum}
-                  </Typography>
-                </Box>
-              )
-            })}
-          </Box>
-
-          <Collapse in={expanded === idx && !!data.hiddenList[idx]}>
-            <Divider extension={16} color="1px solid #252525" />
-            <Box display="flex" flexDirection="column" gap={16} mt={20}>
-              {data.hiddenList[idx].map((datum, idx) => {
-                return (
-                  <Box key={idx} display="flex" justifyContent="space-between">
-                    <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                      {PositionMoreHeader[idx]}
-                    </Typography>
-                    <Typography fontSize={12} fontWeight={600}>
-                      {datum}
-                    </Typography>
-                  </Box>
-                )
-              })}
-            </Box>
-          </Collapse>
-        </Card>
-      ))}
-    </Box>
-  )
-}
-
-function ClaimButton({
-  width,
-  onClick,
-  disabled
-}: {
-  width?: number
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
-  disabled: boolean
-}) {
-  return (
-    <Button
-      disableRipple={true}
-      disabled={disabled}
-      onClick={onClick}
-      fontSize={14}
-      style={{ width: width || 60, borderRadius: 4, height: 36 }}
-    >
-      Claim
-    </Button>
-  )
-}
-
-export function AccordionButton({ onClick, expanded }: { onClick: () => void; expanded: boolean }) {
-  return (
-    <IconButton
-      onClick={onClick}
-      sx={{
-        width: 'max-content',
-        height: 'max-content'
-      }}
-    >
-      {expanded ? <AccordionArrowUpIcon /> : <AccordionArrowDownIcon />}
-    </IconButton>
   )
 }
