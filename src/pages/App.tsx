@@ -12,6 +12,7 @@ import Spinner from 'components/Spinner'
 import { fetchLocation } from 'utils/fetch/location'
 import { BindModalProvider } from 'context/BindContext'
 import Position from './Account/Position'
+import Dashboard from './Account/Dashboard'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -66,6 +67,7 @@ export default function App() {
                   <LocatoinVerification resource={resource}>
                     <Switch>
                       <Route path={routes.explorer} component={Position} />
+                      <Route path={routes.walletDetail} component={Dashboard} />
                       <Route path="/">
                         <Redirect to={routes.explorer} />
                       </Route>

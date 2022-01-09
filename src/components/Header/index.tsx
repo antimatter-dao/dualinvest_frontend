@@ -10,7 +10,6 @@ import antimatter from '../../assets/svg/antimatter.svg'
 import { routes } from 'constants/routes'
 import MobileMenu from './MobileMenu'
 import NetworkSelect from './NetworkSelect'
-import referralUrl from 'assets/images/referral.png'
 import { useReferalModal } from 'hooks/useReferralModal'
 import { useActiveWeb3React } from 'hooks'
 
@@ -26,27 +25,8 @@ interface Tab extends TabContent {
 }
 
 export const Tabs: Tab[] = [
-  { title: 'Dual Investment', route: routes.dualInvest },
-  { title: 'Account', route: routes.account.replace(':tab', 'dashboard') },
-  { title: 'DAO', link: 'https://dao.antimatter.finance/#/' },
-  { title: 'Docs', link: 'https://docs.antimatter.finance/' },
-  {
-    title: 'Referral',
-    titleContent: (
-      <>
-        Referral
-        <Image src={referralUrl} style={{ height: 14, width: 14, marginLeft: 3 }} />
-      </>
-    ),
-    route: '/referal'
-  },
-  {
-    title: 'Labs',
-    subTab: [
-      { title: 'BULL & BEAR Option', link: 'https://app.antimatter.finance/#/option_trading' },
-      { title: 'Nonfungible Finance', link: 'https://nonfungible.finance/#/' }
-    ]
-  }
+  { title: 'explorer', route: routes.explorer },
+  { title: 'walletDetail', route: routes.walletDetail }
 ]
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({

@@ -1,95 +1,35 @@
 import { useCallback, useMemo, useState } from 'react'
-import { useHistory } from 'react-router'
-import { Container, Box, Typography, useTheme } from '@mui/material'
+import { Container, Box, Typography } from '@mui/material'
 import Card from 'components/Card/Card'
 import Table from 'components/Table'
 import NoDataCard from 'components/Card/NoDataCard'
-import Button from 'components/Button/Button'
-import OutlineButton from 'components/Button/OutlineButton'
-import NumericalCard from 'components/Card/NumericalCard'
 import Pagination from 'components/Pagination'
 import { useActiveWeb3React } from 'hooks'
-import ActionModal, { ActionType } from './modals/ActionModal'
 import StatusTag from 'components/Status/StatusTag'
 import TransactionTypeIcon from 'components/Icon/TransactionTypeIcon'
-import { Token, Currency } from 'constants/token'
-import { routes } from 'constants/routes'
+import { Token } from 'constants/token'
 import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
 import { useAccountRecord } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
-import { BTC, USDT } from 'constants/index'
 import Spinner from 'components/Spinner'
 import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
-import { usePrice } from 'hooks/usePriceSet'
-import { useAccountBalances } from 'hooks/useAccountBalance'
 import { toChecksumAddress } from 'web3-utils'
-
-enum BalanceTableHeaderIndex {
-  token,
-  available,
-  amount,
-  cumulativeInvest,
-  pnl,
-  actions
-}
 
 const RecordType: { [key in number]: 'withdraw' | 'deposit' } = {
   1: 'deposit',
   2: 'withdraw'
 }
 
-const BalanceTableHeader = ['', 'Deposit Amount', 'Available', 'Investing(Locked)', 'PnL', '']
 const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
 
-function TokenHeader({ token }: { token: Currency }) {
-  return (
-    <Box display="flex" alignItems="center" gap={16}>
-      <CurrencyLogo currency={token} size="32px" />
-      <Box>
-        <Typography fontSize={16}>{token.symbol}</Typography>
-        <Typography fontSize={12} sx={{}}>
-          <span style={{ opacity: 0.5, fontSize: '12px' }}>{token.name}</span>
-        </Typography>
-      </Box>
-    </Box>
-  )
-}
-
 export default function Dashboard() {
-  const [isDepositOpen, setIsDepositOpen] = useState(false)
-  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false)
-  const [currentCurrency, setCurrentCurrency] = useState<Token | undefined>(undefined)
   const { account, chainId } = useActiveWeb3React()
-  const history = useHistory()
   const isDownMd = useBreakpoint('md')
   const [page, setPage] = useState(1)
-  const btcPrice = usePrice('BTC', 30000)
-  const accountBalances = useAccountBalances()
   const { accountRecord, pageParams } = useAccountRecord(page)
-
-  const indexPrices = useMemo(() => {
-    return {
-      BTC: btcPrice,
-      USDT: 1
-    }
-  }, [btcPrice])
-
-  const totalInvest = useMemo(() => {
-    if (!accountBalances) return '-'
-    const accumulated = Object.keys(accountBalances).reduce((acc: number, key: string) => {
-      const val = accountBalances?.[key as keyof typeof accountBalances]?.totalInvest
-      const price = indexPrices[key as keyof typeof indexPrices]
-      if (val && price) {
-        return acc + +val * +price
-      } else {
-        return acc
-      }
-    }, 0)
-    return accumulated.toFixed(2) + ''
-  }, [accountBalances, indexPrices])
 
   const accountDetailsData = useMemo(() => {
     const records = accountRecord?.records
@@ -130,66 +70,7 @@ export default function Dashboard() {
     })
   }, [accountRecord?.records, chainId, isDownMd])
 
-  const handleDepositOpen = useCallback(() => {
-    setIsDepositOpen(true)
-  }, [])
-
-  const handleWithdrawOpen = useCallback(() => {
-    setIsWithdrawOpen(true)
-  }, [])
-
-  const handleDismiss = useCallback(() => {
-    setIsDepositOpen(false)
-    setIsWithdrawOpen(false)
-    setCurrentCurrency(undefined)
-  }, [])
-
   const handlePage = useCallback((event, value) => setPage(value), [])
-
-  const balanceData = useMemo(() => {
-    return accountBalances
-      ? [
-          [
-            <TokenHeader key="btc" token={BTC} />,
-            accountBalances?.BTC?.totalInvest ?? '-',
-            accountBalances?.BTC?.available ?? '-',
-            accountBalances?.BTC?.locked ?? '-',
-            accountBalances?.BTC?.pnl ?? '-',
-            <BalanceActions
-              key="1"
-              onDeposit={() => {
-                setCurrentCurrency(BTC)
-                handleDepositOpen()
-              }}
-              onWithdraw={() => {
-                setCurrentCurrency(BTC)
-                handleWithdrawOpen()
-              }}
-              buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c"
-            />
-          ],
-          [
-            <TokenHeader key="usdt" token={USDT} />,
-            accountBalances?.USDT?.totalInvest ?? '-',
-            accountBalances?.USDT?.available ?? '-',
-            accountBalances?.USDT?.locked ?? '-',
-            accountBalances?.USDT?.pnl ?? '-',
-            <BalanceActions
-              key="1"
-              onDeposit={() => {
-                setCurrentCurrency(USDT)
-                handleDepositOpen()
-              }}
-              onWithdraw={() => {
-                setCurrentCurrency(USDT)
-                handleWithdrawOpen()
-              }}
-              buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x55d398326f99059ff775485246999027b3197955"
-            />
-          ]
-        ]
-      : []
-  }, [accountBalances, handleDepositOpen, handleWithdrawOpen])
 
   if (!account)
     return (
@@ -199,109 +80,8 @@ export default function Dashboard() {
     )
   return (
     <>
-      <ActionModal isOpen={isDepositOpen} onDismiss={handleDismiss} token={currentCurrency} type={ActionType.DEPOSIT} />
-      <ActionModal
-        isOpen={isWithdrawOpen}
-        onDismiss={handleDismiss}
-        type={ActionType.WITHDRAW}
-        token={currentCurrency}
-      />
       <Container disableGutters sx={{ mt: 48 }}>
         <Box display="grid" gap={48}>
-          <Card>
-            <Box padding="38px 24px" display="grid" gap={36}>
-              <Box>
-                <Typography fontSize={{ xs: 20, sm: 24 }} fontWeight={700}>
-                  My Account Balance
-                </Typography>
-                <Typography sx={{ color: theme => theme.palette.text.secondary, mt: 8 }}>
-                  Deposit funds to your Dual Investment account, you can withdraw available amount at any time
-                </Typography>
-              </Box>
-              <Box position="relative">
-                {!accountRecord && (
-                  <Box
-                    position="absolute"
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      background: '#ffffff',
-                      zIndex: 3,
-                      borderRadius: 2
-                    }}
-                  >
-                    <Spinner size={60} />
-                  </Box>
-                )}
-
-                {isDownMd ? (
-                  <InvestmentValueCard
-                    value={(+totalInvest).toLocaleString('en-US', {
-                      minimumFractionDigits: 6,
-                      maximumFractionDigits: 6
-                    })}
-                    unit="$"
-                    // dayChange="+ 8.91% / $350.28 "
-                  />
-                ) : (
-                  <NumericalCard
-                    value={(+totalInvest).toLocaleString('en-US', {
-                      minimumFractionDigits: 6,
-                      maximumFractionDigits: 6
-                    })}
-                    border
-                    title="Portfolio Value"
-                    unit="$"
-                    padding="20px 24px"
-                    fontSize={'44px'}
-                    // dayChange="+ 8.91% / $350.28 "
-                  >
-                    <Button
-                      onClick={() => {
-                        history.push(routes.dualInvest)
-                      }}
-                      style={{
-                        position: 'absolute',
-                        right: '180px',
-                        bottom: '20px',
-                        width: 148,
-                        height: 44,
-                        fontSize: 14
-                      }}
-                    >
-                      Invest
-                    </Button>
-                    <OutlineButton
-                      href={'https://exchange.chainswap.com/'}
-                      primary
-                      style={{
-                        position: 'absolute',
-                        right: '20px',
-                        bottom: '20px',
-                        width: 148,
-                        height: 44,
-                        fontSize: 14
-                      }}
-                    >
-                      Bridge
-                    </OutlineButton>
-                  </NumericalCard>
-                )}
-
-                {balanceData && isDownMd ? (
-                  <AccountBalanceCards data={balanceData} />
-                ) : balanceData ? (
-                  <Table header={BalanceTableHeader} rows={balanceData} />
-                ) : (
-                  <NoDataCard height="20vh" />
-                )}
-              </Box>
-            </Box>
-          </Card>
-
           <Card>
             <Box padding="38px 24px" display="grid" gap={36}>
               <Typography fontSize={24} fontWeight={700}>
@@ -355,38 +135,6 @@ export default function Dashboard() {
   )
 }
 
-function AccountBalanceCards({ data }: { data: any[][] }) {
-  return (
-    <Box mt={24} display="grid" gap={8}>
-      {data.map((dataRow, idx) => (
-        <Card color="#F2F5FA" padding="17px 16px" key={`balance-row-${idx}`}>
-          <Box display="grid" gap={20}>
-            {dataRow[BalanceTableHeaderIndex.token]}
-            {dataRow[BalanceTableHeaderIndex.actions]}
-          </Box>
-
-          <Box display="flex" flexDirection="column" gap={16} mt={24}>
-            {dataRow.map((datum, idx2) => {
-              if (idx2 === BalanceTableHeaderIndex.token) return null
-              if (idx2 === BalanceTableHeaderIndex.actions) return null
-              return (
-                <Box key={`balance-row-${idx}-datum-${idx2}`} display="flex" justifyContent="space-between">
-                  <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                    {BalanceTableHeader[idx2]}
-                  </Typography>
-                  <Typography fontSize={12} fontWeight={600}>
-                    {datum}
-                  </Typography>
-                </Box>
-              )
-            })}
-          </Box>
-        </Card>
-      ))}
-    </Box>
-  )
-}
-
 function AccountDetailCards({ data }: { data: any[][] }) {
   return (
     <Box display="flex" flexDirection="column" gap={8} mb={24}>
@@ -423,106 +171,5 @@ function AccountDetailCards({ data }: { data: any[][] }) {
         </Card>
       ))}
     </Box>
-  )
-}
-
-function BalanceActions({
-  onDeposit,
-  onWithdraw,
-  buyHref
-}: {
-  onDeposit: () => void
-  onWithdraw: () => void
-  buyHref: string
-}) {
-  return (
-    <Box display="flex" key="action" gap={10} pl={20}>
-      <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
-        Deposit
-      </Button>
-      <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onWithdraw}>
-        Withdraw
-      </Button>
-      <OutlineButton
-        href={buyHref}
-        fontSize={14}
-        style={{ width: 72, borderRadius: 4, height: 36, backgroundColor: '#ffffff' }}
-        primary
-      >
-        Swap
-      </OutlineButton>
-    </Box>
-  )
-}
-
-function InvestmentValueCard({ value, unit }: { value?: string; unit?: string; dayChange?: string }) {
-  const theme = useTheme()
-  const history = useHistory()
-  return (
-    <Card width={1} style={{ position: 'relative', border: '1px solid #00000010' }}>
-      <Box
-        sx={{
-          padding: '16px',
-          gap: '12px',
-          height: 'auto',
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <Box display="flex">
-          <Typography variant="inherit" color={theme.palette.text.secondary}>
-            Total Investment Value
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'baseline',
-            color: theme.palette.text.primary
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: 20,
-              fontWeight: 700,
-              lineHeight: 1
-            }}
-          >
-            {value}
-          </Typography>
-          <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>{unit}</Typography>
-          {/* <Box
-            component="div"
-            borderRadius={22}
-            color="#31B047"
-            bgcolor="rgba(49, 176, 71, 0.16)"
-            fontSize={14}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width={120}
-            height={24}
-            ml={12}
-          >
-            <Typography
-              sx={{
-                color: '#11BF2D',
-                fontSize: '12px'
-              }}
-            >
-              {dayChange}
-            </Typography>
-          </Box> */}
-        </Box>
-        <Button
-          onClick={() => {
-            history.push(routes.dualInvest)
-          }}
-          style={{ width: '100%', height: 36, fontSize: 14, borderRadius: 22 }}
-        >
-          Invest
-        </Button>
-      </Box>
-    </Card>
   )
 }

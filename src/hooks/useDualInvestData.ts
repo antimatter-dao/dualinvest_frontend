@@ -2,7 +2,6 @@ import { useState, useCallback, useMemo } from 'react'
 import { Axios } from 'utils/axios'
 import { ProductList, productListFormatter, productFormatter, Product, OrderRecord } from 'utils/fetch/product'
 import { AccountRecord } from 'utils/fetch/account'
-import { useActiveWeb3React } from 'hooks'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 
 export enum InvestStatus {
@@ -41,7 +40,6 @@ export function useProduct(productId: string) {
 }
 
 export function useAccountRecord(pageNum = 1, pageSize = 8) {
-  const { account } = useActiveWeb3React()
   const [accountRecord, setAccountRecord] = useState<AccountRecord | undefined>(undefined)
   const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
     count: 0,
@@ -50,9 +48,8 @@ export function useAccountRecord(pageNum = 1, pageSize = 8) {
   })
 
   const promiseFn = useCallback(() => {
-    if (!account) return new Promise((resolve, reject) => reject(null))
-    return Axios.get('getAccountRecord', { account, pageNum, pageSize })
-  }, [account, pageNum, pageSize])
+    return Axios.get('getAccountRecord', { account: undefined, pageNum, pageSize })
+  }, [pageNum, pageSize])
 
   const callbackFn = useCallback(r => {
     setAccountRecord(r.data.data)
