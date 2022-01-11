@@ -9,7 +9,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
-import { AccordionButton } from './Position'
+import AccordionButton from 'components/Button/AccordionButton'
 import Divider from 'components/Divider'
 // import Button from 'components/Button/Button'
 import StatusTag from 'components/Status/StatusTag'
@@ -25,19 +25,18 @@ enum HistoryMoreHeaderIndex {
 }
 
 const HistoryTableHeader = [
-  'Invest Amount\n(Subscription Amount)',
+  'Pair',
   'APY',
   'Subscribed Time',
-  'Strike Price',
-  'Exercise',
-  'Holding Days',
-  'Execute Amount',
-  'Delivery Date'
+  'Start Price',
+  'Price Range',
+  'Invest Amount\n(Dollar Value)',
+  'Cumulative'
 ]
 
-const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '', '']
+const HistoryMoreHeader = ['Subscribed Time', 'Time Interval', 'Cycle', 'Next Settle', 'Est. Earnings']
 
-export default function History() {
+export default function HistoryChainType() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
