@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Box } from '@mui/material'
 //import Tabs from 'components/Tabs/Tabs'
 import TabButton from 'components/Button/TabButton'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 enum Tabs {
   dualInvest = 'Dual Investment',
@@ -16,7 +17,7 @@ export default function InvestTabs({
   chainTypeContent: JSX.Element
 }) {
   const [currentTab, setCurrentTab] = useState(Tabs.dualInvest)
-
+  const isDownMd = useBreakpoint('md')
   return (
     <Box
       sx={{
@@ -31,7 +32,7 @@ export default function InvestTabs({
           setCurrentTab(Tabs.dualInvest)
         }}
         active={currentTab === Tabs.dualInvest}
-        sx={{ marginRight: 20 }}
+        sx={{ marginRight: 20, width: isDownMd ? 100 : 180 }}
       >
         {Tabs.dualInvest}
       </TabButton>
@@ -41,6 +42,7 @@ export default function InvestTabs({
           setCurrentTab(Tabs.chainType)
         }}
         active={currentTab === Tabs.chainType}
+        sx={{ width: isDownMd ? 140 : 180 }}
       >
         {Tabs.chainType}
       </TabButton>

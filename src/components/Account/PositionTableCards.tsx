@@ -8,12 +8,12 @@ export default function PositionTableCards({
   data,
   header,
   moreHeader,
-  headerIdx
+  statusIdx
 }: {
   data: { summaryList: any[][]; hiddenList: any[][] }
   header: string[]
   moreHeader: string[]
-  headerIdx: any
+  statusIdx: number
 }) {
   const [expanded, setExpanded] = useState<null | number>(null)
 
@@ -23,7 +23,7 @@ export default function PositionTableCards({
         <Card key={idx} color="#F2F5FA" padding="17px 16px">
           <Box display="flex" flexDirection="column" gap={16}>
             {dataRow.map((datum, idx2) => {
-              if (idx2 === headerIdx.status) {
+              if (idx2 === statusIdx) {
                 return (
                   <Box display="flex" alignItems="center" gap={14} key={idx2}>
                     {datum}

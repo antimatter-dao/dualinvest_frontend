@@ -25,17 +25,16 @@ enum HistoryMoreHeaderIndex {
 }
 
 const HistoryTableHeader = [
-  'Invest Amount\n(Subscription Amount)',
+  'Pair',
   'APY',
   'Subscribed Time',
-  'Strike Price',
-  'Exercise',
-  'Holding Days',
-  'Execute Amount',
-  'Delivery Date'
+  'Start Price',
+  'Price Range',
+  'Invest Amount\n(Dollar Value)',
+  'Cumulative'
 ]
 
-const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '', '']
+const HistoryMoreHeader = ['Subscribed Time', 'Time Interval', 'Cycle', 'Next Settle', 'Est. Earnings']
 
 export default function HistoryChainType() {
   const isDownMd = useBreakpoint('md')

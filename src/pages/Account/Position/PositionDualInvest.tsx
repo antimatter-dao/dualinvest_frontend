@@ -271,7 +271,7 @@ export default function PositionChainType() {
                   {isDownMd ? (
                     <PositionTableCards
                       header={PositionTableHeader}
-                      headerIdx={PositionTableHeaderIndex}
+                      statusIdx={PositionTableHeaderIndex.status}
                       moreHeader={PositionMoreHeader}
                       data={data}
                     />
