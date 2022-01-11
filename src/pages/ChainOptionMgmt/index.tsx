@@ -15,8 +15,13 @@ import { Subject } from '../../components/MgmtPage/stableContent'
 import MgmtPage from 'components/MgmtPage'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
-  paddingLeft: '18px',
+  paddingLeft: '14px',
   color: '#808080',
+  '& li': {
+    marginTop: 10,
+    whiteSpace: 'nowrap',
+    fontSize: 15.5
+  },
   '& li span': {
     color: '#252525'
   },
@@ -112,13 +117,13 @@ export default function DualInvestMgmt() {
         <StyledUnorderList>
           <li>Start at 11-29 09:00.</li>
           <li>
-            If the BTC price can stay within the following range within 24 hours, that is, Start price-500≤BTC/USDT
-            price≤Start price+500, you will receive{' '}
-            <span style={{ color: theme.palette.text.primary }}>220.00USDT</span>.
+            If the BTC price can keep rising within 24 hours, you will receive a reward of up to{' '}
+            <span style={{ color: theme.palette.text.primary }}>220.00 USDT</span>.
           </li>
+          <li>If the BTC price down in a certain range, it will be eliminated and your total income will be settled</li>
           <li>
-            If the BTC price exceeds the above range within 24 hours, it will be knocked out and your total income will
-            be settled.
+            If the first interval down, you will get&nbsp;
+            <span style={{ color: theme.palette.text.primary }}>20 USDT</span> compensation
           </li>
         </StyledUnorderList>
       </div>

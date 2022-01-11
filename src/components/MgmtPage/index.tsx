@@ -10,6 +10,7 @@ import { RiskStatement, FAQ, Subject } from './stableContent'
 // import { useSuccessImage } from 'hooks/useSuccessImage'
 
 interface Props {
+  showFaq?: boolean
   backLink: string
   product: any
   pageTitle: string
@@ -21,7 +22,17 @@ interface Props {
 }
 
 export default function MgmtPage(props: Props) {
-  const { backLink, product, pageTitle, chart, returnOnInvestment, subject, type, subscribeForm } = props
+  const {
+    backLink,
+    product,
+    pageTitle,
+    chart,
+    returnOnInvestment,
+    subject,
+    type,
+    subscribeForm,
+    showFaq = true
+  } = props
 
   const isDownMd = useBreakpoint('md')
 
@@ -143,11 +154,14 @@ export default function MgmtPage(props: Props) {
                 <RiskStatement subject={subject} />
               </Card>
             </Grid>
-            <Grid xs={12} item>
-              <Card style={{ height: '100%' }} padding="32px 24px">
-                <FAQ subject={subject} />
-              </Card>
-            </Grid>
+
+            {showFaq && (
+              <Grid xs={12} item>
+                <Card style={{ height: '100%' }} padding="32px 24px">
+                  <FAQ subject={subject} />
+                </Card>
+              </Grid>
+            )}
           </Grid>
         </Box>
       </Box>
