@@ -9,7 +9,7 @@ interface Props {
   height?: string | number
   value?: string
   subValue?: string
-  unit?: string
+  unit?: string | JSX.Element
   fontSize?: string
   gray?: boolean
   rate?: string

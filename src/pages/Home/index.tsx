@@ -1,4 +1,5 @@
 import { Box, Grid, Typography, styled } from '@mui/material'
+import { useHistory } from 'react-router-dom'
 import { ReactComponent as HomeSvg } from 'assets/svg/home.svg'
 import LogoText from 'components/LogoText'
 import checkUrl from 'assets/images/check.png'
@@ -11,6 +12,8 @@ import flexibleUrl from 'assets/images/flexible.png'
 import dualInvestUrl from 'assets/svg/home_dual_invest.svg'
 import chainOptionUrl from 'assets/svg/home_chain_option.svg'
 import Card from 'components/Card/Card'
+import { routes } from 'constants/routes'
+import { useBindModal } from 'hooks/useReferralModal'
 
 const StyledHomeSvg = styled(HomeSvg)(({ theme }) => ({
   flexShrink: 1,
@@ -27,6 +30,8 @@ const StyledHomeSvg = styled(HomeSvg)(({ theme }) => ({
 }))
 
 export default function Home() {
+  const history = useHistory()
+  useBindModal()
   return (
     <Box
       display="grid"
@@ -80,7 +85,7 @@ export default function Home() {
         gap={80}
         margin={{ xs: '0px 20px' }}
         sx={{
-          maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
+          maxWidth: theme => ({ xs: `calc(100% - 40px)`, lg: theme.width.maxContent })
         }}
       >
         <Grid container spacing={{ xs: 8, md: 20 }}>
@@ -91,7 +96,7 @@ export default function Home() {
                 '111'
                 // statistics && BTCPrice
                 //   ? trimNumberString(
-                //       (+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit).toLocaleString(),
+                //       (+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit).toLocaleString(      'en-US'),
                 //       0
                 //     )
                 //   : '-'
@@ -105,7 +110,7 @@ export default function Home() {
             <NumericalCard
               width={'100%'}
               value={'111'}
-              // value={statistics ? trimNumberString((+statistics.totalInvestAmount).toLocaleString(), 0) : '-'}
+              // value={statistics ? trimNumberString((+statistics.totalInvestAmount).toLocaleString(      'en-US'), 0) : '-'}
               unit="USDT"
               border
               subValue="Cumulative Investment Amount"
@@ -115,7 +120,7 @@ export default function Home() {
             <NumericalCard
               width={'100%'}
               value={'111'}
-              // value={statistics ? trimNumberString((+statistics.totalInvestAmount).toLocaleString(), 0) : '-'}
+              // value={statistics ? trimNumberString((+statistics.totalInvestAmount).toLocaleString(      'en-US'), 0) : '-'}
               unit="USDT"
               border
               subValue="Cumulative Investment Amount"
@@ -131,9 +136,11 @@ export default function Home() {
               src={dualInvestUrl}
               title="Dual Investment"
               synospis="Earn both ups and downs within a fluctuation range"
+              onClick={() => {
+                history.push(routes.dualInvest)
+              }}
             />
             <ProductCard
-              disabled
               src={dualInvestUrl}
               title="Dual Investment Plus"
               synospis="Dual Investment standard + advanced settings"
@@ -148,12 +155,34 @@ export default function Home() {
             <ProductCard
               src={chainOptionUrl}
               title="Saddle Options"
-              synospis="Suitable to buy wh en the price will fluctuate for a period of time"
+              synospis="Suitable to buy when the price will fluctuate for a period of time"
+              onClick={() => {
+                history.push(routes.chainOptionTyped.replace(':type', 'saddle'))
+              }}
             />
             <ProductCard
               src={chainOptionUrl}
               title="Tiered Options"
               synospis="Suitable for buying when the price will continue to rise or fall for a period of time"
+              onClick={() => {
+                history.push(routes.chainOptionTyped.replace(':type', 'tiered'))
+              }}
+            />
+          </Grid>
+        </Box>
+
+        <Box display="grid" gap={32}>
+          <Typography fontSize={48} fontWeight={700}>
+            Recurring Vault
+          </Typography>
+          <Grid container spacing={20}>
+            <ProductCard
+              src={chainOptionUrl}
+              title="Recurring Vault"
+              synospis="Automatic management of funds, cyclic compound interest"
+              onClick={() => {
+                history.push(routes.recurringVault)
+              }}
             />
           </Grid>
         </Box>
@@ -220,14 +249,14 @@ function ProductCard({
   src,
   title,
   synospis,
-  disabled,
-  actionText
+  actionText,
+  onClick
 }: {
   src: string
   title: string
   synospis: string
-  disabled?: boolean
   actionText?: string
+  onClick?: () => void
 }) {
   return (
     <Grid item xs={12} sm={6}>
@@ -243,14 +272,16 @@ function ProductCard({
             <Typography fontSize={24} fontWeight={700}>
               {title}
             </Typography>
-            <Typography sx={{ color: theme => theme.palette.text.secondary }}>{synospis}</Typography>
+            <Typography sx={{ color: theme => theme.palette.text.secondary, mt: 8 }}>{synospis}</Typography>
           </Box>
 
-          <Button disabled={disabled}>{disabled ? 'Coming soon' : actionText ?? 'Start now'}</Button>
+          <Button disabled={!onClick} onClick={onClick}>
+            {!onClick ? 'Coming soon' : actionText ?? 'Start now'}
+          </Button>
           <Image
             src={src}
             style={{
-              opacity: disabled ? 0.5 : 1,
+              opacity: !onClick ? 0.5 : 1,
               marginLeft: 'auto',
               gridRowStart: { xs: '2', md: '1' },
               gridRowEnd: { xs: 'span 1', md: 'span 2' },

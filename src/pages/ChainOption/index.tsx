@@ -1,45 +1,26 @@
 import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useHistory } from 'react-router'
-import { Box, Typography, styled, Grid, ButtonBase } from '@mui/material'
-import { ReactComponent as DualInvestGuide } from 'assets/svg/dualInvestGuide.svg'
-import checkUrl from 'assets/images/check.png'
-import Image from 'components/Image'
-import LogoText from 'components/LogoText'
+import { Box, Typography, styled, ButtonBase } from '@mui/material'
 import Table from 'components/Table'
-import NumericalCard from 'components/Card/NumericalCard'
 import Button from 'components/Button/Button'
 import { routes } from 'constants/routes'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { Product } from 'utils/fetch/product'
 import Spinner from 'components/Spinner'
-import { useProductList, useStatistics } from 'hooks/useDualInvestData'
+import { useProductList } from 'hooks/useDualInvestData'
 import dayjs from 'dayjs'
 import { usePrice } from 'hooks/usePriceSet'
-import { trimNumberString } from 'utils/trimNumberString'
 import NoDataCard from 'components/Card/NoDataCard'
 import { useBindModal } from 'hooks/useReferralModal'
 import { ExpireDateAQuestionHelper } from 'components/essential/QuestionHelper'
+import { useParams } from 'react-router-dom'
+import ProductBanner from 'components/ProductBanner'
+import BlueRing from 'components/Icon/BlueRing'
 
 enum TYPE {
   Saddle = 'Saddle',
   Tiered = 'Tiered'
 }
-
-const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
-  marginBottom: 13,
-  '& #dualInvestGuide': {
-    zIndex: 2,
-    '&:hover, :focus, :active': {
-      opacity: 1,
-      cursor: 'pointer'
-    }
-  },
-  flexShrink: 1,
-  [theme.breakpoints.down('md')]: {
-    width: 'calc(100vw - 80px)',
-    margin: '0 auto'
-  }
-}))
 
 const RowStr = styled(Typography)<{ component?: string }>(({ theme }) => ({
   fontWeight: 400,
@@ -103,11 +84,27 @@ const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => voi
 export default function ChainOption() {
   const [type, setType] = useState(TYPE.Saddle)
   const history = useHistory()
-  const isDownMd = useBreakpoint('md')
+  const { type: typePath } = useParams<{ type: string }>()
   const productList = useProductList()
-  const statistics = useStatistics()
   const BTCPrice = usePrice('BTC')
+  const ETHPrice = usePrice('ETH')
   useBindModal()
+
+  useEffect(() => {
+    if (typePath) {
+      const pathStr = typePath.toLocaleLowerCase()
+      if (pathStr === TYPE.Saddle.toLocaleLowerCase()) {
+        setType(TYPE.Saddle)
+        return
+      }
+      if (pathStr === TYPE.Tiered.toLocaleLowerCase()) {
+        setType(TYPE.Tiered)
+        return
+      }
+      history.push(routes.chainOption)
+      setType(TYPE.Saddle)
+    }
+  }, [history, typePath])
 
   const handleSubscribe = useCallback(
     (id: number) => () => {
@@ -138,68 +135,30 @@ export default function ChainOption() {
       marginBottom="auto"
       gap={{ xs: 36, md: 48 }}
     >
-      <Box
-        display="flex"
-        justifyContent="center"
-        sx={{
-          width: '100%',
-          background: theme => theme.palette.background.paper,
-          padding: { xs: '20px', md: '40px', lg: '44px 61px' }
-        }}
-      >
-        <Box
-          sx={{ maxWidth: theme => ({ xs: 'calc(100vw - 88px)', md: theme.width.maxContent }) }}
-          width="100%"
-          display={{ xs: 'grid', sm: 'flex' }}
-          justifyContent={{ sm: 'center', md: 'space-between' }}
-          alignItems="center"
-        >
-          <Box display="grid" gap={12}>
-            <Typography component="h1" sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700 }}>
-              Chain-type Option
-            </Typography>
-            <Box display={{ xs: 'grid', md: 'flex' }} gap={{ xs: 8, md: 32 }} paddingBottom={{ xs: 16, md: 30 }}>
-              <LogoText
-                logo={<Image src={checkUrl} />}
-                text={
-                  <Typography sx={{ fontSize: { xs: 14, md: 18 }, opacity: 0.8 }}>
-                    Easy to access，enjoy high returns
-                  </Typography>
-                }
-              />
-            </Box>
-            <Grid container spacing={{ xs: 8, md: 20 }}>
-              <Grid item xs={12} md={6}>
-                <NumericalCard
-                  width={isDownMd ? '320px' : '264px'}
-                  value={
-                    statistics && BTCPrice
-                      ? trimNumberString(
-                          (+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit).toLocaleString(),
-                          0
-                        )
-                      : '-'
-                  }
-                  unit="USDT"
-                  border
-                  subValue="BTC latest spot price"
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <NumericalCard
-                  width={isDownMd ? '320px' : '264px'}
-                  value={statistics ? trimNumberString((+statistics.totalInvestAmount).toLocaleString(), 0) : '-'}
-                  unit="USDT"
-                  border
-                  subValue="ETH latest spot price"
-                />
-              </Grid>
-            </Grid>
+      <ProductBanner
+        title="Chain-type Option"
+        checkpoints={['Easy to access，enjoy high returns']}
+        val1={
+          BTCPrice ? (+BTCPrice).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-'
+        }
+        subVal1={'BTC latest spot price'}
+        unit1={
+          <Box display={'flex'} alignItems="center" gap={'5px'} component="span">
+            USDT
+            <BlueRing />
           </Box>
-          <StyledDualInvestGuide />
-        </Box>
-      </Box>
-
+        }
+        val2={
+          ETHPrice ? (+ETHPrice).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '-'
+        }
+        subVal2={'ETH latest spot price'}
+        unit2={
+          <Box display={'flex'} alignItems="center" gap={'5px'} component="span">
+            USDT
+            <BlueRing />
+          </Box>
+        }
+      />
       <Box
         display="flex"
         gap={20}

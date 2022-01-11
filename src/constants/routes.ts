@@ -1,12 +1,16 @@
 export const routes = {
-  home: '/home',
+  account: '/account',
+  accountTab: '/account/:tab',
   chainOption: '/chain_option',
+  chainOptionTyped: '/chain_option/:type',
   chainOptionMgmt: '/chain_option_mgmt/:id',
   dualInvest: '/dual_invest',
   dualInvestMgmt: '/dual_invest_mgmt/:id',
   dualInvestMgmtImg: '/dual_invest_mgmt/:id/:orderId',
-  account: '/account/:tab',
+  home: '/home',
   noService: 'no_service',
+  recurringVault: '/recurring_vault',
+  recurringVaultMgmt: '/recurring_vault_mgmt/:id',
   referral: '/:referrer'
 }
 
