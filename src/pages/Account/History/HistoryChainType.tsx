@@ -179,7 +179,7 @@ export default function HistoryChainType() {
               />
             </>
           ) : (
-            <NoDataCard height="20vh" />
+            <NoDataCard height="40vh" />
           )}
         </Box>
       </Card>
