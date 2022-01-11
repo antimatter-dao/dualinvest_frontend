@@ -116,7 +116,7 @@ export default function DualInvest() {
                   }
                   unit="USDT"
                   border
-                  subValue="Cumulative Deposit Amount"
+                  subValue="Total Value Locked"
                 />
               </Grid>
               <Grid item xs={12} md={6}>
