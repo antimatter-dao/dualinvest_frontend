@@ -25,7 +25,13 @@ export function useDualInvestCallback(): {
   withdrawCallback: undefined | ((amount: string, currency: string) => Promise<any>)
   createOrderCallback:
     | undefined
-    | ((orderId: string | number, productId: string, amount: string, currencyAddress: string) => Promise<any>)
+    | ((
+        orderId: string | number,
+        productId: string,
+        amount: string,
+        currencyAddress: string,
+        supplier: 0 | 1
+      ) => Promise<any>)
   finishOrderCallback: undefined | ((orderId: string, productId: string) => Promise<any>)
   checkOrderStatusCallback: undefined | ((orderId: number) => Promise<any>)
 } {
@@ -45,6 +51,7 @@ export function useDualInvestCallback(): {
     },
     [contract]
   )
+
   const withdraw = useCallback(
     (amount: string, currency: string): Promise<any> => {
       return new Promise(async (resolve, reject) => {
@@ -95,15 +102,15 @@ export function useDualInvestCallback(): {
   )
 
   const createOrder = useCallback(
-    async (orderId, productId, amount, currencyAddress): Promise<any> => {
+    async (orderId, productId, amount, currencyAddress, supplier): Promise<any> => {
       if (!contract) return undefined
       const estimatedGas = await contract.estimateGas
-        .createOrder(orderId, productId, amount, currencyAddress)
+        .createOrder(orderId, productId, amount, currencyAddress, supplier)
         .catch((error: Error) => {
           console.debug('Failed to create order', error)
           throw error
         })
-      return contract?.createOrder(orderId, productId, amount, currencyAddress, {
+      return contract?.createOrder(orderId, productId, amount, currencyAddress, supplier, {
         gasLimit: calculateGasMargin(estimatedGas)
       })
     },

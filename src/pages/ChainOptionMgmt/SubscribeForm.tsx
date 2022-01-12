@@ -121,7 +121,7 @@ export default function SubscribeForm({
           throw Error('Order Exist')
         }
 
-        const createOrderRes = await createOrderCallback(orderId, productId, val, currentCurrency.address)
+        const createOrderRes = await createOrderCallback(orderId, productId, val, currentCurrency.address, 0)
         addTransaction(createOrderRes, {
           createOrder: true,
           summary: ''
