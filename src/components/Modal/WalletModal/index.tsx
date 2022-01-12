@@ -210,17 +210,30 @@ export default function WalletModal({
           </Typography>
           <Box padding={isUpToMD ? '16px' : '2rem 6rem 52px'}>
             {error instanceof UnsupportedChainIdError
-              ? 'Please connect to the Binance Smart Chain.'
+              ? `Please connect to the    ${
+                  SUPPORTED_NETWORKS[parseInt(process.env.REACT_APP_CHAIN_ID ?? '') as ChainId]
+                    ? SUPPORTED_NETWORKS[parseInt(process.env.REACT_APP_CHAIN_ID ?? '') as ChainId]?.chainName
+                    : 'Binance Smart Chain'
+                }.`
               : 'Error connecting. Try refreshing the page.'}
           </Box>
           {window.ethereum && window.ethereum.isMetaMask && (
             <Button
               onClick={() => {
-                const params = SUPPORTED_NETWORKS[ChainId.ROPSTEN]
-                window.ethereum?.send('wallet_addEthereumChain', [params, account])
+                const id = Object.values(ChainId).find(val => val === parseInt(process.env.REACT_APP_CHAIN_ID ?? ''))
+                if (!id) {
+                  return
+                }
+                const params = SUPPORTED_NETWORKS[id as ChainId]
+                params?.nativeCurrency.symbol === 'ETH'
+                  ? window.ethereum?.send('wallet_switchEthereumChain', [{ chainId: params.chainId }, account])
+                  : window.ethereum?.send('wallet_addEthereumChain', [params, account])
               }}
             >
-              Connect to BSC
+              Connect to{' '}
+              {SUPPORTED_NETWORKS[parseInt(process.env.REACT_APP_CHAIN_ID ?? '') as ChainId]
+                ? SUPPORTED_NETWORKS[parseInt(process.env.REACT_APP_CHAIN_ID ?? '') as ChainId]?.chainName
+                : 'BSC'}
             </Button>
           )}
         </>
