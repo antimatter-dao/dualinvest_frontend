@@ -10,10 +10,11 @@ interface Props {
   curPrice?: string
   title: string
   priceCurSymbol: string
+  description?: string
 }
 
 export default function ProductCardHeader(props: Props) {
-  const { logoCurSymbol, curPrice, title, priceCurSymbol } = props
+  const { logoCurSymbol, curPrice, title, priceCurSymbol, description } = props
 
   const isDownSm = useBreakpoint('sm')
   const isDownMd = useBreakpoint('md')
@@ -35,16 +36,23 @@ export default function ProductCardHeader(props: Props) {
             marginBottom: isDownSm ? 12 : 0
           }}
         />
-        <Typography
-          fontWeight={700}
-          sx={{
-            gridColumnStart: isDownSm ? 1 : 2,
-            gridColumnEnd: 'span 1',
-            fontSize: 24
-          }}
-        >
-          {title}
-        </Typography>
+        <Box>
+          <Typography
+            fontWeight={700}
+            sx={{
+              gridColumnStart: isDownSm ? 1 : 2,
+              gridColumnEnd: 'span 1',
+              fontSize: 24
+            }}
+          >
+            {title}
+          </Typography>
+          {description && (
+            <Typography fontSize={16} sx={{ opacity: 0.5 }}>
+              {description}
+            </Typography>
+          )}
+        </Box>
       </Box>
       <Card gray={isDownSm} style={{ borderRadius: '16px', margin: isDownMd ? '16px 0' : 0 }}>
         <Box
