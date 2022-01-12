@@ -1,5 +1,6 @@
+import { useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Box, Typography, Grid } from '@mui/material'
+import { Box, Typography, Grid, styled } from '@mui/material'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
 import theme from 'theme'
 import Card, { OutlinedCard } from 'components/Card/Card'
@@ -9,16 +10,31 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import { RiskStatement, FAQ, Subject } from './stableContent'
 // import { useSuccessImage } from 'hooks/useSuccessImage'
 
+const StyledUnorderList = styled('ul')(({ theme }) => ({
+  paddingLeft: '14px',
+  color: '#808080',
+  '& li': {
+    marginTop: 10,
+    fontSize: 15.5
+  },
+  '& li span': {
+    color: '#252525'
+  },
+  '& li::marker': {
+    color: theme.palette.primary.main
+  }
+}))
+
 interface Props {
   showFaq?: boolean
   backLink: string
   product: any
-  pageTitle: string
+  pageTitle?: string
   chart: React.ReactNode
-  returnOnInvestment: React.ReactNode
   subject: Subject
   type?: string
   subscribeForm: React.ReactNode
+  returnOnInvestmentListItems: React.ReactNode[]
 }
 
 export default function MgmtPage(props: Props) {
@@ -27,14 +43,29 @@ export default function MgmtPage(props: Props) {
     product,
     pageTitle,
     chart,
-    returnOnInvestment,
     subject,
     type,
     subscribeForm,
-    showFaq = true
+    showFaq = true,
+    returnOnInvestmentListItems
   } = props
 
   const isDownMd = useBreakpoint('md')
+
+  const returnOnInvestment = useMemo(() => {
+    return (
+      <div>
+        <Typography fontSize={16} color={theme.palette.text.primary}>
+          Return on investment:
+        </Typography>
+        <StyledUnorderList>
+          {returnOnInvestmentListItems.map((item, idx) => (
+            <li key={idx}>{item}</li>
+          ))}
+        </StyledUnorderList>
+      </div>
+    )
+  }, [theme.palette.text.primary])
 
   return (
     <>
@@ -67,9 +98,11 @@ export default function MgmtPage(props: Props) {
         </Box>
         <Box padding={isDownMd ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
           <Box mb={isDownMd ? 24 : 60} display="flex" gap={8} flexDirection={isDownMd ? 'column' : 'row'}>
-            <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
-              {pageTitle}
-            </Typography>
+            {pageTitle && (
+              <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
+                {pageTitle}
+              </Typography>
+            )}
             {subject === Subject.DualInvest && (
               <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={400} component="span">
                 [{type === 'CALL' ? 'upward' : 'down'} exercise]

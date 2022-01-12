@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Typography, styled, Box, useTheme } from '@mui/material'
+import { Typography, Box, useTheme } from '@mui/material'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import MgmtPage from 'components/MgmtPage'
 import { routes } from 'constants/routes'
@@ -8,21 +8,6 @@ import ConfirmModal from 'components/MgmtPage/ConfirmModal'
 import { feeRate } from 'constants/index'
 import { CURRENCIES } from 'constants/currencies'
 import Card from 'components/Card/Card'
-
-const StyledUnorderList = styled('ul')(({ theme }) => ({
-  paddingLeft: '14px',
-  color: '#808080',
-  '& li': {
-    marginTop: 10,
-    fontSize: 15.5
-  },
-  '& li span': {
-    color: '#252525'
-  },
-  '& li::marker': {
-    color: theme.palette.primary.main
-  }
-}))
 
 export default function RecurringValueMgmt() {
   const theme = useTheme()
@@ -42,27 +27,20 @@ export default function RecurringValueMgmt() {
     []
   )
 
-  const returnOnInvestment = useMemo(() => {
-    return (
-      <div>
-        <Typography fontSize={16} color={theme.palette.text.primary}>
-          Return on investment:
-        </Typography>
-        <StyledUnorderList>
-          <li>Start at 11-29 09:00.</li>
-          <li>
-            If the BTC price can keep rising within 24 hours, you will receive a reward of up to{' '}
-            <span style={{ color: theme.palette.text.primary }}>220.00 USDT</span>.
-          </li>
-          <li>If the BTC price down in a certain range, it will be eliminated and your total income will be settled</li>
-          <li>
-            If the first interval down, you will get&nbsp;
-            <span style={{ color: theme.palette.text.primary }}>20 USDT</span> compensation
-          </li>
-        </StyledUnorderList>
-      </div>
-    )
-  }, [theme.palette.text.primary])
+  const returnOnInvestmentListItems = useMemo(() => {
+    return [
+      <>Start at 11-29 09:00.</>,
+      <>
+        If the BTC price can keep rising within 24 hours, you will receive a reward of up to{' '}
+        <span style={{ color: theme.palette.text.primary }}>220.00 USDT</span>.
+      </>,
+      <>If the BTC price down in a certain range, it will be eliminated and your total income will be settled</>,
+      <>
+        If the first interval down, you will get&nbsp;
+        <span style={{ color: theme.palette.text.primary }}>20 USDT</span> compensation
+      </>
+    ]
+  }, [])
 
   return (
     <>
@@ -96,11 +74,10 @@ export default function RecurringValueMgmt() {
         showFaq={false}
         backLink={routes.recurringVault}
         product={undefined}
-        pageTitle={`test`}
-        returnOnInvestment={returnOnInvestment}
         subject={Subject.RecurringVault}
         chart={undefined}
         subscribeForm={<Box />}
+        returnOnInvestmentListItems={returnOnInvestmentListItems}
       />
     </>
   )

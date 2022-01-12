@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { Box, Typography, Grid, styled } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { Time } from 'lightweight-charts'
 import { routes } from 'constants/routes'
 import theme from 'theme'
@@ -13,17 +13,6 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import SubscribeForm from './SubscribeForm'
 import { Subject } from '../../components/MgmtPage/stableContent'
 import MgmtPage from 'components/MgmtPage'
-
-const StyledUnorderList = styled('ul')(({ theme }) => ({
-  paddingLeft: '18px',
-  color: '#808080',
-  '& li span': {
-    color: '#252525'
-  },
-  '& li::marker': {
-    color: theme.palette.primary.main
-  }
-}))
 
 export default function DualInvestMgmt() {
   const [amount, setAmount] = useState('')
@@ -103,28 +92,21 @@ export default function DualInvestMgmt() {
     )
   }, [gtStr, isDownMd, ltStr, priceSet, product, strikeLineData, strikePrice])
 
-  const returnOnInvestment = useMemo(() => {
-    return (
-      <div>
-        <Typography fontSize={16} color={theme.palette.text.primary}>
-          Return on investment:
-        </Typography>
-        <StyledUnorderList>
-          <li>
-            When the final settlement price &gt; {strikePrice} USDT, you will receive{' '}
-            <span style={{ color: theme.palette.text.primary }}>{gtStr}</span>.
-          </li>
-          <li>
-            When the settlement price is &le; {strikePrice} USDT, you will receive{' '}
-            <span style={{ color: theme.palette.text.primary }}>{ltStr}</span>.
-          </li>
-          <li>
-            APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully complete the
-            subscription.
-          </li>
-        </StyledUnorderList>
-      </div>
-    )
+  const returnOnInvestmentListItems = useMemo(() => {
+    return [
+      <>
+        When the final settlement price &gt; {strikePrice} USDT, you will receive{' '}
+        <span style={{ color: theme.palette.text.primary }}>{gtStr}</span>.
+      </>,
+      <>
+        When the settlement price is &le; {strikePrice} USDT, you will receive{' '}
+        <span style={{ color: theme.palette.text.primary }}>{ltStr}</span>.
+      </>,
+      <>
+        APY will be refreshed instantly, and Antimatter will use the latest APY when you successfully complete the
+        subscription.
+      </>
+    ]
   }, [gtStr, ltStr, strikePrice])
 
   return (
@@ -132,7 +114,7 @@ export default function DualInvestMgmt() {
       backLink={routes.dualInvest}
       product={product}
       pageTitle={`${product?.currency} Financial Management`}
-      returnOnInvestment={returnOnInvestment}
+      returnOnInvestmentListItems={returnOnInvestmentListItems}
       subject={Subject.DualInvest}
       type={type}
       chart={chart}
