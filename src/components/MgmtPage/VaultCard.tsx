@@ -1,6 +1,7 @@
 import { Box } from '@mui/material'
 import Card from 'components/Card/Card'
 import ProductCardHeader from 'components/ProductCardHeader'
+import VaultForm from './VaultForm'
 
 interface Props {
   logoCurSymbol: string
@@ -23,6 +24,7 @@ export default function VaultCard(props: Props) {
           description={description}
           priceCurSymbol={priceCurSymbol}
         />
+        <VaultForm />
       </Box>
     </Card>
   )
