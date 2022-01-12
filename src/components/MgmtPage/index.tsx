@@ -113,16 +113,19 @@ export default function MgmtPage(props: Props) {
               </Typography>
             )}
           </Box>
-          {showVault && (
-            <VaultCard
-              title="BTC Covered Call Vault"
-              description="Generates yield by running an automated BTC covered call strategy"
-              logoCurSymbol="BTC"
-              curPrice={'12345'}
-              priceCurSymbol="BTC"
-            />
-          )}
+
           <Grid container spacing={20}>
+            <Grid xs={12} item>
+              {showVault && (
+                <VaultCard
+                  title="BTC Covered Call Vault"
+                  description="Generates yield by running an automated BTC covered call strategy"
+                  logoCurSymbol="BTC"
+                  curPrice={'12345'}
+                  priceCurSymbol="BTC"
+                />
+              )}
+            </Grid>
             <Grid xs={12} md={4} item position="relative">
               {!product && (
                 <Box
