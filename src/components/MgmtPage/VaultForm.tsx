@@ -17,7 +17,7 @@ const formData = {
 
 export default function VaultForm() {
   return (
-    <Box maxWidth={496}>
+    <Box width="100%">
       <Tabs
         titles={['Compound', 'Redeem']}
         contents={[<Form key="compound" type={TYPE.compound} />, <Form key="redeem" type={TYPE.redeem} />]}
@@ -38,7 +38,7 @@ function Form({ type }: { type: TYPE }) {
         ))}
       </Box>
       <NumericalInput
-        label="Redeemable amount: 5BTC"
+        label="Available: 5BTC"
         placeholder="0.00"
         onChangeCapture={() => {}}
         onMax={() => {}}
