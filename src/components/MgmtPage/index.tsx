@@ -9,6 +9,7 @@ import Spinner from 'components/Spinner'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { RiskStatement, FAQ, Subject } from './stableContent'
 // import { useSuccessImage } from 'hooks/useSuccessImage'
+import VaultCard from './VaultCard'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -35,6 +36,7 @@ interface Props {
   type?: string
   subscribeForm: React.ReactNode
   returnOnInvestmentListItems: React.ReactNode[]
+  showVault?: boolean
 }
 
 export default function MgmtPage(props: Props) {
@@ -47,7 +49,8 @@ export default function MgmtPage(props: Props) {
     type,
     subscribeForm,
     showFaq = true,
-    returnOnInvestmentListItems
+    returnOnInvestmentListItems,
+    showVault
   } = props
 
   const isDownMd = useBreakpoint('md')
@@ -96,6 +99,7 @@ export default function MgmtPage(props: Props) {
             </NavLink>
           </Box>
         </Box>
+
         <Box padding={isDownMd ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
           <Box mb={isDownMd ? 24 : 60} display="flex" gap={8} flexDirection={isDownMd ? 'column' : 'row'}>
             {pageTitle && (
@@ -109,6 +113,9 @@ export default function MgmtPage(props: Props) {
               </Typography>
             )}
           </Box>
+          {showVault && (
+            <VaultCard title="BTC Covered Call Vault" logoCurSymbol="BTC" curPrice={'12345'} priceCurSymbol="BTC" />
+          )}
           <Grid container spacing={20}>
             <Grid xs={12} md={4} item position="relative">
               {!product && (

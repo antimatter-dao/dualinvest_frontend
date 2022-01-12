@@ -78,6 +78,7 @@ export default function RecurringValueMgmt() {
         chart={undefined}
         subscribeForm={<Box />}
         returnOnInvestmentListItems={returnOnInvestmentListItems}
+        showVault={true}
       />
     </>
   )
