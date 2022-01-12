@@ -1,53 +1,55 @@
-import { useParams } from 'react-router-dom'
 import { Box, Typography, useTheme } from '@mui/material'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import Button from 'components/Button/Button'
 import Modal from 'components/Modal'
-import { useProduct } from 'hooks/useDualInvestData'
 import Divider from 'components/Divider'
 import QuestionHelper from 'components/essential/QuestionHelper'
 import { feeRate } from 'constants/index'
+import { Currency } from 'constants/token'
 
 export default function ConfirmModal({
   isOpen,
   onDismiss,
   onConfirm,
   amount,
-  data
+  data,
+  showCancelWarning,
+  title,
+  subTitle,
+  investCurrency
 }: {
   isOpen: boolean
   onDismiss: () => void
   onConfirm: () => void
   amount: string
   data: { [key: string]: any }
+  title: string
+  subTitle?: string
+  investCurrency?: Currency
+  showCancelWarning?: boolean
 }) {
-  const { id } = useParams<{ id: string }>()
-  const product = useProduct(id)
   const theme = useTheme()
 
   return (
     <Modal customIsOpen={isOpen} customOnDismiss={onDismiss} padding="35px 32px 37px" closeIcon>
       <Box padding="0 21px">
         <Typography fontSize={20} fontWeight={500} textAlign="center">
-          {product?.investCurrency} Financial Management
+          {title}
         </Typography>
-        <Typography fontSize={20} fontWeight={500} color="#31B047" textAlign="center">
-          [{product?.type === 'CALL' ? 'upward' : 'down'} exercise]
-        </Typography>
+        {subTitle && (
+          <Typography fontSize={20} fontWeight={500} color="#31B047" textAlign="center">
+            {subTitle}
+          </Typography>
+        )}
         <Typography fontSize={18} fontWeight={500} sx={{ opacity: 0.4 }} mt={30} mb={16}>
           Subscription Amount
         </Typography>
         <Box display="flex" justifyContent="space-between" mb={30}>
-          {product && (
-            <Typography fontSize={44} fontWeight={700}>
-              {(
-                +product.multiplier *
-                +amount *
-                (product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
-              ).toFixed(2)}
-            </Typography>
-          )}
-          <Typography fontSize={24}>{product?.investCurrency}</Typography>
+          <Typography fontSize={44} fontWeight={700}>
+            {amount}
+          </Typography>
+
+          <Typography fontSize={24}>{investCurrency?.symbol}</Typography>
         </Box>
         <Divider sx={{ opacity: 0.1 }} />
         <Box display="grid" gap="8px" mt={29} mb={29}>
@@ -79,12 +81,14 @@ export default function ConfirmModal({
       </Box>
 
       <Button onClick={onConfirm}>Confirm</Button>
-      <Box>
-        <InfoOutlinedIcon sx={{ color: theme.palette.primary.main, height: 12 }} />
-        <Typography component="span" fontSize={12}>
-          Once subscribed, the subscribed products cannot be cancelled.
-        </Typography>
-      </Box>
+      {showCancelWarning && (
+        <Box>
+          <InfoOutlinedIcon sx={{ color: theme.palette.primary.main, height: 12 }} />
+          <Typography component="span" fontSize={12}>
+            Once subscribed, the subscribed products cannot be cancelled.
+          </Typography>
+        </Box>
+      )}
     </Modal>
   )
 }

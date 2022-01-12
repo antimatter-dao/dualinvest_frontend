@@ -9,7 +9,8 @@ import ActionModal, { ActionType } from 'pages/Account/modals/ActionModal'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { Token } from 'constants/token'
 import { Product } from 'utils/fetch/product'
-import ConfirmModal from 'pages/DualInvestMgmt/ConfirmModal'
+import ConfirmModal from 'components/MgmtPage/ConfirmModal'
+import { CURRENCIES } from 'constants/currencies'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -81,7 +82,7 @@ export function MgmtForm({
   const handleConfirm = useCallback(() => {
     setIsConfirmed(true)
     setIsConfirmOpen(false)
-    handleSubscribe
+    handleSubscribe()
   }, [handleSubscribe])
 
   return (
@@ -90,8 +91,20 @@ export function MgmtForm({
         isOpen={isConfirmOpen}
         onDismiss={hideConfirm}
         onConfirm={handleConfirm}
-        amount={amount}
+        amount={
+          product
+            ? (
+                +product.multiplier *
+                +amount *
+                (product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
+              ).toFixed(2)
+            : '-'
+        }
         data={confirmData}
+        investCurrency={CURRENCIES[product?.investCurrency ?? 'USDT']}
+        title={` ${product?.investCurrency} Financial Management`}
+        subTitle={`  [${product?.type === 'CALL' ? 'upward' : 'down'} exercise]`}
+        showCancelWarning={false}
       />
       <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
       <Box display="grid" flexDirection="column" gap={16} height="100%" width="100%" padding="36px 24px">

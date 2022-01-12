@@ -16,7 +16,7 @@ import { InvesStatus, InvesStatusType, OrderRecord } from 'utils/fetch/product'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useDualInvestCallback } from 'hooks/useDualInvest'
 import { trimNumberString } from 'utils/trimNumberString'
-import { MgmtForm } from 'components/MgmtForm'
+import { MgmtForm } from 'components/MgmtForm/MgmtForm'
 import { CURRENCIES } from 'constants/currencies'
 
 enum ErrorType {
