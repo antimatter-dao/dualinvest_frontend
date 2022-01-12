@@ -6,15 +6,18 @@ import useBreakpoint from 'hooks/useBreakpoint'
 
 enum Tabs {
   dualInvest = 'Dual Investment',
-  chainType = 'Chain-Type Option'
+  chainType = 'Chain-Type Option',
+  recurVault = 'Recurring Vault'
 }
 
 export default function InvestTabs({
   dualInvestContent,
-  chainTypeContent
+  chainTypeContent,
+  recurVaultContent
 }: {
   dualInvestContent: JSX.Element
-  chainTypeContent: JSX.Element
+  chainTypeContent?: JSX.Element
+  recurVaultContent?: JSX.Element
 }) {
   const [currentTab, setCurrentTab] = useState(Tabs.dualInvest)
   const isDownMd = useBreakpoint('md')
@@ -36,19 +39,32 @@ export default function InvestTabs({
       >
         {Tabs.dualInvest}
       </TabButton>
-
-      <TabButton
-        onClick={() => {
-          setCurrentTab(Tabs.chainType)
-        }}
-        active={currentTab === Tabs.chainType}
-        sx={{ width: isDownMd ? 140 : 180 }}
-      >
-        {Tabs.chainType}
-      </TabButton>
+      {chainTypeContent && (
+        <TabButton
+          onClick={() => {
+            setCurrentTab(Tabs.chainType)
+          }}
+          active={currentTab === Tabs.chainType}
+          sx={{ width: isDownMd ? 140 : 180, marginRight: 20 }}
+        >
+          {Tabs.chainType}
+        </TabButton>
+      )}
+      {recurVaultContent && (
+        <TabButton
+          onClick={() => {
+            setCurrentTab(Tabs.recurVault)
+          }}
+          active={currentTab === Tabs.recurVault}
+          sx={{ width: isDownMd ? 140 : 180 }}
+        >
+          {Tabs.recurVault}
+        </TabButton>
+      )}
 
       {currentTab === Tabs.dualInvest && dualInvestContent}
       {currentTab === Tabs.chainType && chainTypeContent}
+      {currentTab === Tabs.recurVault && recurVaultContent}
     </Box>
   )
 }
