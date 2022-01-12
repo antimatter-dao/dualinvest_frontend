@@ -6,6 +6,8 @@ import Divider from 'components/Divider'
 import QuestionHelper from 'components/essential/QuestionHelper'
 import { feeRate } from 'constants/index'
 import { Currency } from 'constants/token'
+import CurrencyLogo from 'components/essential/CurrencyLogo'
+import React from 'react'
 
 export default function ConfirmModal({
   isOpen,
@@ -16,7 +18,8 @@ export default function ConfirmModal({
   showCancelWarning,
   title,
   subTitle,
-  investCurrency
+  investCurrency,
+  children
 }: {
   isOpen: boolean
   onDismiss: () => void
@@ -27,6 +30,7 @@ export default function ConfirmModal({
   subTitle?: string
   investCurrency?: Currency
   showCancelWarning?: boolean
+  children?: React.ReactNode
 }) {
   const theme = useTheme()
 
@@ -41,15 +45,20 @@ export default function ConfirmModal({
             {subTitle}
           </Typography>
         )}
+        {children}
         <Typography fontSize={18} fontWeight={500} sx={{ opacity: 0.4 }} mt={30} mb={16}>
           Subscription Amount
         </Typography>
-        <Box display="flex" justifyContent="space-between" mb={30}>
+        <Box display="flex" justifyContent="space-between" mb={30} alignItems={'center'}>
           <Typography fontSize={44} fontWeight={700}>
             {amount}
           </Typography>
-
-          <Typography fontSize={24}>{investCurrency?.symbol}</Typography>
+          {investCurrency && (
+            <Box display="flex" gap="5px">
+              <CurrencyLogo currency={investCurrency} />
+              <Typography fontSize={24}>{investCurrency?.symbol}</Typography>
+            </Box>
+          )}
         </Box>
         <Divider sx={{ opacity: 0.1 }} />
         <Box display="grid" gap="8px" mt={29} mb={29}>

@@ -19,7 +19,6 @@ const StyledUnorderList = styled('ul')(({ theme }) => ({
   color: '#808080',
   '& li': {
     marginTop: 10,
-    whiteSpace: 'nowrap',
     fontSize: 15.5
   },
   '& li span': {

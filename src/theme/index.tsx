@@ -73,8 +73,8 @@ export const theme = {
       contrastText: '#ffffff'
     },
     error: {
-      main: '#FF0000',
-      light: '#FFD7D7'
+      main: '#FA0E0E',
+      light: '#FA0E0E10'
     },
     warning: {
       main: '#F0B90B'
