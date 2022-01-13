@@ -264,7 +264,6 @@ export default function PositionChainType() {
                   <Button style={{ marginTop: 24 }} onClick={handleGoInvest} height="44px">
                     Go invest and earn money
                   </Button>
-                  hi
                 </NoDataCard>
               ) : (
                 <>
