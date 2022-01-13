@@ -75,7 +75,7 @@ export default function PositionChainType() {
   const history = useHistory()
 
   const handleGoInvest = useCallback(() => {
-    history.push(routes.dualInvest)
+    history.push(routes.recurringVault)
   }, [history])
 
   const data = useMemo(() => {
@@ -264,7 +264,6 @@ export default function PositionChainType() {
                   <Button style={{ marginTop: 24 }} onClick={handleGoInvest} height="44px">
                     Go invest and earn money
                   </Button>
-                  hi
                 </NoDataCard>
               ) : (
                 <>

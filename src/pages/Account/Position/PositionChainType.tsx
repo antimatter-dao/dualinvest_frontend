@@ -76,7 +76,7 @@ export default function PositionChainType() {
   const history = useHistory()
 
   const handleGoInvest = useCallback(() => {
-    history.push(routes.dualInvest)
+    history.push(routes.chainOption)
   }, [history])
 
   const data = useMemo(() => {
