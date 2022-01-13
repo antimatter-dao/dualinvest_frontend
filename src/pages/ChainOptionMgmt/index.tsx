@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { Box, Typography, Grid, styled } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { Time } from 'lightweight-charts'
 import { routes } from 'constants/routes'
 import theme from 'theme'
@@ -13,21 +13,6 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import SubscribeForm from './SubscribeForm'
 import { Subject } from '../../components/MgmtPage/stableContent'
 import MgmtPage from 'components/MgmtPage'
-
-const StyledUnorderList = styled('ul')(({ theme }) => ({
-  paddingLeft: '14px',
-  color: '#808080',
-  '& li': {
-    marginTop: 10,
-    fontSize: 15.5
-  },
-  '& li span': {
-    color: '#252525'
-  },
-  '& li::marker': {
-    color: theme.palette.primary.main
-  }
-}))
 
 export default function DualInvestMgmt() {
   const [amount, setAmount] = useState('')
@@ -107,26 +92,19 @@ export default function DualInvestMgmt() {
     )
   }, [gtStr, isDownMd, ltStr, priceSet, product, strikeLineData, strikePrice])
 
-  const returnOnInvestment = useMemo(() => {
-    return (
-      <div>
-        <Typography fontSize={16} color={theme.palette.text.primary}>
-          Return on investment:
-        </Typography>
-        <StyledUnorderList>
-          <li>Start at 11-29 09:00.</li>
-          <li>
-            If the BTC price can keep rising within 24 hours, you will receive a reward of up to{' '}
-            <span style={{ color: theme.palette.text.primary }}>220.00 USDT</span>.
-          </li>
-          <li>If the BTC price down in a certain range, it will be eliminated and your total income will be settled</li>
-          <li>
-            If the first interval down, you will get&nbsp;
-            <span style={{ color: theme.palette.text.primary }}>20 USDT</span> compensation
-          </li>
-        </StyledUnorderList>
-      </div>
-    )
+  const returnOnInvestmentListItems = useMemo(() => {
+    return [
+      <>Start at 11-29 09:00.</>,
+      <>
+        If the BTC price can keep rising within 24 hours, you will receive a reward of up to{' '}
+        <span style={{ color: theme.palette.text.primary }}>220.00 USDT</span>.
+      </>,
+      <>If the BTC price down in a certain range, it will be eliminated and your total income will be settled</>,
+      <>
+        If the first interval down, you will get&nbsp;
+        <span style={{ color: theme.palette.text.primary }}>20 USDT</span> compensation
+      </>
+    ]
   }, [])
 
   return (
@@ -134,7 +112,7 @@ export default function DualInvestMgmt() {
       backLink={routes.chainOption}
       product={product}
       pageTitle={`${product?.currency} Saddle Option`}
-      returnOnInvestment={returnOnInvestment}
+      returnOnInvestmentListItems={returnOnInvestmentListItems}
       subject={Subject.ChainOption}
       chart={chart}
       subscribeForm={<SubscribeForm product={product} setAmount={handleInput} amount={amount} id={id} />}
