@@ -14,10 +14,11 @@ interface Props {
   title: string
   priceCurSymbol: string
   description: string
+  account?: string | null
 }
 
 export default function VaultCard(props: Props) {
-  const { logoCurSymbol, curPrice, title, priceCurSymbol, description } = props
+  const { logoCurSymbol, curPrice, title, priceCurSymbol, description, account } = props
   const isDownMd = useBreakpoint('md')
 
   return (
@@ -60,7 +61,13 @@ export default function VaultCard(props: Props) {
                   </Typography>
                 </Box>
               </Box>
-              <Button onClick={() => {}} width="178px" height="40px" style={{ borderRadius: '16px', float: 'right' }}>
+              <Button
+                onClick={() => {}}
+                width="178px"
+                height="40px"
+                style={{ borderRadius: '16px', float: 'right' }}
+                disabled={!account}
+              >
                 Stop Compounding
               </Button>
             </Box>

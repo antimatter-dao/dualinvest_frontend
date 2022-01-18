@@ -1,11 +1,13 @@
 import { Box, Typography } from '@mui/material'
 import Tabs from 'components/Tabs/Tabs'
 import NumericalInput from 'components/Input/InputNumerical'
-import Button from 'components/Button/Button'
+import Button, { BlackButton } from 'components/Button/Button'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import InputLabel from 'components/Input/InputLabel'
 import DepositModalButton from 'pages/Account/modals/DepositModalButton'
 import { CURRENCIES } from 'constants/currencies'
+import { useActiveWeb3React } from 'hooks'
+import { useWalletModalToggle } from 'state/application/hooks'
 
 enum TYPE {
   compound = 'Compound',
@@ -31,6 +33,9 @@ export default function VaultForm() {
 }
 
 function Form({ type }: { type: TYPE }) {
+  const { account } = useActiveWeb3React()
+  const toggleWallet = useWalletModalToggle()
+
   return (
     <Box>
       <Box display="flex" flexDirection="column" gap={16} pt={35} pb={42}>
@@ -47,10 +52,17 @@ function Form({ type }: { type: TYPE }) {
           <DepositModalButton currentCurrency={CURRENCIES.BTC} />
         </Box>
 
-        <NumericalInput placeholder="0.00" onChangeCapture={() => {}} onMax={() => {}} unit="BTC" value="0" />
+        <NumericalInput
+          placeholder="0.00"
+          onChangeCapture={() => {}}
+          onMax={() => {}}
+          unit="BTC"
+          value="0"
+          disabled={!account}
+        />
       </Box>
       <Box mt={16}>
-        <Button>{type}</Button>
+        {account ? <Button>{type}</Button> : <BlackButton onClick={toggleWallet}>Connect</BlackButton>}
         <Box mt={8} sx={{ opacity: type === TYPE.redeem ? 0 : 1 }}>
           <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 12 }} />
           <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
