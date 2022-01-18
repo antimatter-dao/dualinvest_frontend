@@ -4,6 +4,11 @@ import { ReactComponent as RiskStatementIcon } from 'assets/svg/risk_statement.s
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import Accordion from 'components/Accordion'
 import { ReactComponent as Faq } from 'assets/svg/faq.svg'
+import { ReactComponent as Put1 } from 'assets/svg/recurPolicy/put1.svg'
+import { ReactComponent as Put2 } from 'assets/svg/recurPolicy/put2.svg'
+import { ReactComponent as Call1 } from 'assets/svg/recurPolicy/call1.svg'
+import { ReactComponent as Call2 } from 'assets/svg/recurPolicy/call2.svg'
+import { ReactComponent as Img3 } from 'assets/svg/recurPolicy/3.svg'
 
 export enum Subject {
   DualInvest = 'DualInvest',
@@ -251,3 +256,37 @@ export function FAQ({ subject }: { subject: Subject }) {
     </Box>
   )
 }
+
+export const vaultPolicyCall = [
+  {
+    img: <Call1 />,
+    text: 'The vault algorithmically selects the optimal strike price for the BTC call options.'
+  },
+  {
+    img: <Call2 />,
+    text:
+      'Out of the price when the call option expires, according to whether the option is exercised, which currency is the settlement fund'
+  },
+  {
+    img: <Img3 />,
+    text:
+      'Regardless of the settlement currency, we will again invest in the treasury of the settlement currency, no management, automatic compounding'
+  }
+]
+export const vaultPolicyPut = [
+  {
+    img: <Put1 />,
+    text: 'The vault algorithmically selects the optimal strike price for the BTC put options.'
+  },
+  {
+    img: <Put2 />,
+    text:
+      'Regardless of the settlement currency, we will again invest in the treasury of the settlement currency, no management, automatic compounding'
+  },
+  {
+    img: <Img3 />,
+    text: 'The vault algorithmically selects the optimal strike price for the BTC call options.'
+  }
+]
+
+export const valutPolicyTitle = ['Algorithmic Strike Selection', 'Two settlement results', 'Recurring Vault']

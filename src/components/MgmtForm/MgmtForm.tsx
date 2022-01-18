@@ -11,6 +11,7 @@ import { Token } from 'constants/token'
 import { Product } from 'utils/fetch/product'
 import ConfirmModal from 'components/MgmtPage/ConfirmModal'
 import { CURRENCIES } from 'constants/currencies'
+import Spinner from 'components/Spinner'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -107,7 +108,34 @@ export function MgmtForm({
         showCancelWarning={false}
       />
       <ActionModal isOpen={isDepositOpen} onDismiss={hideDeposit} token={currentCurrency} type={ActionType.DEPOSIT} />
-      <Box display="grid" flexDirection="column" gap={16} height="100%" width="100%" padding="36px 24px">
+      <Box
+        display="grid"
+        flexDirection="column"
+        gap={16}
+        height="100%"
+        width="100%"
+        padding="36px 24px"
+        position="relative"
+      >
+        {!product && (
+          <Box
+            position="absolute"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            sx={{
+              top: 20,
+              left: 20,
+              width: 'calc(100% - 20px)',
+              height: 'calc(100% - 20px)',
+              background: '#ffffff',
+              zIndex: 3,
+              borderRadius: 2
+            }}
+          >
+            <Spinner size={60} />
+          </Box>
+        )}
         {Object.keys(data).map((key, idx) => (
           <Box key={idx} display="flex" justifyContent="space-between">
             <Typography fontSize={16} sx={{ opacity: 0.8 }}>

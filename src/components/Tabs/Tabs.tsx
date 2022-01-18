@@ -6,6 +6,7 @@ interface Props {
   contents: React.ReactNode[]
   customCurrentTab?: number
   customOnChange?: (val: number) => void
+  tabPadding?: string
 }
 
 function TabPanel({ children, value, index }: { children: React.ReactNode; value: number; index: number }) {
@@ -13,7 +14,7 @@ function TabPanel({ children, value, index }: { children: React.ReactNode; value
 }
 
 export default function Tabs(props: Props) {
-  const { titles, contents, customCurrentTab, customOnChange } = props
+  const { titles, contents, customCurrentTab, customOnChange, tabPadding } = props
   const [value, setValue] = React.useState(0)
 
   const onChange = useCallback(
@@ -33,7 +34,7 @@ export default function Tabs(props: Props) {
               key={idx}
               label={tab}
               sx={{
-                padding: { xs: '20px 0px 17px 0px', md: '20px 10px 25px 0px' },
+                padding: { xs: '20px 0px 17px 0px', md: tabPadding ?? '20px 10px 25px 0px' },
                 mr: { xs: 23, md: 25 },
                 textTransform: 'none',
                 color: theme => theme.palette.text.primary,

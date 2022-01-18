@@ -1,11 +1,11 @@
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Box, Typography, Grid, styled } from '@mui/material'
 import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
 import theme from 'theme'
 import Card, { OutlinedCard } from 'components/Card/Card'
 import Divider from 'components/Divider'
-import Spinner from 'components/Spinner'
+// import Spinner from 'components/Spinner'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { RiskStatement, FAQ, Subject } from './stableContent'
 // import { useSuccessImage } from 'hooks/useSuccessImage'
@@ -37,12 +37,13 @@ interface Props {
   subscribeForm: React.ReactNode
   returnOnInvestmentListItems: React.ReactNode[]
   showVault?: boolean
+  children?: React.ReactNode
 }
 
 export default function MgmtPage(props: Props) {
   const {
     backLink,
-    product,
+    // product,
     pageTitle,
     chart,
     subject,
@@ -50,7 +51,8 @@ export default function MgmtPage(props: Props) {
     subscribeForm,
     showFaq = true,
     returnOnInvestmentListItems,
-    showVault
+    showVault,
+    children
   } = props
 
   const isDownMd = useBreakpoint('md')
@@ -68,7 +70,7 @@ export default function MgmtPage(props: Props) {
         </StyledUnorderList>
       </div>
     )
-  }, [theme.palette.text.primary])
+  }, [returnOnInvestmentListItems])
 
   return (
     <>
@@ -100,7 +102,7 @@ export default function MgmtPage(props: Props) {
           </Box>
         </Box>
 
-        <Box padding={isDownMd ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
+        <Box padding={isDownMd || showVault ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
           <Box mb={isDownMd ? 24 : 60} display="flex" gap={8} flexDirection={isDownMd ? 'column' : 'row'}>
             {pageTitle && (
               <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
@@ -114,9 +116,9 @@ export default function MgmtPage(props: Props) {
             )}
           </Box>
 
-          <Grid container spacing={20}>
-            <Grid xs={12} item>
-              {showVault && (
+          <Grid container spacing={isDownMd ? 20 : 40}>
+            {showVault && (
+              <Grid xs={12} item>
                 <VaultCard
                   title="BTC Covered Call Vault"
                   description="Generates yield by running an automated BTC covered call strategy"
@@ -124,28 +126,9 @@ export default function MgmtPage(props: Props) {
                   curPrice={'12345'}
                   priceCurSymbol="BTC"
                 />
-              )}
-            </Grid>
+              </Grid>
+            )}
             <Grid xs={12} md={4} item position="relative">
-              {!product && (
-                <Box
-                  position="absolute"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  sx={{
-                    top: 20,
-                    left: 20,
-                    width: 'calc(100% - 20px)',
-                    height: 'calc(100% - 20px)',
-                    background: '#ffffff',
-                    zIndex: 3,
-                    borderRadius: 2
-                  }}
-                >
-                  <Spinner size={60} />
-                </Box>
-              )}
               <Card style={{ height: '100%' }}>{subscribeForm}</Card>
             </Grid>
 
@@ -197,6 +180,11 @@ export default function MgmtPage(props: Props) {
                 </Box>
               </Card>
             </Grid>
+            {children && (
+              <Grid xs={12} item>
+                {children}
+              </Grid>
+            )}
 
             <Grid xs={12} item>
               <Card style={{ height: '100%' }}>

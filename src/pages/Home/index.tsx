@@ -11,6 +11,7 @@ import highReturnUrl from 'assets/images/high_return.png'
 import flexibleUrl from 'assets/images/flexible.png'
 import dualInvestUrl from 'assets/svg/home_dual_invest.svg'
 import chainOptionUrl from 'assets/svg/home_chain_option.svg'
+import recurringVaultUrl from 'assets/svg/home_recurring_vault.svg'
 import Card from 'components/Card/Card'
 import { routes } from 'constants/routes'
 import { useBindModal } from 'hooks/useReferralModal'
@@ -127,6 +128,25 @@ export default function Home() {
             />
           </Grid>
         </Grid>
+
+        <Box display="grid" gap={32}>
+          <Typography fontSize={48} fontWeight={700}>
+            Recurring Vault
+          </Typography>
+          <Grid container spacing={20}>
+            <ProductCard
+              large
+              src={recurringVaultUrl}
+              title="Recurring Vault"
+              synospis="Automatic management of funds, cyclic compound interest.
+              Earn Yield on your idle assets"
+              onClick={() => {
+                history.push(routes.recurringVault)
+              }}
+            />
+          </Grid>
+        </Box>
+
         <Box display="grid" gap={32}>
           <Typography fontSize={48} fontWeight={700}>
             Dual Investment
@@ -166,22 +186,6 @@ export default function Home() {
               synospis="Suitable for buying when the price will continue to rise or fall for a period of time"
               onClick={() => {
                 history.push(routes.chainOptionTyped.replace(':type', 'tiered'))
-              }}
-            />
-          </Grid>
-        </Box>
-
-        <Box display="grid" gap={32}>
-          <Typography fontSize={48} fontWeight={700}>
-            Recurring Vault
-          </Typography>
-          <Grid container spacing={20}>
-            <ProductCard
-              src={chainOptionUrl}
-              title="Recurring Vault"
-              synospis="Automatic management of funds, cyclic compound interest"
-              onClick={() => {
-                history.push(routes.recurringVault)
               }}
             />
           </Grid>
@@ -250,32 +254,34 @@ function ProductCard({
   title,
   synospis,
   actionText,
-  onClick
+  onClick,
+  large
 }: {
   src: string
   title: string
   synospis: string
   actionText?: string
   onClick?: () => void
+  large?: boolean
 }) {
   return (
-    <Grid item xs={12} sm={6}>
+    <Grid item xs={12} sm={large ? 12 : 6}>
       <Card>
         <Box
-          padding="32px 24px"
+          padding={large ? '0 24px' : '32px 24px'}
           display="grid"
           gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }}
           rowGap={25}
           columnGap={20}
         >
-          <Box>
+          <Box paddingTop={large ? '32px' : 0}>
             <Typography fontSize={24} fontWeight={700}>
               {title}
             </Typography>
             <Typography sx={{ color: theme => theme.palette.text.secondary, mt: 8 }}>{synospis}</Typography>
           </Box>
 
-          <Button disabled={!onClick} onClick={onClick}>
+          <Button disabled={!onClick} onClick={onClick} style={{ marginBottom: large ? '32px' : 0 }}>
             {!onClick ? 'Coming soon' : actionText ?? 'Start now'}
           </Button>
           <Image

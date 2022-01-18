@@ -11,10 +11,11 @@ interface Props {
   title: string
   priceCurSymbol: string
   description?: string
+  fontColor?: string
 }
 
 export default function ProductCardHeader(props: Props) {
-  const { logoCurSymbol, curPrice, title, priceCurSymbol, description } = props
+  const { logoCurSymbol, curPrice, title, priceCurSymbol, description, fontColor } = props
 
   const isDownSm = useBreakpoint('sm')
   const isDownMd = useBreakpoint('md')
@@ -25,6 +26,7 @@ export default function ProductCardHeader(props: Props) {
       alignContent="center"
       justifyContent={{ xs: 'stretch', sm: 'space-between' }}
       gap={{ xs: '0', sm: '40px' }}
+      sx={{ color: fontColor ?? 'inherit' }}
     >
       <Box display="flex" columnGap={20} alignItems={'center'}>
         <CurrencyLogo
