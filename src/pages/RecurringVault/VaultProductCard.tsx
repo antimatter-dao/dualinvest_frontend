@@ -1,6 +1,5 @@
 import { Box, Typography } from '@mui/material'
 import NumericalCard from 'components/Card/NumericalCard'
-import { usePrice } from 'hooks/usePriceSet'
 import ProductCardHeader from 'components/ProductCardHeader'
 import Divider from 'components/Divider'
 import { Timer } from 'components/Timer'
@@ -17,7 +16,8 @@ export default function VaultProductCard({
   onClick,
   strikePrice,
   color,
-  deliveryDate
+  deliveryDate,
+  timer
 }: {
   logoCurSymbol: string
   priceCurSymbol: string
@@ -29,9 +29,8 @@ export default function VaultProductCard({
   color: string
   strikePrice: string
   deliveryDate: string
+  timer: number
 }) {
-  const curPrice = usePrice(priceCurSymbol)
-
   return (
     <Box
       display="grid"
@@ -52,7 +51,6 @@ export default function VaultProductCard({
     >
       <ProductCardHeader
         logoCurSymbol={logoCurSymbol}
-        curPrice={curPrice}
         description={description}
         title={title}
         priceCurSymbol={priceCurSymbol}
@@ -67,9 +65,9 @@ export default function VaultProductCard({
           </Button>
         </NumericalCard>
         <NumericalCard value={strikePrice} subValue="Current Strike Price" border />
-        <NumericalCard value={<Timer timer={1645003583} />} subValue="Countdown until delivery date" gray>
+        <NumericalCard value={<Timer timer={timer} />} subValue="Countdown until delivery date" gray>
           <OutlinedCard color="rgba(0, 0, 0, 0.1)">
-            <Box display="grid" padding="14px 18px" gap={4} height={60}>
+            <Box display="grid" padding="14px 18px" gap={4} height={60} minWidth={248}>
               <Typography sx={{ color: theme => theme.palette.text.secondary }} fontSize={12} textAlign={'left'}>
                 Delivery Date
               </Typography>

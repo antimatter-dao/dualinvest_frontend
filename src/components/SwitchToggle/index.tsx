@@ -19,9 +19,10 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
   [`& .${switchClasses.track}`]: {
     width: 80,
     height: 36,
+    color: theme.palette.primary.contrastText,
     opacity: '1 !important',
-    backgroundColor: 'transparent',
-    border: '1px solid rgba(255,255,255,0.8)',
+    backgroundColor: theme.palette.primary.light,
+    border: '1px solid transparent',
     borderRadius: '49px',
     position: 'relative',
     '&:before, &:after': {
@@ -47,13 +48,13 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
       transform: 'translateX(44px)',
       '&:hover': {}
     },
-    [`& .${switchClasses.thumb}`]: {
-      backgroundColor: theme.palette.primary.main
-    },
+    // [`& .${switchClasses.thumb}`]: {
+    //   backgroundColor: theme.palette.primary.main
+    // },
     [`& + .${switchClasses.track}`]: {
-      background: 'transparent !important',
+      background: theme.palette.primary.dark + ' !important',
       opacity: '1 !important',
-      border: '1px solid rgba(255,255,255,0.8)',
+      border: '1px solid transparent',
       borderRadius: '49px',
       '&:before': {
         opacity: 1
@@ -67,10 +68,12 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
 
 export default function SwitchToggle({
   checked,
-  onChange
+  onChange,
+  disabled
 }: {
   checked: boolean
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  disabled?: boolean
 }) {
-  return <StyledSwitch checked={checked} onChange={onChange} />
+  return <StyledSwitch checked={checked} onChange={onChange} disabled={disabled} />
 }

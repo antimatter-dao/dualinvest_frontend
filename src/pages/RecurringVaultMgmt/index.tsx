@@ -7,6 +7,7 @@ import { feeRate } from 'constants/index'
 import VaultConfirmModal from './VaultConfirmModal'
 import TextButton from 'components/Button/TextButton'
 import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle } from 'components/MgmtPage/stableContent'
+import VaultForm from './VaultForm'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -24,6 +25,8 @@ export const StyledUnorderList = styled('ul')(({ theme }) => ({
     color: theme.palette.primary.main
   }
 }))
+
+const currencySymbol = 'BTC'
 
 export default function RecurringValueMgmt() {
   const theme = useTheme()
@@ -61,6 +64,7 @@ export default function RecurringValueMgmt() {
   return (
     <>
       <VaultConfirmModal confirmData={confirmData} />
+
       <MgmtPage
         showFaq={false}
         backLink={routes.recurringVault}
@@ -69,7 +73,7 @@ export default function RecurringValueMgmt() {
         chart={undefined}
         subscribeForm={<RecurringPolicy type="call" />}
         returnOnInvestmentListItems={returnOnInvestmentListItems}
-        showVault={true}
+        vaultForm={<VaultForm currencySymbol={currencySymbol} timer={1645003583} />}
       />
     </>
   )

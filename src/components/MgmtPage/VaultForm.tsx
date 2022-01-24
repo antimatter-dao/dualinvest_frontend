@@ -10,29 +10,50 @@ import { useActiveWeb3React } from 'hooks'
 import { useWalletModalToggle } from 'state/application/hooks'
 
 enum TYPE {
-  compound = 'Compound',
+  invest = 'Invest',
   redeem = 'Redeem'
 }
 
-const formData = {
-  ['Current cycle Invested amount：']: '5BTC',
-  ['Next cycle invest amount：']: '0.23BTC',
-  ['Redeemable:']: '5.23BTC'
-}
-
-export default function VaultForm() {
+export default function VaultForm({
+  formData,
+  currencySymbol,
+  available
+}: {
+  formData: { [key: string]: any }
+  currencySymbol: string
+  available?: string
+}) {
   return (
     <Box width="100%">
       <Tabs
-        titles={['Compound', 'Redeem']}
+        titles={['Invest', 'Redeem']}
         tabPadding="12px"
-        contents={[<Form key="compound" type={TYPE.compound} />, <Form key="redeem" type={TYPE.redeem} />]}
+        contents={[
+          <Form
+            key="compound"
+            type={TYPE.invest}
+            formData={formData}
+            currencySymbol={currencySymbol}
+            available={available}
+          />,
+          <Form key="redeem" type={TYPE.redeem} formData={formData} currencySymbol={currencySymbol} />
+        ]}
       />
     </Box>
   )
 }
 
-function Form({ type }: { type: TYPE }) {
+function Form({
+  type,
+  formData,
+  currencySymbol,
+  available
+}: {
+  type: TYPE
+  formData: { [key: string]: any }
+  currencySymbol: string
+  available?: string
+}) {
   const { account } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
 
@@ -48,8 +69,19 @@ function Form({ type }: { type: TYPE }) {
       </Box>
       <Box>
         <Box display="flex" alignItems="flex-start" gap="5px">
-          <InputLabel>Available: 5BTC</InputLabel>
-          <DepositModalButton currentCurrency={CURRENCIES.BTC} />
+          {type === TYPE.invest ? (
+            <>
+              <InputLabel>
+                Available: {available ? available : '-'}
+                {currencySymbol}
+              </InputLabel>
+              <DepositModalButton currentCurrency={CURRENCIES[currencySymbol]} />
+            </>
+          ) : (
+            <>
+              <InputLabel>Redeemable amount: {formData['Redeemable:']}</InputLabel>
+            </>
+          )}
         </Box>
 
         <NumericalInput
@@ -66,7 +98,7 @@ function Form({ type }: { type: TYPE }) {
         <Box mt={8} sx={{ opacity: type === TYPE.redeem ? 0 : 1 }}>
           <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 12 }} />
           <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
-            Once subscribed, the subscribed products cannot be cancelled.
+            Your deposit is a strategy that allows us to invest your {currencySymbol} in the vault by default.
           </Typography>
         </Box>
       </Box>

@@ -4,17 +4,19 @@ import CurrencyLogo from 'components/essential/CurrencyLogo'
 import BlueRing from 'components/Icon/BlueRing'
 import { CURRENCIES } from 'constants/currencies'
 import useBreakpoint from 'hooks/useBreakpoint'
+import { usePrice } from 'hooks/usePriceSet'
 
 interface Props {
   logoCurSymbol: string
-  curPrice?: string
   title: string | JSX.Element
   priceCurSymbol: string
   description?: string
 }
 
 export default function ProductCardHeader(props: Props) {
-  const { logoCurSymbol, curPrice, title, priceCurSymbol, description } = props
+  const { logoCurSymbol, title, priceCurSymbol, description } = props
+
+  const curPrice = usePrice(priceCurSymbol)
 
   const isDownSm = useBreakpoint('sm')
   const isDownMd = useBreakpoint('md')

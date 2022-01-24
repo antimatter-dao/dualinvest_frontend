@@ -37,11 +37,12 @@ export default function RecurringVault() {
         apy="132%"
         deposit="13.2 BTC"
         strikePrice="62,800 USDT"
+        deliveryDate="Sep 21, 2021 08:30 AM UTC "
+        timer={1645003583}
         onClick={() => {
           history.push(routes.recurringVaultMgmt)
         }}
         color="#FD8B00"
-        deliveryDate="Sep 21, 2021 08:30 AM UTC "
       />
       <VaultCard
         logoCurSymbol="USDT"
@@ -52,6 +53,7 @@ export default function RecurringVault() {
         deposit="132,567 USDT"
         strikePrice="62,800 USDT"
         deliveryDate="Sep 21, 2021 08:30 AM UTC "
+        timer={1645003583}
         onClick={() => {
           history.push(routes.recurringVaultMgmt)
         }}

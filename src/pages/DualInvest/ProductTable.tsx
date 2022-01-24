@@ -1,8 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Box, Typography, styled } from '@mui/material'
-import Card from 'components/Card/Card'
 import NoDataCard from 'components/Card/NoDataCard'
-import CurrencyLogo from 'components/essential/CurrencyLogo'
 import Spinner from 'components/Spinner'
 import Table from 'components/Table'
 import useBreakpoint from 'hooks/useBreakpoint'
@@ -10,8 +8,6 @@ import { Product, ProductList } from 'utils/fetch/product'
 import { CURRENCIES } from 'constants/currencies'
 import { ExpireDateAQuestionHelper } from 'components/essential/QuestionHelper'
 import Button from 'components/Button/Button'
-import { trimNumberString } from 'utils/trimNumberString'
-import { usePrice } from 'hooks/usePriceSet'
 import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
 import ProductCardHeader from 'components/ProductCardHeader'
@@ -76,9 +72,7 @@ export default function ProductTable({
   productList: ProductList | undefined
   strikeCurrencySymbol: string
 }) {
-  const isDownSm = useBreakpoint('sm')
   const isDownMd = useBreakpoint('md')
-  const curPrice = usePrice(strikeCurrencySymbol)
   const history = useHistory()
 
   const handleSubscribe = useCallback(
@@ -105,10 +99,9 @@ export default function ProductTable({
       >
         <ProductCardHeader
           logoCurSymbol={strikeCurrencySymbol}
-          curPrice={curPrice}
           title={
             <>
-              BTC Financial Management&nbsp;
+              {strikeCurrencySymbol} Financial Management&nbsp;
               <Box component="span" sx={{ fontWeight: 400 }}>
                 {isDownMd && <br />}[upward exercise]
               </Box>
@@ -134,64 +127,19 @@ export default function ProductTable({
           maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
         }}
       >
-        <Box
-          display={{ xs: 'grid', sm: 'flex' }}
-          alignContent="center"
-          justifyContent="space-between"
-          gap={{ xs: '0', sm: '40px' }}
-        >
-          <Box display="grid" columnGap={20} rowGap={8}>
-            <CurrencyLogo
-              currency={CURRENCIES.USDT}
-              size="64px"
-              style={{
-                gridRowStart: 1,
-                gridRowEnd: isDownSm ? 'span 1' : 'span 2',
-                marginBottom: isDownSm ? 12 : 0
-              }}
-            />
-            <Typography
-              fontWeight={700}
-              sx={{
-                gridColumnStart: isDownSm ? 1 : 2,
-                gridColumnEnd: 'span 1',
-                fontSize: 24
-              }}
-            >
-              BTC Financial Management&nbsp;
+        <ProductCardHeader
+          logoCurSymbol={CURRENCIES.USDT.symbol ?? ''}
+          title={
+            <>
+              {strikeCurrencySymbol} Financial Management&nbsp;
               <Box component="span" sx={{ fontWeight: 400 }}>
                 {isDownMd && <br />}[down exercise]
               </Box>
-            </Typography>
-            <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
-              Deposit USDT, and settle the principal and income at maturity as BTC or USDT
-            </Typography>
-          </Box>
-          <Card gray={isDownSm} style={{ borderRadius: '16px', margin: isDownMd ? '16px 0' : 0 }}>
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems={isDownMd ? 'flex-start' : 'flex-end'}
-              padding={{ xs: '16px', sm: '16px 0' }}
-              gap={isDownMd ? 10 : 0}
-            >
-              <Typography color="primary" fontSize={24} fontWeight={700} gap={8} display="flex" alignItems="center">
-                <span style={{ width: 120 }}>
-                  {curPrice ? trimNumberString((+curPrice).toLocaleString('en-US'), 2) : '-'}
-                </span>
-                <svg width="17" height="18" viewBox="0 0 17 18" fill="none">
-                  <path
-                    d="M8.02174 3.81107L12.6559 6.40065V11.5896L8.04184 14.1889L3.40773 11.6287V6.4202L8.02174 3.81107ZM8.02174 0L6.3229 0.957655L1.69884 3.56678L0 4.52443V13.5244L1.69884 14.4723L6.33295 17.0521L8.03179 18L9.73063 17.0423L14.3446 14.4332L16.0435 13.4756V4.4658L14.3446 3.51792L9.71053 0.928339L8.02174 0Z"
-                    fill="#375CD2"
-                  />
-                </svg>
-              </Typography>
-              <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
-                {strikeCurrencySymbol} latest spot price
-              </Typography>
-            </Box>
-          </Card>
-        </Box>
+            </>
+          }
+          priceCurSymbol={strikeCurrencySymbol}
+          description={` Deposit USDT, and settle the principal and income at maturity as ${strikeCurrencySymbol} or USDT`}
+        />
         <DataTable onSubscribe={handleSubscribe} productList={productList?.put} />
       </Box>
     </>

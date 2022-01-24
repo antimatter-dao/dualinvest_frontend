@@ -9,7 +9,6 @@ import Divider from 'components/Divider'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { RiskStatement, FAQ, Subject } from './stableContent'
 // import { useSuccessImage } from 'hooks/useSuccessImage'
-import VaultCard from './VaultCard'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -36,7 +35,7 @@ interface Props {
   type?: string
   subscribeForm: React.ReactNode
   returnOnInvestmentListItems: React.ReactNode[]
-  showVault?: boolean
+  vaultForm?: React.ReactNode
   children?: React.ReactNode
 }
 
@@ -51,7 +50,7 @@ export default function MgmtPage(props: Props) {
     subscribeForm,
     showFaq = true,
     returnOnInvestmentListItems,
-    showVault,
+    vaultForm,
     children
   } = props
 
@@ -102,7 +101,7 @@ export default function MgmtPage(props: Props) {
           </Box>
         </Box>
 
-        <Box padding={isDownMd || showVault ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
+        <Box padding={isDownMd || vaultForm ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
           <Box mb={isDownMd ? 24 : 60} display="flex" gap={8} flexDirection={isDownMd ? 'column' : 'row'}>
             {pageTitle && (
               <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
@@ -117,15 +116,9 @@ export default function MgmtPage(props: Props) {
           </Box>
 
           <Grid container spacing={isDownMd ? 20 : 40}>
-            {showVault && (
+            {vaultForm && (
               <Grid xs={12} item>
-                <VaultCard
-                  title="BTC Covered Call Vault"
-                  description="Generates yield by running an automated BTC covered call strategy"
-                  logoCurSymbol="BTC"
-                  curPrice={'12345'}
-                  priceCurSymbol="BTC"
-                />
+                {vaultForm}
               </Grid>
             )}
             <Grid xs={12} md={4} item position="relative">
