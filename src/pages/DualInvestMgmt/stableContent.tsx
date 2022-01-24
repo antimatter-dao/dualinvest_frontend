@@ -117,12 +117,12 @@ export function FAQ() {
                   strike price in the alternative currency.
                 </p>
                 <p>
-                  <b>Up-and-Exercised:</b> Yields = (Subscription Amount * Strike Price) * [1 + (APY % * Period (days) /
+                  <b>Upward Exercise:</b> Yields = (Subscription Amount * Strike Price) * [1 + (APY % * Period (days) /
                   365)]
                 </p>
                 <p>
-                  <b>Down-and-Exercised:</b> Yields = (Subscription Amount / Strike Price) * [1 + (APY % * Cycle (Days)
-                  / 365)]
+                  <b>Downward Exercise:</b> Yields = (Subscription Amount / Strike Price) * [1 + (APY % * Cycle (Days) /
+                  365)]
                 </p>
                 <p>
                   When a subscription is &quot;unexercised&quot;, the subscription amount and yields will not be
