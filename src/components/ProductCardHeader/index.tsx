@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function ProductCardHeader(props: Props) {
-  const { logoCurSymbol, curPrice, title, priceCurSymbol, description, fontColor } = props
+  const { logoCurSymbol, curPrice, title, priceCurSymbol, description } = props
 
   const isDownSm = useBreakpoint('sm')
   const isDownMd = useBreakpoint('md')
@@ -26,7 +26,6 @@ export default function ProductCardHeader(props: Props) {
       alignContent="center"
       justifyContent={{ xs: 'stretch', sm: 'space-between' }}
       gap={{ xs: '0', sm: '40px' }}
-      sx={{ color: fontColor ?? 'inherit' }}
     >
       <Box display="flex" columnGap={20} alignItems={'center'}>
         <CurrencyLogo
@@ -41,6 +40,7 @@ export default function ProductCardHeader(props: Props) {
         <Box>
           <Typography
             fontWeight={700}
+            align="left"
             sx={{
               gridColumnStart: isDownSm ? 1 : 2,
               gridColumnEnd: 'span 1',

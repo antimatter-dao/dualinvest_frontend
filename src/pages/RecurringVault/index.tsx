@@ -3,6 +3,7 @@ import { Box } from '@mui/material'
 import ProductBanner from 'components/ProductBanner'
 import VaultCard from './VaultProductCard'
 import { routes } from 'constants/routes'
+import { ReactComponent as RecurVault } from 'assets/svg/recurVault.svg'
 
 export default function RecurringVault() {
   const history = useHistory()
@@ -26,6 +27,7 @@ export default function RecurringVault() {
         unit2={''}
         subVal1={'Total BTC Subscribed'}
         subVal2={'Total USDT Subscribed'}
+        img={<RecurVault />}
       />
       <VaultCard
         logoCurSymbol="BTC"
@@ -34,7 +36,6 @@ export default function RecurringVault() {
         description="Generates yield by running an automated BTC covered call strategy"
         apy="132%"
         deposit="13.2 BTC"
-        bgColor="linear-gradient(90deg, #F6D365 0%, #FDA085 100%)"
         onClick={() => {
           history.push(routes.recurringVaultMgmt)
         }}
@@ -46,7 +47,6 @@ export default function RecurringVault() {
         description="Generates yield by running an automated put selling strategy"
         apy="132%"
         deposit="132,567 USDT"
-        bgColor="linear-gradient(266.8deg, #5BB053 0.46%, #88CA7B 99.78%)"
         onClick={() => {
           history.push(routes.recurringVaultMgmt)
         }}

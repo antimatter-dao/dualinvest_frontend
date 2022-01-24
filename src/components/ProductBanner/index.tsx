@@ -30,7 +30,8 @@ export default function ProductBanner({
   val2,
   unit2,
   subVal2,
-  checkpoints
+  checkpoints,
+  img
 }: {
   title: string
   val1: string
@@ -40,6 +41,7 @@ export default function ProductBanner({
   unit2: string | JSX.Element
   subVal2: string
   checkpoints: string[]
+  img?: JSX.Element
 }) {
   const isDownMd = useBreakpoint('md')
 
@@ -82,7 +84,7 @@ export default function ProductBanner({
             </Grid>
           </Grid>
         </Box>
-        <StyledDualInvestGuide />
+        {img ? img : <StyledDualInvestGuide />}
       </Box>
     </Box>
   )

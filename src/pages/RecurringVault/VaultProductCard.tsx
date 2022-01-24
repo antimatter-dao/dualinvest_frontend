@@ -10,8 +10,7 @@ export default function VaultProductCard({
   description,
   apy,
   deposit,
-  onClick,
-  bgColor
+  onClick
 }: {
   logoCurSymbol: string
   priceCurSymbol: string
@@ -20,7 +19,6 @@ export default function VaultProductCard({
   apy: string
   deposit: string
   onClick: () => void
-  bgColor?: string
 }) {
   const curPrice = usePrice(priceCurSymbol)
 
@@ -34,7 +32,7 @@ export default function VaultProductCard({
       margin={{ xs: '0px 20px' }}
       sx={{
         border: '1px solid transparent',
-        background: theme => (bgColor ? bgColor : theme.palette.background.paper),
+        background: theme => theme.palette.background.paper,
         borderRadius: 2,
         padding: '34px 24px',
         maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent }),
@@ -50,7 +48,6 @@ export default function VaultProductCard({
         description={description}
         title={title}
         priceCurSymbol={priceCurSymbol}
-        fontColor={'#ffffff'}
       />
       <Box display={{ xs: 'grid', md: 'flex' }} gap={24} padding="0 50px">
         <NumericalCard value={apy} subValue="Current Projected Yield(APY)" border />
