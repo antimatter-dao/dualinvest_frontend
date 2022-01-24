@@ -1,7 +1,11 @@
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import NumericalCard from 'components/Card/NumericalCard'
 import { usePrice } from 'hooks/usePriceSet'
 import ProductCardHeader from 'components/ProductCardHeader'
+import Divider from 'components/Divider'
+import { Timer } from 'components/Timer'
+import Button from 'components/Button/Button'
+import { OutlinedCard } from 'components/Card/Card'
 
 export default function VaultProductCard({
   logoCurSymbol,
@@ -10,7 +14,10 @@ export default function VaultProductCard({
   description,
   apy,
   deposit,
-  onClick
+  onClick,
+  strikePrice,
+  color,
+  deliveryDate
 }: {
   logoCurSymbol: string
   priceCurSymbol: string
@@ -19,13 +26,14 @@ export default function VaultProductCard({
   apy: string
   deposit: string
   onClick: () => void
+  color: string
+  strikePrice: string
+  deliveryDate: string
 }) {
   const curPrice = usePrice(priceCurSymbol)
 
   return (
     <Box
-      component="button"
-      onClick={onClick}
       display="grid"
       width="100%"
       gap={32}
@@ -35,11 +43,11 @@ export default function VaultProductCard({
         background: theme => theme.palette.background.paper,
         borderRadius: 2,
         padding: '34px 24px',
-        maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent }),
-        '&:hover': {
-          cursor: 'pointer',
-          borderColor: theme => theme.palette.primary.light
-        }
+        maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
+        // '&:hover': {
+        //   cursor: 'pointer',
+        //   borderColor: theme => theme.palette.primary.light
+        // }
       }}
     >
       <ProductCardHeader
@@ -49,9 +57,26 @@ export default function VaultProductCard({
         title={title}
         priceCurSymbol={priceCurSymbol}
       />
-      <Box display={{ xs: 'grid', md: 'flex' }} gap={24} padding="0 50px">
-        <NumericalCard value={apy} subValue="Current Projected Yield(APY)" border />
-        <NumericalCard value={deposit} subValue="Your Deposit" border />
+      <Divider color="#cccccc10" extension={25} />
+
+      <Box display={{ xs: 'grid' }} gap={24} gridTemplateColumns={{ xs: '100%', md: '35% auto' }}>
+        <NumericalCard value={apy} subValue="Current APY" border valueColor={color} />
+        <NumericalCard value={deposit} subValue="Your existing position" border>
+          <Button style={{ borderRadius: 40 }} width={'132px'} height="36px" backgroundColor={color} onClick={onClick}>
+            Add
+          </Button>
+        </NumericalCard>
+        <NumericalCard value={strikePrice} subValue="Current Strike Price" border />
+        <NumericalCard value={<Timer timer={1645003583} />} subValue="Countdown until delivery date" gray>
+          <OutlinedCard color="rgba(0, 0, 0, 0.1)">
+            <Box display="grid" padding="14px 18px" gap={4} height={60}>
+              <Typography sx={{ color: theme => theme.palette.text.secondary }} fontSize={12} textAlign={'left'}>
+                Delivery Date
+              </Typography>
+              <Typography fontSize={12}> {deliveryDate}</Typography>
+            </Box>
+          </OutlinedCard>
+        </NumericalCard>
       </Box>
     </Box>
   )

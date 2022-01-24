@@ -8,10 +8,9 @@ import useBreakpoint from 'hooks/useBreakpoint'
 interface Props {
   logoCurSymbol: string
   curPrice?: string
-  title: string
+  title: string | JSX.Element
   priceCurSymbol: string
   description?: string
-  fontColor?: string
 }
 
 export default function ProductCardHeader(props: Props) {
@@ -27,34 +26,33 @@ export default function ProductCardHeader(props: Props) {
       justifyContent={{ xs: 'stretch', sm: 'space-between' }}
       gap={{ xs: '0', sm: '40px' }}
     >
-      <Box display="flex" columnGap={20} alignItems={'center'}>
+      <Box display="grid" columnGap={20} mb={{ xs: 10, md: 0 }}>
         <CurrencyLogo
           currency={CURRENCIES[logoCurSymbol]}
-          size="53px"
+          size="64px"
           style={{
             gridRowStart: 1,
             gridRowEnd: isDownSm ? 'span 1' : 'span 2',
             marginBottom: isDownSm ? 12 : 0
           }}
         />
-        <Box>
-          <Typography
-            fontWeight={700}
-            align="left"
-            sx={{
-              gridColumnStart: isDownSm ? 1 : 2,
-              gridColumnEnd: 'span 1',
-              fontSize: 24
-            }}
-          >
-            {title}
+
+        <Typography
+          fontWeight={700}
+          align="left"
+          sx={{
+            gridColumnStart: isDownSm ? 1 : 2,
+            gridColumnEnd: 'span 1',
+            fontSize: 24
+          }}
+        >
+          {title}
+        </Typography>
+        {description && (
+          <Typography fontSize={16} sx={{ opacity: 0.5 }} align="left">
+            {description}
           </Typography>
-          {description && (
-            <Typography fontSize={16} sx={{ opacity: 0.5 }}>
-              {description}
-            </Typography>
-          )}
-        </Box>
+        )}
       </Box>
       <Card gray={isDownSm} style={{ borderRadius: '16px', margin: isDownMd ? '16px 0' : 0 }}>
         <Box

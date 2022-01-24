@@ -36,9 +36,12 @@ export default function RecurringVault() {
         description="Generates yield by running an automated BTC covered call strategy"
         apy="132%"
         deposit="13.2 BTC"
+        strikePrice="62,800 USDT"
         onClick={() => {
           history.push(routes.recurringVaultMgmt)
         }}
+        color="#FD8B00"
+        deliveryDate="Sep 21, 2021 08:30 AM UTC "
       />
       <VaultCard
         logoCurSymbol="USDT"
@@ -47,9 +50,12 @@ export default function RecurringVault() {
         description="Generates yield by running an automated put selling strategy"
         apy="132%"
         deposit="132,567 USDT"
+        strikePrice="62,800 USDT"
+        deliveryDate="Sep 21, 2021 08:30 AM UTC "
         onClick={() => {
           history.push(routes.recurringVaultMgmt)
         }}
+        color="#31B047"
       />
     </Box>
   )
