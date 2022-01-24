@@ -86,12 +86,17 @@ export default function VaultCard(props: Props) {
                 </Box>
                 <Box display="flex" justifyContent="space-between">
                   <Typography fontSize={16}>Next Order Due Time</Typography>
-                  <Typography fontSize={16} fontWeight={700} sx={{ color: theme => theme.palette.text.secondary }}>
+                  <Typography
+                    component="div"
+                    fontSize={16}
+                    fontWeight={700}
+                    sx={{ color: theme => theme.palette.text.secondary }}
+                  >
                     <Timer timer={timer} />
                   </Typography>
                 </Box>
                 <Box display="flex" justifyContent="space-between">
-                  <Typography fontSize={16}>
+                  <Typography fontSize={16} component="div">
                     Redeemable amount
                     <Typography fontSize={12}>(Revenue not included)</Typography>
                   </Typography>

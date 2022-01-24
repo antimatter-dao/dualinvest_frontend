@@ -4,6 +4,8 @@ import UsdtLogo from 'assets/svg/usdt_logo.svg'
 import EthLogo from 'assets/svg/eth_logo.svg'
 import MatterLogo from 'assets/svg/antimatter_circle_black.svg'
 
+export const SUPPORTED_CURRENCY_SYMBOL = ['BTC', 'ETH']
+
 export const SYMBOL_MAP = {
   BTC: 'BTC',
   USDT: 'USDT',
@@ -18,6 +20,7 @@ export const SUPPORTED_CURRENCIES: {
     symbol: string
     name: string
     logoUrl: string
+    color?: string
   }
 } = {
   BTC: {
@@ -28,7 +31,8 @@ export const SUPPORTED_CURRENCIES: {
     decimals: 18,
     symbol: 'BTC',
     name: 'Binance-Peg BTCB Token',
-    logoUrl: BtcLogo
+    logoUrl: BtcLogo,
+    color: '#FD8B00'
   },
   USDT: {
     address:
@@ -38,14 +42,16 @@ export const SUPPORTED_CURRENCIES: {
     decimals: 18,
     symbol: 'USDT',
     name: 'Binance-Peg BSC-USDT',
-    logoUrl: UsdtLogo
+    logoUrl: UsdtLogo,
+    color: '#31B047'
   },
   ETH: {
     address: '0x81b7E08F65Bdf5648606c89998A9CC8164397647',
     decimals: 18,
     symbol: 'ETH',
     name: 'Ethereum',
-    logoUrl: EthLogo
+    logoUrl: EthLogo,
+    color: '#393939'
   },
   MATTER: {
     address: '0x60d0769c4940cA58648C0AA34ecdf390a10F272e',

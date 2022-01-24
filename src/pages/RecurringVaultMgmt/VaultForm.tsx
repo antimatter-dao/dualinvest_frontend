@@ -5,6 +5,7 @@ import VaultFormComponent from 'components/MgmtPage/VaultForm'
 import { useActiveWeb3React } from 'hooks'
 import { useDualInvestBalance } from 'hooks/useDualInvest'
 import { CURRENCIES } from 'constants/currencies'
+import { RecurProduct } from 'utils/fetch/recur'
 
 const formData = {
   ['Current cycle invested amount:']: '5BTC',
@@ -12,12 +13,14 @@ const formData = {
   ['P&L:']: '5.23BTC'
 }
 
-export default function VaultForm({ currencySymbol, timer }: { currencySymbol: string; timer: number }) {
+export default function VaultForm({ product }: { product: RecurProduct | undefined }) {
   const [snackbarOpen, setSnackbarOpen] = useState(true)
   const [isRecurOpen, setIsRecurOpen] = useState(false)
 
+  const currencySymbol = product?.investCurrency ?? ''
+
   const { account } = useActiveWeb3React()
-  const contractBalance = useDualInvestBalance(CURRENCIES[currencySymbol])
+  const contractBalance = useDualInvestBalance(CURRENCIES[currencySymbol] ?? undefined)
 
   const handleCloseSnakebar = useCallback(() => {
     setSnackbarOpen(false)
@@ -47,18 +50,26 @@ export default function VaultForm({ currencySymbol, timer }: { currencySymbol: s
 
       <VaultCard
         account={account}
-        title="BTC Covered Call Vault"
-        description="Generates yield by running an automated BTC covered call strategy"
+        title={
+          product?.type === 'CALL'
+            ? `${product?.currency ?? ''} Covered Call Vault`
+            : `${product?.currency ?? ''} Put Selling Vault`
+        }
+        description={`Generates yield by running an automated ${
+          product?.type === 'CALL'
+            ? `${product?.currency ?? ''} covered call strategy`
+            : `${product?.currency ?? ''} put selling strategy`
+        }`}
         logoCurSymbol={currencySymbol}
-        priceCurSymbol={currencySymbol}
-        timer={timer}
+        priceCurSymbol={product?.currency ?? ''}
+        timer={product?.expiredAt ?? 0}
         redeemableAmount={formData['Redeemable:']}
         vaultForm={
           <VaultFormComponent
             formData={formData}
             currencySymbol={currencySymbol}
             available={contractBalance}
-            apy={'120%'}
+            apy={product?.apy ?? ''}
           />
         }
         isRecurOpen={isRecurOpen}

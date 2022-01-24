@@ -9,7 +9,7 @@ const formatTime = (d: number, h: number, m: number, s: number) => {
 }
 
 export const getDeltaTime = (time: number, to = Date.now()) => {
-  const correctedTime = time * 1000
+  const correctedTime = time
   const delta = /*14*24*60*60*1000 -*/ (correctedTime - to) / 1000
 
   return delta > 0 ? delta : 0
@@ -27,7 +27,7 @@ export const Timer = ({ timer, onZero }: { timer: number; onZero?: () => void })
   const [time, setTime] = useState(getDeltaTime(timer))
 
   useEffect(() => {
-    const tm = setInterval(() => setTime(getDeltaTime(timer)), 60000)
+    const tm = setInterval(() => setTime(getDeltaTime(timer)), 1000)
     return () => clearInterval(tm)
   }, [timer])
 

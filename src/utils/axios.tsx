@@ -60,7 +60,7 @@ export const getSignatures = async <T, R>(args: T, numberOfSignRequired = 3, rou
 
     return signRes
   } catch (e) {
-    throw Error('Cannot get signature99')
+    throw Error('Cannot get signature')
   }
 }
 

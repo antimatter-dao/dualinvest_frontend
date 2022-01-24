@@ -1,5 +1,7 @@
-import { useMemo, useState, useCallback, ReactElement } from 'react'
-import { Typography, Box, useTheme, styled } from '@mui/material'
+import { useMemo, useState, useCallback, ReactElement, useRef } from 'react'
+import { useParams } from 'react-router-dom'
+import { Typography, Box, useTheme, styled, Grid } from '@mui/material'
+import { Time } from 'lightweight-charts'
 import MgmtPage from 'components/MgmtPage'
 import { routes } from 'constants/routes'
 import { Subject } from 'components/MgmtPage/stableContent'
@@ -8,6 +10,12 @@ import VaultConfirmModal from './VaultConfirmModal'
 import TextButton from 'components/Button/TextButton'
 import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
+import { useSingleRecurProcuct } from 'hooks/useRecurData'
+import LineChart from 'components/Chart'
+import Spinner from 'components/Spinner'
+import Card from 'components/Card/Card'
+import useBreakpoint from 'hooks/useBreakpoint'
+import { usePriceSet } from 'hooks/usePriceSet'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -26,54 +34,120 @@ export const StyledUnorderList = styled('ul')(({ theme }) => ({
   }
 }))
 
-const currencySymbol = 'BTC'
-
 export default function RecurringValueMgmt() {
   const theme = useTheme()
+  const { currency, type } = useParams<{ currency: string; type: string }>()
+  const product = useSingleRecurProcuct(currency ?? '', type ?? '')
+  const priceSet = usePriceSet(product?.currency)
+  const graphContainer = useRef<HTMLDivElement>(null)
+  const isDownMd = useBreakpoint()
+  const strikePrice = product?.strikePrice ?? '-'
 
   const confirmData = useMemo(
     () => ({
       ['Platform service fee']: feeRate,
       ['Spot Price']: '59,000 USDT',
       ['APY']: '140.25%',
-      ['Strike Price']: '62,800 USDT',
+      ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
       ['Delivery Date']: '29 Oct 2021'
       // ['Spot Price']: product?.currentPrice ?? '-' + ' USDT',
       // ['APY']: product?.apy ? (+product.apy * 100).toFixed(2) + '%' : '- %',
       // ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
       // ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') + ' 08:30:00 AM UTC' : '-'
     }),
-    []
+    [product]
   )
 
   const returnOnInvestmentListItems = useMemo(() => {
     return [
-      <>Start at 11-29 09:00.</>,
       <>
-        If the BTC price can keep rising within 24 hours, you will receive a reward of up to{' '}
-        <span style={{ color: theme.palette.text.primary }}>220.00 USDT</span>.
+        When the final settlement price ≥ 62,800 USDT, you will receive{' '}
+        <span style={{ color: theme.palette.text.primary }}>
+          (Subscription Amount * Strike Price) * [1 + (APY % * Period (days) / 365)]
+        </span>
+        .
       </>,
-      <>If the BTC price down in a certain range, it will be eliminated and your total income will be settled</>,
       <>
-        If the first interval down, you will get&nbsp;
-        <span style={{ color: theme.palette.text.primary }}>20 USDT</span> compensation
+        When the settlement price is &lt; 62,800 USDT, you will receive{' '}
+        <span style={{ color: theme.palette.text.primary }}>
+          Subscription Amount * [1 + (APY% * Period (days) / 365)]
+        </span>
+        .
+      </>,
+      <>
+        APY will be refreshed instantly, and Antimatter will use and lock in the latest APY when you successfully
+        complete the subscription.
       </>
     ]
   }, [theme.palette.text.primary])
+
+  const strikeLineData = useMemo(() => {
+    return product?.expiredAt && product?.strikePrice
+      ? { time: product.expiredAt as Time, value: +product.strikePrice }
+      : undefined
+  }, [product?.expiredAt, product?.strikePrice])
+
+  const chart = useMemo(() => {
+    return (
+      <>
+        <Grid
+          item
+          xs={12}
+          md={8}
+          sx={{
+            height: { xs: '300px', md: '100%', maxWidth: '100%', width: { xs: '100%', md: 'auto' } }
+          }}
+          ref={graphContainer}
+        >
+          {product && priceSet ? (
+            <LineChart
+              lineColor="#18A0FB"
+              lineSeriesData={priceSet}
+              unit="BTC"
+              id="incomeGraph"
+              height={graphContainer?.current?.offsetHeight ?? 280}
+              strikeData={strikeLineData}
+            />
+          ) : (
+            <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
+              <Spinner size={60} marginRight="auto" marginLeft="auto" />
+            </Box>
+          )}
+        </Grid>
+        {!isDownMd && (
+          <Grid item xs={12} md={4} sx={{ height: { xs: 'auto', md: '100%' } }} paddingBottom={{ xs: 0, md: 22 }}>
+            <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
+              <Card gray>
+                <Box padding="32px 16px" fontSize={14}>
+                  Settlement Price &ge; {strikePrice} USDT, will be exercised
+                </Box>
+              </Card>
+              <Card gray>
+                <Box padding="32px 16px" fontSize={14}>
+                  Settlement Price &le; {strikePrice} USDT, will not be exercised
+                </Box>
+              </Card>
+            </Box>
+          </Grid>
+        )}
+      </>
+    )
+  }, [isDownMd, priceSet, product, strikeLineData, strikePrice])
 
   return (
     <>
       <VaultConfirmModal confirmData={confirmData} />
 
       <MgmtPage
+        graphTitle="Current Subscription Status"
         showFaq={false}
         backLink={routes.recurringVault}
-        product={undefined}
+        product={product}
         subject={Subject.RecurringVault}
-        chart={undefined}
         subscribeForm={<RecurringPolicy type="call" />}
         returnOnInvestmentListItems={returnOnInvestmentListItems}
-        vaultForm={<VaultForm currencySymbol={currencySymbol} timer={1645003583} />}
+        vaultForm={<VaultForm product={product} />}
+        chart={chart}
       />
     </>
   )
