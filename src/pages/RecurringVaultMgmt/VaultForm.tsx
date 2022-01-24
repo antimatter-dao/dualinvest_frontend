@@ -54,7 +54,12 @@ export default function VaultForm({ currencySymbol, timer }: { currencySymbol: s
         timer={timer}
         redeemableAmount={formData['Redeemable:']}
         vaultForm={
-          <VaultFormComponent formData={formData} currencySymbol={currencySymbol} available={contractBalance} />
+          <VaultFormComponent
+            formData={formData}
+            currencySymbol={currencySymbol}
+            available={contractBalance}
+            apy={'120%'}
+          />
         }
         isRecurOpen={isRecurOpen}
         onRecurOpen={() => {

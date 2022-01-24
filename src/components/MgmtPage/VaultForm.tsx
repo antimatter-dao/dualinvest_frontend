@@ -17,14 +17,16 @@ enum TYPE {
 export default function VaultForm({
   formData,
   currencySymbol,
-  available
+  available,
+  apy
 }: {
   formData: { [key: string]: any }
   currencySymbol: string
   available?: string
+  apy: string
 }) {
   return (
-    <Box width="100%">
+    <Box width="100%" position="relative">
       <Tabs
         titles={['Invest', 'Redeem']}
         tabPadding="12px"
@@ -39,6 +41,19 @@ export default function VaultForm({
           <Form key="redeem" type={TYPE.redeem} formData={formData} currencySymbol={currencySymbol} />
         ]}
       />
+
+      <Typography
+        position="absolute"
+        sx={{ top: 0, right: 0, height: 48 }}
+        display="flex"
+        alignItems={'center'}
+        variant="inherit"
+      >
+        APY:
+        <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
+          {apy}
+        </Typography>
+      </Typography>
     </Box>
   )
 }
