@@ -1,7 +1,6 @@
-import { useMemo, useState, useCallback, ReactElement, useRef } from 'react'
+import { useMemo, useState, useCallback, ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
-import { Typography, Box, useTheme, styled, Grid } from '@mui/material'
-import { Time } from 'lightweight-charts'
+import { Typography, Box, useTheme, styled } from '@mui/material'
 import MgmtPage from 'components/MgmtPage'
 import { routes } from 'constants/routes'
 import { Subject } from 'components/MgmtPage/stableContent'
@@ -11,11 +10,7 @@ import TextButton from 'components/Button/TextButton'
 import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
 import { useSingleRecurProcuct } from 'hooks/useRecurData'
-import LineChart from 'components/Chart'
-import Spinner from 'components/Spinner'
-import Card from 'components/Card/Card'
-import useBreakpoint from 'hooks/useBreakpoint'
-import { usePriceSet } from 'hooks/usePriceSet'
+import DualInvestChart from 'pages/DualInvestMgmt/Chart'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -38,9 +33,7 @@ export default function RecurringValueMgmt() {
   const theme = useTheme()
   const { currency, type } = useParams<{ currency: string; type: string }>()
   const product = useSingleRecurProcuct(currency ?? '', type ?? '')
-  const priceSet = usePriceSet(product?.currency)
-  const graphContainer = useRef<HTMLDivElement>(null)
-  const isDownMd = useBreakpoint()
+
   const strikePrice = product?.strikePrice ?? '-'
 
   const confirmData = useMemo(
@@ -81,60 +74,15 @@ export default function RecurringValueMgmt() {
     ]
   }, [theme.palette.text.primary])
 
-  const strikeLineData = useMemo(() => {
-    return product?.expiredAt && product?.strikePrice
-      ? { time: product.expiredAt as Time, value: +product.strikePrice }
-      : undefined
-  }, [product?.expiredAt, product?.strikePrice])
-
-  console.log(product, priceSet)
-
   const chart = useMemo(() => {
     return (
-      <>
-        <Grid
-          item
-          xs={12}
-          md={9}
-          sx={{
-            height: { xs: '300px', md: '100%', maxWidth: '100%', width: { xs: '100%', md: 'auto' } }
-          }}
-          ref={graphContainer}
-        >
-          {product && priceSet ? (
-            <LineChart
-              lineColor="#18A0FB"
-              lineSeriesData={priceSet}
-              unit="BTC"
-              id="incomeGraph"
-              height={graphContainer?.current?.offsetHeight ?? 280}
-              strikeData={strikeLineData}
-            />
-          ) : (
-            <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-              <Spinner size={60} marginRight="auto" marginLeft="auto" />
-            </Box>
-          )}
-        </Grid>
-        {!isDownMd && (
-          <Grid item xs={12} md={3} sx={{ height: { xs: 'auto', md: '100%' } }} paddingBottom={{ xs: 0, md: 22 }}>
-            <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
-              <Card gray>
-                <Box padding="20px 16px" fontSize={14}>
-                  Settlement Price &ge; {strikePrice} USDT, will be exercised
-                </Box>
-              </Card>
-              <Card gray>
-                <Box padding="16px" fontSize={14}>
-                  Settlement Price &le; {strikePrice} USDT, will not be exercised
-                </Box>
-              </Card>
-            </Box>
-          </Grid>
-        )}
-      </>
+      <DualInvestChart
+        product={product}
+        str1={`Settlement Price ≥ ${strikePrice} USDT, will be exercised`}
+        str2={`Settlement Price < ${strikePrice} USDT, will not be exercised`}
+      />
     )
-  }, [isDownMd, priceSet, product, strikeLineData, strikePrice])
+  }, [product, strikePrice])
 
   return (
     <>

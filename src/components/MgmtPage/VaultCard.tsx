@@ -9,6 +9,7 @@ import TextButton from 'components/Button/TextButton'
 import { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
+import { PRODUCT_TYPE_ROUTE } from 'components/Tabs/InvestTabs'
 
 interface Props {
   logoCurSymbol: string
@@ -38,8 +39,9 @@ export default function VaultCard(props: Props) {
   } = props
   const isDownMd = useBreakpoint('md')
   const history = useHistory()
+
   const handleDetails = useCallback(() => {
-    history.push(routes.accountTab.replace(':tab', 'position'))
+    history.push(routes.accountTabType.replace(':tab', 'position').replace(':type', PRODUCT_TYPE_ROUTE.recurVault))
   }, [history])
 
   return (

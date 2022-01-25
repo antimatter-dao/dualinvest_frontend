@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { Box, Alert } from '@mui/material'
 import VaultCard from 'components/MgmtPage/VaultCard'
 import VaultFormComponent from 'components/MgmtPage/VaultForm'
@@ -6,24 +6,41 @@ import { useActiveWeb3React } from 'hooks'
 import { useDualInvestBalance } from 'hooks/useDualInvest'
 import { CURRENCIES } from 'constants/currencies'
 import { RecurProduct } from 'utils/fetch/recur'
-
-const formData = {
-  ['Current cycle invested amount:']: '5BTC',
-  ['Redeemable:']: '0.23BTC',
-  ['P&L:']: '5.23BTC'
-}
+import { useRecurBalance } from 'hooks/useRecur'
+import { useRecurPnl } from 'hooks/useRecurData'
 
 export default function VaultForm({ product }: { product: RecurProduct | undefined }) {
-  const [snackbarOpen, setSnackbarOpen] = useState(true)
-  const [isRecurOpen, setIsRecurOpen] = useState(false)
-
   const currencySymbol = product?.investCurrency ?? ''
 
+  const [snackbarOpen, setSnackbarOpen] = useState(true)
+  const [isRecurOpen, setIsRecurOpen] = useState(false)
+  const [investAmount, setInvestAmount] = useState('')
+  const [redeemAmount, setRedeemAmount] = useState('')
+
+  const pnl = useRecurPnl(currencySymbol)
+  const { autoLockedBalance, autoBalance } = useRecurBalance(currencySymbol ? CURRENCIES[currencySymbol] : undefined)
   const { account } = useActiveWeb3React()
   const contractBalance = useDualInvestBalance(CURRENCIES[currencySymbol] ?? undefined)
 
+  const formData = useMemo(
+    () => ({
+      ['Current cycle invested amount:']: autoLockedBalance + currencySymbol,
+      ['Redeemable:']: autoBalance + currencySymbol,
+      ['P&L:']: pnl + currencySymbol
+    }),
+    [autoLockedBalance, currencySymbol, autoBalance, pnl]
+  )
+
   const handleCloseSnakebar = useCallback(() => {
     setSnackbarOpen(false)
+  }, [])
+
+  const handleInvestChange = useCallback(val => {
+    setInvestAmount(val)
+  }, [])
+
+  const handleRedeemChange = useCallback(val => {
+    setRedeemAmount(val)
   }, [])
 
   return (
@@ -67,6 +84,13 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
             currencySymbol={currencySymbol}
             available={contractBalance}
             apy={product?.apy ?? ''}
+            onInvestChange={handleInvestChange}
+            onRedeemChange={handleRedeemChange}
+            investAmount={investAmount}
+            redeemAmount={redeemAmount}
+            multiplier={product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1}
+            formula={`${product?.multiplier ?? '-'} ${product?.currency ?? '-'}
+            ${product?.type === 'CALL' ? '' : `*${product?.strikePrice ?? '-'}`}`}
           />
         }
         isRecurOpen={isRecurOpen}

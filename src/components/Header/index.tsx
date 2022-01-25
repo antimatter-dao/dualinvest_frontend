@@ -35,7 +35,7 @@ export const Tabs: Tab[] = [
     ]
   },
   // { title: 'Dual Investment', route: routes.dualInvest },
-  { title: 'Account', route: routes.account.replace(':tab', 'dashboard') },
+  { title: 'Account', route: routes.accountTab.replace(':tab', 'dashboard') },
   { title: 'DAO', link: 'https://dao.antimatter.finance/#/' },
   { title: 'Docs', link: 'https://docs.antimatter.finance/' },
   {
@@ -254,7 +254,22 @@ export default function Header() {
                     )}
                   </React.Fragment>
                 ) : (
-                  <NavLink key={title + idx} id={`${route}-nav-link`} to={route ?? ''} className={'link'}>
+                  <NavLink
+                    key={title + idx}
+                    id={`${route}-nav-link`}
+                    to={route ?? ''}
+                    className={
+                      (route
+                        ? pathname.includes(route)
+                          ? 'active'
+                          : pathname.includes('account')
+                          ? route.includes('account')
+                            ? 'active'
+                            : ''
+                          : ''
+                        : '') + ' link'
+                    }
+                  >
                     {titleContent ?? title}
                   </NavLink>
                 )

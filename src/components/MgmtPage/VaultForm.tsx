@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import Tabs from 'components/Tabs/Tabs'
-import NumericalInput from 'components/Input/InputNumerical'
+import InputNumerical from 'components/Input/InputNumerical'
 import Button, { BlackButton } from 'components/Button/Button'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import InputLabel from 'components/Input/InputLabel'
@@ -8,6 +8,8 @@ import DepositModalButton from 'pages/Account/modals/DepositModalButton'
 import { CURRENCIES } from 'constants/currencies'
 import { useActiveWeb3React } from 'hooks'
 import { useWalletModalToggle } from 'state/application/hooks'
+import { useCallback } from 'react'
+import { OutlinedCard } from 'components/Card/Card'
 
 enum TYPE {
   invest = 'Invest',
@@ -18,12 +20,24 @@ export default function VaultForm({
   formData,
   currencySymbol,
   available,
-  apy
+  apy,
+  onInvestChange,
+  onRedeemChange,
+  investAmount,
+  redeemAmount,
+  multiplier,
+  formula
 }: {
+  formula: string
   formData: { [key: string]: any }
   currencySymbol: string
   available?: string
   apy: string
+  onInvestChange: (val: string) => void
+  onRedeemChange: (val: string) => void
+  investAmount: string
+  redeemAmount: string
+  multiplier: number
 }) {
   return (
     <Box width="100%" position="relative">
@@ -32,13 +46,26 @@ export default function VaultForm({
         tabPadding="12px"
         contents={[
           <Form
-            key="compound"
+            key="invest"
             type={TYPE.invest}
             formData={formData}
             currencySymbol={currencySymbol}
             available={available}
+            onChange={onInvestChange}
+            val={investAmount}
+            multiplier={multiplier}
+            formula={formula}
           />,
-          <Form key="redeem" type={TYPE.redeem} formData={formData} currencySymbol={currencySymbol} />
+          <Form
+            key="redeem"
+            type={TYPE.redeem}
+            formData={formData}
+            currencySymbol={currencySymbol}
+            onChange={onRedeemChange}
+            val={redeemAmount}
+            multiplier={multiplier}
+            formula={formula}
+          />
         ]}
       />
 
@@ -62,19 +89,42 @@ function Form({
   type,
   formData,
   currencySymbol,
-  available
+  available,
+  onChange,
+  val,
+  multiplier,
+  formula
 }: {
   type: TYPE
   formData: { [key: string]: any }
   currencySymbol: string
   available?: string
+  onChange: (val: string) => void
+  val: string
+  multiplier: number
+  formula: string
 }) {
   const { account } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
 
+  const handleMax = useCallback(() => {
+    onChange(
+      type === TYPE.invest
+        ? Math.floor(+(available ?? 0) / multiplier)
+        : formData['Redeemable:'].replace(currencySymbol, '')
+    )
+  }, [available, currencySymbol, formData, onChange, type, multiplier])
+
+  const handleChange = useCallback(
+    e => {
+      onChange(e.target.value ? Math.floor(+e.target.value) + '' : '')
+    },
+    [onChange]
+  )
+
   return (
     <Box>
-      <Box display="flex" flexDirection="column" gap={16} pt={35} pb={42}>
+      <Box display="flex" flexDirection="column" gap={16} pt={35} pb={35}>
         {Object.keys(formData).map(key => (
           <Box key={key} display="flex" justifyContent="space-between">
             <Typography fontSize={16}>{key}</Typography>
@@ -89,30 +139,64 @@ function Form({
         </Box>
       </Box>
       <Box>
-        <Box display="flex" alignItems="flex-start" gap="5px">
-          {type === TYPE.invest ? (
-            <>
-              <InputLabel>
-                Available: {available ? available : '-'}
-                {currencySymbol}
-              </InputLabel>
-              <DepositModalButton currentCurrency={CURRENCIES[currencySymbol]} />
-            </>
-          ) : (
-            <>
-              <InputLabel>Redeemable amount: {formData['Redeemable:']}</InputLabel>
-            </>
-          )}
-        </Box>
-
-        <NumericalInput
-          placeholder="0.00"
-          onChangeCapture={() => {}}
-          onMax={() => {}}
-          unit="BTC"
-          value="0"
+        <InputNumerical
+          smallPlaceholder
+          placeholder={`Each unit represents ${multiplier} ${currencySymbol}`}
+          onChange={handleChange}
+          onMax={handleMax}
+          value={val}
           disabled={!account}
         />
+        <Box mt={12}>
+          <Box display="flex" justifyContent="space-between">
+            <InputLabel>{type === TYPE.invest ? TYPE.invest : TYPE.redeem} Amount</InputLabel>
+            <Box display="flex" alignItems="flex-start" gap="5px">
+              {type === TYPE.invest ? (
+                <>
+                  <InputLabel>
+                    Available: {available ? available : '-'}
+                    {currencySymbol}
+                  </InputLabel>
+                  <DepositModalButton currentCurrency={CURRENCIES[currencySymbol]} />
+                </>
+              ) : (
+                <>
+                  <InputLabel>Redeemable amount: {formData['Redeemable:']}</InputLabel>
+                </>
+              )}
+            </Box>
+          </Box>
+          <OutlinedCard>
+            <Box height="60px" display="flex" alignItems="center" padding="16px" justifyContent="space-between">
+              <>
+                <Typography
+                  component="span"
+                  color="primary"
+                  fontSize={16}
+                  maxWidth={'55%'}
+                  sx={{ wordBreak: 'break-all' }}
+                >
+                  {(multiplier * +val).toFixed(2)} {currencySymbol}
+                </Typography>
+                <Typography
+                  component="span"
+                  fontSize={12}
+                  sx={{ color: theme => theme.palette.text.secondary, wordBreak: 'break-all' }}
+                  maxWidth={'45%'}
+                >
+                  ={val}*{formula}
+                </Typography>
+              </>
+            </Box>
+          </OutlinedCard>
+          <Box display="flex" mt={8} justifyContent="space-between">
+            <Typography fontSize={12} sx={{ opacity: 0.5 }}>
+              <span>
+                Min:{multiplier} {currencySymbol}
+              </span>
+            </Typography>
+          </Box>
+        </Box>
       </Box>
       <Box mt={16}>
         {account ? <Button>{type}</Button> : <BlackButton onClick={toggleWallet}>Connect</BlackButton>}

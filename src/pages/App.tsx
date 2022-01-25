@@ -77,8 +77,8 @@ export default function App() {
                       <Route exact strict path={routes.chainOptionTyped} component={ChainOption} />
                       <Route exact strict path={routes.chainOptionMgmt} component={ChainOptionMgmt} />
                       <Route exact strict path={routes.noService} component={NoService} />
-                      <Route exact strict path={routes.account} component={Account} />
                       <Route exact strict path={routes.accountTab} component={Account} />
+                      <Route exact strict path={routes.accountTabType} component={Account} />
 
                       <Route exact strict path={routes.dualInvest} component={DualInvest} />
                       <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
