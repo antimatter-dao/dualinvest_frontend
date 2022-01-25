@@ -46,7 +46,10 @@ export const SUPPORTED_CURRENCIES: {
     color: '#31B047'
   },
   ETH: {
-    address: '0x81b7E08F65Bdf5648606c89998A9CC8164397647',
+    address:
+      parseInt(process.env.REACT_APP_CHAIN_ID ?? '') === 3
+        ? '0x55795b02C44Bd098D21bC1854036C2E75d7E7c43'
+        : '0x81b7E08F65Bdf5648606c89998A9CC8164397647',
     decimals: 18,
     symbol: 'ETH',
     name: 'Ethereum',
