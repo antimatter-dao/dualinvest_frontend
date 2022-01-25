@@ -131,27 +131,32 @@ function Form({
             <Typography fontSize={16}>{formData[key as keyof typeof formData]}</Typography>
           </Box>
         ))}
-        <Box mt={-5} sx={{ opacity: type === TYPE.redeem ? 1 : 0 }} display="flex" alignItems="center">
-          <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 14 }} />
+        <Box display="flex" alignItems="center">
+          <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 14, width: 14, mr: 8 }} />
           <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
-            your redeem amount will be available for withdraw once the current cycle finishes.
+            {type === TYPE.redeem ? (
+              <> your redeem amount will be available for withdraw once the current cycle finishes.</>
+            ) : (
+              <>Your deposit is a strategy that allows us to invest your {currencySymbol} in the vault by default.</>
+            )}
           </Typography>
         </Box>
       </Box>
-      <Box>
-        <InputNumerical
-          smallPlaceholder
-          placeholder={`Each unit represents ${multiplier} ${currencySymbol}`}
-          onChange={handleChange}
-          onMax={handleMax}
-          value={val}
-          disabled={!account}
-        />
-        <Box mt={12}>
-          <Box display="flex" justifyContent="space-between">
-            <InputLabel>{type === TYPE.invest ? TYPE.invest : TYPE.redeem} Amount</InputLabel>
-            <Box display="flex" alignItems="flex-start" gap="5px">
-              {type === TYPE.invest ? (
+      {type === TYPE.invest && (
+        <Box>
+          <InputNumerical
+            smallPlaceholder
+            placeholder={`Each unit represents ${multiplier} ${currencySymbol}`}
+            onChange={handleChange}
+            onMax={handleMax}
+            value={val}
+            disabled={!account}
+          />
+          <Box mt={12}>
+            <Box display="flex" justifyContent="space-between">
+              <InputLabel>{TYPE.invest} Amount</InputLabel>
+              <Box display="flex" alignItems="flex-start" gap="5px">
+                {/*  {type === TYPE.invest ? (*/}
                 <>
                   <InputLabel>
                     Available: {available ? available : '-'}
@@ -159,54 +164,47 @@ function Form({
                   </InputLabel>
                   <DepositModalButton currentCurrency={CURRENCIES[currencySymbol]} />
                 </>
-              ) : (
+                {/* ) : (
+                  <>
+                    <InputLabel>Redeemable amount: {formData['Redeemable:']}</InputLabel>
+                  </>
+               )}*/}
+              </Box>
+            </Box>
+            <OutlinedCard>
+              <Box height="60px" display="flex" alignItems="center" padding="16px" justifyContent="space-between">
                 <>
-                  <InputLabel>Redeemable amount: {formData['Redeemable:']}</InputLabel>
+                  <Typography
+                    component="span"
+                    color="primary"
+                    fontSize={16}
+                    maxWidth={'55%'}
+                    sx={{ wordBreak: 'break-all' }}
+                  >
+                    {(multiplier * +val).toFixed(2)} {currencySymbol}
+                  </Typography>
+                  <Typography
+                    component="span"
+                    fontSize={12}
+                    sx={{ color: theme => theme.palette.text.secondary, wordBreak: 'break-all' }}
+                    maxWidth={'45%'}
+                  >
+                    ={val}*{formula}
+                  </Typography>
                 </>
-              )}
+              </Box>
+            </OutlinedCard>
+            <Box display="flex" mt={8} justifyContent="space-between">
+              <Typography fontSize={12} sx={{ opacity: 0.5 }}>
+                <span>
+                  Min:{multiplier} {currencySymbol}
+                </span>
+              </Typography>
             </Box>
           </Box>
-          <OutlinedCard>
-            <Box height="60px" display="flex" alignItems="center" padding="16px" justifyContent="space-between">
-              <>
-                <Typography
-                  component="span"
-                  color="primary"
-                  fontSize={16}
-                  maxWidth={'55%'}
-                  sx={{ wordBreak: 'break-all' }}
-                >
-                  {(multiplier * +val).toFixed(2)} {currencySymbol}
-                </Typography>
-                <Typography
-                  component="span"
-                  fontSize={12}
-                  sx={{ color: theme => theme.palette.text.secondary, wordBreak: 'break-all' }}
-                  maxWidth={'45%'}
-                >
-                  ={val}*{formula}
-                </Typography>
-              </>
-            </Box>
-          </OutlinedCard>
-          <Box display="flex" mt={8} justifyContent="space-between">
-            <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-              <span>
-                Min:{multiplier} {currencySymbol}
-              </span>
-            </Typography>
-          </Box>
         </Box>
-      </Box>
-      <Box mt={16}>
-        {account ? <Button>{type}</Button> : <BlackButton onClick={toggleWallet}>Connect</BlackButton>}
-        <Box mt={12} sx={{ opacity: type === TYPE.redeem ? 0 : 1 }} display="flex" alignItems="center">
-          <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 14 }} />
-          <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
-            Your deposit is a strategy that allows us to invest your {currencySymbol} in the vault by default.
-          </Typography>
-        </Box>
-      </Box>
+      )}
+      <Box mt={16}>{account ? <Button>{type}</Button> : <BlackButton onClick={toggleWallet}>Connect</BlackButton>}</Box>
     </Box>
   )
 }

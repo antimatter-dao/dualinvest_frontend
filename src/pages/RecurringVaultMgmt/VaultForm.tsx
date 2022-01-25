@@ -78,6 +78,11 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
         logoCurSymbol={currencySymbol}
         priceCurSymbol={product?.currency ?? ''}
         timer={product?.expiredAt ?? 0}
+        isRecurOpen={isRecurOpen}
+        onRecurOpen={() => {
+          setIsRecurOpen(prev => !prev)
+        }}
+        activeOrder={5}
         vaultForm={
           <VaultFormComponent
             formData={formData}
@@ -93,11 +98,6 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
             ${product?.type === 'CALL' ? '' : `*${product?.strikePrice ?? '-'}`}`}
           />
         }
-        isRecurOpen={isRecurOpen}
-        onRecurOpen={() => {
-          setIsRecurOpen(prev => !prev)
-        }}
-        activeOrder={5}
       />
     </Box>
   )
