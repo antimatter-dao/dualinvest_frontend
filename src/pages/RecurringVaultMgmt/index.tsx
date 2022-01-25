@@ -8,7 +8,7 @@ import { Subject } from 'components/MgmtPage/stableContent'
 import { feeRate } from 'constants/index'
 import VaultConfirmModal from './VaultConfirmModal'
 import TextButton from 'components/Button/TextButton'
-import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle } from 'components/MgmtPage/stableContent'
+import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
 import { useSingleRecurProcuct } from 'hooks/useRecurData'
 import LineChart from 'components/Chart'
@@ -87,13 +87,15 @@ export default function RecurringValueMgmt() {
       : undefined
   }, [product?.expiredAt, product?.strikePrice])
 
+  console.log(product, priceSet)
+
   const chart = useMemo(() => {
     return (
       <>
         <Grid
           item
           xs={12}
-          md={8}
+          md={9}
           sx={{
             height: { xs: '300px', md: '100%', maxWidth: '100%', width: { xs: '100%', md: 'auto' } }
           }}
@@ -115,15 +117,15 @@ export default function RecurringValueMgmt() {
           )}
         </Grid>
         {!isDownMd && (
-          <Grid item xs={12} md={4} sx={{ height: { xs: 'auto', md: '100%' } }} paddingBottom={{ xs: 0, md: 22 }}>
+          <Grid item xs={12} md={3} sx={{ height: { xs: 'auto', md: '100%' } }} paddingBottom={{ xs: 0, md: 22 }}>
             <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
               <Card gray>
-                <Box padding="32px 16px" fontSize={14}>
+                <Box padding="20px 16px" fontSize={14}>
                   Settlement Price &ge; {strikePrice} USDT, will be exercised
                 </Box>
               </Card>
               <Card gray>
-                <Box padding="32px 16px" fontSize={14}>
+                <Box padding="16px" fontSize={14}>
                   Settlement Price &le; {strikePrice} USDT, will not be exercised
                 </Box>
               </Card>
@@ -144,7 +146,12 @@ export default function RecurringValueMgmt() {
         backLink={routes.recurringVault}
         product={product}
         subject={Subject.RecurringVault}
-        subscribeForm={<RecurringPolicy type="call" />}
+        subscribeForm={
+          <RecurringPolicy
+            type={product?.type.toLocaleLowerCase() === 'call' ? 'call' : 'put'}
+            currencySymbol={product?.currency ?? '-'}
+          />
+        }
         returnOnInvestmentListItems={returnOnInvestmentListItems}
         vaultForm={<VaultForm product={product} />}
         chart={chart}
@@ -153,9 +160,10 @@ export default function RecurringValueMgmt() {
   )
 }
 
-function RecurringPolicy({ type }: { type: 'call' | 'put' }) {
+function RecurringPolicy({ type, currencySymbol }: { type: 'call' | 'put'; currencySymbol: string }) {
   const [curIdx, setCurIdx] = useState(0)
   const policy = type === 'call' ? vaultPolicyCall : vaultPolicyPut
+  const Text = vaultPolicyText[type]
 
   const handlePrev = useCallback(() => {
     setCurIdx(preIdx => {
@@ -175,15 +183,7 @@ function RecurringPolicy({ type }: { type: 'call' | 'put' }) {
         Recurring Policy
       </Typography>
       <StyledUnorderList>
-        <li>
-          Vault earns its BTC deposits by running a bullish strategy that automatically covers BTC on a weekly basis.
-          The vault reinvests the earnings earned back into the strategy, effectively increasing the saver&apos;s
-          returns over time.
-        </li>
-        <li>
-          It is important to note that when the final result is exercised, we will settle in another currency and invest
-          again in the settlement currency&apos;s vault.
-        </li>
+        <Text currencySymbol={currencySymbol} />
       </StyledUnorderList>
       <Box position="relative">
         <Box width="100%" display="flex" justifyContent="space-between" position="absolute" top="40%">

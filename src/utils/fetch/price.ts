@@ -19,8 +19,8 @@ export enum kLineProps {
 export const priceFormatter = (raw: (string | number)[][]): LineSeriesData => {
   return raw.map(item => {
     return {
-      time: item[kLineProps.closeTime] as Time,
-      value: +item[kLineProps.close]
+      time: item[kLineProps.openTime] as Time,
+      value: +item[kLineProps.open]
     }
   })
 }

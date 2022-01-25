@@ -81,6 +81,12 @@ function Form({
             <Typography fontSize={16}>{formData[key as keyof typeof formData]}</Typography>
           </Box>
         ))}
+        <Box mt={-5} sx={{ opacity: type === TYPE.redeem ? 1 : 0 }} display="flex" alignItems="center">
+          <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 14 }} />
+          <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
+            your redeem amount will be available for withdraw once the current cycle finishes.
+          </Typography>
+        </Box>
       </Box>
       <Box>
         <Box display="flex" alignItems="flex-start" gap="5px">
@@ -110,8 +116,8 @@ function Form({
       </Box>
       <Box mt={16}>
         {account ? <Button>{type}</Button> : <BlackButton onClick={toggleWallet}>Connect</BlackButton>}
-        <Box mt={8} sx={{ opacity: type === TYPE.redeem ? 0 : 1 }}>
-          <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 12 }} />
+        <Box mt={12} sx={{ opacity: type === TYPE.redeem ? 0 : 1 }} display="flex" alignItems="center">
+          <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 14 }} />
           <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
             Your deposit is a strategy that allows us to invest your {currencySymbol} in the vault by default.
           </Typography>

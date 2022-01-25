@@ -52,18 +52,15 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
         account={account}
         title={
           product?.type === 'CALL'
-            ? `${product?.currency ?? ''} Covered Call Vault`
-            : `${product?.currency ?? ''} Put Selling Vault`
+            ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
+            : `${product?.currency ?? ''} Put Selling Recuring Strategy`
         }
         description={`Generates yield by running an automated ${
-          product?.type === 'CALL'
-            ? `${product?.currency ?? ''} covered call strategy`
-            : `${product?.currency ?? ''} put selling strategy`
+          product?.type === 'CALL' ? `${product?.currency ?? ''} covered call strategy` : `put selling strategy`
         }`}
         logoCurSymbol={currencySymbol}
         priceCurSymbol={product?.currency ?? ''}
         timer={product?.expiredAt ?? 0}
-        redeemableAmount={formData['Redeemable:']}
         vaultForm={
           <VaultFormComponent
             formData={formData}

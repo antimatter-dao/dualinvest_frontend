@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { LineSeriesData } from 'components/Chart'
 import { priceFormatter } from 'utils/fetch/price'
+import { Time } from 'lightweight-charts'
 
 export function usePriceSet(symbol: string | undefined) {
   const [priceSet, setPriceSetList] = useState<LineSeriesData | undefined>(undefined)
@@ -33,6 +34,7 @@ export function usePriceSet(symbol: string | undefined) {
     if (price) {
       setPriceSetList(list => {
         if (!list) return list
+        list[list.length - 1].time = Date.now() as Time
         list[list.length - 1].value = +price
         return [...list]
       })

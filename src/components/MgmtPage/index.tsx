@@ -117,7 +117,7 @@ export default function MgmtPage(props: Props) {
             )}
           </Box>
 
-          <Grid container spacing={isDownMd ? 20 : 40}>
+          <Grid container spacing={20}>
             {vaultForm && (
               <Grid xs={12} item>
                 {vaultForm}
@@ -166,7 +166,7 @@ export default function MgmtPage(props: Props) {
                     <Box
                       maxHeight="100%"
                       height="100%"
-                      gap={20}
+                      gap={0}
                       display={{ xs: 'grid', md: 'flex', maxWidth: 'calc(100vw - 100px)' }}
                     >
                       {chart}

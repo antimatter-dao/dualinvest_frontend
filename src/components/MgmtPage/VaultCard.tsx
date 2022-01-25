@@ -21,7 +21,6 @@ interface Props {
   isRecurOpen: boolean
   onRecurOpen: () => void
   activeOrder: number | string
-  redeemableAmount: string
 }
 
 export default function VaultCard(props: Props) {
@@ -35,8 +34,7 @@ export default function VaultCard(props: Props) {
     timer,
     isRecurOpen,
     onRecurOpen,
-    activeOrder,
-    redeemableAmount
+    activeOrder
   } = props
   const isDownMd = useBreakpoint('md')
   const history = useHistory()
@@ -93,15 +91,6 @@ export default function VaultCard(props: Props) {
                     sx={{ color: theme => theme.palette.text.secondary }}
                   >
                     <Timer timer={timer} />
-                  </Typography>
-                </Box>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography fontSize={16} component="div">
-                    Redeemable amount
-                    <Typography fontSize={12}>(Revenue not included)</Typography>
-                  </Typography>
-                  <Typography fontWeight={700} fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
-                    {redeemableAmount}
                   </Typography>
                 </Box>
               </Box>

@@ -51,7 +51,7 @@ export default function DualInvestMgmt() {
         <Grid
           item
           xs={12}
-          md={8}
+          md={9}
           sx={{
             height: { xs: '300px', md: '100%', maxWidth: '100%', width: { xs: '100%', md: 'auto' } }
           }}
@@ -73,7 +73,7 @@ export default function DualInvestMgmt() {
           )}
         </Grid>
         {!isDownMd && (
-          <Grid item xs={12} md={4} sx={{ height: { xs: 'auto', md: '100%' } }} paddingBottom={{ xs: 0, md: 22 }}>
+          <Grid item xs={12} md={3} sx={{ height: { xs: 'auto', md: '100%' } }} paddingBottom={{ xs: 0, md: 22 }}>
             <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
               <Card gray>
                 <Box padding="16px" fontSize={14}>
