@@ -22,11 +22,13 @@ export default function VaultForm({
   available,
   apy,
   onInvestChange,
-  onRedeemChange,
   investAmount,
-  redeemAmount,
   multiplier,
-  formula
+  formula,
+  onWithdraw,
+  onInvest,
+  redeemDisabled,
+  investDisabled
 }: {
   formula: string
   formData: { [key: string]: any }
@@ -34,10 +36,12 @@ export default function VaultForm({
   available?: string
   apy: string
   onInvestChange: (val: string) => void
-  onRedeemChange: (val: string) => void
   investAmount: string
-  redeemAmount: string
   multiplier: number
+  onWithdraw: () => void
+  onInvest: () => void
+  redeemDisabled: boolean
+  investDisabled: boolean
 }) {
   return (
     <Box width="100%" position="relative">
@@ -55,16 +59,18 @@ export default function VaultForm({
             val={investAmount}
             multiplier={multiplier}
             formula={formula}
+            onClick={onInvest}
+            disabled={investDisabled}
           />,
           <Form
             key="redeem"
             type={TYPE.redeem}
             formData={formData}
             currencySymbol={currencySymbol}
-            onChange={onRedeemChange}
-            val={redeemAmount}
             multiplier={multiplier}
             formula={formula}
+            onClick={onWithdraw}
+            disabled={redeemDisabled}
           />
         ]}
       />
@@ -93,31 +99,36 @@ function Form({
   onChange,
   val,
   multiplier,
-  formula
+  formula,
+  onClick,
+  disabled
 }: {
   type: TYPE
   formData: { [key: string]: any }
   currencySymbol: string
   available?: string
-  onChange: (val: string) => void
-  val: string
+  onChange?: (val: string) => void
+  val?: string
   multiplier: number
   formula: string
+  onClick: () => void
+  disabled: boolean
 }) {
   const { account } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
 
   const handleMax = useCallback(() => {
-    onChange(
-      type === TYPE.invest
-        ? Math.floor(+(available ?? 0) / multiplier)
-        : formData['Redeemable:'].replace(currencySymbol, '')
-    )
+    onChange &&
+      onChange(
+        type === TYPE.invest
+          ? Math.floor(+(available ?? 0) / multiplier)
+          : formData['Redeemable:'].replace(currencySymbol, '')
+      )
   }, [available, currencySymbol, formData, onChange, type, multiplier])
 
   const handleChange = useCallback(
     e => {
-      onChange(e.target.value ? Math.floor(+e.target.value) + '' : '')
+      onChange && onChange(e.target.value ? Math.floor(+e.target.value) + '' : '')
     },
     [onChange]
   )
@@ -142,7 +153,7 @@ function Form({
           </Typography>
         </Box>
       </Box>
-      {type === TYPE.invest && (
+      {type === TYPE.invest && val !== undefined && onChange && (
         <Box>
           <InputNumerical
             smallPlaceholder
@@ -204,7 +215,15 @@ function Form({
           </Box>
         </Box>
       )}
-      <Box mt={16}>{account ? <Button>{type}</Button> : <BlackButton onClick={toggleWallet}>Connect</BlackButton>}</Box>
+      <Box mt={16}>
+        {account ? (
+          <Button onClick={onClick} disabled={disabled}>
+            {type}
+          </Button>
+        ) : (
+          <BlackButton onClick={toggleWallet}>Connect</BlackButton>
+        )}
+      </Box>
     </Box>
   )
 }

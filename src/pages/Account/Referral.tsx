@@ -97,7 +97,7 @@ export default function Referral() {
           />
           <NumericalCard title="Number of Referral Accounts" value={inviteCount ?? '-'} border fontSize="44px">
             <Button
-              style={{ position: 'absolute', width: 148, height: 44, right: 20, bottom: 20, fontSize: 14 }}
+              style={{ width: 148, height: 44, fontSize: 14, transform: 'translateY(50%)' }}
               onClick={handleOpenReferral}
             >
               Referral Link

@@ -6,8 +6,13 @@ import { useActiveWeb3React } from 'hooks'
 import { useDualInvestBalance } from 'hooks/useDualInvest'
 import { CURRENCIES } from 'constants/currencies'
 import { RecurProduct } from 'utils/fetch/recur'
-import { useRecurBalance } from 'hooks/useRecur'
+import { useRecurBalance, useRecurCallback } from 'hooks/useRecur'
 import { useRecurPnl } from 'hooks/useRecurData'
+import { tryParseAmount } from 'utils/parseAmount'
+import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
+import useModal from 'hooks/useModal'
+import MessageBox from 'components/Modal/TransactionModals/MessageBox'
+import { useTransactionAdder } from 'state/transactions/hooks'
 
 export default function VaultForm({ product }: { product: RecurProduct | undefined }) {
   const currencySymbol = product?.investCurrency ?? ''
@@ -15,12 +20,16 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
   const [snackbarOpen, setSnackbarOpen] = useState(true)
   const [isRecurOpen, setIsRecurOpen] = useState(false)
   const [investAmount, setInvestAmount] = useState('')
-  const [redeemAmount, setRedeemAmount] = useState('')
+  const { redeemCallback, investCallback } = useRecurCallback()
 
   const pnl = useRecurPnl(currencySymbol)
-  const { autoLockedBalance, autoBalance } = useRecurBalance(currencySymbol ? CURRENCIES[currencySymbol] : undefined)
+  const { autoLockedBalance, autoBalance, autoBalanceRaw } = useRecurBalance(
+    currencySymbol ? CURRENCIES[currencySymbol] : undefined
+  )
   const { account } = useActiveWeb3React()
   const contractBalance = useDualInvestBalance(CURRENCIES[currencySymbol] ?? undefined)
+  const { showModal, hideModal } = useModal()
+  const addPopup = useTransactionAdder()
 
   const formData = useMemo(
     () => ({
@@ -39,9 +48,58 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
     setInvestAmount(val)
   }, [])
 
-  const handleRedeemChange = useCallback(val => {
-    setRedeemAmount(val)
-  }, [])
+  const handleInvest = useCallback(async () => {
+    const cur = CURRENCIES[currencySymbol]
+    if (!cur || !investCallback || !product) return
+    showModal(<TransactionPendingModal />)
+    const val = tryParseAmount(
+      (
+        +investAmount * (product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
+      ).toFixed(2),
+      cur
+    )?.raw?.toString()
+    if (!val) return
+    try {
+      const r = await investCallback(val, cur.address)
+      hideModal()
+
+      addPopup(r, {
+        summary: `Subscribed ${(
+          +investAmount * (product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
+        ).toFixed(2)} ${product.investCurrency} to ${
+          product.type === 'CALL'
+            ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
+            : `${product?.currency ?? ''} Put Selling Recuring Strategy`
+        }`
+      })
+      hideModal()
+    } catch (e) {
+      setInvestAmount('')
+      showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
+      console.error(e)
+    }
+  }, [addPopup, currencySymbol, hideModal, investAmount, investCallback, product, showModal])
+
+  const handleWithdraw = useCallback(async () => {
+    const cur = CURRENCIES[currencySymbol]
+    if (!cur || !redeemCallback || !product) return
+    showModal(<TransactionPendingModal />)
+
+    try {
+      const r = await redeemCallback(autoBalanceRaw, cur.address)
+      addPopup(r, {
+        summary: `Redeemed ${autoBalance} ${product.investCurrency} from ${
+          product.type === 'CALL'
+            ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
+            : `${product?.currency ?? ''} Put Selling Recuring Strategy`
+        }`
+      })
+      hideModal()
+    } catch (e) {
+      showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
+      console.error(e)
+    }
+  }, [currencySymbol, redeemCallback, product, showModal, autoBalanceRaw, addPopup, autoBalance, hideModal])
 
   return (
     <Box display="grid" position="relative" gap="35px" mt={-24}>
@@ -85,14 +143,16 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
         activeOrder={5}
         vaultForm={
           <VaultFormComponent
+            redeemDisabled={!product}
+            investDisabled={!product}
+            onWithdraw={handleWithdraw}
+            onInvest={handleInvest}
             formData={formData}
             currencySymbol={currencySymbol}
             available={contractBalance}
             apy={product?.apy ?? ''}
             onInvestChange={handleInvestChange}
-            onRedeemChange={handleRedeemChange}
             investAmount={investAmount}
-            redeemAmount={redeemAmount}
             multiplier={product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1}
             formula={`${product?.multiplier ?? '-'} ${product?.currency ?? '-'}
             ${product?.type === 'CALL' ? '' : `*${product?.strikePrice ?? '-'}`}`}

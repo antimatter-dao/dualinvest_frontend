@@ -16,8 +16,8 @@ import { fetchLocation } from 'utils/fetch/location'
 import Account from './Account'
 import { BindModalProvider } from 'context/BindContext'
 import Home from './Home'
-import ChainOption from './ChainOption'
-import ChainOptionMgmt from './ChainOptionMgmt'
+// import ChainOption from './ChainOption'
+// import ChainOptionMgmt from './ChainOptionMgmt'
 import RecurringVault from './RecurringVault'
 import RecurringVaultMgmt from './RecurringVaultMgmt'
 
@@ -73,9 +73,9 @@ export default function App() {
                 <BindModalProvider>
                   <LocatoinVerification resource={resource}>
                     <Switch>
-                      <Route exact strict path={routes.chainOption} component={ChainOption} />
+                      {/* <Route exact strict path={routes.chainOption} component={ChainOption} />
                       <Route exact strict path={routes.chainOptionTyped} component={ChainOption} />
-                      <Route exact strict path={routes.chainOptionMgmt} component={ChainOptionMgmt} />
+                      <Route exact strict path={routes.chainOptionMgmt} component={ChainOptionMgmt} /> */}
                       <Route exact strict path={routes.noService} component={NoService} />
                       <Route exact strict path={routes.accountTab} component={Account} />
                       <Route exact strict path={routes.accountTabType} component={Account} />

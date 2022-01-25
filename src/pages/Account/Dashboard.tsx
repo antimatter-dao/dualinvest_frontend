@@ -306,9 +306,6 @@ export default function Dashboard() {
                         history.push(routes.dualInvest)
                       }}
                       style={{
-                        position: 'absolute',
-                        right: '180px',
-                        bottom: '20px',
                         width: 148,
                         height: 44,
                         fontSize: 14
@@ -320,9 +317,7 @@ export default function Dashboard() {
                       href={'https://exchange.chainswap.com/'}
                       primary
                       style={{
-                        position: 'absolute',
-                        right: '20px',
-                        bottom: '20px',
+                        marginLeft: 12,
                         width: 148,
                         height: 44,
                         fontSize: 14
