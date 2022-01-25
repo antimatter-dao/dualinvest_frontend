@@ -16,6 +16,7 @@ export default function ConfirmModal({
   amount,
   data,
   showCancelWarning,
+  showCompoundWarning,
   title,
   subTitle,
   investCurrency,
@@ -30,6 +31,7 @@ export default function ConfirmModal({
   subTitle?: string
   investCurrency?: Currency
   showCancelWarning?: boolean
+  showCompoundWarning?: boolean
   children?: React.ReactNode
 }) {
   const theme = useTheme()
@@ -95,6 +97,18 @@ export default function ConfirmModal({
           <InfoOutlinedIcon sx={{ color: theme.palette.primary.main, height: 12 }} />
           <Typography component="span" fontSize={12}>
             Once subscribed, the subscribed products cannot be cancelled.
+          </Typography>
+        </Box>
+      )}
+      {showCompoundWarning && (
+        <Box padding="12px 15px" display="flex" gap="7px">
+          <InfoOutlinedIcon sx={{ color: theme.palette.error.main, height: 12 }} />
+          <Typography fontSize={12} color={theme.palette.error.main} fontWeight={400}>
+            when the final result is exercised, we will settle in another currency and invest again in the settlement
+            currency&apos;s vault.
+            <br />
+            <br /> Once compound interest is confirmed, it cannot be canceled halfway. When compound interest is in
+            progress, you can choose to stop the next compound interest.
           </Typography>
         </Box>
       )}
