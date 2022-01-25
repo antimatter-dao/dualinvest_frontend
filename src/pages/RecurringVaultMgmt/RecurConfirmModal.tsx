@@ -9,7 +9,7 @@ interface Props {
   type: 'on' | 'off'
 }
 
-export default function RecurringConfirmModal(props: Props) {
+export default function RecurConfirmModal(props: Props) {
   const { isOpen, onDismiss, onConfirm, type } = props
 
   return (
