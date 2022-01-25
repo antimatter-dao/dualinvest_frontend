@@ -53,13 +53,8 @@ const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => voi
     </RowStr>,
     <RowStr key={1} component="div">
       <ExpireDateAQuestionHelper expireAt={data.expiredAt} showIcon={false} />
-      {/* <QuestionHelper
-        text={dayjs(data.expiredAt).format('MMM-DD-YYYY') + ' 08:30:00 AM UTC'}
-        title={<Typography color="#161616">{dayjs(data.expiredAt).format('DD MMM YYYY')}</Typography>}
-      /> */}
     </RowStr>,
     <RowStr key={1}>{Math.floor((data.expiredAt - data.ts) / 86400000)} Days</RowStr>,
-    // <CastValue key={1} unit="BTC" val={15.08} total={50} />,
     <Box
       width="100%"
       display="flex"

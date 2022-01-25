@@ -71,17 +71,3 @@ export default function DualInvest() {
     </Box>
   )
 }
-
-// function CastValue({ unit, val, total }: { unit: string; val: number; total: number }) {
-//   const isDownMd = useBreakpoint('md')
-//   const percentage = ((val / total) * 100).toFixed(2)
-
-//   if (isDownMd) {
-//     return (
-//       <RowStr>
-//         {percentage}% {val} {unit} / {total} {unit}
-//       </RowStr>
-//     )
-//   }
-//   return <Progress unit={unit} val={val} total={total} />
-// }

@@ -53,12 +53,10 @@ export function useAccountBalances(): {
   BTC: BalanceInfo | undefined
   USDT: BalanceInfo | undefined
   ETH: BalanceInfo | undefined
-  MATTER: BalanceInfo | undefined
 } {
   const [btcRes, setBtcRes] = useState<BalanceInfo | undefined>(undefined)
   const [usdtRes, setUsdtRes] = useState<BalanceInfo | undefined>(undefined)
   const [ethRes, setEthRes] = useState<BalanceInfo | undefined>(undefined)
-  const [matterRes, setMatterRes] = useState<BalanceInfo | undefined>(undefined)
   const { account, chainId } = useActiveWeb3React()
 
   const btcPromiseFn = useCallback(
@@ -100,31 +98,15 @@ export function useAccountBalances(): {
     setEthRes(assetBalanceFormatter(r.data.data))
   }, [])
 
-  const matterPromiseFn = useCallback(
-    () =>
-      Axios.post('getUserAssets', undefined, {
-        account,
-        chainId,
-        currency: CURRENCIES.MATTER.address,
-        symbol: CURRENCIES.MATTER.symbol
-      }),
-    [account, chainId]
-  )
-  const matterCallbackFn = useCallback(r => {
-    setMatterRes(assetBalanceFormatter(r.data.data))
-  }, [])
-
   usePollingWithMaxRetries(btcPromiseFn, btcCallbackFn, 30000)
   usePollingWithMaxRetries(usdtPromiseFn, usdtCallbackFn, 30000)
   usePollingWithMaxRetries(ethPromiseFn, ethCallbackFn, 3000)
-  usePollingWithMaxRetries(matterPromiseFn, matterCallbackFn, 3000)
 
   return useMemo(() => {
     return {
       BTC: btcRes,
-      USDT: usdtRes,
       ETH: ethRes,
-      MATTER: matterRes
+      USDT: usdtRes
     }
-  }, [btcRes, usdtRes, ethRes, matterRes])
+  }, [btcRes, usdtRes, ethRes])
 }
