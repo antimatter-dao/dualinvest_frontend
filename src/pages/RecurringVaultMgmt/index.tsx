@@ -11,6 +11,8 @@ import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } fr
 import VaultForm from './VaultForm'
 import { useSingleRecurProcuct } from 'hooks/useRecurData'
 import DualInvestChart from 'pages/DualInvestMgmt/Chart'
+import RedeemConfirmModal from './RedeemConfirmModal'
+import { CURRENCIES } from 'constants/currencies'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -86,6 +88,7 @@ export default function RecurringValueMgmt() {
 
   return (
     <>
+      <RedeemConfirmModal isOpen={false} amount={'20'} currency={CURRENCIES['BTC']} />
       <VaultConfirmModal confirmData={confirmData} />
 
       <MgmtPage
