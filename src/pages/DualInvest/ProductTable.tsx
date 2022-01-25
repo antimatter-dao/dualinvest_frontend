@@ -4,7 +4,7 @@ import NoDataCard from 'components/Card/NoDataCard'
 import Spinner from 'components/Spinner'
 import Table from 'components/Table'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { Product, ProductList } from 'utils/fetch/product'
+import { Product, SingleCurProductList } from 'utils/fetch/product'
 import { CURRENCIES } from 'constants/currencies'
 import { ExpireDateAQuestionHelper } from 'components/essential/QuestionHelper'
 import Button from 'components/Button/Button'
@@ -69,7 +69,7 @@ export default function ProductTable({
   productList,
   strikeCurrencySymbol
 }: {
-  productList: ProductList | undefined
+  productList: SingleCurProductList | undefined
   strikeCurrencySymbol: string
 }) {
   const isDownMd = useBreakpoint('md')
@@ -83,18 +83,25 @@ export default function ProductTable({
   )
 
   return (
-    <>
+    <Box
+      display="grid"
+      gap={{ xs: 36, md: 48 }}
+      justifyItems={{ xs: 'flex-start', md: 'center' }}
+      width="100%"
+      margin={{ xs: '0px auto' }}
+      alignContent="flex-start"
+    >
       <Box
         id="up"
         display="grid"
         width="100%"
         gap={8}
-        margin={{ xs: '0px 20px' }}
         sx={{
           background: theme => theme.palette.background.paper,
           borderRadius: 2,
           padding: '34px 24px',
-          maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
+          margin: '0 auto',
+          maxWidth: theme => ({ xs: '100%', sm: `calc(100% - 40px)`, md: theme.width.maxContent })
         }}
       >
         <ProductCardHeader
@@ -119,12 +126,13 @@ export default function ProductTable({
         display="grid"
         width="100%"
         gap={8}
-        margin={{ xs: '0px 20px' }}
+        margin={{ xs: '0px auto' }}
         sx={{
           background: theme => theme.palette.background.paper,
           borderRadius: 2,
           padding: '34px 24px',
-          maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
+          margin: '0 auto',
+          maxWidth: theme => ({ xs: '100%', sm: `calc(100% - 40px)`, md: theme.width.maxContent })
         }}
       >
         <ProductCardHeader
@@ -142,7 +150,7 @@ export default function ProductTable({
         />
         <DataTable onSubscribe={handleSubscribe} productList={productList?.put} />
       </Box>
-    </>
+    </Box>
   )
 }
 

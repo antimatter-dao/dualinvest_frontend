@@ -16,6 +16,7 @@ import { ExpireDateAQuestionHelper } from 'components/essential/QuestionHelper'
 import { useParams } from 'react-router-dom'
 import ProductBanner from 'components/ProductBanner'
 import BlueRing from 'components/Icon/BlueRing'
+import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 
 enum TYPE {
   Saddle = 'Saddle',
@@ -189,7 +190,11 @@ export default function ChainOption() {
           maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
         }}
       >
-        <DataTable onSubscribe={handleSubscribe} productList={productList?.call} />
+        {SUPPORTED_CURRENCY_SYMBOL.map(symbol => {
+          const list = productList?.[symbol as keyof typeof productList]
+
+          return <DataTable onSubscribe={handleSubscribe} productList={list?.call} key={symbol} />
+        })}
       </Box>
     </Box>
   )
