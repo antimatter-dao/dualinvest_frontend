@@ -16,6 +16,7 @@ import { ExpireDateAQuestionHelper } from 'components/essential/QuestionHelper'
 import { useParams } from 'react-router-dom'
 import ProductBanner from 'components/ProductBanner'
 import BlueRing from 'components/Icon/BlueRing'
+import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 
 enum TYPE {
   Saddle = 'Saddle',
@@ -52,13 +53,8 @@ const formatData = (data: Product, isDownMd: boolean, hanldeSubscribe: () => voi
     </RowStr>,
     <RowStr key={1} component="div">
       <ExpireDateAQuestionHelper expireAt={data.expiredAt} showIcon={false} />
-      {/* <QuestionHelper
-        text={dayjs(data.expiredAt).format('MMM-DD-YYYY') + ' 08:30:00 AM UTC'}
-        title={<Typography color="#161616">{dayjs(data.expiredAt).format('DD MMM YYYY')}</Typography>}
-      /> */}
     </RowStr>,
     <RowStr key={1}>{Math.floor((data.expiredAt - data.ts) / 86400000)} Days</RowStr>,
-    // <CastValue key={1} unit="BTC" val={15.08} total={50} />,
     <Box
       width="100%"
       display="flex"
@@ -189,7 +185,11 @@ export default function ChainOption() {
           maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
         }}
       >
-        <DataTable onSubscribe={handleSubscribe} productList={productList?.call} />
+        {SUPPORTED_CURRENCY_SYMBOL.map(symbol => {
+          const list = productList?.[symbol as keyof typeof productList]
+
+          return <DataTable onSubscribe={handleSubscribe} productList={list?.call} key={symbol} />
+        })}
       </Box>
     </Box>
   )

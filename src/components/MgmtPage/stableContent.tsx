@@ -290,3 +290,39 @@ export const vaultPolicyPut = [
 ]
 
 export const valutPolicyTitle = ['Algorithmic Strike Selection', 'Two settlement results', 'Recurring Vault']
+
+export const vaultPolicyText: {
+  call: React.FC<{ currencySymbol: string }>
+  put: React.FC<{ currencySymbol: string }>
+} = {
+  call: function({ currencySymbol }: { currencySymbol: string }) {
+    return (
+      <>
+        <li>
+          Vault earns its {currencySymbol} deposits by running a bullish strategy that automatically covers{' '}
+          {currencySymbol} on a weekly basis. The vault reinvests the earnings earned back into the strategy,
+          effectively increasing the saver&apos;s returns over time.
+        </li>
+        <li>
+          It is important to note that when the final result is exercised, we will settle in another currency and invest
+          again in the settlement currency&apos;s vault.
+        </li>
+      </>
+    )
+  },
+  put: function({ currencySymbol }: { currencySymbol: string }) {
+    return (
+      <>
+        <li>
+          Vault earns its {currencySymbol} deposits by running a put strategy that automatically covers {currencySymbol}{' '}
+          on a weekly basis. The vault reinvests the earnings earned back into the strategy, effectively increasing the
+          saver&apos;s returns over time.
+        </li>
+        <li>
+          It is important to note that when the final result is exercised, we will settle in another currency and invest
+          again in the settlement currency&apos;s vault.
+        </li>
+      </>
+    )
+  }
+}

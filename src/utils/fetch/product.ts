@@ -1,3 +1,5 @@
+import { SYMBOL_MAP } from 'constants/currencies'
+
 const TYPE = {
   call: 'CALL',
   put: 'PUT'
@@ -67,9 +69,10 @@ export interface Product {
   strikeCurrency: string
 }
 
-export interface ProductList {
-  call: Product[]
-  put: Product[]
+export type SingleCurProductList = { call: Product[]; put: Product[] }
+
+export type ProductList = {
+  [key in Partial<keyof typeof SYMBOL_MAP>]: SingleCurProductList
 }
 
 export interface OrderRecord {
@@ -122,17 +125,18 @@ export const productFormatter = (raw: ProductRaw): Product => {
 }
 
 export const productListFormatter = (raw: ProductRaw[]): ProductList => {
-  return raw.reduce(
-    (acc, item) => {
-      const res = productFormatter(item)
-      if (item.is_active === false) return acc
-      if (item.type === TYPE.call) {
-        acc.call.push(res)
-      } else {
-        acc.put.push(res)
+  return raw.reduce((acc, item) => {
+    if (!acc[item.currency as Partial<keyof typeof SYMBOL_MAP>]) {
+      acc[item.currency as Partial<keyof typeof SYMBOL_MAP>] = {
+        call: [],
+        put: []
       }
-      return acc
-    },
-    { call: [], put: [] } as { call: any[]; put: any[] }
-  )
+    }
+    if (item.type === TYPE.call) {
+      acc[item.currency as Partial<keyof typeof SYMBOL_MAP>].call.push(productFormatter(item))
+    } else {
+      acc[item.currency as Partial<keyof typeof SYMBOL_MAP>].put.push(productFormatter(item))
+    }
+    return acc
+  }, {} as ProductList)
 }

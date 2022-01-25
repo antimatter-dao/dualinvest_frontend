@@ -6,6 +6,8 @@ import { usePrice } from 'hooks/usePriceSet'
 import ProductTable from './ProductTable'
 import { useProductList, useStatistics } from 'hooks/useDualInvestData'
 import ProductBanner from 'components/ProductBanner'
+import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
+import CurrencyTabs from 'components/Tabs/CurrencyTabs'
 
 export default function DualInvest() {
   const productList = useProductList()
@@ -57,21 +59,15 @@ export default function DualInvest() {
         subVal2={'Cumulative Investment Amount'}
         unit2={'USDT'}
       />
-      <ProductTable strikeCurrencySymbol="BTC" productList={productList} />
+      <Box width={'100%'} sx={{ maxWidth: theme => theme.width.maxContent, margin: '0 24px' }}>
+        <CurrencyTabs
+          contents={SUPPORTED_CURRENCY_SYMBOL.map(symbol => {
+            const list = productList?.[symbol as keyof typeof productList]
+
+            return <ProductTable strikeCurrencySymbol={symbol} productList={list} key={symbol} />
+          })}
+        />
+      </Box>
     </Box>
   )
 }
-
-// function CastValue({ unit, val, total }: { unit: string; val: number; total: number }) {
-//   const isDownMd = useBreakpoint('md')
-//   const percentage = ((val / total) * 100).toFixed(2)
-
-//   if (isDownMd) {
-//     return (
-//       <RowStr>
-//         {percentage}% {val} {unit} / {total} {unit}
-//       </RowStr>
-//     )
-//   }
-//   return <Progress unit={unit} val={val} total={total} />
-// }
