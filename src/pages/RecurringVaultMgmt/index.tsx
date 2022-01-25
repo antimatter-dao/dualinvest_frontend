@@ -148,7 +148,9 @@ export default function RecurringValueMgmt() {
         returnOnInvestmentListItems={returnOnInvestmentListItems}
         vaultForm={<VaultForm product={product} />}
         chart={chart}
-      />
+      >
+        <PrevCycleStats />
+      </MgmtPage>
     </>
   )
 }
@@ -252,3 +254,92 @@ function RecurringPolicyPage({ img, text }: { img: ReactElement<any, any>; text:
     </Box>
   )
 }
+
+function PrevCycleStats() {
+  const theme = useTheme()
+  const data = useMemo(
+    () => ({
+      ['APY']: '140.25%',
+      ['Strike Price']: '62800 USDT',
+      ['Executed Price']: '62800 USDT',
+      ['Status']: 'Exercised',
+      ['Your P&L']: '800 USDT',
+      ['Date']: 'From Sep 21, 2021 to Sep 21, 2021'
+    }),
+    []
+  )
+  return (
+    <Card width={358}>
+      <Box display="flex" gap="21px" padding="28px" flexDirection="column" alignItems={'stretch'} height={430}>
+        <Typography fontSize={24} fontWeight={700} marginBottom={95}>
+          Previous Cycle Statistics
+        </Typography>
+
+        {Object.keys(data).map((key, idx) => (
+          <Box key={idx} display="flex" justifyContent={'space-between'}>
+            <Typography fontSize={16} sx={{ opacity: 0.8 }}>
+              {key}
+            </Typography>
+
+            <Typography
+              color={
+                key === 'APY' || (key === 'Status' && data.Status === 'Exercised')
+                  ? theme.palette.primary.main
+                  : theme.palette.text.primary
+              }
+            >
+              {data[key as keyof typeof data]}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+    </Card>
+  )
+}
+/* const aggregateChart = useMemo(() => {
+  return (
+    <>
+      <Grid
+        item
+        xs={12}
+        md={8}
+        sx={{
+          height: { xs: '300px', md: '100%', maxWidth: '100%', width: { xs: '100%', md: 'auto' } }
+        }}
+        ref={graphContainer}
+      >
+        {product && priceSet ? (
+          <LineChart
+            lineColor="#18A0FB"
+            lineSeriesData={priceSet}
+            unit="BTC"
+            id="incomeGraph"
+            height={graphContainer?.current?.offsetHeight ?? 280}
+            strikeData={strikeLineData}
+          />
+        ) : (
+          <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
+            <Spinner size={60} marginRight="auto" marginLeft="auto" />
+          </Box>
+        )}
+      </Grid>
+      {!isDownMd && (
+        <Grid item xs={12} md={4} sx={{ height: { xs: 'auto', md: '100%' } }} paddingBottom={{ xs: 0, md: 22 }}>
+          <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
+            <Card gray>
+              <Box padding="32px 16px" fontSize={14}>
+                Settlement Price &ge; {strikePrice} USDT, will be exercised
+              </Box>
+            </Card>
+            <Card gray>
+              <Box padding="32px 16px" fontSize={14}>
+                Settlement Price &le; {strikePrice} USDT, will not be exercised
+              </Box>
+            </Card>
+          </Box>
+        </Grid>
+      )}
+    </>
+  )
+}, [isDownMd, priceSet, product, strikeLineData, strikePrice])
+ */
