@@ -13,6 +13,9 @@ import HistoryTableCards from 'components/Account/HistoryTableCards'
 // import Button from 'components/Button/Button'
 import StatusTag from 'components/Status/StatusTag'
 // import { useShowClaimSuccessModal } from 'hooks/useSuccessImage'
+import Filter from 'components/Filter'
+import { CURRENCIES } from 'constants/currencies'
+import CurrencyLogo from 'components/essential/CurrencyLogo'
 
 enum HistoryMoreHeaderIndex {
   OrderID,
@@ -24,14 +27,15 @@ enum HistoryMoreHeaderIndex {
 }
 
 const HistoryTableHeader = [
+  'Token',
   'Invest Amount\n(Subscription Amount)',
-  'APY',
   'Subscribed Time',
+  'APY',
+  'Delivery Date',
   'Strike Price',
   'Exercise',
   'Holding Days',
-  'Execute Amount',
-  'Delivery Date'
+  'Refund Amount'
 ]
 
 const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '', '']
@@ -43,6 +47,7 @@ export default function HistoryDualInvest() {
   const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.recur, InvestStatus.Settled, page, 8)
   const [hiddenParts, setHiddenParts] = useState<JSX.Element[]>([])
   // const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
+  const [checkedFilterOption, setCheckedFilterOption] = useState('All')
 
   const data = useMemo(() => {
     if (!orderList) return { hiddenList: [], summaryList: [] }
@@ -62,7 +67,8 @@ export default function HistoryDualInvest() {
         investCurrency,
         orderId,
         productId,
-        type
+        type,
+        currency
       } = order
       const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
       const hiddenData = [
@@ -112,18 +118,22 @@ export default function HistoryDualInvest() {
         </Box>
       )
       return [
+        <Box key="token" display="flex" alignItems="center" gap={13}>
+          <CurrencyLogo currency={CURRENCIES[currency]} size="22px" />
+          <Typography fontSize={16}>{CURRENCIES[currency].symbol}</Typography>
+        </Box>,
         `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
           1
         )} ${investCurrency} (${amount})`,
+        dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC',
         <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
           {(+annualRor * 100).toFixed(2)}%
         </Typography>,
-        dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC',
+        dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + '\n08:30 AM UTC',
         strikePrice,
         type === 'CALL' ? 'Upward' : 'Down',
         `${dayjs().diff(dayjs(ts * 1000), 'day')} days`,
-        `${returnedAmount} ${returnedCurrency}`,
-        dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + '\n08:30 AM UTC'
+        `${returnedAmount} ${returnedCurrency}`
       ]
     })
     setHiddenParts(hiddenPartsList)
@@ -162,6 +172,14 @@ export default function HistoryDualInvest() {
             <HistoryTableCards data={data} header={HistoryTableHeader} moreHeader={HistoryMoreHeader} />
           ) : data.summaryList.length ? (
             <>
+              <Filter
+                checkedOption={checkedFilterOption}
+                options={['All', 'BTC', 'ETH', 'BNB']}
+                onChange={e => {
+                  setCheckedFilterOption(e.target.id)
+                }}
+              />
+              ,
               <Table
                 header={HistoryTableHeader}
                 rows={data.summaryList}
