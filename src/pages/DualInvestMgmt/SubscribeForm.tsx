@@ -256,10 +256,21 @@ export default function SubscribeForm({
             <Box height="60px" display="flex" alignItems="center" padding="16px" justifyContent="space-between">
               {product && (
                 <>
-                  <Typography component="span" color="primary" fontSize={16}>
+                  <Typography
+                    component="span"
+                    color="primary"
+                    fontSize={16}
+                    maxWidth={'55%'}
+                    sx={{ wordBreak: 'break-all' }}
+                  >
                     {(+product.multiplier * +amount * multiplier).toFixed(2)} {product.investCurrency}
                   </Typography>
-                  <Typography component="span" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
+                  <Typography
+                    component="span"
+                    fontSize={12}
+                    sx={{ color: theme => theme.palette.text.secondary, wordBreak: 'break-all' }}
+                    maxWidth={'45%'}
+                  >
                     ={+amount}*{product.multiplier} {product.currency}
                     {product?.type !== 'CALL' ? `*${product.strikePrice}` : ''}
                   </Typography>

@@ -1,3 +1,5 @@
+import { CURRENCIES } from 'constants/currencies'
+import { useActiveWeb3React } from 'hooks'
 import { useCallback, useState } from 'react'
 import { Axios } from 'utils/axios'
 import {
@@ -32,4 +34,26 @@ export function useSingleRecurProcuct(currency: string, type: string) {
   usePollingWithMaxRetries(promiseFn, callbackFn, 60000)
 
   return productList
+}
+
+export function useRecurPnl(currency: string | undefined) {
+  const [pnl, setPnl] = useState<string>('-')
+
+  const { account } = useActiveWeb3React()
+
+  const promiseFn = useCallback(() => {
+    return Axios.get<RecurProductRaw>('getTotalReInvest', {
+      account,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      currency: CURRENCIES[currency!].address
+    })
+  }, [account, currency])
+
+  const callbackFn = useCallback(r => {
+    setPnl(r.data.data.pnl)
+  }, [])
+
+  usePollingWithMaxRetries(currency ? promiseFn : undefined, callbackFn, 60000)
+
+  return pnl
 }

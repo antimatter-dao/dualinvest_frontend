@@ -68,7 +68,7 @@ export default function Dashboard() {
   const [page, setPage] = useState(1)
   const btcPrice = usePrice('BTC', 30000)
   const ethPrice = usePrice('ETH', 30000)
-  const matterPrice = usePrice('MATTER', 30000)
+  // const matterPrice = usePrice('MATTER', 30000)
   const accountBalances = useAccountBalances()
   const { accountRecord, pageParams } = useAccountRecord(page)
 
@@ -76,10 +76,10 @@ export default function Dashboard() {
     return {
       BTC: btcPrice,
       ETH: ethPrice,
-      MATTER: matterPrice,
+      // MATTER: matterPrice,
       USDT: 1
     }
-  }, [btcPrice, ethPrice, matterPrice])
+  }, [btcPrice, ethPrice])
 
   const totalInvest = useMemo(() => {
     if (!accountBalances) return '-'
@@ -209,26 +209,26 @@ export default function Dashboard() {
               }}
               buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x55d398326f99059ff775485246999027b3197955"
             />
-          ],
-          [
-            <TokenHeader key="matter" token={CURRENCIES.MATTER} />,
-            accountBalances?.MATTER?.totalInvest ?? '-',
-            accountBalances?.MATTER?.available ?? '-',
-            accountBalances?.MATTER?.locked ?? '-',
-            accountBalances?.MATTER?.pnl ?? '-',
-            <BalanceActions
-              key="1"
-              onDeposit={() => {
-                setCurrentCurrency(CURRENCIES.MATTER)
-                handleDepositOpen()
-              }}
-              onWithdraw={() => {
-                setCurrentCurrency(CURRENCIES.MATTER)
-                handleWithdrawOpen()
-              }}
-              buyHref="https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x9b99cca871be05119b2012fd4474731dd653febe"
-            />
           ]
+          // [
+          //   <TokenHeader key="matter" token={CURRENCIES.MATTER} />,
+          //   accountBalances?.MATTER?.totalInvest ?? '-',
+          //   accountBalances?.MATTER?.available ?? '-',
+          //   accountBalances?.MATTER?.locked ?? '-',
+          //   accountBalances?.MATTER?.pnl ?? '-',
+          //   <BalanceActions
+          //     key="1"
+          //     onDeposit={() => {
+          //       setCurrentCurrency(CURRENCIES.MATTER)
+          //       handleDepositOpen()
+          //     }}
+          //     onWithdraw={() => {
+          //       setCurrentCurrency(CURRENCIES.MATTER)
+          //       handleWithdrawOpen()
+          //     }}
+          //     buyHref="https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x9b99cca871be05119b2012fd4474731dd653febe"
+          //   />
+          // ]
         ]
       : []
   }, [accountBalances, handleDepositOpen, handleWithdrawOpen])

@@ -28,7 +28,7 @@ const Backdrop = styled('div')({
   backdropFilter: 'blur(2px)'
 })
 
-const availablePath = [routes.dualInvest, routes.account]
+const availablePath = [routes.dualInvest]
 
 export default function ComingSoonMoadal() {
   const [isOpen, setIsOpen] = useState(false)

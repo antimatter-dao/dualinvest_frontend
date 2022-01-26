@@ -239,7 +239,11 @@ export default function PositionChainType() {
                 price ? (+price).toLocaleString('en-US', { minimumFractionDigits: 6, maximumFractionDigits: 6 }) : '-'
               }
               border={true}
-            />
+            >
+              <Typography sx={{ color: theme => theme.palette.text.secondary }}>
+                You can visit specific recurring token page to close your recurring strategy
+              </Typography>
+            </NumericalCard>
             <Box position="relative">
               {!orderList && (
                 <Box
