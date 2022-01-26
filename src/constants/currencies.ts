@@ -49,7 +49,7 @@ export const SUPPORTED_CURRENCIES: {
     address:
       parseInt(process.env.REACT_APP_CHAIN_ID ?? '') === 3
         ? '0x55795b02C44Bd098D21bC1854036C2E75d7E7c43'
-        : '0x81b7E08F65Bdf5648606c89998A9CC8164397647',
+        : '0x2170ed0880ac9a755fd29b2688956bd959f933f8',
     decimals: 18,
     symbol: 'ETH',
     name: 'Ethereum',

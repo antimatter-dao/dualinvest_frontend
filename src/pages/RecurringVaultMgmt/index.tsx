@@ -4,15 +4,11 @@ import { Typography, Box, useTheme, styled } from '@mui/material'
 import MgmtPage from 'components/MgmtPage'
 import { routes } from 'constants/routes'
 import { Subject } from 'components/MgmtPage/stableContent'
-import { feeRate } from 'constants/index'
-import VaultConfirmModal from './VaultConfirmModal'
 import TextButton from 'components/Button/TextButton'
 import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
 import { useSingleRecurProcuct } from 'hooks/useRecurData'
 import DualInvestChart from 'pages/DualInvestMgmt/Chart'
-import RedeemConfirmModal from './RedeemConfirmModal'
-import { CURRENCIES } from 'constants/currencies'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -32,26 +28,13 @@ export const StyledUnorderList = styled('ul')(({ theme }) => ({
 }))
 
 export default function RecurringValueMgmt() {
+  const [investAmount, setInvestAmount] = useState('')
+
   const theme = useTheme()
   const { currency, type } = useParams<{ currency: string; type: string }>()
   const product = useSingleRecurProcuct(currency ?? '', type ?? '')
 
   const strikePrice = product?.strikePrice ?? '-'
-
-  const confirmData = useMemo(
-    () => ({
-      ['Platform service fee']: feeRate,
-      ['Spot Price']: '59,000 USDT',
-      ['APY']: '140.25%',
-      ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
-      ['Delivery Date']: '29 Oct 2021'
-      // ['Spot Price']: product?.currentPrice ?? '-' + ' USDT',
-      // ['APY']: product?.apy ? (+product.apy * 100).toFixed(2) + '%' : '- %',
-      // ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
-      // ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') + ' 08:30:00 AM UTC' : '-'
-    }),
-    [product]
-  )
 
   const returnOnInvestmentListItems = useMemo(() => {
     return [
@@ -86,11 +69,12 @@ export default function RecurringValueMgmt() {
     )
   }, [product, strikePrice])
 
+  const handleInput = useCallback((val: string) => {
+    setInvestAmount(val)
+  }, [])
+
   return (
     <>
-      <RedeemConfirmModal isOpen={false} amount={'20'} currency={CURRENCIES['BTC']} />
-      <VaultConfirmModal confirmData={confirmData} />
-
       <MgmtPage
         graphTitle="Current Subscription Status"
         showFaq={false}
@@ -104,7 +88,7 @@ export default function RecurringValueMgmt() {
           />
         }
         returnOnInvestmentListItems={returnOnInvestmentListItems}
-        vaultForm={<VaultForm product={product} />}
+        vaultForm={<VaultForm product={product} setInvestAmount={handleInput} investAmount={investAmount} />}
         chart={chart}
       />
     </>
