@@ -23,10 +23,11 @@ import { routes } from 'constants/routes'
 import ClaimSuccessModal from '../modals/ClaimSuccessModal'
 import { parseBalance } from 'utils/parseAmount'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
-import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
+import { CURRENCY_ADDRESS_MAP, CURRENCIES } from 'constants/currencies'
 /* import { PositionMoreHeader, PositionMoreHeaderIndex, PositionTableHeader } from 'components/Account/PositionTableCards' */
 import PositionTableCards from 'components/Account/PositionTableCards'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
+import CurrencyLogo from 'components/essential/CurrencyLogo'
 
 export const THIRTY_MINUTES_MS = 1800000
 export enum PositionMoreHeaderIndex {
@@ -49,15 +50,15 @@ export enum PositionTableHeaderIndex {
 }
 
 export const PositionTableHeader = [
-  'Invest Amount\n(Subscription Amount)',
-  'APY',
+  'Token',
+  'Invest Amount',
   'Subscribed Time',
+  'APY',
+  'Delivery Date',
   'Strike Price',
   'Exercise',
-  'Execute Amount',
-  'Delivery Date',
-  'Status',
-  ''
+  'Refund Amount',
+  'Status'
 ]
 
 export const PositionMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '']
@@ -154,15 +155,19 @@ export default function PositionRecur() {
           </Box>
         )
         return [
+          <Box key="token" display="flex" alignItems="center" gap={13}>
+            <CurrencyLogo currency={CURRENCIES[currency]} size="22px" />
+            <Typography fontSize={16}>{CURRENCIES[currency].symbol}</Typography>
+          </Box>,
           `${investAmount}(${amount})`,
+          dayjs(ts * 1000).format('MMM DD, YYYY'),
           <Typography color="primary" key="1" variant="inherit">
             {apy}
           </Typography>,
-          dayjs(ts * 1000).format('MMM DD, YYYY'),
+          deliveryDate,
           strikePrice,
           type === 'CALL' ? 'Upward' : 'Down',
           +returnedAmount > 0 ? +returnedAmount + returnedCurrency : '--',
-          deliveryDate,
           <Box display="flex" key="action" gap={isDownMd ? 10 : 8} sx={{ mr: -15 }}>
             <StatusTag status={status} width={isDownMd ? 120 : 100} />
             <ClaimButton
