@@ -37,6 +37,7 @@ interface Props {
   returnOnInvestmentListItems: React.ReactNode[]
   vaultForm?: React.ReactNode
   children?: React.ReactNode
+  graphTitle: string
 }
 
 export default function MgmtPage(props: Props) {
@@ -51,7 +52,8 @@ export default function MgmtPage(props: Props) {
     showFaq = true,
     returnOnInvestmentListItems,
     vaultForm,
-    children
+    children,
+    graphTitle
   } = props
 
   const isDownMd = useBreakpoint('md')
@@ -143,13 +145,21 @@ export default function MgmtPage(props: Props) {
                     gap={18}
                   >
                     <Typography fontSize={{ xs: 20, md: 24 }} fontWeight={700}>
-                      Purchase expected income graph
+                      {graphTitle}
                     </Typography>
-                    <Box display="flex" alignItems="center" gap={8}>
-                      <Box height={10} width={10} borderRadius="50%" bgcolor="#18A0FB" />
-                      <Typography fontSize={12} color="#18A0FB">
-                        Spot Price
-                      </Typography>
+                    <Box display="flex" gap={24}>
+                      <Box display="flex" alignItems="center" gap={8}>
+                        <Box height={10} width={10} borderRadius="50%" bgcolor="#18A0FB" />
+                        <Typography fontSize={12} color="#18A0FB">
+                          Spot Price
+                        </Typography>
+                      </Box>
+                      <Box display="flex" alignItems="center" gap={8}>
+                        <Box height={10} width={10} borderRadius="50%" bgcolor="#F0B90B" />
+                        <Typography fontSize={12} color="#F0B90B">
+                          Strike price
+                        </Typography>
+                      </Box>
                     </Box>
                   </Box>
                   <Box sx={{ maxWidth: '100vw', height: '100%', flexGrow: 1 }} mt={20}>

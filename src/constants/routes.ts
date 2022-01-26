@@ -10,7 +10,7 @@ export const routes = {
   home: '/home',
   noService: 'no_service',
   recurringVault: '/recurring_vault',
-  recurringVaultMgmt: '/recurring_vault_mgmt/:id',
+  recurringVaultMgmt: '/recurring_vault_mgmt/:currency/:type',
   referral: '/:referrer'
 }
 

@@ -5,31 +5,28 @@ import Divider from 'components/Divider'
 import { Timer } from 'components/Timer'
 import Button from 'components/Button/Button'
 import { OutlinedCard } from 'components/Card/Card'
+import { RecurProduct } from 'utils/fetch/recur'
+import Spinner from 'components/Spinner'
+import dayjs from 'dayjs'
 
 export default function VaultProductCard({
   logoCurSymbol,
   priceCurSymbol,
   title,
   description,
-  apy,
   deposit,
   onClick,
-  strikePrice,
   color,
-  deliveryDate,
-  timer
+  product
 }: {
   logoCurSymbol: string
   priceCurSymbol: string
   title: string
   description: string
-  apy: string
   deposit: string
   onClick: () => void
   color: string
-  strikePrice: string
-  deliveryDate: string
-  timer: number
+  product: RecurProduct | undefined
 }) {
   return (
     <Box
@@ -43,10 +40,6 @@ export default function VaultProductCard({
         borderRadius: 2,
         padding: '34px 24px',
         maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
-        // '&:hover': {
-        //   cursor: 'pointer',
-        //   borderColor: theme => theme.palette.primary.light
-        // }
       }}
     >
       <ProductCardHeader
@@ -57,25 +50,43 @@ export default function VaultProductCard({
       />
       <Divider color="#cccccc10" extension={25} />
 
-      <Box display={{ xs: 'grid' }} gap={24} gridTemplateColumns={{ xs: '100%', md: '35% auto' }}>
-        <NumericalCard value={apy} subValue="Current APY" border valueColor={color} />
-        <NumericalCard value={deposit} subValue="Your existing position" border>
-          <Button style={{ borderRadius: 40 }} width={'132px'} height="36px" backgroundColor={color} onClick={onClick}>
-            Add
-          </Button>
-        </NumericalCard>
-        <NumericalCard value={strikePrice} subValue="Current Strike Price" border />
-        <NumericalCard value={<Timer timer={timer} />} subValue="Countdown until delivery date" gray>
-          <OutlinedCard color="rgba(0, 0, 0, 0.1)">
-            <Box display="grid" padding="14px 18px" gap={4} height={60} minWidth={248}>
-              <Typography sx={{ color: theme => theme.palette.text.secondary }} fontSize={12} textAlign={'left'}>
-                Delivery Date
-              </Typography>
-              <Typography fontSize={12}> {deliveryDate}</Typography>
-            </Box>
-          </OutlinedCard>
-        </NumericalCard>
-      </Box>
+      {product ? (
+        <Box display={{ xs: 'grid' }} gap={24} gridTemplateColumns={{ xs: '100%', md: '35% auto' }}>
+          <NumericalCard value={product?.apy ?? '-'} subValue="Current APY" border valueColor={color} />
+          <NumericalCard value={deposit} subValue="Your existing position" border>
+            <Button
+              style={{ borderRadius: 40 }}
+              width={'132px'}
+              height="36px"
+              backgroundColor={color}
+              onClick={onClick}
+            >
+              Add
+            </Button>
+          </NumericalCard>
+          <NumericalCard value={product.strikePrice + ' USDT'} subValue="Current Strike Price" border />
+          <NumericalCard
+            value={<Timer timer={product?.expiredAt ?? 0} />}
+            subValue="Countdown until delivery date"
+            gray
+          >
+            <OutlinedCard color="rgba(0, 0, 0, 0.1)">
+              <Box display="grid" padding="14px 18px" gap={4} height={60} minWidth={248}>
+                <Typography sx={{ color: theme => theme.palette.text.secondary }} fontSize={12} textAlign={'left'}>
+                  Delivery Date
+                </Typography>
+                <Typography fontSize={12}>
+                  {product?.expiredAt ? dayjs(product.expiredAt).format('MMM DD,YYYY') + ' 08:30 AM UTC' : '-'}
+                </Typography>
+              </Box>
+            </OutlinedCard>
+          </NumericalCard>
+        </Box>
+      ) : (
+        <Box margin={'60px auto'}>
+          <Spinner size={60} />
+        </Box>
+      )}
     </Box>
   )
 }

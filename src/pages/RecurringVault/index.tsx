@@ -1,12 +1,19 @@
+import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Box } from '@mui/material'
+import { Box, useTheme } from '@mui/material'
 import ProductBanner from 'components/ProductBanner'
 import VaultCard from './VaultProductCard'
 import { routes } from 'constants/routes'
 import { ReactComponent as RecurVault } from 'assets/svg/recurVault.svg'
+import { useRecurProcuctList } from 'hooks/useRecurData'
+import { SUPPORTED_CURRENCIES } from 'constants/currencies'
+
+const SUPPORTED = ['BTC']
 
 export default function RecurringVault() {
   const history = useHistory()
+  const data = useRecurProcuctList()
+  const theme = useTheme()
 
   return (
     <Box
@@ -29,36 +36,36 @@ export default function RecurringVault() {
         subVal2={'Total USDT Subscribed'}
         img={<RecurVault />}
       />
-      <VaultCard
-        logoCurSymbol="BTC"
-        priceCurSymbol="BTC"
-        title="BTC Covered Call Vault"
-        description="Generates yield by running an automated BTC covered call strategy"
-        apy="132%"
-        deposit="13.2 BTC"
-        strikePrice="62,800 USDT"
-        deliveryDate="Sep 21, 2021 08:30 AM UTC "
-        timer={1645003583}
-        onClick={() => {
-          history.push(routes.recurringVaultMgmt)
-        }}
-        color="#FD8B00"
-      />
-      <VaultCard
-        logoCurSymbol="USDT"
-        priceCurSymbol="BTC"
-        title="BTC Put Selling Vault"
-        description="Generates yield by running an automated put selling strategy"
-        apy="132%"
-        deposit="132,567 USDT"
-        strikePrice="62,800 USDT"
-        deliveryDate="Sep 21, 2021 08:30 AM UTC "
-        timer={1645003583}
-        onClick={() => {
-          history.push(routes.recurringVaultMgmt)
-        }}
-        color="#31B047"
-      />
+      {SUPPORTED.map(key => {
+        return (
+          <React.Fragment key={key}>
+            <VaultCard
+              product={data?.[key as keyof typeof data]?.call}
+              logoCurSymbol={key}
+              priceCurSymbol={key}
+              title={`${key} Covered Call Vault`}
+              description={`Generates yield by running an automated ${key} covered call strategy`}
+              deposit="13.2 BTC"
+              onClick={() => {
+                history.push(routes.recurringVaultMgmt.replace(':currency', key).replace(':type', 'call'))
+              }}
+              color={SUPPORTED_CURRENCIES[key].color ?? theme.palette.primary.main}
+            />
+            <VaultCard
+              product={data?.[key as keyof typeof data]?.put}
+              logoCurSymbol="USDT"
+              priceCurSymbol={key}
+              title={`${key} Put Selling Vault`}
+              description="Generates yield by running an automated put selling strategy"
+              deposit="132,567 USDT"
+              onClick={() => {
+                history.push(routes.recurringVaultMgmt.replace(':currency', key).replace(':type', 'put'))
+              }}
+              color={SUPPORTED_CURRENCIES['USDT'].color ?? theme.palette.primary.main}
+            />
+          </React.Fragment>
+        )
+      })}
     </Box>
   )
 }

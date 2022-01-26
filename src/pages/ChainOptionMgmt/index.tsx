@@ -109,6 +109,7 @@ export default function DualInvestMgmt() {
 
   return (
     <MgmtPage
+      graphTitle="Purchase expected income graph"
       backLink={routes.chainOption}
       product={product}
       pageTitle={`${product?.currency} Saddle Option`}
