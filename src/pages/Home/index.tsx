@@ -90,41 +90,24 @@ export default function Home() {
         }}
       >
         <Grid container spacing={{ xs: 8, md: 20 }}>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <NumericalCard
               width={'100%'}
-              value={
-                '111'
-                // statistics && BTCPrice
-                //   ? trimNumberString(
-                //       (+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit).toLocaleString(      'en-US'),
-                //       0
-                //     )
-                //   : '-'
-              }
+              title={'Total investment amount'}
+              value={'111'}
+              fontSize={'44px'}
               unit="USDT"
               border
-              subValue="Cumulative Deposit Amount"
             />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <NumericalCard
               width={'100%'}
+              title={'Amount of investment in progress'}
               value={'111'}
-              // value={statistics ? trimNumberString((+statistics.totalInvestAmount).toLocaleString(      'en-US'), 0) : '-'}
+              fontSize={'44px'}
               unit="USDT"
               border
-              subValue="Cumulative Investment Amount"
-            />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <NumericalCard
-              width={'100%'}
-              value={'111'}
-              // value={statistics ? trimNumberString((+statistics.totalInvestAmount).toLocaleString(      'en-US'), 0) : '-'}
-              unit="USDT"
-              border
-              subValue="Cumulative Investment Amount"
             />
           </Grid>
         </Grid>
