@@ -1,4 +1,4 @@
-import { createTheme, styled, ThemeProvider as MuiThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import { createTheme, styled, ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
 
 interface Gradient {
   gradient1: string
@@ -307,9 +307,5 @@ export default createTheme({
 })
 
 export function ThemeProvider({ children, theme }: any) {
-  return (
-    <StyledEngineProvider injectFirst>
-      <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
-    </StyledEngineProvider>
-  )
+  return <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
 }

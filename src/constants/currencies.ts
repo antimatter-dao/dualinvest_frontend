@@ -4,14 +4,14 @@ import UsdtLogo from 'assets/svg/usdt_logo.svg'
 import EthLogo from 'assets/svg/eth_logo.svg'
 import MatterLogo from 'assets/svg/antimatter_circle_black.svg'
 
-export const SUPPORTED_CURRENCY_SYMBOL = ['BTC', 'ETH']
-
 export const SYMBOL_MAP = {
   BTC: 'BTC',
   USDT: 'USDT',
   BTCT: 'BTC',
   ETH: 'ETH'
 }
+
+export const SUPPORTED_CURRENCY_SYMBOL = [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH]
 
 export const SUPPORTED_CURRENCIES: {
   [key: string]: {
@@ -51,7 +51,7 @@ export const SUPPORTED_CURRENCIES: {
     symbol: 'ETH',
     name: 'Ethereum',
     logoUrl: EthLogo,
-    color: '#393939'
+    color: '#656565'
   },
   MATTER: {
     address: '0x60d0769c4940cA58648C0AA34ecdf390a10F272e',
