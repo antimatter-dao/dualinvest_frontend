@@ -10,6 +10,7 @@ export default function usePollingWithMaxRetries(
   const savedCallback = useRef(callback)
 
   useEffect(() => {
+    let isMounted = true
     if (!fn || fn === undefined) {
       return
     }
@@ -23,14 +24,21 @@ export default function usePollingWithMaxRetries(
           if (r.data.code !== 200) {
             throw Error(r.data.msg)
           }
-          callback(r)
+          if (isMounted) {
+            callback(r)
+          }
         })
         .catch(e => {
           console.error(e)
         })
+
+    return () => {
+      isMounted = false
+    }
   }, [fn, callback])
 
   useEffect(() => {
+    let isMounted = true
     if (!savedFn.current) {
       return
     }
@@ -51,7 +59,9 @@ export default function usePollingWithMaxRetries(
             if (r.data.code !== 200) {
               throw Error(r.data.msg)
             }
-            savedCallback.current(r)
+            if (isMounted) {
+              savedCallback.current(r)
+            }
           })
           .catch(e => {
             retries--
@@ -60,6 +70,7 @@ export default function usePollingWithMaxRetries(
     }, delay)
 
     return () => {
+      isMounted = false
       clearInterval(id)
     }
   }, [fn, callback, delay, retries])

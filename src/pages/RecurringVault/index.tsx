@@ -45,7 +45,6 @@ export default function RecurringVault() {
               priceCurSymbol={key}
               title={`${key} Covered Call Vault`}
               description={`Generates yield by running an automated ${key} covered call strategy`}
-              deposit="13.2 BTC"
               onClick={() => {
                 history.push(routes.recurringVaultMgmt.replace(':currency', key).replace(':type', 'call'))
               }}
@@ -57,7 +56,6 @@ export default function RecurringVault() {
               priceCurSymbol={key}
               title={`${key} Put Selling Vault`}
               description="Generates yield by running an automated put selling strategy"
-              deposit="132,567 USDT"
               onClick={() => {
                 history.push(routes.recurringVaultMgmt.replace(':currency', key).replace(':type', 'put'))
               }}

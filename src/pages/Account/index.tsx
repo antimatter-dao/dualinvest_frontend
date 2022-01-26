@@ -36,7 +36,7 @@ export default function Account() {
   const handleTabClick = useCallback(
     tabNum => {
       setCurrentTab(tabNum)
-      history.push(routes.accountTab.replace(':tab', AccountTabsRoute[tabNum as keyof typeof AccountTabsRoute]))
+      history.replace(routes.accountTab.replace(':tab', AccountTabsRoute[tabNum as keyof typeof AccountTabsRoute]))
     },
     [history]
   )

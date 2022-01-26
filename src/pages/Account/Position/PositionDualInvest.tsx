@@ -10,7 +10,7 @@ import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
 import StatusTag from 'components/Status/StatusTag'
 import { useActiveWeb3React } from 'hooks'
-import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
+import { useOrderRecords, InvestStatus, INVEST_TYPE } from 'hooks/useAccountData'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
 import { usePrice } from 'hooks/usePriceSet'
@@ -26,6 +26,7 @@ import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
 /* import { PositionMoreHeader, PositionMoreHeaderIndex, PositionTableHeader } from 'components/Account/PositionTableCards' */
 import PositionTableCards from 'components/Account/PositionTableCards'
+import { toLocalNumberString } from 'utils/toLocalNumberString'
 
 export const THIRTY_MINUTES_MS = 1800000
 export enum PositionMoreHeaderIndex {
@@ -63,13 +64,13 @@ export const PositionMoreHeader = ['Order ID', 'Product ID', 'Settlement Price',
 
 const statusArr = [InvestStatus.Ordered, InvestStatus.ReadyToSettle]
 
-export default function PositionChainType() {
+export default function PositionDualInvest() {
   const [page, setPage] = useState(1)
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   const price = usePrice('BTC')
   const { finishOrderCallback } = useDualInvestCallback()
-  const { orderList, pageParams } = useOrderRecords(statusArr, page, 999999)
+  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, statusArr, page, 999999)
   const { showModal, hideModal } = useModal()
   const addTransaction = useTransactionAdder()
   const history = useHistory()
@@ -235,9 +236,7 @@ export default function PositionChainType() {
           <Box padding="38px 24px">
             <NumericalCard
               title="BTC latest spot price"
-              value={
-                price ? (+price).toLocaleString('en-US', { minimumFractionDigits: 6, maximumFractionDigits: 6 }) : '-'
-              }
+              value={price ? toLocalNumberString(price, 6) : '-'}
               border={true}
             />
             <Box position="relative">

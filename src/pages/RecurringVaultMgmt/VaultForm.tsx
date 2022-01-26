@@ -7,7 +7,7 @@ import { useDualInvestBalance } from 'hooks/useDualInvest'
 import { CURRENCIES } from 'constants/currencies'
 import { RecurProduct } from 'utils/fetch/recur'
 import { useRecurBalance, useRecurCallback } from 'hooks/useRecur'
-import { RECUR_TOGGLE_STATUS, useRecurPnl, useRecurToggle } from 'hooks/useRecurData'
+import { RECUR_TOGGLE_STATUS, useRecurActiveOrderCount, useRecurPnl, useRecurToggle } from 'hooks/useRecurData'
 import { tryParseAmount } from 'utils/parseAmount'
 import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import useModal from 'hooks/useModal'
@@ -42,13 +42,14 @@ export default function VaultForm({
   const [investConfirmOpen, setInvestConfirmOpen] = useState(false)
 
   const { redeemCallback, investCallback } = useRecurCallback()
-  const pnl = useRecurPnl(currencySymbol)
+  const { pnl } = useRecurPnl(currencySymbol)
   const { autoLockedBalance, autoBalance, autoBalanceRaw } = useRecurBalance(currency)
   const { recurStatus, toggleRecur } = useRecurToggle(product ? currency?.address : undefined)
   const { account } = useActiveWeb3React()
   const contractBalance = useDualInvestBalance(currency)
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()
+  const activeOrderCount = useRecurActiveOrderCount(currency?.symbol)
 
   const formData = useMemo(
     () => ({
@@ -74,9 +75,12 @@ export default function VaultForm({
     setSnackbarOpen(false)
   }, [])
 
-  const handleInvestChange = useCallback(val => {
-    setInvestAmount(val)
-  }, [])
+  const handleInvestChange = useCallback(
+    val => {
+      setInvestAmount(val)
+    },
+    [setInvestAmount]
+  )
 
   const handleInvestConfirmOpen = useCallback(() => {
     setInvestConfirmOpen(true)
@@ -215,7 +219,7 @@ export default function VaultForm({
           onRecurOpen={() => {
             setIsConfirmOpen(true)
           }}
-          activeOrder={5}
+          activeOrder={activeOrderCount}
           vaultForm={
             <VaultFormComponent
               redeemDisabled={!product || !+autoBalance}

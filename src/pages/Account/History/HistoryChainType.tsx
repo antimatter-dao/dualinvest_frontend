@@ -6,7 +6,7 @@ import Table from 'components/Table'
 import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useActiveWeb3React } from 'hooks'
-import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
+import { useOrderRecords, InvestStatus, INVEST_TYPE } from 'hooks/useAccountData'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
 import AccordionButton from 'components/Button/AccordionButton'
@@ -40,7 +40,7 @@ export default function HistoryChainType() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
-  const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled, page, 8)
+  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, InvestStatus.Settled, page, 8)
   const [hiddenParts, setHiddenParts] = useState<JSX.Element[]>([])
   // const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
 

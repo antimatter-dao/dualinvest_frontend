@@ -8,6 +8,7 @@ import { useProductList, useStatistics } from 'hooks/useDualInvestData'
 import ProductBanner from 'components/ProductBanner'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import CurrencyTabs from 'components/Tabs/CurrencyTabs'
+import { toLocalNumberString } from 'utils/toLocalNumberString'
 
 export default function DualInvest() {
   const productList = useProductList()
@@ -40,22 +41,12 @@ export default function DualInvest() {
         checkpoints={['Earn fixed yield on idle assets', 'Earn on both ups and downs']}
         val1={
           statistics && BTCPrice
-            ? (+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit).toLocaleString('en-US', {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-              })
+            ? toLocalNumberString(+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit, 0)
             : '-'
         }
         subVal1={'Cumulative Deposit Amount'}
         unit1={'USDT'}
-        val2={
-          statistics
-            ? (+statistics.totalInvestAmount).toLocaleString('en-US', {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-              })
-            : '-'
-        }
+        val2={statistics ? toLocalNumberString(statistics.totalInvestAmount, 0) : '-'}
         subVal2={'Cumulative Investment Amount'}
         unit2={'USDT'}
       />
