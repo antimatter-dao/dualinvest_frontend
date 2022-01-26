@@ -10,7 +10,8 @@ import TextButton from 'components/Button/TextButton'
 import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
 import { useSingleRecurProcuct } from 'hooks/useRecurData'
-import DualInvestChart from 'pages/DualInvestMgmt/Chart'
+import DualInvestChart, { PastAggrChart } from 'pages/DualInvestMgmt/Chart'
+import Card from 'components/Card/Card'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -84,6 +85,10 @@ export default function RecurringValueMgmt() {
     )
   }, [product, strikePrice])
 
+  const chart2 = useMemo(() => {
+    return <PastAggrChart />
+  }, [])
+
   return (
     <>
       <VaultConfirmModal confirmData={confirmData} />
@@ -103,6 +108,7 @@ export default function RecurringValueMgmt() {
         returnOnInvestmentListItems={returnOnInvestmentListItems}
         vaultForm={<VaultForm product={product} />}
         chart={chart}
+        chart2={chart2}
       >
         <PrevCycleStats />
       </MgmtPage>
@@ -244,50 +250,3 @@ function PrevCycleStats() {
     </Card>
   )
 }
-/* const aggregateChart = useMemo(() => {
-  return (
-    <>
-      <Grid
-        item
-        xs={12}
-        md={8}
-        sx={{
-          height: { xs: '300px', md: '100%', maxWidth: '100%', width: { xs: '100%', md: 'auto' } }
-        }}
-        ref={graphContainer}
-      >
-        {product && priceSet ? (
-          <LineChart
-            lineColor="#18A0FB"
-            lineSeriesData={priceSet}
-            unit="BTC"
-            id="incomeGraph"
-            height={graphContainer?.current?.offsetHeight ?? 280}
-            strikeData={strikeLineData}
-          />
-        ) : (
-          <Box sx={{ height: '100%', display: 'flex', alignItems: 'center' }}>
-            <Spinner size={60} marginRight="auto" marginLeft="auto" />
-          </Box>
-        )}
-      </Grid>
-      {!isDownMd && (
-        <Grid item xs={12} md={4} sx={{ height: { xs: 'auto', md: '100%' } }} paddingBottom={{ xs: 0, md: 22 }}>
-          <Box display={{ xs: 'flex', md: 'grid' }} gap={20}>
-            <Card gray>
-              <Box padding="32px 16px" fontSize={14}>
-                Settlement Price &ge; {strikePrice} USDT, will be exercised
-              </Box>
-            </Card>
-            <Card gray>
-              <Box padding="32px 16px" fontSize={14}>
-                Settlement Price &le; {strikePrice} USDT, will not be exercised
-              </Box>
-            </Card>
-          </Box>
-        </Grid>
-      )}
-    </>
-  )
-}, [isDownMd, priceSet, product, strikeLineData, strikePrice])
- */

@@ -1,6 +1,6 @@
 import { Box, Grid } from '@mui/material'
 import Card from 'components/Card/Card'
-import LineChart from 'components/Chart'
+import LineChart, { Histogram } from 'components/Chart'
 import Spinner from 'components/Spinner'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { usePriceSet } from 'hooks/usePriceSet'
@@ -68,6 +68,26 @@ export default function DualInvestChart({
           </Box>
         </Grid>
       )}
+    </>
+  )
+}
+
+export function PastAggrChart() {
+  const graphContainer = useRef<HTMLDivElement>(null)
+
+  return (
+    <>
+      <Grid
+        item
+        xs={12}
+        md={9}
+        sx={{
+          height: { xs: '300px', md: '100%', maxWidth: '100%', width: { xs: '100%', md: 'auto' } }
+        }}
+        ref={graphContainer}
+      >
+        <Histogram id="pastAggr" />
+      </Grid>
     </>
   )
 }

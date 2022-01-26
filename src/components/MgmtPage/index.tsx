@@ -31,6 +31,7 @@ interface Props {
   product: any
   pageTitle?: string
   chart: React.ReactNode
+  chart2?: React.ReactNode
   subject: Subject
   type?: string
   subscribeForm: React.ReactNode
@@ -46,6 +47,7 @@ export default function MgmtPage(props: Props) {
     // product,
     pageTitle,
     chart,
+    chart2,
     subject,
     type,
     subscribeForm,
@@ -157,7 +159,7 @@ export default function MgmtPage(props: Props) {
                       <Box display="flex" alignItems="center" gap={8}>
                         <Box height={10} width={10} borderRadius="50%" bgcolor="#F0B90B" />
                         <Typography fontSize={12} color="#F0B90B">
-                          Strike price
+                          Strike Price
                         </Typography>
                       </Box>
                     </Box>
@@ -184,9 +186,55 @@ export default function MgmtPage(props: Props) {
               </Card>
             </Grid>
             {children && (
-              <Grid xs={12} item>
-                {children}
-              </Grid>
+              <>
+                <Grid xs={4} item position="relative">
+                  {children}
+                </Grid>
+                <Grid xs={8} item>
+                  <Card style={{ height: '100%' }}>
+                    <Box
+                      maxHeight="100%"
+                      height="100%"
+                      gap={0}
+                      display={{ xs: 'grid', md: 'flex', maxWidth: 'calc(100vw - 100px)' }}
+                      flexDirection={'column'}
+                      padding={'32px 24px'}
+                    >
+                      <Typography fontSize={{ xs: 14, md: 16 }} paddingTop={18} paddingLeft={24} sx={{ opacity: 0.5 }}>
+                        Past Aggregate Earnings (Platform)
+                      </Typography>
+                      <Box
+                        display="flex"
+                        justifyContent={isDownMd ? 'flex-start' : 'space-between'}
+                        flexDirection={isDownMd ? 'column' : 'row'}
+                        gap={18}
+                      >
+                        <Typography fontSize={{ xs: 40, md: 44 }} paddingTop={13} paddingLeft={24} fontWeight={700}>
+                          82,890$
+                        </Typography>
+                        <Box display="flex" flexDirection={'column'} gap={8}>
+                          <Box display="flex" alignItems="center" gap={8}>
+                            <Box height={10} width={10} borderRadius="50%" bgcolor="#ADDFB5" />
+                            <Typography fontSize={14} color="#ADDFB5">
+                              Unexercised
+                            </Typography>
+                          </Box>
+                          <Box display="flex" alignItems="center" gap={8}>
+                            <Box height={10} width={10} borderRadius="50%" bgcolor="#E3E3E3" />
+                            <Typography fontSize={14} color="#E3E3E3">
+                              Exercised
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Box>
+                      <Typography fontSize={{ xs: 11, md: 13 }} paddingLeft={24}>
+                        Aug 26, 2021
+                      </Typography>
+                      {chart2}
+                    </Box>
+                  </Card>
+                </Grid>
+              </>
             )}
 
             <Grid xs={12} item>

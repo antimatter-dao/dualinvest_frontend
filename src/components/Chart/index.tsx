@@ -373,6 +373,114 @@ export default function LineChart({
   )
 }
 
+export function Histogram({
+  style,
+  id,
+  width,
+  height
+}: {
+  style?: React.CSSProperties
+  id: string
+  width?: number
+  height?: number
+}) {
+  const theme = useTheme()
+  const [chart, setChart] = useState<IChartApi | undefined>(undefined)
+  useEffect(() => {
+    if (chart) return
+    const chartElement = (document.getElementById(id + '-chart') as HTMLDivElement) ?? ''
+    if (!chartElement) return
+    const chartEl = createChart(chartElement, {
+      width: width ? width : chartElement ? chartElement.offsetWidth : 556,
+      height: height,
+      layout: {
+        backgroundColor: 'transparent',
+        textColor: '#00000050',
+        fontSize: 10,
+        fontFamily: 'SF Pro, Roboto, san-serif'
+      },
+      grid: {
+        horzLines: {
+          visible: true
+        },
+        vertLines: {
+          style: LineStyle.Dotted,
+          color: 'rgba(0, 0, 0, 0.2)'
+        }
+      }
+    })
+    setChart(chartEl)
+
+    chartEl.applyOptions({
+      layout: {
+        fontFamily: 'SF Pro'
+      },
+      leftPriceScale: {
+        autoScale: true,
+        visible: true,
+        drawTicks: false,
+        borderVisible: false
+      },
+      rightPriceScale: { visible: false },
+      timeScale: {
+        fixLeftEdge: true,
+        borderColor: 'rgba(0, 0, 0, 0.2)',
+        secondsVisible: true,
+        shiftVisibleRangeOnNewBar: true,
+        tickMarkFormatter: (time: any) => {
+          return dayjs(time).format('DD MMM')
+        }
+      },
+      crosshair: {
+        mode: CrosshairMode.Magnet,
+        vertLine: {
+          color: '#00000010',
+          width: 2,
+          visible: true,
+          labelVisible: false
+        },
+        horzLine: {
+          visible: true,
+          labelVisible: true
+        }
+      },
+      handleScroll: {
+        mouseWheel: false,
+        pressedMouseMove: false
+      },
+      handleScale: {
+        axisPressedMouseMove: false,
+        mouseWheel: false,
+        pinch: false
+      }
+    })
+
+    const histogramSeries = chartEl.addHistogramSeries({
+      color: theme.palette.primary.main
+    })
+
+    histogramSeries.setData([
+      { time: '2018-12-20', value: 20.31 },
+      { time: '2018-12-21', value: 30.27 },
+      { time: '2018-12-22', value: 70.28 },
+      { time: '2018-12-23', value: 49.29 },
+      { time: '2018-12-24', value: 40.64 },
+      { time: '2018-12-25', value: 57.46 },
+      { time: '2018-12-26', value: 50.55 },
+      { time: '2018-12-27', value: 34.85 },
+      { time: '2018-12-28', value: 56.68 },
+      { time: '2018-12-29', value: 51.64 },
+      { time: '2018-12-30', value: 75.33 },
+      { time: '2018-12-31', value: 54.85 }
+    ])
+  }, [chart, height, id, theme.palette.primary.main, width])
+  return (
+    <>
+      <Chart sx={{ ...style }} id={id + '-chart'}></Chart>
+    </>
+  )
+}
+
 // function Capsule({ val }: { val: string }) {
 //   return (
 //     <Typography
