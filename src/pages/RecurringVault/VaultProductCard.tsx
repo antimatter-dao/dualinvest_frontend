@@ -9,7 +9,7 @@ import { RecurProduct } from 'utils/fetch/recur'
 import Spinner from 'components/Spinner'
 import dayjs from 'dayjs'
 import { useRecurPnl } from 'hooks/useRecurData'
-import { toLocalNumberString } from 'utils/toLocalNumberString'
+import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 
 export default function VaultProductCard({
   logoCurSymbol,
@@ -55,7 +55,7 @@ export default function VaultProductCard({
         <Box display={{ xs: 'grid' }} gap={24} gridTemplateColumns={{ xs: '100%', md: '35% auto' }}>
           <NumericalCard value={product?.apy ?? '-'} subValue="Current APY" border valueColor={color} />
           <NumericalCard
-            value={toLocalNumberString(totalReInvest) + (product?.investCurrency ?? '-')}
+            value={toLocaleNumberString(totalReInvest) + (product?.investCurrency ?? '-')}
             subValue="Your existing position"
             border
           >
@@ -70,7 +70,7 @@ export default function VaultProductCard({
             </Button>
           </NumericalCard>
           <NumericalCard
-            value={toLocalNumberString(product.strikePrice) + ' USDT'}
+            value={toLocaleNumberString(product.strikePrice) + ' USDT'}
             subValue="Current Strike Price"
             border
           />

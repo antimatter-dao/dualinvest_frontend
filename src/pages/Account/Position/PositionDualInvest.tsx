@@ -26,7 +26,7 @@ import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
 /* import { PositionMoreHeader, PositionMoreHeaderIndex, PositionTableHeader } from 'components/Account/PositionTableCards' */
 import PositionTableCards from 'components/Account/PositionTableCards'
-import { toLocalNumberString } from 'utils/toLocalNumberString'
+import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 
 export const THIRTY_MINUTES_MS = 1800000
 export enum PositionMoreHeaderIndex {
@@ -236,7 +236,7 @@ export default function PositionDualInvest() {
           <Box padding="38px 24px">
             <NumericalCard
               title="BTC latest spot price"
-              value={price ? toLocalNumberString(price, 6) : '-'}
+              value={price ? toLocaleNumberString(price, 6) : '-'}
               border={true}
             />
             <Box position="relative">
