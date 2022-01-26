@@ -27,6 +27,7 @@ import { CURRENCY_ADDRESS_MAP, CURRENCIES } from 'constants/currencies'
 /* import { PositionMoreHeader, PositionMoreHeaderIndex, PositionTableHeader } from 'components/Account/PositionTableCards' */
 import PositionTableCards from 'components/Account/PositionTableCards'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
+import Filter from 'components/Filter'
 
 export const THIRTY_MINUTES_MS = 1800000
 export enum PositionMoreHeaderIndex {
@@ -74,6 +75,7 @@ export default function PositionChainType() {
   const { showModal, hideModal } = useModal()
   const addTransaction = useTransactionAdder()
   const history = useHistory()
+  const [checkedFilterOption, setCheckedFilterOption] = useState('All')
 
   const handleGoInvest = useCallback(() => {
     history.push(routes.recurringVault)
@@ -276,6 +278,16 @@ export default function PositionChainType() {
                 </NoDataCard>
               ) : (
                 <>
+                  <Box mt={27} pl={10}>
+                    <Filter
+                      checkedOption={checkedFilterOption}
+                      options={['All', 'BTC', 'ETH', 'BNB']}
+                      onChange={e => {
+                        setCheckedFilterOption(e.target.id)
+                      }}
+                    />
+                  </Box>
+
                   {isDownMd ? (
                     <PositionTableCards
                       header={PositionTableHeader}
