@@ -16,7 +16,7 @@ import TransacitonPendingModal from 'components/Modal/TransactionModals/Transact
 import { useDualInvestBalance } from 'hooks/useDualInvest'
 import { tryParseAmount } from 'utils/parseAmount'
 import { useAddPopup } from 'state/application/hooks'
-import { InvesStatus, InvesStatusType, OrderRecord } from 'utils/fetch/product'
+import { InvesStatus, InvesStatusType, OrderRecord } from 'utils/fetch/record'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useDualInvestCallback } from 'hooks/useDualInvest'
 import { trimNumberString } from 'utils/trimNumberString'

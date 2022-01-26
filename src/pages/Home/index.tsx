@@ -90,62 +90,13 @@ export default function Home() {
         }}
       >
         <Grid container spacing={{ xs: 8, md: 20 }}>
-          <Grid item xs={12} md={4}>
-            <NumericalCard
-              width={'100%'}
-              value={
-                '111'
-                // statistics && BTCPrice
-                //   ? trimNumberString(
-                //       (+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit).toLocaleString(      'en-US'),
-                //       0
-                //     )
-                //   : '-'
-              }
-              unit="USDT"
-              border
-              subValue="Cumulative Deposit Amount"
-            />
+          <Grid item xs={12} md={6}>
+            <NumericalCard width={'100%'} value={'111'} unit="USDT" border subValue="Cumulative Deposit Amount" />
           </Grid>
-          <Grid item xs={12} md={4}>
-            <NumericalCard
-              width={'100%'}
-              value={'111'}
-              // value={statistics ? trimNumberString((+statistics.totalInvestAmount).toLocaleString(      'en-US'), 0) : '-'}
-              unit="USDT"
-              border
-              subValue="Cumulative Investment Amount"
-            />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <NumericalCard
-              width={'100%'}
-              value={'111'}
-              // value={statistics ? trimNumberString((+statistics.totalInvestAmount).toLocaleString(      'en-US'), 0) : '-'}
-              unit="USDT"
-              border
-              subValue="Cumulative Investment Amount"
-            />
+          <Grid item xs={12} md={6}>
+            <NumericalCard width={'100%'} value={'111'} unit="USDT" border subValue="Cumulative Investment Amount" />
           </Grid>
         </Grid>
-
-        <Box display="grid" gap={32}>
-          <Typography fontSize={48} fontWeight={700}>
-            Recurring Vault
-          </Typography>
-          <Grid container spacing={20}>
-            <ProductCard
-              large
-              src={recurringVaultUrl}
-              title="Recurring Vault"
-              synospis="Automatic management of funds, cyclic compound interest.
-              Earn Yield on your idle assets"
-              onClick={() => {
-                history.push(routes.recurringVault)
-              }}
-            />
-          </Grid>
-        </Box>
 
         <Box display="grid" gap={32}>
           <Typography fontSize={48} fontWeight={700}>
@@ -169,6 +120,23 @@ export default function Home() {
         </Box>
         <Box display="grid" gap={32}>
           <Typography fontSize={48} fontWeight={700}>
+            Recurring Vault
+          </Typography>
+          <Grid container spacing={20}>
+            <ProductCard
+              large
+              src={recurringVaultUrl}
+              title="Recurring Vault"
+              synospis="Automatic management of funds, cyclic compound interest.
+              Earn Yield on your idle assets"
+              onClick={() => {
+                history.push(routes.recurringVault)
+              }}
+            />
+          </Grid>
+        </Box>
+        <Box display="grid" gap={32}>
+          <Typography fontSize={48} fontWeight={700}>
             Chain Option
           </Typography>
           <Grid container spacing={20}>
@@ -176,17 +144,17 @@ export default function Home() {
               src={chainOptionUrl}
               title="Saddle Options"
               synospis="Suitable to buy when the price will fluctuate for a period of time"
-              onClick={() => {
-                history.push(routes.chainOptionTyped.replace(':type', 'saddle'))
-              }}
+              // onClick={() => {
+              //   history.push(routes.chainOptionTyped.replace(':type', 'saddle'))
+              // }}
             />
             <ProductCard
               src={chainOptionUrl}
               title="Tiered Options"
               synospis="Suitable for buying when the price will continue to rise or fall for a period of time"
-              onClick={() => {
-                history.push(routes.chainOptionTyped.replace(':type', 'tiered'))
-              }}
+              // onClick={() => {
+              //   history.push(routes.chainOptionTyped.replace(':type', 'tiered'))
+              // }}
             />
           </Grid>
         </Box>

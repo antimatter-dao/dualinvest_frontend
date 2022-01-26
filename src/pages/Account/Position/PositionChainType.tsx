@@ -10,7 +10,7 @@ import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
 import StatusTag from 'components/Status/StatusTag'
 import { useActiveWeb3React } from 'hooks'
-import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
+import { useOrderRecords, InvestStatus, INVEST_TYPE } from 'hooks/useAccountData'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
 import { usePrice } from 'hooks/usePriceSet'
@@ -26,6 +26,7 @@ import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
 /* import { PositionMoreHeader, PositionMoreHeaderIndex, PositionTableHeader } from 'components/Account/PositionTableCards'
  */ import PositionTableCards from 'components/Account/PositionTableCards'
+import { toLocalNumberString } from 'utils/toLocalNumberString'
 
 export const THIRTY_MINUTES_MS = 1800000
 export enum PositionMoreHeaderIndex {
@@ -70,7 +71,7 @@ export default function PositionChainType() {
   const btcPrice = usePrice('BTC')
   const ethPrice = usePrice('ETH')
   const { finishOrderCallback } = useDualInvestCallback()
-  const { orderList, pageParams } = useOrderRecords(statusArr, page, 999999)
+  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, statusArr, page, 999999)
   const { showModal, hideModal } = useModal()
   const addTransaction = useTransactionAdder()
   const history = useHistory()
@@ -238,22 +239,14 @@ export default function PositionChainType() {
               <Grid item xs={12} md={6}>
                 <NumericalCard
                   title="BTC latest spot price"
-                  value={
-                    btcPrice
-                      ? (+btcPrice).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                      : '-'
-                  }
+                  value={btcPrice ? toLocalNumberString(btcPrice) : '-'}
                   border={true}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <NumericalCard
                   title="ETH latest spot price"
-                  value={
-                    ethPrice
-                      ? (+ethPrice).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                      : '-'
-                  }
+                  value={ethPrice ? toLocalNumberString(ethPrice) : '-'}
                   border={true}
                 />
               </Grid>

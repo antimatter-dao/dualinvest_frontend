@@ -98,9 +98,9 @@ export function useAccountBalances(): {
     setEthRes(assetBalanceFormatter(r.data.data))
   }, [])
 
-  usePollingWithMaxRetries(btcPromiseFn, btcCallbackFn, 30000)
-  usePollingWithMaxRetries(usdtPromiseFn, usdtCallbackFn, 30000)
-  usePollingWithMaxRetries(ethPromiseFn, ethCallbackFn, 3000)
+  usePollingWithMaxRetries(btcPromiseFn, btcCallbackFn, 300000)
+  usePollingWithMaxRetries(usdtPromiseFn, usdtCallbackFn, 300000)
+  usePollingWithMaxRetries(ethPromiseFn, ethCallbackFn, 30000)
 
   return useMemo(() => {
     return {

@@ -3,6 +3,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { isAddress } from 'utils'
 import { Axios } from 'utils/axios'
+import { OrderRecord } from 'utils/fetch/record'
 import {
   RecurProductRaw,
   recurProductListFormatter,
@@ -10,7 +11,9 @@ import {
   singleRecurProductFormatter,
   RecurProduct
 } from 'utils/fetch/recur'
+import { INVEST_TYPE } from './useAccountData'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
+import { InvestStatus } from './useAccountData'
 
 export function useRecurProcuctList() {
   const [productList, setProductList] = useState<RecurProductList | undefined>(undefined)
@@ -37,8 +40,8 @@ export function useSingleRecurProcuct(currency: string, type: string) {
   return productList
 }
 
-export function useRecurPnl(currency: string | undefined) {
-  const [pnl, setPnl] = useState<string>('-')
+export function useRecurPnl(currency: string | undefined): { totalReInvest: string; pnl: string } {
+  const [data, setData] = useState<{ totalReInvest: string; pnl: string }>({ totalReInvest: '-', pnl: '-' })
 
   const { account } = useActiveWeb3React()
 
@@ -51,12 +54,12 @@ export function useRecurPnl(currency: string | undefined) {
   }, [account, currency])
 
   const callbackFn = useCallback(r => {
-    setPnl(r.data.data.pnl)
+    setData({ pnl: r?.data?.data?.pnl ?? '-', totalReInvest: r?.data?.data?.totalReInvest ?? '-' })
   }, [])
 
   usePollingWithMaxRetries(currency ? promiseFn : undefined, callbackFn, 60000)
 
-  return pnl
+  return data
 }
 
 export enum RECUR_TOGGLE_STATUS {
@@ -107,4 +110,27 @@ export function useRecurToggle(
       toggleRecur: callback
     }
   }, [status, callback])
+}
+
+export function useRecurActiveOrderCount(curSymbol: string | undefined) {
+  const [count, setCount] = useState(0)
+  const { account } = useActiveWeb3React()
+
+  const promiseFn = useCallback(() => {
+    if (!account) return new Promise((resolve, reject) => reject(null))
+    return Axios.get<OrderRecord[]>('getOrderRecord', { account, investType: INVEST_TYPE.recur, currency: curSymbol })
+  }, [account, curSymbol])
+
+  const callbackFn = useCallback(r => {
+    if (!r.data.data.records) return
+    const list = r.data.data.records.filter((record: OrderRecord) => {
+      return [InvestStatus.Ordered, InvestStatus.ReadyToSettle].includes(record.investStatus)
+    })
+
+    setCount(list.length)
+  }, [])
+
+  usePollingWithMaxRetries(curSymbol ? promiseFn : undefined, callbackFn, 300000)
+
+  return count
 }
