@@ -44,7 +44,7 @@ export function useDualInvestCallback(): {
         throw Error('no contract')
       }
       const estimatedGas = await contract.estimateGas.deposit(val, tokenAddress).catch((error: Error) => {
-        console.debug('Failed to create order', error)
+        console.debug('Failed to deposit', error)
         throw error
       })
       return contract?.deposit(val, tokenAddress, { gasLimit: estimatedGas })
@@ -57,7 +57,7 @@ export function useDualInvestCallback(): {
       return new Promise(async (resolve, reject) => {
         try {
           if (!contract || !account || !chainId) {
-            throw Error('withdraw fail')
+            throw Error('Failed to withdraw')
           }
           const nonce = await contract?.withdrawNonces(account)
           const signRes = await Axios.getSignatures<SignatureRequest, Signature>(
