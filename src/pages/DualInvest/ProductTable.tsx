@@ -141,7 +141,7 @@ export default function ProductTable({
             <>
               {strikeCurrencySymbol} Financial Management&nbsp;
               <Box component="span" sx={{ fontWeight: 400 }}>
-                {isDownMd && <br />}[down exercise]
+                {isDownMd && <br />}[downward exercise]
               </Box>
             </>
           }
