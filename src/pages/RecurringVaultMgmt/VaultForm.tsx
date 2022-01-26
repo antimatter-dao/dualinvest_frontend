@@ -13,12 +13,14 @@ import TransactionPendingModal from 'components/Modal/TransactionModals/Transact
 import useModal from 'hooks/useModal'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import RecurConfirmModal from '../RecurringVaultMgmt/RecurConfirmModal'
 
 export default function VaultForm({ product }: { product: RecurProduct | undefined }) {
   const currencySymbol = product?.investCurrency ?? ''
 
   const [snackbarOpen, setSnackbarOpen] = useState(true)
   const [isRecurOpen, setIsRecurOpen] = useState(false)
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [investAmount, setInvestAmount] = useState('')
   const { redeemCallback, investCallback } = useRecurCallback()
 
@@ -102,63 +104,74 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
   }, [currencySymbol, redeemCallback, product, showModal, autoBalanceRaw, addPopup, autoBalance, hideModal])
 
   return (
-    <Box display="grid" position="relative" gap="35px" mt={-24}>
-      {snackbarOpen && (
-        <Alert
-          onClose={handleCloseSnakebar}
-          severity="error"
-          sx={{
-            width: '100%',
-            color: theme => theme.palette.error.main,
-            background: theme => theme.palette.error.light,
-            border: theme => `1px solid ${theme.palette.error.main}`,
-            '& .MuiAlert-icon': {
-              color: theme => theme.palette.error.main
-            },
-            fontSize: 12
-          }}
-        >
-          warning: The primary risk for running this covered call strategy is that the vault may incur a weekly loss in
-          the case where the call option sold by the vault expires in-the-money
-        </Alert>
-      )}
-
-      <VaultCard
-        account={account}
-        title={
-          product?.type === 'CALL'
-            ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-            : `${product?.currency ?? ''} Put Selling Recuring Strategy`
-        }
-        description={`Generates yield by running an automated ${
-          product?.type === 'CALL' ? `${product?.currency ?? ''} covered call strategy` : `put selling strategy`
-        }`}
-        logoCurSymbol={currencySymbol}
-        priceCurSymbol={product?.currency ?? ''}
-        timer={product?.expiredAt ?? 0}
-        isRecurOpen={isRecurOpen}
-        onRecurOpen={() => {
+    <>
+      <RecurConfirmModal
+        isOpen={isConfirmOpen}
+        onDismiss={() => setIsConfirmOpen(false)}
+        type={isRecurOpen ? 'off' : 'on'}
+        onConfirm={() => {
           setIsRecurOpen(prev => !prev)
+          setIsConfirmOpen(false)
         }}
-        activeOrder={5}
-        vaultForm={
-          <VaultFormComponent
-            redeemDisabled={!product}
-            investDisabled={!product}
-            onWithdraw={handleWithdraw}
-            onInvest={handleInvest}
-            formData={formData}
-            currencySymbol={currencySymbol}
-            available={contractBalance}
-            apy={product?.apy ?? ''}
-            onInvestChange={handleInvestChange}
-            investAmount={investAmount}
-            multiplier={product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1}
-            formula={`${product?.multiplier ?? '-'} ${product?.currency ?? '-'}
-            ${product?.type === 'CALL' ? '' : `*${product?.strikePrice ?? '-'}`}`}
-          />
-        }
       />
-    </Box>
+      <Box display="grid" position="relative" gap="35px" mt={-24}>
+        {snackbarOpen && (
+          <Alert
+            onClose={handleCloseSnakebar}
+            severity="error"
+            sx={{
+              width: '100%',
+              color: theme => theme.palette.error.main,
+              background: theme => theme.palette.error.light,
+              border: theme => `1px solid ${theme.palette.error.main}`,
+              '& .MuiAlert-icon': {
+                color: theme => theme.palette.error.main
+              },
+              fontSize: 12
+            }}
+          >
+            warning: The primary risk for running this covered call strategy is that the vault may incur a weekly loss
+            in the case where the call option sold by the vault expires in-the-money
+          </Alert>
+        )}
+
+        <VaultCard
+          account={account}
+          title={
+            product?.type === 'CALL'
+              ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
+              : `${product?.currency ?? ''} Put Selling Recuring Strategy`
+          }
+          description={`Generates yield by running an automated ${
+            product?.type === 'CALL' ? `${product?.currency ?? ''} covered call strategy` : `put selling strategy`
+          }`}
+          logoCurSymbol={currencySymbol}
+          priceCurSymbol={product?.currency ?? ''}
+          timer={product?.expiredAt ?? 0}
+          isRecurOpen={isRecurOpen}
+          onRecurOpen={() => {
+            setIsConfirmOpen(true)
+          }}
+          activeOrder={5}
+          vaultForm={
+            <VaultFormComponent
+              redeemDisabled={!product}
+              investDisabled={!product}
+              onWithdraw={handleWithdraw}
+              onInvest={handleInvest}
+              formData={formData}
+              currencySymbol={currencySymbol}
+              available={contractBalance}
+              apy={product?.apy ?? ''}
+              onInvestChange={handleInvestChange}
+              investAmount={investAmount}
+              multiplier={product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1}
+              formula={`${product?.multiplier ?? '-'} ${product?.currency ?? '-'}
+            ${product?.type === 'CALL' ? '' : `*${product?.strikePrice ?? '-'}`}`}
+            />
+          }
+        />
+      </Box>
+    </>
   )
 }
