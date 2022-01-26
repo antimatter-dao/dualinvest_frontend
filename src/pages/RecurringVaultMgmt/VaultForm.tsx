@@ -7,29 +7,46 @@ import { useDualInvestBalance } from 'hooks/useDualInvest'
 import { CURRENCIES } from 'constants/currencies'
 import { RecurProduct } from 'utils/fetch/recur'
 import { useRecurBalance, useRecurCallback } from 'hooks/useRecur'
-import { useRecurPnl } from 'hooks/useRecurData'
+import { RECUR_TOGGLE_STATUS, useRecurPnl, useRecurToggle } from 'hooks/useRecurData'
 import { tryParseAmount } from 'utils/parseAmount'
 import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import useModal from 'hooks/useModal'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import RecurConfirmModal from '../RecurringVaultMgmt/RecurConfirmModal'
+import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
+import RedeemConfirmModal from './RedeemConfirmModal'
+import InvestConfirmModal from './InvestConfirmModal'
+import { feeRate } from 'constants/index'
+import dayjs from 'dayjs'
 
-export default function VaultForm({ product }: { product: RecurProduct | undefined }) {
+export default function VaultForm({
+  product,
+  investAmount,
+  setInvestAmount
+}: {
+  product: RecurProduct | undefined
+  investAmount: string
+  setInvestAmount: (val: string) => void
+}) {
   const currencySymbol = product?.investCurrency ?? ''
+  const currency = CURRENCIES[currencySymbol] ?? undefined
+  const title =
+    product?.type === 'CALL'
+      ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
+      : `${product?.currency ?? ''} Put Selling Recuring Strategy`
 
   const [snackbarOpen, setSnackbarOpen] = useState(true)
-  const [isRecurOpen, setIsRecurOpen] = useState(false)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
-  const [investAmount, setInvestAmount] = useState('')
-  const { redeemCallback, investCallback } = useRecurCallback()
+  const [redeemConfirmOpen, setRedeemConfirmOpen] = useState(false)
+  const [investConfirmOpen, setInvestConfirmOpen] = useState(false)
 
+  const { redeemCallback, investCallback } = useRecurCallback()
   const pnl = useRecurPnl(currencySymbol)
-  const { autoLockedBalance, autoBalance, autoBalanceRaw } = useRecurBalance(
-    currencySymbol ? CURRENCIES[currencySymbol] : undefined
-  )
+  const { autoLockedBalance, autoBalance, autoBalanceRaw } = useRecurBalance(currency)
+  const { recurStatus, toggleRecur } = useRecurToggle(product ? currency?.address : undefined)
   const { account } = useActiveWeb3React()
-  const contractBalance = useDualInvestBalance(CURRENCIES[currencySymbol] ?? undefined)
+  const contractBalance = useDualInvestBalance(currency)
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()
 
@@ -42,12 +59,36 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
     [autoLockedBalance, currencySymbol, autoBalance, pnl]
   )
 
+  const confirmData = useMemo(
+    () => ({
+      ['Platform service fee']: feeRate,
+      ['Spot Price']: product?.indexPrice ?? '-' + ' USDT',
+      ['APY']: product?.apy ?? '-',
+      ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
+      ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') + ' 08:30:00 AM UTC' : '-'
+    }),
+    [product]
+  )
+
   const handleCloseSnakebar = useCallback(() => {
     setSnackbarOpen(false)
   }, [])
 
   const handleInvestChange = useCallback(val => {
     setInvestAmount(val)
+  }, [])
+
+  const handleInvestConfirmOpen = useCallback(() => {
+    setInvestConfirmOpen(true)
+  }, [])
+  const handleInvestConfirmDismiss = useCallback(() => {
+    setInvestConfirmOpen(false)
+  }, [])
+  const handleRedeemConfirmOpen = useCallback(() => {
+    setRedeemConfirmOpen(true)
+  }, [])
+  const handleRedeemConfirmDismiss = useCallback(() => {
+    setRedeemConfirmOpen(false)
   }, [])
 
   const handleInvest = useCallback(async () => {
@@ -74,15 +115,16 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
             : `${product?.currency ?? ''} Put Selling Recuring Strategy`
         }`
       })
-      hideModal()
+      setInvestAmount('')
+      showModal(<TransactionSubmittedModal />)
     } catch (e) {
       setInvestAmount('')
       showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
       console.error(e)
     }
-  }, [addPopup, currencySymbol, hideModal, investAmount, investCallback, product, showModal])
+  }, [addPopup, currencySymbol, hideModal, investAmount, investCallback, product, setInvestAmount, showModal])
 
-  const handleWithdraw = useCallback(async () => {
+  const handleRedeem = useCallback(async () => {
     const cur = CURRENCIES[currencySymbol]
     if (!cur || !redeemCallback || !product) return
     showModal(<TransactionPendingModal />)
@@ -97,6 +139,7 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
         }`
       })
       hideModal()
+      showModal(<TransactionSubmittedModal />)
     } catch (e) {
       showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
       console.error(e)
@@ -108,11 +151,35 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
       <RecurConfirmModal
         isOpen={isConfirmOpen}
         onDismiss={() => setIsConfirmOpen(false)}
-        type={isRecurOpen ? 'off' : 'on'}
+        type={recurStatus !== RECUR_TOGGLE_STATUS.open ? 'on' : 'off'}
         onConfirm={() => {
-          setIsRecurOpen(prev => !prev)
+          toggleRecur(recurStatus === RECUR_TOGGLE_STATUS.open ? RECUR_TOGGLE_STATUS.close : RECUR_TOGGLE_STATUS.open)
           setIsConfirmOpen(false)
         }}
+      />
+      <InvestConfirmModal
+        currency={currency}
+        productTitle={title}
+        amount={(
+          +investAmount * (product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
+        ).toFixed(2)}
+        confirmData={confirmData}
+        isOpen={investConfirmOpen}
+        onDismiss={handleInvestConfirmDismiss}
+        onConfirm={() => {
+          handleInvest()
+          setInvestConfirmOpen(false)
+        }}
+      />
+      <RedeemConfirmModal
+        isOpen={redeemConfirmOpen}
+        onDismiss={handleRedeemConfirmDismiss}
+        onConfirm={() => {
+          handleRedeem()
+          setRedeemConfirmOpen(false)
+        }}
+        amount={autoBalance}
+        currency={currency}
       />
       <Box display="grid" position="relative" gap="35px" mt={-24}>
         {snackbarOpen && (
@@ -137,28 +204,24 @@ export default function VaultForm({ product }: { product: RecurProduct | undefin
 
         <VaultCard
           account={account}
-          title={
-            product?.type === 'CALL'
-              ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-              : `${product?.currency ?? ''} Put Selling Recuring Strategy`
-          }
+          title={title}
           description={`Generates yield by running an automated ${
             product?.type === 'CALL' ? `${product?.currency ?? ''} covered call strategy` : `put selling strategy`
           }`}
           logoCurSymbol={currencySymbol}
           priceCurSymbol={product?.currency ?? ''}
           timer={product?.expiredAt ?? 0}
-          isRecurOpen={isRecurOpen}
+          isRecurOpen={recurStatus === RECUR_TOGGLE_STATUS.open}
           onRecurOpen={() => {
             setIsConfirmOpen(true)
           }}
           activeOrder={5}
           vaultForm={
             <VaultFormComponent
-              redeemDisabled={!product}
-              investDisabled={!product}
-              onWithdraw={handleWithdraw}
-              onInvest={handleInvest}
+              redeemDisabled={!product || !+autoBalance}
+              investDisabled={!product || !investAmount}
+              onWithdraw={handleRedeemConfirmOpen}
+              onInvest={handleInvestConfirmOpen}
               formData={formData}
               currencySymbol={currencySymbol}
               available={contractBalance}

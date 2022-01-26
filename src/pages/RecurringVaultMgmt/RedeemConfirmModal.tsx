@@ -10,12 +10,10 @@ interface Props {
   onDismiss?: () => void
   onConfirm?: () => void
   amount: string
-  currency: Token
+  currency: Token | undefined
 }
 
-export default function RedeemConfirmModal(props: Props) {
-  const { isOpen, onDismiss, onConfirm, amount, currency } = props
-
+export default function RedeemConfirmModal({ isOpen, onDismiss, onConfirm, amount, currency }: Props) {
   return (
     <Modal customIsOpen={isOpen} customOnDismiss={onDismiss} padding="35px 30px 40px" closeIcon>
       <Typography fontSize={20} textAlign="center">
@@ -49,10 +47,12 @@ export default function RedeemConfirmModal(props: Props) {
             {amount}
           </Typography>
 
-          <Box display="flex" gap="5px">
-            <CurrencyLogo currency={currency} />
-            <Typography fontSize={24}>{currency.symbol}</Typography>
-          </Box>
+          {currency && (
+            <Box display="flex" gap="5px">
+              <CurrencyLogo currency={currency} />
+              <Typography fontSize={24}>{currency.symbol}</Typography>
+            </Box>
+          )}
         </Box>
       </Box>
 
