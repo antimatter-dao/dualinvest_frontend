@@ -91,10 +91,24 @@ export default function Home() {
       >
         <Grid container spacing={{ xs: 8, md: 20 }}>
           <Grid item xs={12} md={6}>
-            <NumericalCard width={'100%'} value={'111'} unit="USDT" border subValue="Cumulative Deposit Amount" />
+            <NumericalCard
+              width={'100%'}
+              title={'Total investment amount'}
+              value={'111'}
+              fontSize={'44px'}
+              unit="USDT"
+              border
+            />
           </Grid>
           <Grid item xs={12} md={6}>
-            <NumericalCard width={'100%'} value={'111'} unit="USDT" border subValue="Cumulative Investment Amount" />
+            <NumericalCard
+              width={'100%'}
+              title={'Amount of investment in progress'}
+              value={'111'}
+              fontSize={'44px'}
+              unit="USDT"
+              border
+            />
           </Grid>
         </Grid>
 
