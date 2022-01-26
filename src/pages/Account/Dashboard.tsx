@@ -26,7 +26,7 @@ import { usePrice } from 'hooks/usePriceSet'
 import { useAccountBalances } from 'hooks/useAccountBalance'
 import { toChecksumAddress } from 'web3-utils'
 import { CURRENCIES } from 'constants/currencies'
-import { toLocalNumberString } from 'utils/toLocalNumberString'
+import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -283,13 +283,13 @@ export default function Dashboard() {
 
                 {isDownMd ? (
                   <InvestmentValueCard
-                    value={toLocalNumberString(totalInvest, 6)}
+                    value={toLocaleNumberString(totalInvest, 6)}
                     unit="$"
                     // dayChange="+ 8.91% / $350.28 "
                   />
                 ) : (
                   <NumericalCard
-                    value={toLocalNumberString(totalInvest, 6)}
+                    value={toLocaleNumberString(totalInvest, 6)}
                     border
                     title="Portfolio Value"
                     unit="$"

@@ -17,7 +17,7 @@ import { useParams } from 'react-router-dom'
 import ProductBanner from 'components/ProductBanner'
 import BlueRing from 'components/Icon/BlueRing'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
-import { toLocalNumberString } from 'utils/toLocalNumberString'
+import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 
 enum TYPE {
   Saddle = 'Saddle',
@@ -135,7 +135,7 @@ export default function ChainOption() {
       <ProductBanner
         title="Chain-type Option"
         checkpoints={['Easy to access，enjoy high returns']}
-        val1={BTCPrice ? toLocalNumberString(BTCPrice) : '-'}
+        val1={BTCPrice ? toLocaleNumberString(BTCPrice) : '-'}
         subVal1={'BTC latest spot price'}
         unit1={
           <Box display={'flex'} alignItems="center" gap={'5px'} component="span">
@@ -143,7 +143,7 @@ export default function ChainOption() {
             <BlueRing />
           </Box>
         }
-        val2={ETHPrice ? toLocalNumberString(ETHPrice) : '-'}
+        val2={ETHPrice ? toLocaleNumberString(ETHPrice) : '-'}
         subVal2={'ETH latest spot price'}
         unit2={
           <Box display={'flex'} alignItems="center" gap={'5px'} component="span">

@@ -5,7 +5,7 @@ import BlueRing from 'components/Icon/BlueRing'
 import { CURRENCIES } from 'constants/currencies'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { usePrice } from 'hooks/usePriceSet'
-import { toLocalNumberString } from 'utils/toLocalNumberString'
+import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 
 interface Props {
   logoCurSymbol: string
@@ -66,7 +66,7 @@ export default function ProductCardHeader(props: Props) {
           gap={isDownMd ? 10 : 0}
         >
           <Typography color="primary" fontSize={24} fontWeight={700} gap={8} display="flex" alignItems="center">
-            <span style={{ width: 120 }}> {curPrice ? toLocalNumberString(curPrice) : '-'}</span>
+            <span style={{ width: 120 }}> {curPrice ? toLocaleNumberString(curPrice) : '-'}</span>
             <BlueRing />
           </Typography>
           <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>

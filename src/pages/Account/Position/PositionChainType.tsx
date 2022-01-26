@@ -26,7 +26,7 @@ import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
 /* import { PositionMoreHeader, PositionMoreHeaderIndex, PositionTableHeader } from 'components/Account/PositionTableCards'
  */ import PositionTableCards from 'components/Account/PositionTableCards'
-import { toLocalNumberString } from 'utils/toLocalNumberString'
+import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 
 export const THIRTY_MINUTES_MS = 1800000
 export enum PositionMoreHeaderIndex {
@@ -239,14 +239,14 @@ export default function PositionChainType() {
               <Grid item xs={12} md={6}>
                 <NumericalCard
                   title="BTC latest spot price"
-                  value={btcPrice ? toLocalNumberString(btcPrice) : '-'}
+                  value={btcPrice ? toLocaleNumberString(btcPrice) : '-'}
                   border={true}
                 />
               </Grid>
               <Grid item xs={12} md={6}>
                 <NumericalCard
                   title="ETH latest spot price"
-                  value={ethPrice ? toLocalNumberString(ethPrice) : '-'}
+                  value={ethPrice ? toLocaleNumberString(ethPrice) : '-'}
                   border={true}
                 />
               </Grid>
