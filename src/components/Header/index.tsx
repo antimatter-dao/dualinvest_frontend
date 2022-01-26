@@ -184,7 +184,7 @@ export default function Header() {
                         lg: 48
                       },
                       height: 'auto',
-                      paddingBottom: '29px',
+                      paddingBottom: '30px',
                       borderBottom: '2px solid transparent',
                       borderColor: theme =>
                         title === 'Invest' &&
@@ -203,7 +203,7 @@ export default function Header() {
                       autoFocus={false}
                       width={title === 'Invest' ? '70px' : undefined}
                       style={{
-                        height: '14px'
+                        height: '16px'
                       }}
                     >
                       {subTab.map((sub, idx) =>
@@ -244,7 +244,16 @@ export default function Header() {
                       <MuiButton
                         disableRipple={true}
                         variant="text"
-                        sx={{ padding: 0, marginTop: 'auto', display: 'inline' }}
+                        sx={{
+                          padding: 0,
+                          height: 48,
+                          marginTop: 'auto',
+                          fontSize: 14,
+                          display: 'inline',
+                          '&:hover': {
+                            color: '#232323!important'
+                          }
+                        }}
                         className={'link'}
                         style={{ padding: 0, marginBottom: 0, borderBottom: 0 }}
                         onClick={handleReferral}

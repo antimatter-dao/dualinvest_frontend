@@ -168,13 +168,14 @@ export const override: any = {
       root: {
         fontSize: 16,
         fontWeight: 500,
-        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif'
+        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif!important'
       }
     }
   },
   MuiButton: {
     styleOverrides: {
       root: {
+        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif!important',
         color: theme.palette.primary.contrastText,
         fontWeight: 500,
         borderRadius: theme.shape.borderRadius,
@@ -256,7 +257,7 @@ export const override: any = {
     styleOverrides: {
       root: {
         lineHeight: 1.2,
-        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif'
+        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif!important'
       },
       body1: {
         fontSize: 14
