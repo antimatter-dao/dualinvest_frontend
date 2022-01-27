@@ -15,7 +15,7 @@ interface Props {
 
 export default function RedeemConfirmModal({ isOpen, onDismiss, onConfirm, amount, currency }: Props) {
   return (
-    <Modal customIsOpen={isOpen} customOnDismiss={onDismiss} padding="35px 30px 40px" closeIcon>
+    <Modal customIsOpen={isOpen} customOnDismiss={onDismiss} padding="35px 52px 36px" closeIcon>
       <Typography fontSize={20} textAlign="center">
         Redeem Confirm
       </Typography>
@@ -24,36 +24,34 @@ export default function RedeemConfirmModal({ isOpen, onDismiss, onConfirm, amoun
           width: '100%',
           display: 'flex',
           alignItems: 'center',
+          justifyContent: 'center',
           gap: 7,
-          background: 'rgba(49, 176, 71, 0.1)',
           border: theme => `1px solid ${theme.palette.primary.main}`,
-          padding: '12px 15px',
+          height: 38,
           borderRadius: '8px',
-          mt: 21
+          mt: 20
         }}
       >
         <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 12 }} />
-        <Typography fontSize={12} color="primary">
+        <Typography fontSize={12} sx={{ opacity: 0.5 }}>
           The redemption amount will be returned to your account balance
         </Typography>
       </Box>
-      <Box padding="0 20px">
-        <Typography fontSize={18} fontWeight={500} sx={{ opacity: 0.4 }} mt={25}>
-          Redeem Amount
+      <Typography fontSize={18} fontWeight={400} sx={{ opacity: 0.4 }} mt={32}>
+        Redeem Amount
+      </Typography>
+
+      <Box display="flex" justifyContent="space-between" mt={18} mb={33} alignItems={'center'}>
+        <Typography fontSize={44} fontWeight={400}>
+          {amount}
         </Typography>
 
-        <Box display="flex" justifyContent="space-between" mt={18} mb={33} alignItems={'center'}>
-          <Typography fontSize={44} fontWeight={400}>
-            {amount}
-          </Typography>
-
-          {currency && (
-            <Box display="flex" gap="5px">
-              <CurrencyLogo currency={currency} />
-              <Typography fontSize={24}>{currency.symbol}</Typography>
-            </Box>
-          )}
-        </Box>
+        {currency && (
+          <Box display="flex" gap="5px">
+            <CurrencyLogo currency={currency} />
+            <Typography fontSize={24}>{currency.symbol}</Typography>
+          </Box>
+        )}
       </Box>
 
       <Button onClick={onConfirm}>Confirm</Button>
