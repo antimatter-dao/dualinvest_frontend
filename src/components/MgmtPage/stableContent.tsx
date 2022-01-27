@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo } from 'react'
-import { Box, styled, Typography } from '@mui/material'
+import { Box, styled, Typography, useTheme } from '@mui/material'
 import { ReactComponent as RiskStatementIcon } from 'assets/svg/risk_statement.svg'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import Accordion from 'components/Accordion'
@@ -55,6 +55,7 @@ const AccordionDetailText = styled(Box)({
 })
 
 export function RiskStatement({ subject }: { subject: Subject }) {
+  const theme = useTheme()
   const riskStatementListItems = useMemo(() => {
     const listItems = {
       [Subject.DualInvest]: [
@@ -79,7 +80,11 @@ export function RiskStatement({ subject }: { subject: Subject }) {
         'The annualized rate of return changes in real time with the market, please refer to the actual rate of return of the purchase transaction.',
         'The average spot price of the last 30 minutes at 12:00 (UTC+8) on the delivery date will be used as the settlement price.',
         'Early redemption is not supported, and users can only get rewards after the expiry date.',
-        'After the product is purchased, you can check the operation status on the position page.'
+        <Typography fontSize={16} key={1}>
+          After the product is purchased, you can view it on my currency{' '}
+          <span style={{ color: theme.palette.primary.main }}>holding page</span>, and the payment will be automatically
+          issued to the Account after the delivery.
+        </Typography>
       ]
     }
 
