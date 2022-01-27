@@ -37,58 +37,56 @@ export default function ConfirmModal({
   const theme = useTheme()
 
   return (
-    <Modal customIsOpen={isOpen} customOnDismiss={onDismiss} padding="35px 32px 37px" closeIcon>
-      <Box padding="0 21px">
-        <Typography fontSize={20} fontWeight={500} textAlign="center">
-          {title}
+    <Modal customIsOpen={isOpen} customOnDismiss={onDismiss} padding="35px 52px 36px" closeIcon>
+      <Typography fontSize={20} fontWeight={500} textAlign="center">
+        {title}
+      </Typography>
+      {subTitle && (
+        <Typography fontSize={20} fontWeight={500} color="#31B047" textAlign="center" mt={12}>
+          {subTitle}
         </Typography>
-        {subTitle && (
-          <Typography fontSize={20} fontWeight={500} color="#31B047" textAlign="center">
-            {subTitle}
-          </Typography>
+      )}
+      {children}
+      <Typography fontSize={18} fontWeight={500} sx={{ opacity: 0.4 }} mt={30} mb={16}>
+        Subscription Amount
+      </Typography>
+      <Box display="flex" justifyContent="space-between" mb={30} alignItems={'center'}>
+        <Typography fontSize={44} fontWeight={700}>
+          {amount}
+        </Typography>
+        {investCurrency && (
+          <Box display="flex" gap="5px">
+            <CurrencyLogo currency={investCurrency} />
+            <Typography fontSize={24}>{investCurrency?.symbol}</Typography>
+          </Box>
         )}
-        {children}
-        <Typography fontSize={18} fontWeight={500} sx={{ opacity: 0.4 }} mt={30} mb={16}>
-          Subscription Amount
-        </Typography>
-        <Box display="flex" justifyContent="space-between" mb={30} alignItems={'center'}>
-          <Typography fontSize={44} fontWeight={700}>
-            {amount}
-          </Typography>
-          {investCurrency && (
-            <Box display="flex" gap="5px">
-              <CurrencyLogo currency={investCurrency} />
-              <Typography fontSize={24}>{investCurrency?.symbol}</Typography>
+      </Box>
+      <Divider sx={{ opacity: 0.1 }} />
+      <Box display="grid" gap="8px" mt={29} mb={29}>
+        {Object.keys(data).map((key, idx) => {
+          return (
+            <Box key={idx} display="flex" justifyContent="space-between">
+              {key === 'Platform service fee' ? (
+                <Box display="flex" alignItems="center">
+                  <Typography sx={{ opacity: 0.8 }} component="span">
+                    {key}
+                  </Typography>
+                  <span>
+                    <QuestionHelper
+                      text={`The platform will charge ${feeRate} of the profit as a service fee`}
+                      size={11}
+                    />
+                  </span>
+                </Box>
+              ) : (
+                <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
+              )}
+              <Typography color={key === 'APY' ? '#31B047' : theme.palette.text.primary}>
+                {data[key as keyof typeof data]}
+              </Typography>
             </Box>
-          )}
-        </Box>
-        <Divider sx={{ opacity: 0.1 }} />
-        <Box display="grid" gap="8px" mt={29} mb={29}>
-          {Object.keys(data).map((key, idx) => {
-            return (
-              <Box key={idx} display="flex" justifyContent="space-between">
-                {key === 'Platform service fee' ? (
-                  <Box display="flex" alignItems="center">
-                    <Typography sx={{ opacity: 0.8 }} component="span">
-                      {key}
-                    </Typography>
-                    <span>
-                      <QuestionHelper
-                        text={`The platform will charge ${feeRate} of the profit as a service fee`}
-                        size={11}
-                      />
-                    </span>
-                  </Box>
-                ) : (
-                  <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
-                )}
-                <Typography color={key === 'APY' ? '#31B047' : theme.palette.text.primary}>
-                  {data[key as keyof typeof data]}
-                </Typography>
-              </Box>
-            )
-          })}
-        </Box>
+          )
+        })}
       </Box>
 
       <Button onClick={onConfirm}>Confirm</Button>
@@ -101,17 +99,23 @@ export default function ConfirmModal({
         </Box>
       )}
       {showCompoundWarning && (
-        <Box padding="12px 15px" display="flex" gap="7px">
-          <InfoOutlinedIcon sx={{ color: theme.palette.error.main, height: 12 }} />
-          <Typography fontSize={12} color={theme.palette.error.main} fontWeight={400}>
-            when the final result is exercised, we will settle in another currency and invest again in the settlement
-            currency&apos;s vault.
-            <br />
-            <br /> Once compound interest is confirmed, it cannot be canceled halfway. When compound interest is in
-            progress, you can choose to stop the next compound interest.
-          </Typography>
+        <Box mt={12} display="grid" gap={4}>
+          <InfoText text="When the final result is exercised, you will get settled in the alternative currency and your funds will be invested in the settlement currency's vault for the next cycle." />
+          <InfoText
+            text="Once recurring interest is confirmed, it cannot be canceled halfway.
+            When compound interest is in progress, you can choose to stop the current recurring interest."
+          />
         </Box>
       )}
     </Modal>
+  )
+}
+
+function InfoText({ text }: { text: string }) {
+  return (
+    <Box display="flex" gap="7px">
+      <InfoOutlinedIcon sx={{ color: theme => theme.palette.error.main, height: 12, width: 'auto' }} />
+      <Typography sx={{ fontSize: 12, opacity: 0.5, fontWeight: 400 }}>{text}</Typography>
+    </Box>
   )
 }
