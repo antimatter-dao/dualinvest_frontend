@@ -1,6 +1,6 @@
 import { useMemo, useState, useCallback, ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
-import { Typography, Box, useTheme, styled } from '@mui/material'
+import { Typography, Box, useTheme, styled, Grid } from '@mui/material'
 import MgmtPage from 'components/MgmtPage'
 import { routes } from 'constants/routes'
 import { Subject } from 'components/MgmtPage/stableContent'
@@ -12,6 +12,7 @@ import VaultForm from './VaultForm'
 import { useSingleRecurProcuct } from 'hooks/useRecurData'
 import DualInvestChart, { PastAggrChart } from 'pages/DualInvestMgmt/Chart'
 import Card from 'components/Card/Card'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -34,7 +35,7 @@ export default function RecurringValueMgmt() {
   const theme = useTheme()
   const { currency, type } = useParams<{ currency: string; type: string }>()
   const product = useSingleRecurProcuct(currency ?? '', type ?? '')
-
+  const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
 
   const confirmData = useMemo(
@@ -108,9 +109,63 @@ export default function RecurringValueMgmt() {
         returnOnInvestmentListItems={returnOnInvestmentListItems}
         vaultForm={<VaultForm product={product} />}
         chart={chart}
-        chart2={chart2}
       >
-        <PrevCycleStats />
+        <Grid xs={4} item position="relative">
+          <PrevCycleStats />
+        </Grid>
+        <Grid xs={8} item>
+          <Card style={{ height: '100%' }}>
+            <Box
+              maxHeight="100%"
+              height="100%"
+              gap={0}
+              display={{ xs: 'grid', md: 'flex', maxWidth: 'calc(100vw - 100px)' }}
+              flexDirection={'column'}
+              padding={'32px 24px'}
+            >
+              <Typography fontSize={{ xs: 14, md: 16 }} paddingTop={18} paddingLeft={24} sx={{ opacity: 0.5 }}>
+                Past Aggregate Earnings (Platform)
+              </Typography>
+              <Box
+                display="flex"
+                justifyContent={isDownMd ? 'flex-start' : 'space-between'}
+                flexDirection={isDownMd ? 'column' : 'row'}
+                alignItems="center"
+                gap={18}
+              >
+                <Typography
+                  display="flex"
+                  alignItems="baseline"
+                  fontSize={{ xs: 40, md: 44 }}
+                  paddingTop={13}
+                  paddingLeft={24}
+                  fontWeight={700}
+                >
+                  82,890
+                  <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>$</Typography>
+                </Typography>
+                <Box display="flex" flexDirection={'column'} gap={8}>
+                  <Box display="flex" alignItems="center" gap={8}>
+                    <Box height={10} width={10} borderRadius="50%" bgcolor="#ADDFB5" />
+                    <Typography fontSize={14} color="#ADDFB5">
+                      Unexercised
+                    </Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center" gap={8}>
+                    <Box height={10} width={10} borderRadius="50%" bgcolor="#E3E3E3" />
+                    <Typography fontSize={14} color="#E3E3E3">
+                      Exercised
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+              <Typography fontSize={{ xs: 11, md: 13 }} paddingLeft={24}>
+                Aug 26, 2021
+              </Typography>
+              {chart2}
+            </Box>
+          </Card>
+        </Grid>
       </MgmtPage>
     </>
   )
