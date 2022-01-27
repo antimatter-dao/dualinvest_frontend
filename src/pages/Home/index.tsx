@@ -10,7 +10,8 @@ import securityUrl from 'assets/images/security.png'
 import highReturnUrl from 'assets/images/high_return.png'
 import flexibleUrl from 'assets/images/flexible.png'
 import dualInvestUrl from 'assets/svg/home_dual_invest.svg'
-import chainOptionUrl from 'assets/svg/home_chain_option.svg'
+import SaddleOptionUrl from 'assets/svg/home_saddle_option.svg'
+import TieredOptionUrl from 'assets/svg/home_tiered_option.svg'
 import recurringVaultUrl from 'assets/svg/home_recurring_vault.svg'
 import Card from 'components/Card/Card'
 import { routes } from 'constants/routes'
@@ -155,7 +156,7 @@ export default function Home() {
           </Typography>
           <Grid container spacing={20}>
             <ProductCard
-              src={chainOptionUrl}
+              src={SaddleOptionUrl}
               title="Saddle Options"
               synospis="Suitable to buy when the price will fluctuate for a period of time"
               // onClick={() => {
@@ -163,7 +164,7 @@ export default function Home() {
               // }}
             />
             <ProductCard
-              src={chainOptionUrl}
+              src={TieredOptionUrl}
               title="Tiered Options"
               synospis="Suitable for buying when the price will continue to rise or fall for a period of time"
               // onClick={() => {
