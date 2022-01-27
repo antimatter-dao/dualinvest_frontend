@@ -30,7 +30,8 @@ export default function VaultForm({
   setInvestAmount: (val: string) => void
 }) {
   const currencySymbol = product?.investCurrency ?? ''
-  const currency = CURRENCIES[currencySymbol] ?? undefined
+  const investCurrency = CURRENCIES[currencySymbol] ?? undefined
+  const currency = CURRENCIES[product?.currency ?? ''] ?? undefined
   const title =
     product?.type === 'CALL'
       ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
@@ -43,13 +44,13 @@ export default function VaultForm({
 
   const { redeemCallback, investCallback } = useRecurCallback()
   const { pnl } = useRecurPnl(currencySymbol)
-  const { autoLockedBalance, autoBalance, autoBalanceRaw } = useRecurBalance(currency)
-  const { recurStatus, toggleRecur } = useRecurToggle(product ? currency?.address : undefined)
+  const { autoLockedBalance, autoBalance, autoBalanceRaw } = useRecurBalance(currency, investCurrency)
+  const { recurStatus, toggleRecur } = useRecurToggle(product ? investCurrency?.address : undefined)
   const { account } = useActiveWeb3React()
-  const contractBalance = useDualInvestBalance(currency)
+  const contractBalance = useDualInvestBalance(investCurrency)
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()
-  const activeOrderCount = useRecurActiveOrderCount(currency?.symbol)
+  const activeOrderCount = useRecurActiveOrderCount(investCurrency?.symbol)
 
   const formData = useMemo(
     () => ({
@@ -96,18 +97,17 @@ export default function VaultForm({
   }, [])
 
   const handleInvest = useCallback(async () => {
-    const cur = CURRENCIES[currencySymbol]
-    if (!cur || !investCallback || !product) return
+    if (!currency || !investCallback || !product || !investCurrency) return
     showModal(<TransactionPendingModal />)
     const val = tryParseAmount(
       (
         +investAmount * (product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
       ).toFixed(2),
-      cur
+      investCurrency
     )?.raw?.toString()
     if (!val) return
     try {
-      const r = await investCallback(val, cur.address)
+      const r = await investCallback(val, currency.address, investCurrency.address)
       hideModal()
 
       addPopup(r, {
@@ -126,15 +126,14 @@ export default function VaultForm({
       showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
       console.error(e)
     }
-  }, [addPopup, currencySymbol, hideModal, investAmount, investCallback, product, setInvestAmount, showModal])
+  }, [currency, investCallback, product, investCurrency, showModal, investAmount, hideModal, addPopup, setInvestAmount])
 
   const handleRedeem = useCallback(async () => {
-    const cur = CURRENCIES[currencySymbol]
-    if (!cur || !redeemCallback || !product) return
+    if (!investCurrency || !redeemCallback || !product || !currency) return
     showModal(<TransactionPendingModal />)
 
     try {
-      const r = await redeemCallback(autoBalanceRaw, cur.address)
+      const r = await redeemCallback(autoBalanceRaw, currency.address, investCurrency.address)
       addPopup(r, {
         summary: `Redeemed ${autoBalance} ${product.investCurrency} from ${
           product.type === 'CALL'
@@ -148,7 +147,7 @@ export default function VaultForm({
       showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
       console.error(e)
     }
-  }, [currencySymbol, redeemCallback, product, showModal, autoBalanceRaw, addPopup, autoBalance, hideModal])
+  }, [investCurrency, redeemCallback, product, currency, showModal, autoBalanceRaw, addPopup, autoBalance, hideModal])
 
   return (
     <>
@@ -162,7 +161,7 @@ export default function VaultForm({
         }}
       />
       <InvestConfirmModal
-        currency={currency}
+        currency={investCurrency}
         productTitle={title}
         amount={(
           +investAmount * (product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
@@ -183,7 +182,7 @@ export default function VaultForm({
           setRedeemConfirmOpen(false)
         }}
         amount={autoBalance}
-        currency={currency}
+        currency={investCurrency}
       />
       <Box display="grid" position="relative" gap="35px" mt={-24}>
         {snackbarOpen && (

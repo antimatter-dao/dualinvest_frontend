@@ -48,6 +48,12 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "valut",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "account",
         "type": "address"
       },
@@ -70,6 +76,12 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "valut",
+        "type": "address"
+      },
       {
         "indexed": true,
         "internalType": "address",
@@ -527,6 +539,11 @@
         "internalType": "address",
         "name": "",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "name": "autoBalances",
@@ -542,6 +559,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
       {
         "internalType": "address",
         "name": "",
@@ -580,6 +602,11 @@
         "internalType": "uint256",
         "name": "expiredAt",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "valut",
+        "type": "address"
       }
     ],
     "name": "autoConfirmOrder",
@@ -600,6 +627,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "address",
+        "name": "valut",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
@@ -615,9 +647,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint8",
+        "internalType": "uint256",
         "name": "suppliers",
-        "type": "uint8"
+        "type": "uint256"
       }
     ],
     "name": "autoCreateOrder",
@@ -627,6 +659,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "valut",
+        "type": "address"
+      },
       {
         "internalType": "uint256",
         "name": "amount",
@@ -654,6 +691,11 @@
         "internalType": "uint256",
         "name": "productId",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "valut",
+        "type": "address"
       },
       {
         "internalType": "address",
@@ -705,6 +747,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "valut",
+        "type": "address"
+      },
       {
         "internalType": "uint256",
         "name": "amount",
@@ -965,7 +1012,7 @@
     "outputs": [
       {
         "internalType": "address",
-        "name": "autoAdmin",
+        "name": "_autoAdmin",
         "type": "address"
       }
     ],
@@ -1576,6 +1623,24 @@
       }
     ],
     "name": "transferGovernorship",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_tokenList",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_amount",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "transferReserve",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
