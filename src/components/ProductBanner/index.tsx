@@ -6,19 +6,21 @@ import { ReactComponent as DualInvestGuide } from 'assets/svg/dualInvestGuide.sv
 import useBreakpoint from 'hooks/useBreakpoint'
 import NumericalCard from 'components/Card/NumericalCard'
 
-const StyledDualInvestGuide = styled(DualInvestGuide)(({ theme }) => ({
-  marginBottom: 13,
-  '& #dualInvestGuide': {
-    zIndex: 2,
-    '&:hover, :focus, :active': {
-      opacity: 1,
-      cursor: 'pointer'
+const StyledImg = styled(Box)(({ theme }) => ({
+  svg: {
+    marginBottom: 13,
+    '& #dualInvestGuide': {
+      zIndex: 2,
+      '&:hover, :focus, :active': {
+        opacity: 1,
+        cursor: 'pointer'
+      }
+    },
+    flexShrink: 1,
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+      margin: '0 auto'
     }
-  },
-  flexShrink: 1,
-  [theme.breakpoints.down('md')]: {
-    width: 'calc(100vw - 80px)',
-    margin: '0 auto'
   }
 }))
 
@@ -44,6 +46,7 @@ export default function ProductBanner({
   img?: JSX.Element
 }) {
   const isDownMd = useBreakpoint('md')
+  const isDownSm = useBreakpoint('sm')
 
   return (
     <Box
@@ -56,7 +59,7 @@ export default function ProductBanner({
       }}
     >
       <Box
-        sx={{ maxWidth: theme => ({ xs: 'calc(100vw - 88px)', md: theme.width.maxContent }) }}
+        sx={{ maxWidth: theme => ({ xs: '100%', md: theme.width.maxContent }) }}
         width="100%"
         display={{ xs: 'grid', sm: 'flex' }}
         justifyContent={{ sm: 'center', md: 'space-between' }}
@@ -77,14 +80,26 @@ export default function ProductBanner({
           </Box>
           <Grid container spacing={{ xs: 8, md: 20 }}>
             <Grid item xs={12} md={6}>
-              <NumericalCard width={isDownMd ? '320px' : '264px'} value={val1} unit={unit1} border subValue={subVal1} />
+              <NumericalCard
+                width={isDownSm ? '100%' : isDownMd ? '320px' : '264px'}
+                value={val1}
+                unit={unit1}
+                border
+                subValue={subVal1}
+              />
             </Grid>
             <Grid item xs={12} md={6}>
-              <NumericalCard width={isDownMd ? '320px' : '264px'} value={val2} unit={unit2} border subValue={subVal2} />
+              <NumericalCard
+                width={isDownSm ? '100%' : isDownMd ? '320px' : '264px'}
+                value={val2}
+                unit={unit2}
+                border
+                subValue={subVal2}
+              />
             </Grid>
           </Grid>
         </Box>
-        {img ? img : <StyledDualInvestGuide />}
+        <StyledImg> {img ? img : <DualInvestGuide />}</StyledImg>
       </Box>
     </Box>
   )

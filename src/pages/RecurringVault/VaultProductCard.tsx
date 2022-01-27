@@ -48,8 +48,9 @@ export default function VaultProductCard({
         description={description}
         title={title}
         priceCurSymbol={priceCurSymbol}
+        color={color}
       />
-      <Divider color="#cccccc10" extension={25} />
+      <Divider color="#cccccc05" extension={25} style={{ marginBottom: 20 }} />
 
       {product ? (
         <Box display={{ xs: 'grid' }} gap={24} gridTemplateColumns={{ xs: '100%', md: '35% auto' }}>

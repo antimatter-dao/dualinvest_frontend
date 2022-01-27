@@ -10,6 +10,7 @@ import { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
 import { PRODUCT_TYPE_ROUTE } from 'components/Tabs/InvestTabs'
+import Divider from 'components/Divider'
 
 interface Props {
   logoCurSymbol: string
@@ -59,13 +60,19 @@ export default function VaultCard(props: Props) {
             <Box width={'100%'} padding="34px 22px 27px" display="flex" flexDirection={'column'} gap={46}>
               <Card gray>
                 <Box padding="22px" display="grid" gap={30}>
-                  <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
-                    When you stop recurring, all your existing orders will not be taken into next cycle and you can
-                    redeem your tokens once your existing orders expire.
-                  </Typography>
-                  <Box display={'flex'} alignItems={'center'} justifyContent={'flex-end'} gap={15}>
-                    <Typography fontWeight={700}>Recurring:</Typography>
+                  <Box display={'flex'}>
+                    <Divider
+                      orientation="vertical"
+                      sx={{ marginRight: 12, width: 2, backgroundColor: theme => theme.palette.primary.main }}
+                    />
+                    <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
+                      When you stop recurring, all your existing orders will not be taken into next cycle and you can
+                      redeem your tokens once your existing orders expire.
+                    </Typography>
+                  </Box>
+                  <Box display={'flex'} alignItems={'center'} gap={15}>
                     <SwitchToggle checked={isRecurOpen} onChange={onRecurOpen} disabled={!account} />
+                    <Typography fontWeight={700}>Recurring</Typography>
                   </Box>
                 </Box>
               </Card>

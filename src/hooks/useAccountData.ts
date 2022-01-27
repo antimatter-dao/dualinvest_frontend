@@ -3,6 +3,7 @@ import { Axios } from 'utils/axios'
 import { OrderRecord } from 'utils/fetch/record'
 import { useActiveWeb3React } from 'hooks'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
+import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 
 export enum InvestStatus {
   Confirming = 1,
@@ -22,8 +23,11 @@ export enum INVEST_TYPE {
 
 const PageSize = 8
 
+export type FilterType = 'All' | typeof SUPPORTED_CURRENCY_SYMBOL[number]
+
 export function useOrderRecords(
   investType: INVEST_TYPE,
+  currency: FilterType,
   investStatus?: number | number[],
   pageNum?: number,
   pageSize?: number
@@ -39,6 +43,9 @@ export function useOrderRecords(
   const filteredOrderList = useMemo(() => {
     if (!Array.isArray(investStatus) || !orderList) return undefined
     return orderList.reduce((acc, order) => {
+      if (currency !== 'All' && order.currency !== currency) {
+        return acc
+      }
       if (investStatus.includes(order.investStatus) && order.investStatus === InvestStatus.ReadyToSettle) {
         acc.unshift(order)
         return acc
@@ -49,7 +56,7 @@ export function useOrderRecords(
       }
       return acc
     }, [] as OrderRecord[])
-  }, [investStatus, orderList])
+  }, [currency, investStatus, orderList])
 
   const pageCount = useMemo(() => {
     if (!filteredOrderList) return 0

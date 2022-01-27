@@ -70,7 +70,7 @@ export default function PositionDualInvest() {
   const { account } = useActiveWeb3React()
   const price = usePrice('BTC')
   const { finishOrderCallback } = useDualInvestCallback()
-  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, statusArr, page, 999999)
+  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, 'All', statusArr, page, 999999)
   const { showModal, hideModal } = useModal()
   const addTransaction = useTransactionAdder()
   const history = useHistory()

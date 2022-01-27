@@ -29,6 +29,8 @@ export default function Tabs(props: Props) {
     <Box sx={{ width: '100%' }}>
       <Box sx={CustomTab ? undefined : { borderBottom: 1, borderColor: 'divider' }}>
         <MuiTabs
+          allowScrollButtonsMobile
+          scrollButtons="auto"
           value={customCurrentTab !== undefined ? customCurrentTab : value}
           onChange={onChange}
           sx={{ mb: -1 }}

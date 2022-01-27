@@ -71,7 +71,7 @@ export default function PositionChainType() {
   const btcPrice = usePrice('BTC')
   const ethPrice = usePrice('ETH')
   const { finishOrderCallback } = useDualInvestCallback()
-  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, statusArr, page, 999999)
+  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, 'All', statusArr, page, 999999)
   const { showModal, hideModal } = useModal()
   const addTransaction = useTransactionAdder()
   const history = useHistory()

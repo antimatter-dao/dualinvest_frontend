@@ -62,13 +62,13 @@ export default function InvestTabs({
         maxWidth: theme => theme.width.maxContent,
         margin: { xs: '0 0 auto', md: '62px 0 auto' },
         width: '100%',
-        padding: { xs: 20, md: 0 }
+        padding: { xs: '20px 0', md: 0 }
       }}
     >
       <TabButton
         onClick={handleClick(Keys[PRODUCT_TYPE_ROUTE.dualInvest])}
         active={currentTab === Tabs.dualInvest}
-        sx={{ marginRight: 20, width: isDownMd ? 100 : 180 }}
+        sx={{ marginRight: 20, width: isDownMd ? 140 : 180, whiteSpace: 'nowrap', mt: 5 }}
       >
         {Tabs.dualInvest}
       </TabButton>
@@ -76,7 +76,7 @@ export default function InvestTabs({
         <TabButton
           onClick={handleClick(Keys[PRODUCT_TYPE_ROUTE.chainType])}
           active={currentTab === Tabs.chainType}
-          sx={{ width: isDownMd ? 140 : 180, marginRight: 20 }}
+          sx={{ width: isDownMd ? 140 : 180, marginRight: 20, whiteSpace: 'nowrap', mt: 5 }}
         >
           {Tabs.chainType}
         </TabButton>
@@ -85,7 +85,7 @@ export default function InvestTabs({
         <TabButton
           onClick={handleClick(Keys[PRODUCT_TYPE_ROUTE.recurVault])}
           active={currentTab === Tabs.recurVault}
-          sx={{ width: isDownMd ? 140 : 180 }}
+          sx={{ width: isDownMd ? 140 : 180, whiteSpace: 'nowrap', mt: 5 }}
         >
           {Tabs.recurVault}
         </TabButton>

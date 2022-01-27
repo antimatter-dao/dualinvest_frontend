@@ -14,6 +14,7 @@ import {
 import { INVEST_TYPE } from './useAccountData'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { InvestStatus } from './useAccountData'
+import { SHA1 } from 'crypto-js'
 
 export function useRecurProcuctList() {
   const [productList, setProductList] = useState<RecurProductList | undefined>(undefined)
@@ -80,15 +81,17 @@ export function useRecurToggle(
     setting => {
       Axios.get(
         'reInvestSwitch',
-        setting !== null
+        setting === null
           ? {
               account,
               currency: curAddress,
-              type: setting
+              sign: SHA1(`@#MATTER@#invest#${account}#$${curAddress}#$`).toString()
             }
           : {
               account,
-              currency: curAddress
+              currency: curAddress,
+              type: setting,
+              sign: SHA1(`@#MATTER@#invest#${account}#$${curAddress}#$${setting}#$`).toString()
             }
       ).then(r => {
         if (r.data.data) {

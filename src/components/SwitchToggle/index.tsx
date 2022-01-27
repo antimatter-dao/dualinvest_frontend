@@ -4,24 +4,24 @@ import { switchClasses } from '@mui/material/Switch'
 
 const StyledSwitch = styled(Switch)(({ theme }) => ({
   [`&.${switchClasses.root}`]: {
-    width: 80,
-    height: 36,
+    width: 44,
+    height: 24,
     padding: 0
   },
   [`& .${switchClasses.switchBase}`]: {
-    padding: '8px'
+    padding: '4px'
   },
   [`& .${switchClasses.thumb}`]: {
-    width: 20,
-    height: 20,
+    width: 16,
+    height: 16,
     backgroundColor: '#FFFFFF'
   },
   [`& .${switchClasses.track}`]: {
-    width: 80,
-    height: 36,
+    width: 44,
+    height: 24,
     color: theme.palette.primary.contrastText,
     opacity: '1 !important',
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: '#D8D9DC',
     border: '1px solid transparent',
     borderRadius: '49px',
     position: 'relative',
@@ -32,27 +32,18 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
       width: '50%',
       transform: 'translateY(-50%)',
       textAlign: 'center'
-    },
-    '&:before': {
-      content: '"On"',
-      left: 4,
-      opacity: 0
-    },
-    '&:after': {
-      content: '"Off"',
-      right: 4
     }
   },
   [`& .${switchClasses.checked}`]: {
     [`&.${switchClasses.switchBase}`]: {
-      transform: 'translateX(44px)',
+      transform: 'translateX(20px)',
       '&:hover': {}
     },
     // [`& .${switchClasses.thumb}`]: {
     //   backgroundColor: theme.palette.primary.main
     // },
     [`& + .${switchClasses.track}`]: {
-      background: theme.palette.primary.dark + ' !important',
+      background: theme.palette.primary.main + ' !important',
       opacity: '1 !important',
       border: '1px solid transparent',
       borderRadius: '49px',

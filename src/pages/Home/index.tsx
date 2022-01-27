@@ -63,7 +63,7 @@ export default function Home() {
         >
           <Box display="grid" gap={12}>
             <Typography component="h1" sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700 }}>
-              Antimatter Invest
+              Structured Products
             </Typography>
             <Box display={{ xs: 'grid', md: 'flex' }} gap={{ xs: 8, md: 32 }} paddingBottom={{ xs: 16, md: 30 }}>
               <LogoText
@@ -91,10 +91,24 @@ export default function Home() {
       >
         <Grid container spacing={{ xs: 8, md: 20 }}>
           <Grid item xs={12} md={6}>
-            <NumericalCard width={'100%'} value={'111'} unit="USDT" border subValue="Cumulative Deposit Amount" />
+            <NumericalCard
+              width={'100%'}
+              title={'Total investment amount'}
+              value={'111'}
+              fontSize={'44px'}
+              unit="USDT"
+              border
+            />
           </Grid>
           <Grid item xs={12} md={6}>
-            <NumericalCard width={'100%'} value={'111'} unit="USDT" border subValue="Cumulative Investment Amount" />
+            <NumericalCard
+              width={'100%'}
+              title={'Amount of investment in progress'}
+              value={'111'}
+              fontSize={'44px'}
+              unit="USDT"
+              border
+            />
           </Grid>
         </Grid>
 

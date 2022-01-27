@@ -149,7 +149,7 @@ export default function NumericalCard(props: Props) {
             position: { xs: 'unset', sm: 'absolute' },
             right: 20,
             top: '50%',
-            transform: 'translateY(-50%)',
+            transform: { xs: 'translateY(-20px)', sm: 'translateY(-50%)' },
             borderRadius: 40,
             padding: { xs: '0 20px', sm: 0 },
             mt: { xs: '20px', sm: 0 }
