@@ -40,7 +40,7 @@ export default function HistoryDualInvest() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
-  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, InvestStatus.Settled, page, 8)
+  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, 'All', InvestStatus.Settled, page, 8)
   const [hiddenParts, setHiddenParts] = useState<JSX.Element[]>([])
   // const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
 

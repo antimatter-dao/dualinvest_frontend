@@ -1,4 +1,5 @@
-import { Typography, Box, Checkbox, FormControlLabel } from '@mui/material'
+import { Box, useTheme } from '@mui/material'
+import OutlineButton from 'components/Button/OutlineButton'
 
 export default function Filter({
   options,
@@ -7,17 +8,24 @@ export default function Filter({
 }: {
   options: string[]
   checkedOption: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (option: string) => void
 }) {
+  const theme = useTheme()
   return (
-    <Box display="flex" alignItems="center" gap={23}>
-      <Typography fontSize={18}>Filter</Typography>
+    <Box display="flex" alignItems="center" gap={23} mb={32}>
       {options.map(option => (
-        <FormControlLabel
+        <OutlineButton
           key={option}
-          control={<Checkbox checked={option === checkedOption} onChange={onChange} id={option} />}
-          label={option}
-        />
+          primary={option === checkedOption}
+          onClick={() => onChange(option)}
+          width="80px"
+          height="40px"
+          style={{
+            color: option === checkedOption ? theme.palette.primary.main : theme.palette.text.primary
+          }}
+        >
+          {option}
+        </OutlineButton>
       ))}
     </Box>
   )

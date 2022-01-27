@@ -63,7 +63,7 @@ export default function Home() {
         >
           <Box display="grid" gap={12}>
             <Typography component="h1" sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700 }}>
-              Antimatter Invest
+              Structured Products
             </Typography>
             <Box display={{ xs: 'grid', md: 'flex' }} gap={{ xs: 8, md: 32 }} paddingBottom={{ xs: 16, md: 30 }}>
               <LogoText

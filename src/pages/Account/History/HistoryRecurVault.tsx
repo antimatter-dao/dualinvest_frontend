@@ -6,7 +6,7 @@ import Table from 'components/Table'
 import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useActiveWeb3React } from 'hooks'
-import { useOrderRecords, InvestStatus, INVEST_TYPE } from 'hooks/useAccountData'
+import { useOrderRecords, InvestStatus, INVEST_TYPE, FilterType } from 'hooks/useAccountData'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
 import HistoryTableCards from 'components/Account/HistoryTableCards'
@@ -44,10 +44,16 @@ export default function HistoryDualInvest() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
-  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.recur, InvestStatus.Settled, page, 8)
+  const [checkedFilterOption, setCheckedFilterOption] = useState<FilterType>('All')
+  const { orderList, pageParams } = useOrderRecords(
+    INVEST_TYPE.recur,
+    checkedFilterOption,
+    InvestStatus.Settled,
+    page,
+    8
+  )
   const [hiddenParts, setHiddenParts] = useState<JSX.Element[]>([])
   // const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
-  const [checkedFilterOption, setCheckedFilterOption] = useState('All')
 
   const data = useMemo(() => {
     if (!orderList) return { hiddenList: [], summaryList: [] }
@@ -151,6 +157,13 @@ export default function HistoryDualInvest() {
     <Box sx={{ mt: 48, width: '100%' }}>
       <Card>
         <Box padding="38px 24px" display="grid" gap={36} position="relative">
+          <Filter
+            checkedOption={checkedFilterOption}
+            options={['All', 'BTC']}
+            onChange={option => {
+              setCheckedFilterOption(option)
+            }}
+          />
           {!orderList && (
             <Box
               position="absolute"
@@ -168,17 +181,11 @@ export default function HistoryDualInvest() {
               <Spinner size={60} />
             </Box>
           )}
+
           {data.summaryList.length && isDownMd ? (
             <HistoryTableCards data={data} header={HistoryTableHeader} moreHeader={HistoryMoreHeader} />
           ) : data.summaryList.length ? (
             <>
-              <Filter
-                checkedOption={checkedFilterOption}
-                options={['All', 'BTC', 'ETH', 'BNB']}
-                onChange={e => {
-                  setCheckedFilterOption(e.target.id)
-                }}
-              />
               ,
               <Table
                 header={HistoryTableHeader}

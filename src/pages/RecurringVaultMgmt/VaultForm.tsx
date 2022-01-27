@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react'
-import { Box, Alert } from '@mui/material'
+import { Box, Alert, Typography } from '@mui/material'
 import VaultCard from 'components/MgmtPage/VaultCard'
 import VaultFormComponent from 'components/MgmtPage/VaultForm'
 import { useActiveWeb3React } from 'hooks'
@@ -193,16 +193,21 @@ export default function VaultForm({
             sx={{
               width: '100%',
               color: theme => theme.palette.error.main,
-              background: theme => theme.palette.error.light,
+              background: theme => theme.palette.background.paper,
               border: theme => `1px solid ${theme.palette.error.main}`,
               '& .MuiAlert-icon': {
                 color: theme => theme.palette.error.main
               },
-              fontSize: 12
+              fontSize: 16
             }}
           >
-            warning: The primary risk for running this covered call strategy is that the vault may incur a weekly loss
-            in the case where the call option sold by the vault expires in-the-money
+            <div style={{ maxWidth: 963, lineHeight: '19.2px', margin: '-4px 0' }}>
+              Warning:{' '}
+              <Typography component="span" sx={{ color: theme => theme.palette.text.primary }}>
+                The primary risk for running this covered call strategy is that the vault may incur a weekly loss in the
+                case where the call option sold by the vault expires in-the-money
+              </Typography>
+            </div>
           </Alert>
         )}
 

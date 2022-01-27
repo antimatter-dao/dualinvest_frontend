@@ -12,11 +12,10 @@ interface Props {
   title: string | JSX.Element
   priceCurSymbol: string
   description?: string
+  color?: string
 }
 
-export default function ProductCardHeader(props: Props) {
-  const { logoCurSymbol, title, priceCurSymbol, description } = props
-
+export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol, description, color }: Props) {
   const curPrice = usePrice(priceCurSymbol)
 
   const isDownSm = useBreakpoint('sm')
@@ -65,7 +64,16 @@ export default function ProductCardHeader(props: Props) {
           padding={{ xs: '16px', sm: '16px 0' }}
           gap={isDownMd ? 10 : 0}
         >
-          <Typography color="primary" fontSize={24} fontWeight={700} gap={8} display="flex" alignItems="center">
+          <Typography
+            fontSize={24}
+            fontWeight={700}
+            gap={8}
+            display="flex"
+            alignItems="center"
+            sx={{
+              color: theme => (color ? color : theme.palette.primary.main)
+            }}
+          >
             <span style={{ width: 120 }}> {curPrice ? toLocaleNumberString(curPrice) : '-'}</span>
             <BlueRing />
           </Typography>

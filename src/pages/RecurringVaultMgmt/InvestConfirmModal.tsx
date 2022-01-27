@@ -26,7 +26,7 @@ export default function InvestConfirmModal({
       amount={amount}
       data={confirmData}
       title={'Confirm'}
-      subTitle={`【${productTitle}】`}
+      subTitle={`[${productTitle}]`}
       investCurrency={currency}
       showCompoundWarning
     />

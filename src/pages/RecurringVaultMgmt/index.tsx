@@ -113,7 +113,7 @@ function RecurringPolicy({ type, currencySymbol }: { type: 'call' | 'put'; curre
   }, [policy.length])
 
   return (
-    <Box display="grid" gap="19px" padding="33px 29px">
+    <Box display="grid" gap="19px" padding="33px 24px">
       <Typography fontSize={24} fontWeight={700}>
         Recurring Policy
       </Typography>
@@ -121,13 +121,14 @@ function RecurringPolicy({ type, currencySymbol }: { type: 'call' | 'put'; curre
         <Text currencySymbol={currencySymbol} />
       </StyledUnorderList>
       <Box position="relative">
-        <Box width="100%" display="flex" justifyContent="space-between" position="absolute" top="40%">
+        <Box width="100%" display="flex" justifyContent="space-between" position="absolute" top="50%">
           <TextButton onClick={handlePrev} disabled={curIdx === 0} style={{ '&:disabled': { opacity: 0 } }}>
-            <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="12" height="19" viewBox="0 0 12 19" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
-                opacity="0.6"
-                d="M11.67 1.77L9.9 0L0 9.9L9.9 19.8L11.67 18.03L3.54 9.9L11.67 1.77Z"
-                fill="#31B047"
+                opacity="0.4"
+                d="M10.4844 17.9707L1.99909 9.48542L10.4844 1.00014"
+                stroke="black"
+                strokeWidth="1.6"
               />
             </svg>
           </TextButton>
@@ -136,8 +137,8 @@ function RecurringPolicy({ type, currencySymbol }: { type: 'call' | 'put'; curre
             disabled={curIdx === policy.length - 1}
             style={{ '&:disabled': { opacity: 0 } }}
           >
-            <svg width="13" height="20" viewBox="0 0 13 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path opacity="0.6" d="M0 2.12L7.88 10L0 17.88L2.12 20L12.12 10L2.12 0L0 2.12Z" fill="#31B047" />
+            <svg width="11" height="19" viewBox="0 0 11 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path opacity="0.4" d="M0.828125 1L9.31341 9.48528L0.828125 17.9706" stroke="black" strokeWidth="1.6" />
             </svg>
           </TextButton>
         </Box>
@@ -169,21 +170,25 @@ function RecurringPolicy({ type, currencySymbol }: { type: 'call' | 'put'; curre
 
 function RecurringPolicyPage({ img, text }: { img: ReactElement<any, any>; text: string }) {
   return (
-    <Box
-      display="flex"
-      gap="12px"
-      flexDirection="column"
-      justifyContent={'space-between'}
-      alignItems="center"
-      height={200}
-    >
+    <Box display="flex" gap="12px" flexDirection="column" justifyContent={'space-between'} alignItems="center">
       <div />
-      <Box height="140px" display="flex" alignItems="center">
-        {img}
+      <Box
+        sx={{ border: '1px solid #25252510', borderRadius: 1 }}
+        padding="15px"
+        width="calc(100% - 34px)"
+        display="grid"
+        justifyItems={'center'}
+        height={210}
+        gap={8}
+      >
+        <Box alignItems="center" display="flex">
+          {img}
+        </Box>
+
+        <Typography sx={{ color: '#00000060' }} fontWeight={400} fontSize={12}>
+          {text}
+        </Typography>
       </Box>
-      <Typography sx={{ color: '#00000060' }} fontWeight={600} fontSize={12} align="center">
-        {text}
-      </Typography>
     </Box>
   )
 }
