@@ -148,7 +148,7 @@ function Form({
             {type === TYPE.redeem ? (
               <> your redeem amount will be available for withdraw once the current cycle finishes.</>
             ) : (
-              <>Your deposit is a strategy that allows us to invest your {currencySymbol} in the vault by default.</>
+              <>Your deposit allows us to invest your {currencySymbol} in the strategy by default.</>
             )}
           </Typography>
         </Box>
