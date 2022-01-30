@@ -35,7 +35,7 @@ export default function VaultForm({
   const title =
     product?.type === 'CALL'
       ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-      : `${product?.currency ?? ''} Put Selling Recuring Strategy`
+      : `${product?.currency ?? ''} Put Selling Recurring Strategy`
 
   const [snackbarOpen, setSnackbarOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
@@ -116,7 +116,7 @@ export default function VaultForm({
         ).toFixed(2)} ${product.investCurrency} to ${
           product.type === 'CALL'
             ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-            : `${product?.currency ?? ''} Put Selling Recuring Strategy`
+            : `${product?.currency ?? ''} Put Selling Recurring Strategy`
         }`
       })
       setInvestAmount('')
@@ -138,7 +138,7 @@ export default function VaultForm({
         summary: `Redeemed ${autoBalance} ${product.investCurrency} from ${
           product.type === 'CALL'
             ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-            : `${product?.currency ?? ''} Put Selling Recuring Strategy`
+            : `${product?.currency ?? ''} Put Selling Recurring Strategy`
         }`
       })
       hideModal()

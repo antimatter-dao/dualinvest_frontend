@@ -294,7 +294,7 @@ export const vaultPolicyPut = [
   }
 ]
 
-export const valutPolicyTitle = ['Algorithmic Strike Selection', 'Two settlement results', 'Recurring Vault']
+export const valutPolicyTitle = ['Algorithmic Strike Selection', 'Two settlement results', 'Recurring Strategy']
 
 export const vaultPolicyText: {
   call: React.FC<{ currencySymbol: string }>
@@ -304,13 +304,13 @@ export const vaultPolicyText: {
     return (
       <>
         <li>
-          Vault earns its {currencySymbol} deposits by running a bullish strategy that automatically covers{' '}
+          Strategy earns its {currencySymbol} deposits by running a bullish strategy that automatically covers{' '}
           {currencySymbol} on a weekly basis. The vault reinvests the earnings earned back into the strategy,
           effectively increasing the saver&apos;s returns over time.
         </li>
         <li>
           It is important to note that when the final result is exercised, we will settle in another currency and invest
-          again in the settlement currency&apos;s vault.
+          again in the settlement currency&apos;s strategy.
         </li>
       </>
     )
@@ -319,13 +319,13 @@ export const vaultPolicyText: {
     return (
       <>
         <li>
-          Vault earns its {currencySymbol} deposits by running a put strategy that automatically covers {currencySymbol}{' '}
-          on a weekly basis. The vault reinvests the earnings earned back into the strategy, effectively increasing the
-          saver&apos;s returns over time.
+          Strategy earns its {currencySymbol} deposits by running a put strategy that automatically covers{' '}
+          {currencySymbol} on a weekly basis. The strategy reinvests the earnings earned without further management,
+          effectively increasing the saver&apos;s returns over time.
         </li>
         <li>
           It is important to note that when the final result is exercised, we will settle in another currency and invest
-          again in the settlement currency&apos;s vault.
+          again in the settlement currency&apos;s strategy.
         </li>
       </>
     )

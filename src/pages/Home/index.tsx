@@ -135,13 +135,13 @@ export default function Home() {
         </Box>
         <Box display="grid" gap={32}>
           <Typography fontSize={48} fontWeight={700}>
-            Recurring Vault
+            Recurring Strategy
           </Typography>
           <Grid container spacing={20}>
             <ProductCard
               large
               src={recurringVaultUrl}
-              title="Recurring Vault"
+              title="Recurring Strategy"
               synospis="Automatic management of funds, cyclic compound interest.
               Earn Yield on your idle assets"
               onClick={() => {
