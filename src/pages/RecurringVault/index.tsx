@@ -26,7 +26,7 @@ export default function RecurringVault() {
       gap={{ xs: 36, md: 48 }}
     >
       <ProductBanner
-        title="Recurring Vault"
+        title="Recurring Strategy"
         checkpoints={['Automated strategy for yield generation']}
         val1={'$ 57,640'}
         val2={'$ 114,375'}
@@ -43,7 +43,7 @@ export default function RecurringVault() {
               product={data?.[key as keyof typeof data]?.call}
               logoCurSymbol={key}
               priceCurSymbol={key}
-              title={`${key} Covered Call Vault`}
+              title={`${key} Covered Call Strategy`}
               description={`Generates yield by running an automated ${key} covered call strategy`}
               onClick={() => {
                 history.push(routes.recurringVaultMgmt.replace(':currency', key).replace(':type', 'call'))
@@ -54,7 +54,7 @@ export default function RecurringVault() {
               product={data?.[key as keyof typeof data]?.put}
               logoCurSymbol="USDT"
               priceCurSymbol={key}
-              title={`${key} Put Selling Vault`}
+              title={`${key} Put Selling Strategy`}
               description="Generates yield by running an automated put selling strategy"
               onClick={() => {
                 history.push(routes.recurringVaultMgmt.replace(':currency', key).replace(':type', 'put'))
