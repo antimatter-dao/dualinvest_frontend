@@ -2,7 +2,8 @@ import axios, { AxiosResponse, AxiosPromise } from 'axios'
 import { retry } from 'utils/retry'
 
 const axiosInstance = axios.create({
-  baseURL: 'https://dualinvest-api.antimatter.finance/web/',
+  // baseURL: 'https://dualinvest-api.antimatter.finance/web/',
+  baseURL: 'https://dualinvest-testapi.antimatter.finance/web/',
   timeout: 10000,
   headers: { 'content-type': 'application/json', accept: 'application/json' }
 })
@@ -59,7 +60,7 @@ export const getSignatures = async <T, R>(args: T, numberOfSignRequired = 3, rou
 
     return signRes
   } catch (e) {
-    throw Error('Cannot get signature99')
+    throw Error('Cannot get signature')
   }
 }
 

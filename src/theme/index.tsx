@@ -1,4 +1,4 @@
-import { createTheme, styled, ThemeProvider as MuiThemeProvider, StyledEngineProvider } from '@mui/material/styles'
+import { createTheme, styled, ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
 
 interface Gradient {
   gradient1: string
@@ -73,8 +73,8 @@ export const theme = {
       contrastText: '#ffffff'
     },
     error: {
-      main: '#FF0000',
-      light: '#FFD7D7'
+      main: '#FA0E0E',
+      light: '#FA0E0E10'
     },
     warning: {
       main: '#F0B90B'
@@ -145,7 +145,12 @@ export const theme = {
 export const override: any = {
   MuiCssBaseline: {
     styleOverrides: {
-      body: { backgroundColor: theme.palette.background.default, fontSize: 16 },
+      body: {
+        backgroundColor: theme.palette.background.default,
+        fontSize: 16,
+        overflow: 'auto!important',
+        paddingRight: '0px!important'
+      },
       'html, input, textarea, button, body': {
         fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif',
         fontDisplay: 'fallback'
@@ -163,13 +168,14 @@ export const override: any = {
       root: {
         fontSize: 16,
         fontWeight: 500,
-        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif'
+        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif!important'
       }
     }
   },
   MuiButton: {
     styleOverrides: {
       root: {
+        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif!important',
         color: theme.palette.primary.contrastText,
         fontWeight: 500,
         borderRadius: theme.shape.borderRadius,
@@ -251,7 +257,7 @@ export const override: any = {
     styleOverrides: {
       root: {
         lineHeight: 1.2,
-        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif'
+        fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif!important'
       },
       body1: {
         fontSize: 14
@@ -302,9 +308,5 @@ export default createTheme({
 })
 
 export function ThemeProvider({ children, theme }: any) {
-  return (
-    <StyledEngineProvider injectFirst>
-      <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
-    </StyledEngineProvider>
-  )
+  return <MuiThemeProvider theme={theme}>{children}</MuiThemeProvider>
 }

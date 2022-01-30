@@ -4,12 +4,13 @@ import Card from 'components/Card/Card'
 
 interface Props {
   title?: string
+  valueColor?: string
   primary?: boolean
   width?: string | number
   height?: string | number
-  value?: string
+  value?: string | React.ReactNode
   subValue?: string
-  unit?: string
+  unit?: string | JSX.Element
   fontSize?: string
   gray?: boolean
   rate?: string
@@ -36,7 +37,8 @@ export default function NumericalCard(props: Props) {
     actions,
     children,
     border,
-    padding
+    padding,
+    valueColor
   } = props
   const theme = useTheme()
 
@@ -47,7 +49,6 @@ export default function NumericalCard(props: Props) {
       width={width || '100%'}
       style={{ position: 'relative', border: border ? '1px solid #00000010' : undefined }}
     >
-      {children}
       <Box
         sx={{
           padding: padding ?? '20px',
@@ -97,7 +98,7 @@ export default function NumericalCard(props: Props) {
           sx={{
             display: 'flex',
             alignItems: 'baseline',
-            color: primary ? theme.palette.primary.contrastText : theme.palette.text.primary
+            color: valueColor ? valueColor : primary ? theme.palette.primary.contrastText : theme.palette.text.primary
           }}
         >
           <Typography
@@ -135,8 +136,27 @@ export default function NumericalCard(props: Props) {
             </Box>
           )}
         </Box>
-        {subValue && <Typography sx={{ fontSize: 12, fontWeight: 400, opacity: 0.5 }}>{subValue}</Typography>}
+        {subValue && (
+          <Typography sx={{ fontSize: 12, fontWeight: 400, opacity: 0.5 }} align="left">
+            {subValue}
+          </Typography>
+        )}
         {actions && <Box mt={20}>{actions}</Box>}
+      </Box>
+      <Box sx={{ position: { xs: 'relative', sm: 'unset' } }}>
+        <Box
+          sx={{
+            position: { xs: 'unset', sm: 'absolute' },
+            right: 20,
+            top: '50%',
+            transform: { xs: 'translateY(-20px)', sm: 'translateY(-50%)' },
+            borderRadius: 40,
+            padding: { xs: '0 20px', sm: 0 },
+            mt: { xs: '20px', sm: 0 }
+          }}
+        >
+          {children}
+        </Box>
       </Box>
     </Card>
   )

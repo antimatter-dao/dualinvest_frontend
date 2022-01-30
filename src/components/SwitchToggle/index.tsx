@@ -4,24 +4,25 @@ import { switchClasses } from '@mui/material/Switch'
 
 const StyledSwitch = styled(Switch)(({ theme }) => ({
   [`&.${switchClasses.root}`]: {
-    width: 80,
-    height: 36,
+    width: 44,
+    height: 24,
     padding: 0
   },
   [`& .${switchClasses.switchBase}`]: {
-    padding: '8px'
+    padding: '4px'
   },
   [`& .${switchClasses.thumb}`]: {
-    width: 20,
-    height: 20,
+    width: 16,
+    height: 16,
     backgroundColor: '#FFFFFF'
   },
   [`& .${switchClasses.track}`]: {
-    width: 80,
-    height: 36,
+    width: 44,
+    height: 24,
+    color: theme.palette.primary.contrastText,
     opacity: '1 !important',
-    backgroundColor: 'transparent',
-    border: '1px solid rgba(255,255,255,0.8)',
+    backgroundColor: '#D8D9DC',
+    border: '1px solid transparent',
     borderRadius: '49px',
     position: 'relative',
     '&:before, &:after': {
@@ -31,29 +32,20 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
       width: '50%',
       transform: 'translateY(-50%)',
       textAlign: 'center'
-    },
-    '&:before': {
-      content: '"On"',
-      left: 4,
-      opacity: 0
-    },
-    '&:after': {
-      content: '"Off"',
-      right: 4
     }
   },
   [`& .${switchClasses.checked}`]: {
     [`&.${switchClasses.switchBase}`]: {
-      transform: 'translateX(44px)',
+      transform: 'translateX(20px)',
       '&:hover': {}
     },
-    [`& .${switchClasses.thumb}`]: {
-      backgroundColor: theme.palette.primary.main
-    },
+    // [`& .${switchClasses.thumb}`]: {
+    //   backgroundColor: theme.palette.primary.main
+    // },
     [`& + .${switchClasses.track}`]: {
-      background: 'transparent !important',
+      background: theme.palette.primary.main + ' !important',
       opacity: '1 !important',
-      border: '1px solid rgba(255,255,255,0.8)',
+      border: '1px solid transparent',
       borderRadius: '49px',
       '&:before': {
         opacity: 1
@@ -67,10 +59,12 @@ const StyledSwitch = styled(Switch)(({ theme }) => ({
 
 export default function SwitchToggle({
   checked,
-  onChange
+  onChange,
+  disabled
 }: {
   checked: boolean
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  disabled?: boolean
 }) {
-  return <StyledSwitch checked={checked} onChange={onChange} />
+  return <StyledSwitch checked={checked} onChange={onChange} disabled={disabled} />
 }

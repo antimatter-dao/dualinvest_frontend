@@ -1,5 +1,5 @@
 import React, { ChangeEvent, InputHTMLAttributes } from 'react'
-import { InputBase, styled } from '@mui/material'
+import { InputBase, styled, Typography } from '@mui/material'
 import { inputBaseClasses } from '@mui/material/InputBase'
 import InputLabel from './InputLabel'
 
@@ -17,6 +17,7 @@ export interface InputProps {
   height?: string | number
   error?: boolean
   smallPlaceholder?: boolean
+  subStr?: string
 }
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -62,6 +63,7 @@ export default function Input({
   height,
   error,
   smallPlaceholder,
+  subStr,
   ...rest
 }: InputProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'color' | 'outline' | 'size'>) {
   return (
@@ -98,6 +100,11 @@ export default function Input({
         endAdornment={endAdornment && <span style={{ paddingRight: 20 }}>{endAdornment}</span>}
         {...rest}
       />
+      {subStr && (
+        <Typography fontSize={12} mt={12} sx={{ opacity: 0.5 }}>
+          {subStr}
+        </Typography>
+      )}
     </div>
   )
 }

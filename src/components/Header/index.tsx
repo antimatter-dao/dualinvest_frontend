@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { AppBar, Box, IconButton, MenuItem, styled as muiStyled, styled, Button as MuiButton } from '@mui/material'
 import { ExternalLink } from 'theme/components'
 import Web3Status from './Web3Status'
@@ -26,8 +26,16 @@ interface Tab extends TabContent {
 }
 
 export const Tabs: Tab[] = [
-  { title: 'Dual Investment', route: routes.dualInvest },
-  { title: 'Account', route: routes.account.replace(':tab', 'dashboard') },
+  {
+    title: 'Invest',
+    subTab: [
+      { title: 'Dual Investment', route: routes.dualInvest },
+      // { title: 'Chain-type Option', route: routes.chainOption },
+      { title: 'Recurring Vault', route: routes.recurringVault }
+    ]
+  },
+  // { title: 'Dual Investment', route: routes.dualInvest },
+  { title: 'Account', route: routes.accountTab.replace(':tab', 'dashboard') },
   { title: 'DAO', link: 'https://dao.antimatter.finance/#/' },
   { title: 'Docs', link: 'https://docs.antimatter.finance/' },
   {
@@ -49,6 +57,18 @@ export const Tabs: Tab[] = [
   }
 ]
 
+const navLinkSX = ({ theme }: any) => ({
+  textDecoration: 'none',
+  fontSize: 14,
+  color: theme.palette.text.primary,
+  opacity: 0.5,
+  '&:hover': {
+    opacity: 1
+  }
+})
+
+const StyledNavLink = styled(NavLink)(navLinkSX)
+
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   position: 'relative',
   height: theme.height.header,
@@ -57,7 +77,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   boxShadow: 'none',
-  padding: '0 60px 0 0',
+  padding: '0 60px 0 0!important',
   zIndex: theme.zIndex.drawer,
   borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
   // [theme.breakpoints.down('md')]: {
@@ -86,14 +106,14 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   },
   [theme.breakpoints.down('lg')]: {
     '& .link': { marginRight: 15 },
-    padding: '0 24px 0 0'
+    padding: '0 24px 0 0!important'
   },
   [theme.breakpoints.down('md')]: {
     position: 'fixed'
   },
   [theme.breakpoints.down('sm')]: {
     height: theme.height.mobileHeader,
-    padding: '0 20px'
+    padding: '0 20px!important'
   }
 }))
 
@@ -124,9 +144,9 @@ const MainLogo = styled(NavLink)(({ theme }) => ({
 }))
 
 const LinksWrapper = muiStyled('div')(({ theme }) => ({
-  marginLeft: 60.2,
+  marginLeft: 60,
   [theme.breakpoints.down('lg')]: {
-    marginLeft: 20
+    marginLeft: 0
   }
 }))
 
@@ -134,6 +154,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { openReferralModal } = useReferalModal()
   const { account } = useActiveWeb3React()
+  const { pathname } = useLocation()
 
   const handleReferral = useCallback(() => {
     openReferralModal(true)
@@ -156,47 +177,83 @@ export default function Header() {
             <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
                 subTab ? (
-                  <PlainSelect placeholder={title} key={title + idx} autoFocus={false}>
-                    {subTab.map((sub, idx) =>
-                      sub.link ? (
-                        <MenuItem
-                          key={sub.link + idx}
-                          sx={{ backgroundColor: 'transparent!important', background: 'transparent!important' }}
-                          selected={false}
-                        >
-                          <ExternalLink
-                            href={sub.link}
-                            className={'link'}
-                            color="#00000050"
-                            sx={{
-                              '&:hover': {
-                                color: '#232323!important'
-                              }
-                            }}
+                  <Box
+                    sx={{
+                      marginRight: {
+                        xs: 15,
+                        lg: 48
+                      },
+                      height: 'auto',
+                      paddingBottom: '30px',
+                      borderBottom: '2px solid transparent',
+                      borderColor: theme =>
+                        title === 'Invest' &&
+                        (pathname.includes(routes.chainOption) ||
+                          pathname.includes(routes.dualInvest) ||
+                          pathname.includes(routes.recurringVault))
+                          ? theme.palette.text.primary
+                          : 'transparnet',
+                      display: 'inline'
+                    }}
+                    key={title + idx}
+                  >
+                    <PlainSelect
+                      key={title + idx}
+                      placeholder={title}
+                      autoFocus={false}
+                      width={title === 'Invest' ? '70px' : undefined}
+                      style={{
+                        height: '16px'
+                      }}
+                    >
+                      {subTab.map((sub, idx) =>
+                        sub.link ? (
+                          <MenuItem
+                            key={sub.link + idx}
+                            sx={{ backgroundColor: 'transparent!important', background: 'transparent!important' }}
+                            selected={false}
                           >
-                            {sub.titleContent ?? sub.title}
-                          </ExternalLink>
-                        </MenuItem>
-                      ) : (
-                        <MenuItem key={sub.title + idx}>
-                          <NavLink to={sub.route ?? ''} className={'link'}>
-                            {sub.titleContent ?? sub.title}
-                          </NavLink>
-                        </MenuItem>
-                      )
-                    )}
-                  </PlainSelect>
+                            <ExternalLink
+                              href={sub.link}
+                              className={'link'}
+                              color="#00000050"
+                              sx={{
+                                '&:hover': {
+                                  color: '#232323!important'
+                                }
+                              }}
+                            >
+                              {sub.titleContent ?? sub.title}
+                            </ExternalLink>
+                          </MenuItem>
+                        ) : (
+                          <MenuItem key={sub.title + idx}>
+                            <StyledNavLink to={sub.route ?? ''}>{sub.titleContent ?? sub.title}</StyledNavLink>
+                          </MenuItem>
+                        )
+                      )}
+                    </PlainSelect>
+                  </Box>
                 ) : link ? (
                   <ExternalLink href={link} className={'link'} key={link + idx} style={{ fontSize: 14 }}>
                     {titleContent ?? title}
                   </ExternalLink>
                 ) : title === 'Referral' ? (
-                  <React.Fragment key={'referral'}>
+                  <React.Fragment key={'referral' + idx}>
                     {account && (
                       <MuiButton
                         disableRipple={true}
                         variant="text"
-                        sx={{ padding: 0, marginTop: 'auto', display: 'inline' }}
+                        sx={{
+                          padding: 0,
+                          height: 48,
+                          marginTop: 'auto',
+                          fontSize: 14,
+                          display: 'inline',
+                          '&:hover': {
+                            color: '#232323!important'
+                          }
+                        }}
                         className={'link'}
                         style={{ padding: 0, marginBottom: 0, borderBottom: 0 }}
                         onClick={handleReferral}
@@ -206,7 +263,22 @@ export default function Header() {
                     )}
                   </React.Fragment>
                 ) : (
-                  <NavLink key={title + idx} id={`${route}-nav-link`} to={route ?? ''} className={'link'}>
+                  <NavLink
+                    key={title + idx}
+                    id={`${route}-nav-link`}
+                    to={route ?? ''}
+                    className={
+                      (route
+                        ? pathname.includes(route)
+                          ? 'active'
+                          : pathname.includes('account')
+                          ? route.includes('account')
+                            ? 'active'
+                            : ''
+                          : ''
+                        : '') + ' link'
+                    }
+                  >
                     {titleContent ?? title}
                   </NavLink>
                 )

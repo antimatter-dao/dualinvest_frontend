@@ -1,16 +1,15 @@
 import { useMemo, useState } from 'react'
-import { Box, Typography, Container, Collapse } from '@mui/material'
+import { Box, Typography, Container } from '@mui/material'
 import Card from 'components/Card/Card'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
 import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useActiveWeb3React } from 'hooks'
-import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
+import { useOrderRecords, InvestStatus, INVEST_TYPE } from 'hooks/useAccountData'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
-import { AccordionButton } from './Position'
-import Divider from 'components/Divider'
+import HistoryTableCards from 'components/Account/HistoryTableCards'
 // import Button from 'components/Button/Button'
 import StatusTag from 'components/Status/StatusTag'
 // import { useShowClaimSuccessModal } from 'hooks/useSuccessImage'
@@ -37,11 +36,11 @@ const HistoryTableHeader = [
 
 const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '', '']
 
-export default function History() {
+export default function HistoryDualInvest() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
-  const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled, page, 8)
+  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, 'All', InvestStatus.Settled, page, 8)
   const [hiddenParts, setHiddenParts] = useState<JSX.Element[]>([])
   // const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
 
@@ -160,7 +159,7 @@ export default function History() {
             </Box>
           )}
           {data.summaryList.length && isDownMd ? (
-            <HistoryTableCards data={data} />
+            <HistoryTableCards data={data} header={HistoryTableHeader} moreHeader={HistoryMoreHeader} />
           ) : data.summaryList.length ? (
             <>
               <Table
@@ -180,63 +179,10 @@ export default function History() {
               />
             </>
           ) : (
-            <NoDataCard height="20vh" />
+            <NoDataCard height="40vh" />
           )}
         </Box>
       </Card>
-    </Box>
-  )
-}
-
-function HistoryTableCards({ data }: { data: { summaryList: any[][]; hiddenList: any[][] } }) {
-  const [expanded, setExpanded] = useState<null | number>(null)
-
-  return (
-    <Box display="flex" flexDirection="column" gap={8} mt={24} mb={24}>
-      {data.summaryList.map((dataRow, idx) => (
-        <Card key={idx} color="#F2F5FA" padding="17px 16px">
-          <Box display="flex" flexDirection="column" gap={16}>
-            {dataRow.map((datum, idx2) => {
-              return (
-                <Box key={idx2} display="flex" justifyContent="space-between">
-                  <Typography component="div" fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                    {HistoryTableHeader[idx2]}
-                  </Typography>
-                  <Typography fontSize={12} fontWeight={600} component="div">
-                    {datum}
-                  </Typography>
-                </Box>
-              )
-            })}
-            <Box marginLeft="auto">
-              <AccordionButton
-                onClick={() => {
-                  expanded === idx ? setExpanded(null) : setExpanded(idx)
-                }}
-                expanded={expanded === idx}
-              />
-            </Box>
-          </Box>
-
-          <Collapse in={expanded === idx && !!data.hiddenList[idx]}>
-            <Divider extension={16} color="1px solid #252525" />
-            <Box display="flex" flexDirection="column" gap={16} mt={20}>
-              {data.hiddenList[idx].map((datum, idx) => {
-                return (
-                  <Box key={idx} display="flex" justifyContent="space-between">
-                    <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                      {HistoryMoreHeader[idx]}
-                    </Typography>
-                    <Typography fontSize={12} fontWeight={600}>
-                      {datum}
-                    </Typography>
-                  </Box>
-                )
-              })}
-            </Box>
-          </Collapse>
-        </Card>
-      ))}
     </Box>
   )
 }

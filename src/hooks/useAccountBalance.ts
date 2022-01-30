@@ -2,12 +2,12 @@ import { useActiveWeb3React } from 'hooks'
 import { useCallback, useMemo, useState } from 'react'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useDualInvestContract } from './useContract'
-import { BTC, USDT } from 'constants/index'
 import { parseBalance } from 'utils/parseAmount'
 import { Token } from 'constants/token'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { Axios } from 'utils/axios'
 import { assetBalanceFormatter, BalanceInfo } from 'utils/fetch/balance'
+import { CURRENCIES } from 'constants/currencies'
 
 export function useCurrencyBalances(token: Token): BalanceInfo | undefined {
   const { account } = useActiveWeb3React()
@@ -49,31 +49,64 @@ export function useCurrencyBalances(token: Token): BalanceInfo | undefined {
 //   }, [btcRes, usdtRes])
 // }
 
-export function useAccountBalances(): { BTC: BalanceInfo | undefined; USDT: BalanceInfo | undefined } {
+export function useAccountBalances(): {
+  BTC: BalanceInfo | undefined
+  USDT: BalanceInfo | undefined
+  ETH: BalanceInfo | undefined
+} {
   const [btcRes, setBtcRes] = useState<BalanceInfo | undefined>(undefined)
   const [usdtRes, setUsdtRes] = useState<BalanceInfo | undefined>(undefined)
+  const [ethRes, setEthRes] = useState<BalanceInfo | undefined>(undefined)
   const { account, chainId } = useActiveWeb3React()
 
   const btcPromiseFn = useCallback(
-    () => Axios.post('getUserAssets', undefined, { account, chainId, currency: BTC.address, symbol: BTC.symbol }),
+    () =>
+      Axios.post('getUserAssets', undefined, {
+        account,
+        chainId,
+        currency: CURRENCIES.BTC.address,
+        symbol: CURRENCIES.BTC.symbol
+      }),
     [account, chainId]
   )
   const btcCallbackFn = useCallback(r => {
     setBtcRes(assetBalanceFormatter(r.data.data))
   }, [])
   const usdtPromiseFn = useCallback(
-    () => Axios.post('getUserAssets', undefined, { account, chainId, currency: USDT.address, symbol: USDT.symbol }),
+    () =>
+      Axios.post('getUserAssets', undefined, {
+        account,
+        chainId,
+        currency: CURRENCIES.USDT.address,
+        symbol: CURRENCIES.USDT.symbol
+      }),
     [account, chainId]
   )
   const usdtCallbackFn = useCallback(r => setUsdtRes(assetBalanceFormatter(r.data.data)), [])
 
-  usePollingWithMaxRetries(btcPromiseFn, btcCallbackFn, 30000)
-  usePollingWithMaxRetries(usdtPromiseFn, usdtCallbackFn, 30000)
+  const ethPromiseFn = useCallback(
+    () =>
+      Axios.post('getUserAssets', undefined, {
+        account,
+        chainId,
+        currency: CURRENCIES.ETH.address,
+        symbol: CURRENCIES.ETH.symbol
+      }),
+    [account, chainId]
+  )
+  const ethCallbackFn = useCallback(r => {
+    setEthRes(assetBalanceFormatter(r.data.data))
+  }, [])
+
+  usePollingWithMaxRetries(btcPromiseFn, btcCallbackFn, 300000)
+  usePollingWithMaxRetries(usdtPromiseFn, usdtCallbackFn, 300000)
+  usePollingWithMaxRetries(ethPromiseFn, ethCallbackFn, 30000)
 
   return useMemo(() => {
     return {
       BTC: btcRes,
+      ETH: ethRes,
       USDT: usdtRes
     }
-  }, [btcRes, usdtRes])
+  }, [btcRes, usdtRes, ethRes])
 }

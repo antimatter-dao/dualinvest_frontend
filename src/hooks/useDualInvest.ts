@@ -12,6 +12,7 @@ export function useDualInvestBalance(token?: Token) {
   const contract = useDualInvestContract()
   const { account } = useActiveWeb3React()
   const args = useMemo(() => [token?.address ?? '', account ?? undefined], [account, token])
+
   const balanceRes = useSingleCallResult(token ? contract : null, 'balances', args)
 
   return useMemo(() => {
@@ -24,7 +25,13 @@ export function useDualInvestCallback(): {
   withdrawCallback: undefined | ((amount: string, currency: string) => Promise<any>)
   createOrderCallback:
     | undefined
-    | ((orderId: string | number, productId: string, amount: string, currencyAddress: string) => Promise<any>)
+    | ((
+        orderId: string | number,
+        productId: string,
+        amount: string,
+        currencyAddress: string,
+        supplier: 0 | 1
+      ) => Promise<any>)
   finishOrderCallback: undefined | ((orderId: string, productId: string) => Promise<any>)
   checkOrderStatusCallback: undefined | ((orderId: number) => Promise<any>)
 } {
@@ -37,19 +44,20 @@ export function useDualInvestCallback(): {
         throw Error('no contract')
       }
       const estimatedGas = await contract.estimateGas.deposit(val, tokenAddress).catch((error: Error) => {
-        console.debug('Failed to create order', error)
+        console.debug('Failed to deposit', error)
         throw error
       })
       return contract?.deposit(val, tokenAddress, { gasLimit: estimatedGas })
     },
     [contract]
   )
+
   const withdraw = useCallback(
     (amount: string, currency: string): Promise<any> => {
       return new Promise(async (resolve, reject) => {
         try {
           if (!contract || !account || !chainId) {
-            throw Error('withdraw fail')
+            throw Error('Failed to withdraw')
           }
           const nonce = await contract?.withdrawNonces(account)
           const signRes = await Axios.getSignatures<SignatureRequest, Signature>(
@@ -94,15 +102,15 @@ export function useDualInvestCallback(): {
   )
 
   const createOrder = useCallback(
-    async (orderId, productId, amount, currencyAddress): Promise<any> => {
+    async (orderId, productId, amount, currencyAddress, supplier): Promise<any> => {
       if (!contract) return undefined
       const estimatedGas = await contract.estimateGas
-        .createOrder(orderId, productId, amount, currencyAddress)
+        .createOrder(orderId, productId, amount, currencyAddress, supplier)
         .catch((error: Error) => {
           console.debug('Failed to create order', error)
           throw error
         })
-      return contract?.createOrder(orderId, productId, amount, currencyAddress, {
+      return contract?.createOrder(orderId, productId, amount, currencyAddress, supplier, {
         gasLimit: calculateGasMargin(estimatedGas)
       })
     },

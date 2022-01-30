@@ -48,6 +48,56 @@
 			{
 				"indexed": true,
 				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "currency",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "AutoDeposit",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "currency",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "AutoWithdrawn",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
 				"name": "inviter",
 				"type": "address"
 			},
@@ -59,31 +109,6 @@
 			}
 		],
 		"name": "Bind",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "ChargeFee",
 		"type": "event"
 	},
 	{
@@ -198,6 +223,12 @@
 				"internalType": "uint256",
 				"name": "productId",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "suppliers",
+				"type": "uint256"
 			}
 		],
 		"name": "CreateOrder",
@@ -245,6 +276,37 @@
 			}
 		],
 		"name": "GovernorshipTransferred",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "currency",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "inviter",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "invitee",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "earned",
+				"type": "uint256"
+			}
+		],
+		"name": "InviteEarn",
 		"type": "event"
 	},
 	{
@@ -346,31 +408,6 @@
 			}
 		],
 		"name": "WithdrawnAuthorize",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "inviter",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "invitee",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "earned",
-				"type": "uint256"
-			}
-		],
-		"name": "inviteEarn",
 		"type": "event"
 	},
 	{
@@ -492,6 +529,211 @@
 				"type": "address"
 			}
 		],
+		"name": "autoBalances",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "autoBalances_lock",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "orderId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint8",
+				"name": "flag",
+				"type": "uint8"
+			},
+			{
+				"internalType": "uint256",
+				"name": "expiredAt",
+				"type": "uint256"
+			}
+		],
+		"name": "autoConfirmOrder",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "orderId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "productId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "currency",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "uint8",
+				"name": "suppliers",
+				"type": "uint8"
+			}
+		],
+		"name": "autoCreateOrder",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "currency",
+				"type": "address"
+			}
+		],
+		"name": "autoDeposit",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "orderId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "productId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "returnedCurrency",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "returnedAmount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "fee",
+				"type": "uint256"
+			},
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "signatory",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8",
+						"name": "v",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "r",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "s",
+						"type": "bytes32"
+					}
+				],
+				"internalType": "struct Dual_Invest.Signature[]",
+				"name": "signatures",
+				"type": "tuple[]"
+			}
+		],
+		"name": "autoFinishOrder",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "currency",
+				"type": "address"
+			}
+		],
+		"name": "autoWithdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
 		"name": "balances",
 		"outputs": [
 			{
@@ -584,6 +826,11 @@
 				"internalType": "address",
 				"name": "currency",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "suppliers",
+				"type": "uint256"
 			}
 		],
 		"name": "createOrder",
@@ -710,6 +957,19 @@
 		"name": "finishOrder",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAutoAdmin",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "autoAdmin",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -966,6 +1226,11 @@
 				"internalType": "uint8",
 				"name": "status",
 				"type": "uint8"
+			},
+			{
+				"internalType": "uint256",
+				"name": "suppliers",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -1032,6 +1297,11 @@
 						"internalType": "uint8",
 						"name": "status",
 						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "suppliers",
+						"type": "uint256"
 					}
 				],
 				"internalType": "struct Dual_Invest.Order",
@@ -1052,6 +1322,19 @@
 	{
 		"inputs": [],
 		"name": "resetReentrant",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_autoAdmin",
+				"type": "address"
+			}
+		],
+		"name": "setAutoAdmin",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

@@ -1,22 +1,8 @@
+import { SYMBOL_MAP } from 'constants/currencies'
+
 const TYPE = {
   call: 'CALL',
   put: 'PUT'
-}
-
-export enum InvesStatusType {
-  SUCCESS = 'success',
-  PENDING = 'pending',
-  ERROR = 'error'
-}
-
-export const InvesStatus = {
-  [1]: InvesStatusType.PENDING,
-  [2]: InvesStatusType.SUCCESS,
-  [3]: InvesStatusType.SUCCESS,
-  [4]: InvesStatusType.SUCCESS,
-  [5]: InvesStatusType.ERROR,
-  [6]: InvesStatusType.PENDING,
-  [7]: InvesStatusType.ERROR
 }
 
 export interface createOrder {
@@ -67,38 +53,10 @@ export interface Product {
   strikeCurrency: string
 }
 
-export interface ProductList {
-  call: Product[]
-  put: Product[]
-}
+export type SingleCurProductList = { call: Product[]; put: Product[] }
 
-export interface OrderRecord {
-  address: string
-  amount: number
-  annualRor: string
-  confirmOrderHash: string
-  createdAt: number
-  currency: string
-  deliveryPrice: string
-  earn: string
-  expiredAt: number
-  hash: string
-  indexPrice: string
-  investStatus: number
-  investCurrency: string
-  isLiquidated: string
-  multiplier: string
-  orderId: number
-  price: string
-  productId: number
-  returnedAmount: string
-  returnedCurrency: string
-  signCount: string
-  status: string
-  strikeCurrency: string
-  strikePrice: string
-  ts: number
-  type: string
+export type ProductList = {
+  [key in Partial<keyof typeof SYMBOL_MAP>]: SingleCurProductList
 }
 
 export const productFormatter = (raw: ProductRaw): Product => {
@@ -122,17 +80,18 @@ export const productFormatter = (raw: ProductRaw): Product => {
 }
 
 export const productListFormatter = (raw: ProductRaw[]): ProductList => {
-  return raw.reduce(
-    (acc, item) => {
-      const res = productFormatter(item)
-      if (item.is_active === false) return acc
-      if (item.type === TYPE.call) {
-        acc.call.push(res)
-      } else {
-        acc.put.push(res)
+  return raw.reduce((acc, item) => {
+    if (!acc[item.currency as Partial<keyof typeof SYMBOL_MAP>]) {
+      acc[item.currency as Partial<keyof typeof SYMBOL_MAP>] = {
+        call: [],
+        put: []
       }
-      return acc
-    },
-    { call: [], put: [] } as { call: any[]; put: any[] }
-  )
+    }
+    if (item.type === TYPE.call) {
+      acc[item.currency as Partial<keyof typeof SYMBOL_MAP>].call.push(productFormatter(item))
+    } else {
+      acc[item.currency as Partial<keyof typeof SYMBOL_MAP>].put.push(productFormatter(item))
+    }
+    return acc
+  }, {} as ProductList)
 }

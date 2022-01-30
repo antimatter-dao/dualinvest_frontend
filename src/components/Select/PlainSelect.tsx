@@ -1,59 +1,97 @@
-import React from 'react'
-import { Select as MuiSelect, styled, InputBase } from '@mui/material'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import React, { useState } from 'react'
+import { Button, Fade, Menu } from '@mui/material'
 
 interface Props {
   children?: React.ReactNode
   placeholder: string
   autoFocus?: boolean
+  width?: string
+  style?: React.CSSProperties
 }
 
-const StyledSelect = styled(MuiSelect)(({ theme }) => ({
-  backgroundColor: 'transparent',
-  cursor: 'pointer',
-  width: '72px',
-  position: 'relative',
-  border: 'none',
-  color: theme.palette.text.primary,
-  opacity: 0.5,
-  '& .MuiSelect-icon': {
-    color: theme.palette.text.primary,
-    right: '16px',
-    fontSize: '16px'
-  },
-  // '&.Mui-focused': {
-  //   backgroundColor: 'transparent'
-  // },
-  '&:hover': {
-    opacity: 1,
-    '& .MuiOutlinedInput-notchedOutline': {
-      border: 'none'
-    }
-  },
-  '&.Mui-focused': {
-    opacity: 1
-  }
-}))
+// const StyledSelect = styled(MuiSelect, { shouldForwardProp: () => true })<{ width?: string }>(({ theme, width }) => ({
+//   backgroundColor: 'transparent',
+//   cursor: 'pointer',
+//   width: width ?? '62px',
+//   position: 'relative',
+//   border: 'none',
+//   color: theme.palette.text.primary,
+//   opacity: 0.5,
+
+//   // '&.Mui-focused': {
+//   //   backgroundColor: 'transparent'
+//   // },
+//   '&:hover': {
+//     opacity: 1
+//   },
+//   '&.Mui-focused': {
+//     opacity: 1
+//   }
+// }))
 
 export default function Select(props: Props) {
-  const { children, placeholder, autoFocus } = props
+  const { children, placeholder, autoFocus, style } = props
+
+  const [anchorEl, setAnchorEl] = useState<any>(null)
+  const open = Boolean(anchorEl)
+
+  const handleClick = (event: any) => {
+    event.currentTarget && setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
 
   return (
-    <StyledSelect
-      sx={{
-        '&:before': {
-          position: 'absolute',
-          zIndex: -1,
-          content: '"' + placeholder ? `'${placeholder}'` : '' + '"',
-          fontSize: 14,
-          fontWeight: 400
-        }
-      }}
-      autoFocus={autoFocus}
-      autoWidth
-      placeholder={placeholder}
-      MenuProps={{
-        sx: {
+    <>
+      <Button
+        component="a"
+        type="button"
+        disableRipple
+        id="fade-button"
+        aria-controls={open ? 'fade-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+        sx={{
+          borderRadius: 0,
+          padding: 0,
+          color: theme => theme.palette.text.primary,
+          opacity: open ? 1 : 0.5,
+          '&:hover': {
+            color: theme => theme.palette.text.primary,
+            opacity: 1
+          },
+          '&.Mui-focused': {
+            color: theme => theme.palette.text.primary,
+            opacity: 1
+          },
+          ...style
+        }}
+      >
+        {placeholder}
+        <svg
+          width="10"
+          height="7"
+          viewBox="0 0 10 7"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ transform: open ? 'rotate(180deg)' : 'rotate(0)', stroke: '1px', marginLeft: 8 }}
+        >
+          <path d="M9.48535 1.24268L5.24271 5.48532L1.00007 1.24268" stroke="currentColor" />
+        </svg>
+      </Button>
+      <Menu
+        id="fade-menu"
+        MenuListProps={{
+          'aria-labelledby': 'fade-button'
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        onClick={handleClose}
+        TransitionComponent={Fade}
+        sx={{
           '& .MuiPaper-root': {
             width: 'max-content',
             borderRadius: '14px',
@@ -83,21 +121,28 @@ export default function Select(props: Props) {
               backgroundColor: 'transparent'
             }
           }
-        },
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'left'
-        },
-        transformOrigin: {
-          vertical: 'top',
-          horizontal: 'left'
-        }
-      }}
-      IconComponent={ExpandMoreIcon}
-      input={<InputBase />}
-      renderValue={() => ''}
-    >
-      {children}
-    </StyledSelect>
+        }}
+        autoFocus={autoFocus}
+        // autoWidth
+        placeholder={placeholder}
+        // MenuProps={{
+
+        //   },
+        //   anchorOrigin: {
+        //     vertical: 'bottom',
+        //     horizontal: 'left'
+        //   },
+        //   transformOrigin: {
+        //     vertical: 'top',
+        //     horizontal: 'left'
+        //   }
+        // }}
+        // IconComponent={ExpandMoreIcon}
+        // input={<InputBase sx={{ paddingRight: '0px' }} />}
+        // renderValue={() => ''}
+      >
+        {children}
+      </Menu>
+    </>
   )
 }

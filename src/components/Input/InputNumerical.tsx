@@ -4,6 +4,7 @@ import Input, { InputProps } from './index'
 import { escapeRegExp } from 'utils'
 import SecondaryButton from 'components/Button/SecondaryButton'
 import InputLabel from './InputLabel'
+import TextButton from 'components/Button/TextButton'
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
@@ -16,6 +17,8 @@ export default function NumericalInput({
   label,
   unit,
   endAdornment,
+  onDeposit,
+  subStr,
   ...props
 }: InputProps &
   InputHTMLAttributes<HTMLInputElement> & {
@@ -23,6 +26,8 @@ export default function NumericalInput({
     balance?: string
     unit?: string
     endAdornment?: JSX.Element
+    onDeposit?: () => void
+    subStr?: string
   }) {
   const enforcer = (nextUserInput: string) => {
     const fixed = nextUserInput.replace(/,/g, '.')
@@ -54,6 +59,11 @@ export default function NumericalInput({
               <InputLabel style={{ fontSize: '12px' }}>
                 Available: {balance} {unit ?? 'MATTER'}
               </InputLabel>
+            )}
+            {onDeposit && (
+              <TextButton fontSize={12} color="#11BF2D" style={{ marginLeft: 8 }}>
+                Deposit
+              </TextButton>
             )}
           </Box>
         </Box>
@@ -91,6 +101,7 @@ export default function NumericalInput({
             </Box>
           )
         }
+        subStr={subStr}
       />
     </Box>
   )
