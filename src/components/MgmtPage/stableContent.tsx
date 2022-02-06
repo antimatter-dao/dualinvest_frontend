@@ -89,7 +89,7 @@ export function RiskStatement({ subject }: { subject: Subject }) {
     }
 
     return listItems[subject]
-  }, [subject])
+  }, [subject, theme.palette.primary.main])
 
   return (
     <Box padding="32px 24px" display="grid" gap={29}>

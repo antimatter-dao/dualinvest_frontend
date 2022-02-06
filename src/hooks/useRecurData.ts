@@ -69,7 +69,8 @@ export enum RECUR_TOGGLE_STATUS {
 }
 
 export function useRecurToggle(
-  curAddress: string | undefined
+  curAddress: string | undefined,
+  vaultAddress: string | undefined
 ): {
   recurStatus: RECUR_TOGGLE_STATUS | null
   toggleRecur: (setting: RECUR_TOGGLE_STATUS | null) => void
@@ -85,13 +86,15 @@ export function useRecurToggle(
           ? {
               account,
               currency: curAddress,
-              sign: SHA1(`@#MATTER@#invest#${account}#$${curAddress}#$`).toString()
+              investCurrency: vaultAddress,
+              sign: SHA1(`@#MATTER@#invest#${account}#$${curAddress}#$${vaultAddress}#$`).toString()
             }
           : {
               account,
               currency: curAddress,
+              investCurrency: vaultAddress,
               type: setting,
-              sign: SHA1(`@#MATTER@#invest#${account}#$${curAddress}#$${setting}#$`).toString()
+              sign: SHA1(`@#MATTER@#invest#${account}#$${curAddress}#$${vaultAddress}#$${setting}#$`).toString()
             }
       ).then(r => {
         if (r.data.data) {
@@ -99,7 +102,7 @@ export function useRecurToggle(
         }
       })
     },
-    [account, curAddress]
+    [account, curAddress, vaultAddress]
   )
 
   useEffect(() => {
