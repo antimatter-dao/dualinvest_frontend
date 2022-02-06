@@ -45,7 +45,7 @@ export default function VaultForm({
   const { redeemCallback, investCallback } = useRecurCallback()
   const { pnl } = useRecurPnl(currencySymbol)
   const { autoLockedBalance, autoBalance, autoBalanceRaw } = useRecurBalance(currency, investCurrency)
-  const { recurStatus, toggleRecur } = useRecurToggle(product ? investCurrency?.address : undefined)
+  const { recurStatus, toggleRecur } = useRecurToggle(product ? investCurrency?.address : undefined, currency?.address)
   const { account } = useActiveWeb3React()
   const contractBalance = useDualInvestBalance(investCurrency)
   const { showModal, hideModal } = useModal()
