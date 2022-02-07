@@ -39,7 +39,7 @@ export default function SubscribeForm({
   setAmount: (val: string) => void
   id: string
 }) {
-  const [currentCurrency, setCurrentCurrency] = useState(CURRENCIES.BTC)
+  const [currentCurrency, setCurrentCurrency] = useState(CURRENCIES[product?.investCurrency ?? 'BTC'])
   const [pending, setPending] = useState(false)
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const multiplier = product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1
@@ -212,8 +212,8 @@ export default function SubscribeForm({
   )
 
   useEffect(() => {
-    setCurrentCurrency(CURRENCIES[product ? product.investCurrency : 'BTC'])
-  }, [product])
+    setCurrentCurrency(CURRENCIES[product?.investCurrency ?? 'BTC'])
+  }, [product?.investCurrency])
 
   return (
     <>
