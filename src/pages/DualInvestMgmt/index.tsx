@@ -45,7 +45,7 @@ export default function DualInvestMgmt() {
         <span style={{ color: theme.palette.text.primary }}>{gtStr}</span>.
       </>,
       <>
-        When the settlement price is &le; {strikePrice} USDT, you will receive{' '}
+        When the settlement price &le; {strikePrice} USDT, you will receive{' '}
         <span style={{ color: theme.palette.text.primary }}>{ltStr}</span>.
       </>,
       <>
