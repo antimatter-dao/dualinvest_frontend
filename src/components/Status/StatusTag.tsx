@@ -17,18 +17,16 @@ const statusStyles: { [key in StatusType]: Style } = {
   progressing: {
     statusText: 'Progressing',
     color: '#18A0FB',
-    bgColor: 'transparent',
-    borderColor: '#18A0FB'
+    bgColor: '#18A0FB16'
   },
   finished: {
     statusText: 'Finished',
     color: '#31B047',
-    bgColor: 'transparent',
-    borderColor: '#31B047'
+    bgColor: 'rgba(49, 176, 71, 0.16)'
   },
   completed: { statusText: 'Completed', color: '#11BF2D', bgColor: 'rgba(17, 191, 45, 0.16)' },
   failed: { statusText: 'Failed', color: '#FF0000', bgColor: 'rgba(255,3,3,0.16)' },
-  unexercised: { statusText: 'Unexercised', color: '#F0B90B', bgColor: '#F0B90B16' },
+  unexercised: { statusText: 'Unexercised', color: '#F0B90B', bgColor: '#F0B90B26' },
   exercised: { statusText: 'Exercised', color: '#31B047', bgColor: 'rgba(49, 176, 71, 0.16)' }
 }
 

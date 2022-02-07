@@ -32,6 +32,7 @@ export enum PositionMoreHeaderIndex {
 }
 
 export enum PositionTableHeaderIndex {
+  token,
   investAmount,
   subscribedTime,
   apy,
@@ -130,7 +131,7 @@ export default function PositionRecur() {
                 }}
               >
                 {idx === PositionMoreHeaderIndex.Status ? (
-                  <Box margin="0 auto" width="max-content">
+                  <Box margin="0 52px 0 auto" width="max-content">
                     {datum}
                   </Box>
                 ) : (
