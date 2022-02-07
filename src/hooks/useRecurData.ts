@@ -118,7 +118,7 @@ export function useRecurToggle(
   }, [status, callback])
 }
 
-export function useRecurActiveOrderCount(curSymbol: string | undefined) {
+export function useRecurActiveOrderCount(vaultSymbol: string | undefined, curSymbol: string | undefined) {
   const [count, setCount] = useState(0)
   const { account } = useActiveWeb3React()
 
@@ -127,9 +127,10 @@ export function useRecurActiveOrderCount(curSymbol: string | undefined) {
     return Axios.get<OrderRecord[]>('getOrderRecord', {
       address: account,
       investType: INVEST_TYPE.recur,
-      currency: curSymbol
+      currency: vaultSymbol,
+      investCurrency: curSymbol
     })
-  }, [account, curSymbol])
+  }, [account, curSymbol, vaultSymbol])
 
   const callbackFn = useCallback(r => {
     if (!r.data.data.records) return
