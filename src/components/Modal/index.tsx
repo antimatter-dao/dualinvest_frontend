@@ -1,8 +1,9 @@
 import React from 'react'
-import { Dialog, useTheme } from '@mui/material'
+import { Dialog, useTheme, Box, Slide, Fade, SlideProps, FadeProps } from '@mui/material'
 import useModal from 'hooks/useModal'
 import { useRef } from 'react'
 import { CloseIcon } from 'theme/components'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 interface Props {
   children?: React.ReactNode
@@ -17,6 +18,11 @@ interface Props {
   background?: string
   backdropColor?: string
 }
+
+const Transition = React.forwardRef<unknown, SlideProps | FadeProps>(function Transition(props, ref) {
+  const isDownSm = useBreakpoint()
+  return isDownSm ? <Slide direction="up" ref={ref} {...props} /> : <Fade ref={ref} {...props} />
+})
 
 export default function Modal(props: Props) {
   const {
@@ -49,6 +55,7 @@ export default function Modal(props: Props) {
             alignItems: { xs: !isCardOnMobile ? 'flex-end' : 'center', sm: 'center' }
           }
         }}
+        TransitionComponent={Transition}
         PaperProps={{
           ref: node,
           sx: {
@@ -58,10 +65,10 @@ export default function Modal(props: Props) {
               background: theme => background ?? theme.palette.background.paper,
               border: hasBorder ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid transparent',
               boxShadow: 'unset',
-              padding: padding || 0,
+              padding: 0,
               boxSizing: 'border-box',
               borderRadius: 2,
-              marginBottom: { xs: 0, sm: 100 },
+              marginBottom: { xs: 0, sm: '10vh' },
               overflowX: 'hidden',
               position: 'absolute',
               overflowY: 'auto',
@@ -96,8 +103,10 @@ export default function Modal(props: Props) {
         }}
         onClose={hide}
       >
-        {closeIcon && <CloseIcon onClick={hide} />}
-        {children}
+        <Box width="100%" height="100%" position="relative" padding={padding || 0}>
+          {closeIcon && <CloseIcon onClick={hide} />}
+          {children}
+        </Box>
       </Dialog>
     </>
   )

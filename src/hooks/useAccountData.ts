@@ -4,6 +4,7 @@ import { OrderRecord } from 'utils/fetch/record'
 import { useActiveWeb3React } from 'hooks'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
+import { AccountRecord } from 'utils/fetch/account'
 
 export enum InvestStatus {
   Confirming = 1,
@@ -42,6 +43,7 @@ export function useOrderRecords(
 
   const filteredOrderList = useMemo(() => {
     if (!Array.isArray(investStatus) || !orderList) return undefined
+    console.log(orderList)
     return orderList.reduce((acc, order) => {
       if (currency !== 'All' && order.currency !== currency) {
         return acc
@@ -74,7 +76,7 @@ export function useOrderRecords(
       investType,
       investStatus: Array.isArray(investStatus) ? undefined : investStatus,
       pageNum: Array.isArray(investStatus) ? undefined : pageNum,
-      pageSize
+      pageSize: Array.isArray(investStatus) ? undefined : pageSize
     })
   }, [account, investStatus, investType, pageNum, pageSize])
 
@@ -105,4 +107,34 @@ export function useOrderRecords(
       }
     }
   }, [filteredOrderList, investStatus, orderList, pageCount, pageNum, pageParams])
+}
+
+export function useAccountRecord(pageNum = 1, pageSize = 8) {
+  const { account } = useActiveWeb3React()
+  const [accountRecord, setAccountRecord] = useState<AccountRecord | undefined>(undefined)
+  const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
+    count: 0,
+    perPage: 0,
+    total: 0
+  })
+
+  const promiseFn = useCallback(() => {
+    if (!account) return new Promise((resolve, reject) => reject(null))
+    return Axios.get('getAccountRecord', { account, pageNum, pageSize })
+  }, [account, pageNum, pageSize])
+
+  const callbackFn = useCallback(r => {
+    setAccountRecord(r.data.data)
+    setPageParams({
+      count: parseInt(r.data.data.pages, 10),
+      perPage: parseInt(r.data.data.size, 10),
+      total: parseInt(r.data.data.total, 10)
+    })
+  }, [])
+
+  usePollingWithMaxRetries(promiseFn, callbackFn)
+
+  return useMemo(() => {
+    return { accountRecord, pageParams }
+  }, [accountRecord, pageParams])
 }

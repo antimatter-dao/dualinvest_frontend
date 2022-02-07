@@ -124,7 +124,11 @@ export function useRecurActiveOrderCount(curSymbol: string | undefined) {
 
   const promiseFn = useCallback(() => {
     if (!account) return new Promise((resolve, reject) => reject(null))
-    return Axios.get<OrderRecord[]>('getOrderRecord', { account, investType: INVEST_TYPE.recur, currency: curSymbol })
+    return Axios.get<OrderRecord[]>('getOrderRecord', {
+      address: account,
+      investType: INVEST_TYPE.recur,
+      currency: curSymbol
+    })
   }, [account, curSymbol])
 
   const callbackFn = useCallback(r => {
@@ -132,7 +136,6 @@ export function useRecurActiveOrderCount(curSymbol: string | undefined) {
     const list = r.data.data.records.filter((record: OrderRecord) => {
       return [InvestStatus.Ordered, InvestStatus.ReadyToSettle].includes(record.investStatus)
     })
-
     setCount(list.length)
   }, [])
 
