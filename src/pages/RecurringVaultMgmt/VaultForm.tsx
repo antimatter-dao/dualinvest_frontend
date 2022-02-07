@@ -113,7 +113,7 @@ export default function VaultForm({
     try {
       const r = await investCallback(val, currency.address, investCurrency.address)
       hideModal()
-
+      toggleRecur(RECUR_TOGGLE_STATUS.open)
       addPopup(r, {
         summary: `Subscribed ${(
           +investAmount * (product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
@@ -124,7 +124,6 @@ export default function VaultForm({
         }`
       })
       setInvestAmount('')
-      toggleRecur(RECUR_TOGGLE_STATUS.open)
       showModal(<TransactionSubmittedModal />)
     } catch (e) {
       setInvestAmount('')
@@ -166,15 +165,15 @@ export default function VaultForm({
   }, [investCurrency, redeemCallback, product, currency, showModal, autoBalanceRaw, addPopup, autoBalance, hideModal])
 
   const error = useMemo(() => {
-    if (!product || !autoBalance) return ''
+    if (!product || !contractBalance) return ''
     let str = ''
     if (
       investAmount !== '' &&
-      +autoBalance < +investAmount * +product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice)
+      +contractBalance < +investAmount * +product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice)
     )
       str = ErrorType.insufficientBalance
     return str
-  }, [autoBalance, investAmount, product])
+  }, [contractBalance, investAmount, product])
 
   return (
     <>

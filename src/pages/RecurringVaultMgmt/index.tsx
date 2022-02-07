@@ -46,7 +46,7 @@ export default function RecurringValueMgmt() {
         .
       </>,
       <>
-        When the settlement price is &lt; 62,800 USDT, you will receive{' '}
+        When the settlement price &lt; 62,800 USDT, you will receive{' '}
         <span style={{ color: theme.palette.text.primary }}>
           Subscription Amount * [1 + (APY% * Period (days) / 365)]
         </span>
