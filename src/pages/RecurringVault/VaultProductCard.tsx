@@ -8,8 +8,9 @@ import { OutlinedCard } from 'components/Card/Card'
 import { RecurProduct } from 'utils/fetch/recur'
 import Spinner from 'components/Spinner'
 import dayjs from 'dayjs'
-import { useRecurPnl } from 'hooks/useRecurData'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
+import { useRecurBalance } from 'hooks/useRecur'
+import { CURRENCIES } from 'constants/currencies'
 
 export default function VaultProductCard({
   logoCurSymbol,
@@ -28,7 +29,11 @@ export default function VaultProductCard({
   color: string
   product: RecurProduct | undefined
 }) {
-  const { totalReInvest } = useRecurPnl(product?.investCurrency)
+  const { autoLockedBalance } = useRecurBalance(
+    CURRENCIES[product?.currency ?? ''] ?? undefined,
+    CURRENCIES[product?.investCurrency ?? ''] ?? undefined
+  )
+
   return (
     <Box
       display="grid"
@@ -56,7 +61,7 @@ export default function VaultProductCard({
         <Box display={{ xs: 'grid' }} gap={24} gridTemplateColumns={{ xs: '100%', md: '35% auto' }}>
           <NumericalCard value={product?.apy ?? '-'} subValue="Current APY" border valueColor={color} />
           <NumericalCard
-            value={toLocaleNumberString(totalReInvest) + (product?.investCurrency ?? '-')}
+            value={toLocaleNumberString(autoLockedBalance) + (product?.investCurrency ?? '-')}
             subValue="Your existing position"
             border
           >

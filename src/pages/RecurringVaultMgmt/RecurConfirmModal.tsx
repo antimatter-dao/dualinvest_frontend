@@ -21,7 +21,9 @@ export default function RecurConfirmModal(props: Props) {
         When you stop recurring, all your existing orders will not be taken into next cycle and you can redeem your
         tokens once your existing orders expire.
       </Typography>
-      <Button onClick={onConfirm}>Confirm</Button>
+      <Button onClick={onConfirm} height="60px">
+        Confirm
+      </Button>
     </Modal>
   )
 }

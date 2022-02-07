@@ -89,7 +89,9 @@ export default function ConfirmModal({
         })}
       </Box>
 
-      <Button onClick={onConfirm}>Confirm</Button>
+      <Button onClick={onConfirm} height="60px">
+        Confirm
+      </Button>
       {showCancelWarning && (
         <Box>
           <InfoOutlinedIcon sx={{ color: theme.palette.primary.main, height: 12 }} />
