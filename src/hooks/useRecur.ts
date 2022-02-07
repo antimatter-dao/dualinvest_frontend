@@ -13,9 +13,9 @@ export function useRecurBalance(
   const { account } = useActiveWeb3React()
 
   const args = useMemo(() => [currency?.address ?? '', investCucrrency?.address ?? '', account ?? undefined], [
-    account,
     currency?.address,
-    investCucrrency?.address
+    investCucrrency?.address,
+    account
   ])
 
   const autoBalanceRes = useSingleCallResult(currency ? contract : null, 'autoBalances', args)
