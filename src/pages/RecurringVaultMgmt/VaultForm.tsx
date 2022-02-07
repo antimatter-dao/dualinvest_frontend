@@ -54,7 +54,7 @@ export default function VaultForm({
   const contractBalance = useDualInvestBalance(investCurrency)
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()
-  const activeOrderCount = useRecurActiveOrderCount(investCurrency?.symbol)
+  const activeOrderCount = useRecurActiveOrderCount(currency?.symbol, investCurrency?.symbol)
 
   const formData = useMemo(
     () => ({
