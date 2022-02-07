@@ -61,7 +61,10 @@ export default function VaultProductCard({
         <Box display={{ xs: 'grid' }} gap={24} gridTemplateColumns={{ xs: '100%', md: '35% auto' }}>
           <NumericalCard value={product?.apy ?? '-'} subValue="Current APY" border valueColor={color} />
           <NumericalCard
-            value={toLocaleNumberString(autoLockedBalance) + (product?.investCurrency ?? '-')}
+            value={
+              (autoLockedBalance === '-' ? '-' : toLocaleNumberString(autoLockedBalance)) +
+              (product?.investCurrency ?? '-')
+            }
             subValue="Your existing position"
             border
           >
