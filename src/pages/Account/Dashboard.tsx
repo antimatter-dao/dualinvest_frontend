@@ -18,7 +18,7 @@ import { routes } from 'constants/routes'
 import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
-import { useAccountRecord } from 'hooks/useDualInvestData'
+import { useAccountRecord } from 'hooks/useAccountData'
 import Spinner from 'components/Spinner'
 import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
@@ -37,9 +37,11 @@ enum BalanceTableHeaderIndex {
   actions
 }
 
-const RecordType: { [key in number]: 'withdraw' | 'deposit' } = {
+const RecordType: { [key in number]: 'withdraw' | 'deposit' | 'vault deposit' | 'vault withdraw' } = {
   1: 'deposit',
-  2: 'withdraw'
+  2: 'withdraw',
+  3: 'vault deposit',
+  4: 'vault withdraw'
 }
 
 const BalanceTableHeader = ['', 'Deposit Amount', 'Available', 'Investing(Locked)', 'PnL', '']

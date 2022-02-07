@@ -28,7 +28,8 @@ export default function VaultForm({
   onWithdraw,
   onInvest,
   redeemDisabled,
-  investDisabled
+  investDisabled,
+  error
 }: {
   formula: string
   formData: { [key: string]: any }
@@ -42,6 +43,7 @@ export default function VaultForm({
   onInvest: () => void
   redeemDisabled: boolean
   investDisabled: boolean
+  error: string
 }) {
   return (
     <Box width="100%" position="relative">
@@ -50,6 +52,7 @@ export default function VaultForm({
         tabPadding="12px"
         contents={[
           <Form
+            error={error}
             key="invest"
             type={TYPE.invest}
             formData={formData}
@@ -101,7 +104,8 @@ function Form({
   multiplier,
   formula,
   onClick,
-  disabled
+  disabled,
+  error
 }: {
   type: TYPE
   formData: { [key: string]: any }
@@ -113,6 +117,7 @@ function Form({
   formula: string
   onClick: () => void
   disabled: boolean
+  error?: string
 }) {
   const { account } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
@@ -156,6 +161,7 @@ function Form({
       {type === TYPE.invest && val !== undefined && onChange && (
         <Box>
           <InputNumerical
+            error={!!error}
             smallPlaceholder
             placeholder={`Each unit represents ${multiplier} ${currencySymbol}`}
             onChange={handleChange}
@@ -163,6 +169,20 @@ function Form({
             value={val}
             disabled={!account}
           />
+          {error && (
+            <Box display="flex" mt={6}>
+              <InfoOutlinedIcon sx={{ color: theme => theme.palette.error.main, height: 12 }} />
+              <Typography component="p" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
+                {
+                  <>
+                    <Typography component="span" color="error" fontSize={12}>
+                      {error}
+                    </Typography>
+                  </>
+                }
+              </Typography>
+            </Box>
+          )}
           <Box mt={12}>
             <Box display="flex" justifyContent="space-between">
               <InputLabel>{TYPE.invest} Amount</InputLabel>
@@ -217,7 +237,7 @@ function Form({
       )}
       <Box mt={16}>
         {account ? (
-          <Button onClick={onClick} disabled={disabled}>
+          <Button onClick={onClick} disabled={disabled || !!error}>
             {type}
           </Button>
         ) : (

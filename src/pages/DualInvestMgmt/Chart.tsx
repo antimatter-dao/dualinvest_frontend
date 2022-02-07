@@ -41,8 +41,8 @@ export default function DualInvestChart({
           <LineChart
             lineColor="#18A0FB"
             lineSeriesData={priceSet}
-            unit="BTC"
-            id="incomeGraph"
+            unit={product.currency}
+            id={product.currency + 'PriceGraph'}
             height={graphContainer?.current?.offsetHeight ?? 280}
             strikeData={strikeLineData}
           />

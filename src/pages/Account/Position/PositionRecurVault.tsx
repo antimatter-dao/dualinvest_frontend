@@ -198,7 +198,7 @@ export default function PositionRecur() {
                       Please visit specific recurring page to cancel your recurring plan
                     </Typography>
                   </Box>
-                  <Button height="32px" width="120px">
+                  <Button height="32px" width="120px" onClick={handleGoInvest}>
                     Adjust
                   </Button>
                 </Box>

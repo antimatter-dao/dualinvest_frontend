@@ -54,7 +54,9 @@ export default function RedeemConfirmModal({ isOpen, onDismiss, onConfirm, amoun
         )}
       </Box>
 
-      <Button onClick={onConfirm}>Confirm</Button>
+      <Button onClick={onConfirm} height="60px">
+        Confirm
+      </Button>
     </Modal>
   )
 }

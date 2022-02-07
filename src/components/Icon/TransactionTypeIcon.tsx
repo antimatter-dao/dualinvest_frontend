@@ -3,7 +3,7 @@ import { ReactComponent as WithdrawIcon } from 'assets/svg/withdraw.svg'
 import { ReactComponent as DepositIcon } from 'assets/svg/deposit.svg'
 
 interface Props {
-  txType: 'withdraw' | 'deposit'
+  txType: 'withdraw' | 'deposit' | 'vault withdraw' | 'vault deposit'
 }
 
 export default function TransactionTypeIcon(props: Props) {
@@ -20,6 +20,18 @@ export default function TransactionTypeIcon(props: Props) {
       return (
         <Box>
           <DepositIcon /> Deposit
+        </Box>
+      )
+    case 'vault withdraw':
+      return (
+        <Box>
+          <WithdrawIcon /> Vault Withdraw
+        </Box>
+      )
+    case 'vault deposit':
+      return (
+        <Box>
+          <DepositIcon /> Vault Deposit
         </Box>
       )
     default:

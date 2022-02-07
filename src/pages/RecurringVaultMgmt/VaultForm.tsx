@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo } from 'react'
 import { Box, Alert, Typography } from '@mui/material'
+import dayjs from 'dayjs'
 import VaultCard from 'components/MgmtPage/VaultCard'
 import VaultFormComponent from 'components/MgmtPage/VaultForm'
 import { useActiveWeb3React } from 'hooks'
@@ -18,7 +19,10 @@ import TransactionSubmittedModal from 'components/Modal/TransactionModals/Transa
 import RedeemConfirmModal from './RedeemConfirmModal'
 import InvestConfirmModal from './InvestConfirmModal'
 import { feeRate } from 'constants/index'
-import dayjs from 'dayjs'
+
+enum ErrorType {
+  insufficientBalance = 'Insufficient Balance'
+}
 
 export default function VaultForm({
   product,
@@ -120,13 +124,25 @@ export default function VaultForm({
         }`
       })
       setInvestAmount('')
+      toggleRecur(RECUR_TOGGLE_STATUS.open)
       showModal(<TransactionSubmittedModal />)
     } catch (e) {
       setInvestAmount('')
       showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
       console.error(e)
     }
-  }, [currency, investCallback, product, investCurrency, showModal, investAmount, hideModal, addPopup, setInvestAmount])
+  }, [
+    currency,
+    investCallback,
+    product,
+    investCurrency,
+    showModal,
+    investAmount,
+    hideModal,
+    addPopup,
+    setInvestAmount,
+    toggleRecur
+  ])
 
   const handleRedeem = useCallback(async () => {
     if (!investCurrency || !redeemCallback || !product || !currency) return
@@ -148,6 +164,17 @@ export default function VaultForm({
       console.error(e)
     }
   }, [investCurrency, redeemCallback, product, currency, showModal, autoBalanceRaw, addPopup, autoBalance, hideModal])
+
+  const error = useMemo(() => {
+    if (!product || !autoBalance) return ''
+    let str = ''
+    if (
+      investAmount !== '' &&
+      +autoBalance < +investAmount * +product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice)
+    )
+      str = ErrorType.insufficientBalance
+    return str
+  }, [autoBalance, investAmount, product])
 
   return (
     <>
@@ -226,6 +253,7 @@ export default function VaultForm({
           activeOrder={activeOrderCount}
           vaultForm={
             <VaultFormComponent
+              error={error}
               redeemDisabled={!product || !+autoBalance}
               investDisabled={!product || !investAmount}
               onWithdraw={handleRedeemConfirmOpen}

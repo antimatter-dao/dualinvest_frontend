@@ -212,10 +212,8 @@ export default function SubscribeForm({
   )
 
   useEffect(() => {
-    product?.type === 'CALL'
-      ? setCurrentCurrency(CURRENCIES[product.strikeCurrency])
-      : setCurrentCurrency(CURRENCIES.USDT)
-  }, [product?.strikeCurrency, product?.type])
+    setCurrentCurrency(CURRENCIES[product ? product.investCurrency : 'BTC'])
+  }, [product])
 
   return (
     <>
