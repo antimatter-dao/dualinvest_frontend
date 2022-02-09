@@ -7,6 +7,8 @@ import { routes } from 'constants/routes'
 import { ReactComponent as RecurVault } from 'assets/svg/recurVault.svg'
 import { useRecurProcuctList } from 'hooks/useRecurData'
 import { SUPPORTED_CURRENCIES } from 'constants/currencies'
+import { useRecurStatistics } from 'hooks/useStatistics'
+import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 
 const SUPPORTED = ['BTC']
 
@@ -14,6 +16,7 @@ export default function RecurringVault() {
   const history = useHistory()
   const data = useRecurProcuctList()
   const theme = useTheme()
+  const statustics = useRecurStatistics()
 
   return (
     <Box
@@ -28,12 +31,12 @@ export default function RecurringVault() {
       <ProductBanner
         title="Recurring Strategy"
         checkpoints={['Automated strategy for yield generation']}
-        val1={'$ 57,640'}
-        val2={'$ 114,375'}
+        val1={`${statustics ? toLocaleNumberString(statustics.totalReInvest, 0) : '-'} USDT`}
+        val2={`${statustics ? toLocaleNumberString(statustics.totalProgress, 0) : '-'} USDT`}
         unit1={''}
         unit2={''}
-        subVal1={'Total BTC Subscribed'}
-        subVal2={'Total USDT Subscribed'}
+        subVal1={'Total Recurring Amount'}
+        subVal2={'Amount of Recurring in Progress'}
         img={<RecurVault />}
       />
       {SUPPORTED.map(key => {

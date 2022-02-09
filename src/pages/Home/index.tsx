@@ -16,6 +16,7 @@ import recurringVaultUrl from 'assets/svg/home_recurring_vault.svg'
 import Card from 'components/Card/Card'
 import { routes } from 'constants/routes'
 import { useBindModal } from 'hooks/useReferralModal'
+import { useHomeStatistics } from 'hooks/useStatistics'
 
 const StyledHomeSvg = styled(HomeSvg)(({ theme }) => ({
   flexShrink: 1,
@@ -34,6 +35,8 @@ const StyledHomeSvg = styled(HomeSvg)(({ theme }) => ({
 export default function Home() {
   const history = useHistory()
   useBindModal()
+  const { totalInvest, totalProgress } = useHomeStatistics()
+
   return (
     <Box
       display="grid"
@@ -95,7 +98,7 @@ export default function Home() {
             <NumericalCard
               width={'100%'}
               title={'Total investment amount'}
-              value={'111'}
+              value={totalInvest}
               fontSize={'44px'}
               unit="USDT"
               border
@@ -105,7 +108,7 @@ export default function Home() {
             <NumericalCard
               width={'100%'}
               title={'Amount of investment in progress'}
-              value={'111'}
+              value={totalProgress}
               fontSize={'44px'}
               unit="USDT"
               border
@@ -249,7 +252,7 @@ function ProductCard({
 }) {
   return (
     <Grid item xs={12} sm={large ? 12 : 6}>
-      <Card>
+      <Card style={{ height: '100%' }}>
         <Box
           padding={large ? '0 24px' : '32px 24px'}
           display="grid"

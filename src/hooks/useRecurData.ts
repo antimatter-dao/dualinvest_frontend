@@ -118,7 +118,11 @@ export function useRecurToggle(
   }, [status, callback])
 }
 
-export function useRecurActiveOrderCount(vaultSymbol: string | undefined, curSymbol: string | undefined) {
+export function useRecurActiveOrderCount(
+  vaultSymbol: string | undefined,
+  curSymbol: string | undefined,
+  refresh: number
+) {
   const [count, setCount] = useState(0)
   const { account } = useActiveWeb3React()
 
@@ -132,13 +136,17 @@ export function useRecurActiveOrderCount(vaultSymbol: string | undefined, curSym
     })
   }, [account, curSymbol, vaultSymbol])
 
-  const callbackFn = useCallback(r => {
-    if (!r.data.data.records) return
-    const list = r.data.data.records.filter((record: OrderRecord) => {
-      return [InvestStatus.Ordered, InvestStatus.ReadyToSettle].includes(record.investStatus)
-    })
-    setCount(list.length)
-  }, [])
+  const callbackFn = useCallback(
+    r => {
+      if (!r.data.data.records) return
+      const list = r.data.data.records.filter((record: OrderRecord) => {
+        return [InvestStatus.Ordered, InvestStatus.ReadyToSettle].includes(record.investStatus)
+      })
+      setCount(list.length)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [refresh]
+  )
 
   usePollingWithMaxRetries(curSymbol ? promiseFn : undefined, callbackFn, 300000)
 

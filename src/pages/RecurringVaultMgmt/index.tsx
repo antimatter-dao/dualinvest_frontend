@@ -39,14 +39,14 @@ export default function RecurringValueMgmt() {
   const returnOnInvestmentListItems = useMemo(() => {
     return [
       <>
-        When the final settlement price ≥ 62,800 USDT, you will receive{' '}
+        When the final settlement price ≥ {product?.strikePrice ?? '-'} USDT, you will receive{' '}
         <span style={{ color: theme.palette.text.primary }}>
           (Subscription Amount * Strike Price) * [1 + (APY % * Period (days) / 365)]
         </span>
         .
       </>,
       <>
-        When the settlement price &lt; 62,800 USDT, you will receive{' '}
+        When the settlement price &lt; {product?.strikePrice ?? '-'} USDT, you will receive{' '}
         <span style={{ color: theme.palette.text.primary }}>
           Subscription Amount * [1 + (APY% * Period (days) / 365)]
         </span>
@@ -57,7 +57,7 @@ export default function RecurringValueMgmt() {
         complete the subscription.
       </>
     ]
-  }, [theme.palette.text.primary])
+  }, [product?.strikePrice, theme.palette.text.primary])
 
   const chart = useMemo(() => {
     return (
