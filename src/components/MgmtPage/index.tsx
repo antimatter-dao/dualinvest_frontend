@@ -31,6 +31,7 @@ interface Props {
   product: any
   pageTitle?: string
   chart: React.ReactNode
+  chart2?: React.ReactNode
   subject: Subject
   type?: string
   subscribeForm: React.ReactNode
@@ -157,7 +158,7 @@ export default function MgmtPage(props: Props) {
                       <Box display="flex" alignItems="center" gap={8}>
                         <Box height={10} width={10} borderRadius="50%" bgcolor="#F0B90B" />
                         <Typography fontSize={12} color="#F0B90B">
-                          Strike price
+                          Strike Price
                         </Typography>
                       </Box>
                     </Box>
@@ -183,11 +184,8 @@ export default function MgmtPage(props: Props) {
                 </Box>
               </Card>
             </Grid>
-            {children && (
-              <Grid xs={12} item>
-                {children}
-              </Grid>
-            )}
+
+            {children && <>{children}</>}
 
             <Grid xs={12} item>
               <Card style={{ height: '100%' }}>
