@@ -2,18 +2,17 @@ import { useEffect } from 'react'
 import { Box } from '@mui/material'
 // import antimatterBlackCircle from 'assets/svg/antimatter_circle_black.svg'
 // import { Progress, SimpleProgress } from 'components/Progress'
-import { usePrice } from 'hooks/usePriceSet'
 import ProductTable from './ProductTable'
-import { useProductList, useStatistics } from 'hooks/useDualInvestData'
+import { useProductList } from 'hooks/useDualInvestData'
 import ProductBanner from 'components/ProductBanner'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import CurrencyTabs from 'components/Tabs/CurrencyTabs'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
+import { useDualStatistics } from 'hooks/useStatistics'
 
 export default function DualInvest() {
   const productList = useProductList()
-  const statistics = useStatistics()
-  const BTCPrice = usePrice('BTC')
+  const statistics = useDualStatistics()
 
   useEffect(() => {
     const el = document.getElementById('dualInvestGuide')
@@ -39,11 +38,7 @@ export default function DualInvest() {
       <ProductBanner
         title="Dual Investment"
         checkpoints={['Earn fixed yield on idle assets', 'Earn on both ups and downs']}
-        val1={
-          statistics && BTCPrice
-            ? toLocaleNumberString(+statistics.totalBtcDeposit * +BTCPrice + +statistics.totalUsdtDeposit, 0)
-            : '-'
-        }
+        val1={statistics?.totalDeposit ?? '-'}
         subVal1={'Cumulative Deposit Amount'}
         unit1={'USDT'}
         val2={statistics ? toLocaleNumberString(statistics.totalInvestAmount, 0) : '-'}
