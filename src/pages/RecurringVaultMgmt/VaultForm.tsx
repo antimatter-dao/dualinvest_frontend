@@ -24,6 +24,8 @@ enum ErrorType {
   insufficientBalance = 'Insufficient Balance'
 }
 
+let refresh = 0
+
 export default function VaultForm({
   product,
   investAmount,
@@ -54,7 +56,7 @@ export default function VaultForm({
   const contractBalance = useDualInvestBalance(investCurrency)
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()
-  const activeOrderCount = useRecurActiveOrderCount(currency?.symbol, investCurrency?.symbol)
+  const activeOrderCount = useRecurActiveOrderCount(currency?.symbol, investCurrency?.symbol, refresh)
 
   const formData = useMemo(
     () => ({
@@ -113,6 +115,7 @@ export default function VaultForm({
     try {
       const r = await investCallback(val, currency.address, investCurrency.address)
       hideModal()
+
       toggleRecur(RECUR_TOGGLE_STATUS.open)
       addPopup(r, {
         summary: `Subscribed ${(
@@ -125,6 +128,7 @@ export default function VaultForm({
       })
       setInvestAmount('')
       showModal(<TransactionSubmittedModal />)
+      refresh++
     } catch (e) {
       setInvestAmount('')
       showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)

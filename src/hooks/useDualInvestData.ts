@@ -28,23 +28,3 @@ export function useProduct(productId: string) {
 
   return product
 }
-
-export function useStatistics() {
-  const [statistics, setStatistics] = useState<
-    | {
-        totalBtcDeposit: string
-        totalInvestAmount: string
-        totalUsdtDeposit: string
-      }
-    | undefined
-  >(undefined)
-
-  const promistFn = useCallback(() => Axios.get('getDashboard'), [])
-  const callbackFn = useCallback(r => {
-    setStatistics(r.data.data)
-  }, [])
-
-  usePollingWithMaxRetries(promistFn, callbackFn, 600000)
-
-  return statistics
-}

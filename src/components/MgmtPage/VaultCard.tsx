@@ -92,7 +92,7 @@ export default function VaultCard(props: Props) {
                   </Box>
                 </Box>
                 <Box display="flex" justifyContent="space-between">
-                  <Typography fontSize={16}>Next Order Due Time</Typography>
+                  <Typography fontSize={16}>Next order due time</Typography>
                   <Typography
                     component="div"
                     fontSize={16}
