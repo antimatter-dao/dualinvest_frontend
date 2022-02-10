@@ -125,7 +125,7 @@ export default function HistoryDualInvest() {
       )
       return [
         <Box key="token" display="flex" alignItems="center" gap={13}>
-          <CurrencyLogo currency={CURRENCIES[currency]} size="22px" />
+          <CurrencyLogo currency={CURRENCIES[investCurrency]} size="22px" />
           <Typography fontSize={16}>{CURRENCIES[currency].symbol}</Typography>
         </Box>,
         `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
@@ -156,7 +156,7 @@ export default function HistoryDualInvest() {
   return (
     <Box sx={{ mt: 48, width: '100%' }}>
       <Card>
-        <Box padding="38px 24px" display="grid" gap={36} position="relative">
+        <Box padding="38px 24px" display="grid" position="relative">
           <Filter
             checkedOption={checkedFilterOption}
             options={['All', 'BTC']}
@@ -186,7 +186,6 @@ export default function HistoryDualInvest() {
             <HistoryTableCards data={data} header={HistoryTableHeader} moreHeader={HistoryMoreHeader} />
           ) : data.summaryList.length ? (
             <>
-              ,
               <Table
                 header={HistoryTableHeader}
                 rows={data.summaryList}

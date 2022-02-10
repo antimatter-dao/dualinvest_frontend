@@ -78,7 +78,7 @@ export function useDualInvestCallback(): {
             [signRes[0].signatory, signRes[0].signV, signRes[0].signR, signRes[0].signS]
           ]
           const estimatedGas = await contract.estimateGas.withdraw(...withdrawArgs).catch((error: Error) => {
-            console.debug('Failed to create order', error)
+            console.debug('Failed to withdraw', error)
             throw error
           })
           const contractRes = await contract?.withdraw(...withdrawArgs, { gasLimit: estimatedGas })

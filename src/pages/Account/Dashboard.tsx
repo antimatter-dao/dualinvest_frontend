@@ -195,7 +195,7 @@ export default function Dashboard() {
       />
       <Container disableGutters sx={{ mt: 48 }}>
         <Box display="grid" gap={48}>
-          <Card>
+          <Card style={{ maxWidth: '100%', overflowX: 'auto' }}>
             <Box padding="38px 24px" display="grid" gap={36}>
               <Box>
                 <Typography fontSize={{ xs: 20, sm: 24 }} fontWeight={700}>

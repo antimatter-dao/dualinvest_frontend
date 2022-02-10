@@ -20,7 +20,7 @@ import PendingView from './PendingView'
 import OutlineButton from 'components/Button/OutlineButton'
 import useBreakpoint from 'hooks/useBreakpoint'
 import Button from '../../Button/Button'
-import { ChainId, SUPPORTED_NETWORKS } from '../../../constants/chain'
+import { ChainId, NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from '../../../constants/chain'
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
@@ -211,8 +211,8 @@ export default function WalletModal({
           <Box padding={isUpToMD ? '16px' : '2rem 6rem 52px'}>
             {error instanceof UnsupportedChainIdError
               ? `Please connect to the    ${
-                  SUPPORTED_NETWORKS[parseInt(process.env.REACT_APP_CHAIN_ID ?? '') as ChainId]
-                    ? SUPPORTED_NETWORKS[parseInt(process.env.REACT_APP_CHAIN_ID ?? '') as ChainId]?.chainName
+                  SUPPORTED_NETWORKS[NETWORK_CHAIN_ID]
+                    ? SUPPORTED_NETWORKS[NETWORK_CHAIN_ID]?.chainName
                     : 'Binance Smart Chain'
                 }.`
               : 'Error connecting. Try refreshing the page.'}
@@ -220,7 +220,7 @@ export default function WalletModal({
           {window.ethereum && window.ethereum.isMetaMask && (
             <Button
               onClick={() => {
-                const id = Object.values(ChainId).find(val => val === parseInt(process.env.REACT_APP_CHAIN_ID ?? ''))
+                const id = Object.values(ChainId).find(val => val === NETWORK_CHAIN_ID)
                 if (!id) {
                   return
                 }
@@ -231,9 +231,7 @@ export default function WalletModal({
               }}
             >
               Connect to{' '}
-              {SUPPORTED_NETWORKS[parseInt(process.env.REACT_APP_CHAIN_ID ?? '') as ChainId]
-                ? SUPPORTED_NETWORKS[parseInt(process.env.REACT_APP_CHAIN_ID ?? '') as ChainId]?.chainName
-                : 'BSC'}
+              {SUPPORTED_NETWORKS[NETWORK_CHAIN_ID] ? SUPPORTED_NETWORKS[NETWORK_CHAIN_ID]?.chainName : 'BSC'}
             </Button>
           )}
         </>

@@ -20,6 +20,7 @@ import Home from './Home'
 // import ChainOptionMgmt from './ChainOptionMgmt'
 import RecurringVault from './RecurringVault'
 import RecurringVaultMgmt from './RecurringVaultMgmt'
+import { IS_TEST_NET } from 'constants/chain'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -106,17 +107,7 @@ function LocatoinVerification({ resource, children }: { resource: { read(): any 
 
   return (
     <Suspense fallback={<Spinner size={100} />}>
-      {location === 'US' || location === 'CN' ? (
-        isDev ? (
-          children
-        ) : parseInt(process.env.REACT_APP_CHAIN_ID ?? '') === 3 ? (
-          children
-        ) : (
-          <NoService />
-        )
-      ) : (
-        children
-      )}
+      {location === 'US' || location === 'CN' ? isDev ? children : IS_TEST_NET ? children : <NoService /> : children}
       {/*{location === 'US' || location === 'CN' || !location || location === 'Not found' ? children : children}*/}
     </Suspense>
   )

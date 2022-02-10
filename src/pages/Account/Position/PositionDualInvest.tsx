@@ -250,7 +250,6 @@ export default function PositionDualInvest() {
             <Box mt={27} pl={10}>
               <Filter
                 checkedOption={checkedFilterOption}
-                options={['All', 'BTC']}
                 onChange={option => {
                   setCheckedFilterOption(option)
                 }}

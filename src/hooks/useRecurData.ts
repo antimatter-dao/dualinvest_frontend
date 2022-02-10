@@ -121,7 +121,7 @@ export function useRecurToggle(
 export function useRecurActiveOrderCount(
   vaultSymbol: string | undefined,
   curSymbol: string | undefined,
-  refresh: number
+  refresh: string
 ) {
   const [count, setCount] = useState(0)
   const { account } = useActiveWeb3React()
@@ -148,7 +148,7 @@ export function useRecurActiveOrderCount(
     [refresh]
   )
 
-  usePollingWithMaxRetries(curSymbol ? promiseFn : undefined, callbackFn, 300000)
+  usePollingWithMaxRetries(curSymbol ? promiseFn : undefined, callbackFn, 30000)
 
   return count
 }
