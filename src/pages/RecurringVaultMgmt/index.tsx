@@ -7,10 +7,13 @@ import { Subject } from 'components/MgmtPage/stableContent'
 import TextButton from 'components/Button/TextButton'
 import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
-import { useSingleRecurProcuct } from 'hooks/useRecurData'
+import { useLastCycleRecurDetails, useSingleRecurProcuct } from 'hooks/useRecurData'
 import DualInvestChart /*,{ PastAggrChart }*/ from 'pages/DualInvestMgmt/Chart'
 import Card from 'components/Card/Card'
-// import useBreakpoint from 'hooks/useBreakpoint'
+import { CURRENCIES } from 'constants/currencies'
+import { PrevRecur } from 'utils/fetch/recur'
+import dayjs from 'dayjs'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -35,7 +38,11 @@ export default function RecurringVaultMgmt() {
   const theme = useTheme()
   const { currency, type } = useParams<{ currency: string; type: string }>()
   const product = useSingleRecurProcuct(currency ?? '', type ?? '')
-  // const isDownMd = useBreakpoint('md')
+  const prevDetails = useLastCycleRecurDetails(
+    product?.investCurrency ? CURRENCIES[product.investCurrency].address : undefined,
+    product?.currency ? CURRENCIES[product.currency].address : undefined
+  )
+  const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
 
   const returnOnInvestmentListItems = useMemo(() => {
@@ -99,17 +106,18 @@ export default function RecurringVaultMgmt() {
         chart={chart}
       >
         <Grid xs={12} md={4} item>
-          <PrevCycleStats />
+          <PrevCycleStats prevDetails={prevDetails} />
         </Grid>
-        <Grid xs={12} md={8} item>
-          <Card style={{ height: '100%' }}>
-            <Box height="100%" width="100%" display="flex" alignItems={'center'}>
-              <Typography sx={{ margin: 'auto auto' }} align="center">
-                Past aggregate earnings graph <br />
-                Coming soon...
-              </Typography>
-            </Box>
-            {/* <Box
+        {!isDownMd && (
+          <Grid xs={12} md={8} item>
+            <Card style={{ height: '100%' }}>
+              <Box height="100%" width="100%" display="flex" alignItems={'center'} padding="24px">
+                <Typography sx={{ margin: 'auto auto' }} align="center">
+                  Past aggregate earnings graph <br />
+                  Coming soon...
+                </Typography>
+              </Box>
+              {/* <Box
               maxHeight="100%"
               height="100%"
               gap={0}
@@ -159,8 +167,9 @@ export default function RecurringVaultMgmt() {
               </Typography>
               {chart2}
             </Box> */}
-          </Card>
-        </Grid>
+            </Card>
+          </Grid>
+        )}
       </MgmtPage>
     </>
   )
@@ -264,18 +273,22 @@ function RecurringPolicyPage({ img, text }: { img: ReactElement<any, any>; text:
   )
 }
 
-function PrevCycleStats() {
+function PrevCycleStats({ prevDetails }: { prevDetails: PrevRecur | undefined }) {
   const theme = useTheme()
   const data = useMemo(
     () => ({
-      ['APY']: '140.25%',
-      ['Strike Price']: '62800 USDT',
-      ['Executed Price']: '62800 USDT',
-      ['Status']: 'Exercised',
-      ['Your P&L']: '800 USDT',
-      ['Date']: 'From Sep 21, 2021 to Sep 21, 2021'
+      ['APY']: prevDetails?.apy ?? '-',
+      ['Strike Price']: `${prevDetails?.strikePrice ?? '-'} USDT`,
+      ['Executed Price']: `${prevDetails?.deliveryPrice ?? '-'} USDT`,
+      ['Status']: prevDetails?.status ?? '-',
+      ['Your P&L']: prevDetails?.pnl ?? '-',
+      ['Date']: prevDetails
+        ? `From ${dayjs(prevDetails.ts).format('MMM DD, YYYY')} to ${dayjs(prevDetails.expiredAt).format(
+            'MMM DD, YYYY'
+          )}`
+        : '-'
     }),
-    []
+    [prevDetails]
   )
   return (
     <Card width={'100%'}>
@@ -291,6 +304,7 @@ function PrevCycleStats() {
             </Typography>
 
             <Typography
+              fontWeight={key === 'APY' || (key === 'Status' && data.Status === 'Exercised') ? 400 : 500}
               color={
                 key === 'APY' || (key === 'Status' && data.Status === 'Exercised')
                   ? theme.palette.primary.main

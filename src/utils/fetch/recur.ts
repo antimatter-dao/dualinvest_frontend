@@ -5,6 +5,36 @@ const TYPE = {
   put: 'PUT'
 }
 
+export interface PrevRecurRaw {
+  currency: string
+  delivery_price: string
+  expired_at: number
+  expired_str: string
+  index_price: string
+  invest_currency: string
+  is_active: boolean
+  multiplier: string
+  order_limit: string
+  order_limit_u: string
+  product_id: number
+  re_invest: boolean
+  strike_currency: string
+  strike_price: string
+  ts: number
+  type: string
+  usdtEarned: string
+  vaultEarned: string
+}
+
+export interface PrevRecur {
+  apy: string
+  strikePrice: string
+  deliveryPrice: string
+  status: string
+  pnl: string
+  ts: number
+  expiredAt: number
+}
 export interface RecurProductRaw {
   invest_currency: string
   order_limit_u: number
@@ -92,4 +122,18 @@ export const singleRecurProductFormatter = (
     return item.currency === currency && item.type.toLowerCase() === type
   })
   return res ? recurProductFormatter(res) : undefined
+}
+
+export const prevRecurDetailsFormatter = (raw: PrevRecurRaw): PrevRecur => {
+  const exercised =
+    raw.type === 'CALL' ? !!(+raw.delivery_price > +raw.strike_price) : !!(+raw.delivery_price < +raw.strike_price)
+  return {
+    apy: '0%',
+    strikePrice: raw.strike_price,
+    deliveryPrice: raw.delivery_price,
+    status: exercised ? 'Exercised' : 'Unexercised',
+    pnl: +raw.usdtEarned > 0 ? raw.usdtEarned + ' USDT' : `${raw.vaultEarned} ${raw.currency}`,
+    ts: raw.ts * 1000,
+    expiredAt: raw.expired_at * 1000
+  }
 }

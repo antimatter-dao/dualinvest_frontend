@@ -246,7 +246,7 @@ export default function VaultForm({
           logoCurSymbol={currencySymbol}
           priceCurSymbol={product?.currency ?? ''}
           timer={product?.expiredAt ?? 0}
-          isRecurOpen={recurStatus === RECUR_TOGGLE_STATUS.open}
+          recurStatus={recurStatus}
           onRecurOpen={() => {
             setIsConfirmOpen(true)
           }}

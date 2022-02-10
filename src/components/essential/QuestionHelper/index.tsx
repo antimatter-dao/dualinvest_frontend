@@ -4,7 +4,7 @@ import { styled, Typography } from '@mui/material'
 import Tooltip from './Tooltip'
 import dayjs from 'dayjs'
 
-const QuestionWrapper = styled('div')(({ theme }) => ({
+const QuestionWrapper = styled('div')({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -14,12 +14,11 @@ const QuestionWrapper = styled('div')(({ theme }) => ({
   outline: 'none',
   cursor: 'default',
   borderRadius: '36px',
-  backgroundColor: theme.palette.background.paper,
   color: '#828282',
   '&:hover, :focus': {
     opacity: 0.7
   }
-}))
+})
 
 const LightQuestionWrapper = styled('div')({
   display: 'flex',
@@ -34,17 +33,22 @@ const LightQuestionWrapper = styled('div')({
   width: '12px',
   height: '12px',
   backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  color: '#ffffff',
-  '&:hover, :focus': {
-    opacity: 0.7
-  }
+  color: '#ffffff'
 })
 
 const QuestionMark = styled('span')({
   fontSize: '1rem'
 })
 
-export default function QuestionHelper({ text, size = 14, title }: { text: string; size?: number; title?: any }) {
+export default function QuestionHelper({
+  text,
+  size = 14,
+  title
+}: {
+  text: string | undefined
+  size?: number
+  title?: any
+}) {
   const [show, setShow] = useState<boolean>(false)
 
   const open = useCallback(() => setShow(true), [setShow])
@@ -52,8 +56,18 @@ export default function QuestionHelper({ text, size = 14, title }: { text: strin
 
   return (
     <span style={{ marginLeft: 4 }}>
-      <Tooltip text={text} show={show}>
-        <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
+      <Tooltip text={text ? text : ''} show={show}>
+        <QuestionWrapper
+          onClick={open}
+          onMouseEnter={text ? open : undefined}
+          onMouseLeave={close}
+          sx={{
+            backgroundColor: theme => (title ? 'transparent' : theme.palette.background.paper),
+            '&:hover, :focus': {
+              opacity: title ? 1 : 0.7
+            }
+          }}
+        >
           {title ? title : <HelpOutlineOutlinedIcon sx={{ height: size, width: size }} />}
         </QuestionWrapper>
       </Tooltip>
