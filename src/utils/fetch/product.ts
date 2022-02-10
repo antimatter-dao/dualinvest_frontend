@@ -51,6 +51,7 @@ export interface Product {
   gtStrikePrice: string
   ltStrikePrice: string
   strikeCurrency: string
+  price: string
 }
 
 export type SingleCurProductList = { call: Product[]; put: Product[] }
@@ -61,6 +62,7 @@ export type ProductList = {
 
 export const productFormatter = (raw: ProductRaw): Product => {
   return {
+    price: raw.price,
     currentPrice: raw.index_price,
     productId: raw.product_id,
     expiredAt: raw.expired_at * 1000,

@@ -17,10 +17,10 @@ export default function DualInvestMgmt() {
 
   const strikePrice = product?.strikePrice ?? '-'
   const type = product?.type
-  const gtStr = `${product && amount ? (+product.gtStrikePrice * +amount * +product.multiplier).toFixed(4) : '-'} ${
-    product ? (product.type === 'CALL' ? product?.strikeCurrency : product?.investCurrency) : ''
-  } `
-  const ltStr = `${product && amount ? (+product?.ltStrikePrice * +amount * +product.multiplier).toFixed(4) : '-'} ${
+  const gtStr = `${
+    product && amount ? ((+product.price + 1) * +product.strikePrice * +amount * +product.multiplier).toFixed(4) : '-'
+  } ${product ? (product.type === 'CALL' ? product?.strikeCurrency : product?.investCurrency) : ''} `
+  const ltStr = `${product && amount ? (+product.strikePrice * +amount * +product.multiplier).toFixed(4) : '-'} ${
     product ? (product.type === 'CALL' ? product?.investCurrency : product?.strikeCurrency) : ''
   }`
 
