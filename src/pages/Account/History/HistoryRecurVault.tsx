@@ -125,13 +125,13 @@ export default function HistoryDualInvest() {
       )
       return [
         <Box key="token" display="flex" alignItems="center" gap={13}>
-          <CurrencyLogo currency={CURRENCIES[investCurrency]} size="22px" />
+          <CurrencyLogo currency={CURRENCIES[currency]} size="22px" />
           <Typography fontSize={16}>{CURRENCIES[currency].symbol}</Typography>
         </Box>,
         `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
           1
         )} ${investCurrency} (${amount})`,
-        dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC',
+        dayjs(ts * 1000).format('MMM DD, YYYY\nhh:mm A') + ' UTC',
         <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
           {(+annualRor * 100).toFixed(2)}%
         </Typography>,
@@ -156,7 +156,7 @@ export default function HistoryDualInvest() {
   return (
     <Box sx={{ mt: 48, width: '100%' }}>
       <Card>
-        <Box padding="38px 24px" display="grid" position="relative">
+        <Box padding="38px 24px" display="grid" position="relative" style={{ maxWidth: '100%', overflowX: 'auto' }}>
           <Filter
             checkedOption={checkedFilterOption}
             options={['All', 'BTC']}

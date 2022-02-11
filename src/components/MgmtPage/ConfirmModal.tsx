@@ -71,10 +71,10 @@ export default function ConfirmModal({
                   <Typography sx={{ opacity: 0.8 }} component="span">
                     {key}
                   </Typography>
-                  <span>
+                  <span style={{ height: 16, display: 'flex', alignItems: 'center' }}>
                     <QuestionHelper
                       text={`The platform will charge ${feeRate} of the profit as a service fee`}
-                      size={11}
+                      size={12}
                     />
                   </span>
                 </Box>

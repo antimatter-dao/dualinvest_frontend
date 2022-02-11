@@ -61,7 +61,7 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
           display="flex"
           flexDirection="column"
           alignItems={isDownMd ? 'flex-start' : 'flex-end'}
-          padding={{ xs: '16px', sm: '16px 0' }}
+          padding={{ xs: '16px', sm: '0' }}
           gap={isDownMd ? 10 : 0}
         >
           <Typography
@@ -71,6 +71,7 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
             display="flex"
             alignItems="center"
             sx={{
+              marginBottom: { xs: 0, md: 8 },
               color: theme => (color ? color : theme.palette.primary.main)
             }}
           >

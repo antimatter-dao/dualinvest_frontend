@@ -286,7 +286,7 @@ export default function ActionModal({
                   }
                 }}
                 pending={pending}
-                pendingText="Pending Confirmation"
+                pendingText="Pending"
                 actionText={actionStr}
               />
             )}

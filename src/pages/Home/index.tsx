@@ -279,6 +279,7 @@ function ProductCard({
               gridRowEnd: { xs: 'span 1', md: 'span 2' },
               height: '100%',
               width: '100%',
+              padding: '10px 15px',
               gridColumnStart: { xs: 'unset', md: '2' }
             }}
           />

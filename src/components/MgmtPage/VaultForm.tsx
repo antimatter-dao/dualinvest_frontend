@@ -48,6 +48,7 @@ export default function VaultForm({
   return (
     <Box width="100%" position="relative">
       <Tabs
+        fontWeight={700}
         titles={['Invest', 'Redeem']}
         tabPadding="12px"
         contents={[

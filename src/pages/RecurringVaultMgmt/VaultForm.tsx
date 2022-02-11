@@ -58,9 +58,9 @@ export default function VaultForm({
 
   const formData = useMemo(
     () => ({
-      ['Current cycle invested amount:']: autoLockedBalance + currencySymbol,
-      ['Redeemable:']: autoBalance + currencySymbol,
-      ['P&L:']: pnl + currencySymbol
+      ['Current cycle invested amount:']: autoLockedBalance + ' ' + currencySymbol,
+      ['Redeemable:']: autoBalance + ' ' + currencySymbol,
+      ['P&L:']: pnl + ' ' + currencySymbol
     }),
     [autoLockedBalance, currencySymbol, autoBalance, pnl]
   )
@@ -115,6 +115,7 @@ export default function VaultForm({
       hideModal()
 
       toggleRecur(RECUR_TOGGLE_STATUS.open)
+
       addPopup(r, {
         summary: `Subscribed ${(
           +investAmount * (product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
@@ -139,9 +140,10 @@ export default function VaultForm({
     showModal,
     investAmount,
     hideModal,
+    toggleRecur,
+
     addPopup,
-    setInvestAmount,
-    toggleRecur
+    setInvestAmount
   ])
 
   const handleRedeem = useCallback(async () => {

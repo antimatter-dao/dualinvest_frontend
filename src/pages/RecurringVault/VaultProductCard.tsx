@@ -55,16 +55,15 @@ export default function VaultProductCard({
         priceCurSymbol={priceCurSymbol}
         color={color}
       />
-      <Divider color="#cccccc05" extension={25} style={{ marginBottom: 20 }} />
+      <Divider color="#00000010" extension={25} style={{ marginBottom: 20 }} />
 
       {product ? (
         <Box display={{ xs: 'grid' }} gap={24} gridTemplateColumns={{ xs: '100%', md: '35% auto' }}>
           <NumericalCard value={product?.apy ?? '-'} subValue="Current APY" border valueColor={color} />
           <NumericalCard
-            value={
-              (autoLockedBalance === '-' ? '-' : toLocaleNumberString(autoLockedBalance)) +
-              (product?.investCurrency ?? '-')
-            }
+            value={`${
+              autoLockedBalance === '-' ? '-' : toLocaleNumberString(autoLockedBalance)
+            }  ${product?.investCurrency ?? '-'}`}
             subValue="Your existing position"
             border
           >
