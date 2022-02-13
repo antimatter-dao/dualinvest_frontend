@@ -7,6 +7,7 @@ import { Axios } from 'utils/axios'
 import { parseBalance } from 'utils/parseAmount'
 import { useDualInvestContract } from './useContract'
 import { Signature, SignatureRequest, SignatureRequestClaim, SignatureResponseClaim } from 'utils/fetch/signature'
+import { IS_TEST_NET } from 'constants/chain'
 
 export function useDualInvestBalance(token?: Token) {
   const contract = useDualInvestContract()
@@ -127,7 +128,7 @@ export function useDualInvestCallback(): {
             chainId: chainId,
             orderId: orderId
           },
-          3,
+          IS_TEST_NET ? 1 : 3,
           'getFinishOrderSign'
         )
 
@@ -138,11 +139,13 @@ export function useDualInvestCallback(): {
           returnedCurrency,
           returnedAmount,
           fee + '',
-          [
-            [signRes[0].signatory, signRes[0].signV, signRes[0].signR, signRes[0].signS],
-            [signRes[1].signatory, signRes[1].signV, signRes[1].signR, signRes[1].signS],
-            [signRes[2].signatory, signRes[2].signV, signRes[2].signR, signRes[2].signS]
-          ]
+          IS_TEST_NET
+            ? [[signRes[0].signatory, signRes[0].signV, signRes[0].signR, signRes[0].signS]]
+            : [
+                [signRes[0].signatory, signRes[0].signV, signRes[0].signR, signRes[0].signS],
+                [signRes[1].signatory, signRes[1].signV, signRes[1].signR, signRes[1].signS],
+                [signRes[2].signatory, signRes[2].signV, signRes[2].signR, signRes[2].signS]
+              ]
         ]
         const estimatedGas = await contract.estimateGas.finishOrder(...args).catch((error: Error) => {
           console.debug('Failed to finish order', error)
