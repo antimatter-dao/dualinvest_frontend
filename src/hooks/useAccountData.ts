@@ -76,9 +76,14 @@ export function useOrderRecords(
       investType,
       investStatus: Array.isArray(investStatus) ? undefined : investStatus,
       pageNum: Array.isArray(investStatus) ? undefined : pageNum,
-      pageSize: Array.isArray(investStatus) ? undefined : pageSize
+      pageSize: Array.isArray(investStatus) ? undefined : pageSize,
+      ...(currency === 'All'
+        ? {}
+        : {
+            currency: currency
+          })
     })
-  }, [account, investStatus, investType, pageNum, pageSize])
+  }, [account, currency, investStatus, investType, pageNum, pageSize])
 
   const callbackFn = useCallback(r => {
     setOrderList(r.data.data.records)
