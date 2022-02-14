@@ -70,11 +70,11 @@ export default function RecurringVaultMgmt() {
     return (
       <DualInvestChart
         product={product}
-        str1={`Settlement Price ≥ ${strikePrice} USDT, will be exercised`}
-        str2={`Settlement Price < ${strikePrice} USDT, will not be exercised`}
+        str1={`Settlement Price ${isCall ? '≥' : '≤'} ${strikePrice} USDT, will be exercised`}
+        str2={`Settlement Price ${isCall ? '<' : '>'} ${strikePrice} USDT, will not be exercised`}
       />
     )
-  }, [product, strikePrice])
+  }, [isCall, product, strikePrice])
 
   const handleInput = useCallback((val: string) => {
     setInvestAmount(val)
