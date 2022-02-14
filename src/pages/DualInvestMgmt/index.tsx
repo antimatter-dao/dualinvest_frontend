@@ -25,9 +25,9 @@ export default function DualInvestMgmt() {
   } ${product ? (isCall ? product?.strikeCurrency : product?.currency) : ''} `
   const ltStr = `${
     product && amount
-      ? ((isCall ? 1 : +product.strikePrice) * +amount * (1 + +product.price) * +product.multiplier).toFixed(4)
+      ? ((isCall ? 1 : +product.strikePrice) * (1 + +product.price) * +amount * +product.multiplier).toFixed(4)
       : '-'
-  } ${product ? (isCall ? product?.currency : product?.investCurrency) : ''}`
+  } ${product ? product.investCurrency : ''}`
 
   const handleInput = useCallback(val => {
     setAmount(val)
@@ -46,11 +46,11 @@ export default function DualInvestMgmt() {
   const returnOnInvestmentListItems = useMemo(() => {
     return [
       <>
-        When the final settlement price {isCall ? '≥' : '>'} {strikePrice} USDT, you will receive{' '}
+        When the final settlement price {isCall ? '≥' : '≤'} {strikePrice} USDT, you will receive{' '}
         <span style={{ color: theme.palette.text.primary }}>{gtStr}</span>.
       </>,
       <>
-        When the settlement price {isCall ? '<' : '≤'} {strikePrice} USDT, you will receive{' '}
+        When the settlement price {isCall ? '<' : '>'} {strikePrice} USDT, you will receive{' '}
         <span style={{ color: theme.palette.text.primary }}>{ltStr}</span>.
       </>,
       <>

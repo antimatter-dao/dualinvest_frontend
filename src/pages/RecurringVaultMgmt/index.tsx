@@ -51,23 +51,20 @@ export default function RecurringVaultMgmt() {
       <>
         When the final settlement price {isCall ? '≥' : '≤'} {product?.strikePrice ?? '-'} USDT, you will receive{' '}
         <span style={{ color: theme.palette.text.primary }}>
-          (Subscription Amount * Strike Price) * [1 + (APY % * Period (days) / 365)]
+          (Subscription Amount {isCall ? '*' : '/'} Strike Price) * [1 + (APY% / 365)]
         </span>
         .
       </>,
       <>
-        When the settlement price {isCall ? '<' : '≤'} {product?.strikePrice ?? '-'} USDT, you will receive{' '}
-        <span style={{ color: theme.palette.text.primary }}>
-          Subscription Amount * [1 + (APY% * Period (days) / 365)]
-        </span>
-        .
+        When the settlement price {isCall ? '<' : '>'} {product?.strikePrice ?? '-'} USDT, you will receive{' '}
+        <span style={{ color: theme.palette.text.primary }}>Subscription Amount * [1 + (APY% / 365)]</span>.
       </>,
       <>
         APY will be refreshed instantly, and Antimatter will use and lock in the latest APY when you successfully
         complete the subscription.
       </>
     ]
-  }, [product?.strikePrice, product?.type, theme.palette.text.primary])
+  }, [isCall, product?.strikePrice, theme.palette.text.primary])
 
   const chart = useMemo(() => {
     return (

@@ -20,8 +20,9 @@ import RedeemConfirmModal from './RedeemConfirmModal'
 import InvestConfirmModal from './InvestConfirmModal'
 import { feeRate } from 'constants/index'
 
-enum ErrorType {
-  insufficientBalance = 'Insufficient Balance'
+export enum ErrorType {
+  insufficientBalance = 'Insufficient Balance',
+  notAvailable = 'The current status is not available for subscription, please try again after the current period is settled'
 }
 
 export default function VaultForm({
@@ -170,11 +171,21 @@ export default function VaultForm({
   const error = useMemo(() => {
     if (!product || !contractBalance) return ''
     let str = ''
+
     if (
       investAmount !== '' &&
       +contractBalance < +investAmount * +product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice)
-    )
+    ) {
       str = ErrorType.insufficientBalance
+    }
+    const now = new Date(Date.now())
+    const h = now.getUTCHours()
+    const m = now.getUTCHours()
+
+    if (product.price === null || (h >= 6 && h < 8 && m < 30)) {
+      str = ErrorType.notAvailable
+    }
+
     return str
   }, [contractBalance, investAmount, product])
 

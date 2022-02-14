@@ -70,6 +70,7 @@ export interface RecurProduct {
   orderLimit: number
   strikePrice: string
   ts: number
+  price: any
 }
 
 export type RecurProductList = {
@@ -91,7 +92,8 @@ const recurProductFormatter = (raw: RecurProductRaw): RecurProduct => {
     indexPrice: raw.index_price,
     orderLimit: raw.order_limit,
     ts: raw.ts * 1000,
-    strikeCurrency: raw.strike_currency
+    strikeCurrency: raw.strike_currency,
+    price: raw.price
   }
 }
 

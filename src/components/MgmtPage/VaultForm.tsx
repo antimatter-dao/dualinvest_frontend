@@ -10,6 +10,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useCallback } from 'react'
 import { OutlinedCard } from 'components/Card/Card'
+import { ErrorType } from 'pages/RecurringVaultMgmt/VaultForm'
 
 enum TYPE {
   invest = 'Invest',
@@ -162,33 +163,19 @@ function Form({
       {type === TYPE.invest && val !== undefined && onChange && (
         <Box>
           <InputNumerical
-            error={!!error}
+            error={!!error && error !== ErrorType.notAvailable}
             smallPlaceholder
             placeholder={`Each unit represents ${multiplier} ${currencySymbol}`}
             onChange={handleChange}
             onMax={handleMax}
             value={val}
-            disabled={!account}
+            disabled={!account || error === ErrorType.notAvailable}
           />
-          {error && (
-            <Box display="flex" mt={6}>
-              <InfoOutlinedIcon sx={{ color: theme => theme.palette.error.main, height: 12 }} />
-              <Typography component="p" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
-                {
-                  <>
-                    <Typography component="span" color="error" fontSize={12}>
-                      {error}
-                    </Typography>
-                  </>
-                }
-              </Typography>
-            </Box>
-          )}
+
           <Box mt={12}>
             <Box display="flex" justifyContent="space-between">
               <InputLabel>{TYPE.invest} Amount</InputLabel>
               <Box display="flex" alignItems="flex-start" gap="5px">
-                {/*  {type === TYPE.invest ? (*/}
                 <>
                   <InputLabel>
                     Available: {available ? available : '-'}
@@ -196,11 +183,6 @@ function Form({
                   </InputLabel>
                   <DepositModalButton currentCurrency={CURRENCIES[currencySymbol]} />
                 </>
-                {/* ) : (
-                  <>
-                    <InputLabel>Redeemable amount: {formData['Redeemable:']}</InputLabel>
-                  </>
-               )}*/}
               </Box>
             </Box>
             <OutlinedCard>
@@ -245,6 +227,20 @@ function Form({
           <BlackButton onClick={toggleWallet}>Connect</BlackButton>
         )}
       </Box>
+      {error && (
+        <Box display="flex" mt={8}>
+          <InfoOutlinedIcon sx={{ color: theme => theme.palette.error.main, height: 12 }} />
+          <Typography component="p" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
+            {
+              <>
+                <Typography component="span" color="error" fontSize={12}>
+                  {error}
+                </Typography>
+              </>
+            }
+          </Typography>
+        </Box>
+      )}
     </Box>
   )
 }
