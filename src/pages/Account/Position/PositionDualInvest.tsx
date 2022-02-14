@@ -177,7 +177,7 @@ export default function PositionDualInvest() {
               disabled={status === 'progressing'}
               onClick={e => {
                 if (!finishOrderCallback) return
-                const el = e.target as HTMLButtonElement
+                const el = e.currentTarget as HTMLButtonElement
                 el.innerHTML =
                   '<span class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-z0i010-MuiCircularProgress-root" role="progressbar" style="width: 16px; height: 16px; position: relative"><svg class="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg" viewBox="22 22 44 44" color="#ffffff"><circle class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle" cx="44" cy="44" r="20.5" fill="none" stroke-width="3"></circle></svg></span>'
                 el.disabled = true

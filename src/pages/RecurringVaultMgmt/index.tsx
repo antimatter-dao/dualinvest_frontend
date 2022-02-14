@@ -44,18 +44,19 @@ export default function RecurringVaultMgmt() {
   )
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
+  const isCall = product?.type === 'CALL'
 
   const returnOnInvestmentListItems = useMemo(() => {
     return [
       <>
-        When the final settlement price ≥ {product?.strikePrice ?? '-'} USDT, you will receive{' '}
+        When the final settlement price {isCall ? '≥' : '≤'} {product?.strikePrice ?? '-'} USDT, you will receive{' '}
         <span style={{ color: theme.palette.text.primary }}>
           (Subscription Amount * Strike Price) * [1 + (APY % * Period (days) / 365)]
         </span>
         .
       </>,
       <>
-        When the settlement price &lt; {product?.strikePrice ?? '-'} USDT, you will receive{' '}
+        When the settlement price {isCall ? '<' : '≤'} {product?.strikePrice ?? '-'} USDT, you will receive{' '}
         <span style={{ color: theme.palette.text.primary }}>
           Subscription Amount * [1 + (APY% * Period (days) / 365)]
         </span>
@@ -66,7 +67,7 @@ export default function RecurringVaultMgmt() {
         complete the subscription.
       </>
     ]
-  }, [product?.strikePrice, theme.palette.text.primary])
+  }, [product?.strikePrice, product?.type, theme.palette.text.primary])
 
   const chart = useMemo(() => {
     return (

@@ -17,12 +17,17 @@ export default function DualInvestMgmt() {
 
   const strikePrice = product?.strikePrice ?? '-'
   const type = product?.type
+  const isCall = type === 'CALL'
   const gtStr = `${
-    product && amount ? ((+product.price + 1) * +product.strikePrice * +amount * +product.multiplier).toFixed(4) : '-'
-  } ${product ? (product.type === 'CALL' ? product?.strikeCurrency : product?.investCurrency) : ''} `
-  const ltStr = `${product && amount ? (+product.strikePrice * +amount * +product.multiplier).toFixed(4) : '-'} ${
-    product ? (product.type === 'CALL' ? product?.investCurrency : product?.strikeCurrency) : ''
-  }`
+    product && amount
+      ? ((+product.price + 1) * (isCall ? +product.strikePrice : 1) * +amount * +product.multiplier).toFixed(4)
+      : '-'
+  } ${product ? (isCall ? product?.strikeCurrency : product?.currency) : ''} `
+  const ltStr = `${
+    product && amount
+      ? ((isCall ? 1 : +product.strikePrice) * +amount * (1 + +product.price) * +product.multiplier).toFixed(4)
+      : '-'
+  } ${product ? (isCall ? product?.currency : product?.investCurrency) : ''}`
 
   const handleInput = useCallback(val => {
     setAmount(val)
@@ -32,20 +37,20 @@ export default function DualInvestMgmt() {
     return (
       <DualInvestChart
         product={product}
-        str1={`Settlement price > ${strikePrice}, will be exercised. Estimated return ${gtStr}`}
-        str2={`Settlement price ≤ ${strikePrice}, will not be exercised. Estimated return ${ltStr}`}
+        str1={`Settlement price ${isCall ? '≥' : '≤'} ${strikePrice}, will be exercised. Estimated return ${gtStr}`}
+        str2={`Settlement price ${isCall ? '<' : '>'} ${strikePrice}, will not be exercised. Estimated return ${ltStr}`}
       />
     )
-  }, [gtStr, ltStr, product, strikePrice])
+  }, [gtStr, isCall, ltStr, product, strikePrice])
 
   const returnOnInvestmentListItems = useMemo(() => {
     return [
       <>
-        When the final settlement price &gt; {strikePrice} USDT, you will receive{' '}
+        When the final settlement price {isCall ? '≥' : '>'} {strikePrice} USDT, you will receive{' '}
         <span style={{ color: theme.palette.text.primary }}>{gtStr}</span>.
       </>,
       <>
-        When the settlement price &le; {strikePrice} USDT, you will receive{' '}
+        When the settlement price {isCall ? '<' : '≤'} {strikePrice} USDT, you will receive{' '}
         <span style={{ color: theme.palette.text.primary }}>{ltStr}</span>.
       </>,
       <>
@@ -53,7 +58,7 @@ export default function DualInvestMgmt() {
         subscription.
       </>
     ]
-  }, [gtStr, ltStr, strikePrice])
+  }, [gtStr, isCall, ltStr, strikePrice])
 
   return (
     <MgmtPage
