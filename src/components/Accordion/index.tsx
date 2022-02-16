@@ -21,6 +21,16 @@ export default function _Accordion(props: Props) {
         boxShadow: 'none',
         '& .MuiAccordionSummary-content': {
           margin: '20px 0'
+        },
+        '&.MuiAccordion-root.Mui-expanded:before': {
+          content: '""',
+          opacity: '1!important',
+          position: 'absolute',
+          left: 0,
+          top: '-1px',
+          right: 0,
+          height: ' 1px',
+          backgroundColor: 'rgba(0, 0, 0, 0.12)'
         }
       }}
       expanded={expanded}

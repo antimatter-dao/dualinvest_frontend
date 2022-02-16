@@ -14,13 +14,11 @@ import ENS_ABI from '../constants/abis/ens-registrar.json'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import DUAL_INVEST_ABI from '../constants/abis/dual_invest.json'
-import DUAL_INVEST_TESTNET_ABI from '../constants/abis/dual_invest_testnet.json'
 import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
 import UNISOCKS_ABI from '../constants/abis/unisocks.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
-import { IS_TEST_NET } from 'constants/chain'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -105,5 +103,5 @@ export function useAntiMatterGovernanceContract(): Contract | null {
 }
 
 export function useDualInvestContract(): Contract | null {
-  return useContract(DUAL_INVEST_ADDRESS, IS_TEST_NET ? DUAL_INVEST_TESTNET_ABI : DUAL_INVEST_ABI, true)
+  return useContract(DUAL_INVEST_ADDRESS, DUAL_INVEST_ABI, true)
 }

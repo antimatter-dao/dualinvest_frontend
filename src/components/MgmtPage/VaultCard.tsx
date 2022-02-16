@@ -65,7 +65,12 @@ export default function VaultCard(props: Props) {
                   <Box display={'flex'}>
                     <Divider
                       orientation="vertical"
-                      sx={{ marginRight: 12, width: 2, backgroundColor: theme => theme.palette.primary.main }}
+                      sx={{
+                        marginRight: 12,
+                        width: 2,
+                        backgroundColor: theme => theme.palette.primary.main,
+                        borderColor: 'transparent'
+                      }}
                     />
                     <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
                       When you stop recurring, all your existing orders will not be taken into next cycle and you can

@@ -49,6 +49,7 @@ export default function Tabs(props: Props) {
                     padding: { xs: '20px 0px 17px 0px', md: tabPadding ?? '20px 10px 25px 0px' },
                     mr: { xs: 23, md: 25 },
                     textTransform: 'none',
+                    minWidth: '45px',
                     color: theme => theme.palette.text.primary,
                     opacity: 0.4,
                     '&.Mui-selected': {

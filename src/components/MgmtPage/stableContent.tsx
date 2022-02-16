@@ -1,7 +1,6 @@
-import { useState, useRef, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { Box, styled, Typography, useTheme } from '@mui/material'
 import { ReactComponent as RiskStatementIcon } from 'assets/svg/risk_statement.svg'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import Accordion from 'components/Accordion'
 import { ReactComponent as Faq } from 'assets/svg/faq.svg'
 import { ReactComponent as Put1 } from 'assets/svg/recurPolicy/put1.svg'
@@ -116,8 +115,8 @@ export function RiskStatement({ subject }: { subject: Subject }) {
 export function FAQ({ subject }: { subject: Subject }) {
   const [expanded, setExpanded] = useState<number | null>(null)
 
-  const node = useRef<any>()
-  useOnClickOutside(node, () => setExpanded(null))
+  // const node = useRef<any>()
+  // useOnClickOutside(node, () => setExpanded(null))
 
   const FAQItems = useMemo(() => {
     const items = {
@@ -257,7 +256,13 @@ export function FAQ({ subject }: { subject: Subject }) {
             summary={summary}
             details={details}
             expanded={expanded === idx}
-            onChange={() => setExpanded(idx)}
+            onChange={() => {
+              if (expanded === idx) {
+                setExpanded(null)
+                return
+              }
+              setExpanded(idx)
+            }}
           />
         ))}
       </Box>

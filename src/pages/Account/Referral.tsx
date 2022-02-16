@@ -11,12 +11,12 @@ import { useBindModal, useReferalModal } from 'hooks/useReferralModal'
 import { useReferral } from 'hooks/useReferral'
 import { useActiveWeb3React } from 'hooks'
 import NoDataCard from 'components/Card/NoDataCard'
-import TextButton from 'components/Button/TextButton'
 import { usePrice } from 'hooks/usePriceSet'
 import { trimNumberString } from 'utils/trimNumberString'
 import { shortenAddress } from 'utils'
 import { CURRENCIES } from 'constants/currencies'
 import Copy from '../../components/essential/Copy'
+import OutlineButton from 'components/Button/OutlineButton'
 
 export default function Referral() {
   const theme = useTheme()
@@ -64,22 +64,18 @@ export default function Referral() {
                 <Copy toCopy={invitation} />
               </>
             ) : (
-              <TextButton
+              <OutlineButton
                 primary
-                underline
-                fontSize={14}
                 onClick={showBindModal}
+                height="32px"
                 style={{
-                  '&:hover': {
-                    textDecoration: 'none'
-                  },
-                  '&:active': {
-                    transform: 'translateY(1px)'
-                  }
+                  padding: '8px 20px',
+                  borderRadius: 6,
+                  fontSize: 14
                 }}
               >
                 Bind referral account
-              </TextButton>
+              </OutlineButton>
             )}
           </Box>
         </Box>

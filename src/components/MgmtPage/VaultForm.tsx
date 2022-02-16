@@ -51,7 +51,7 @@ export default function VaultForm({
       <Tabs
         fontWeight={700}
         titles={['Invest', 'Redeem']}
-        tabPadding="12px"
+        tabPadding="12px 0"
         contents={[
           <Form
             error={error}

@@ -36,8 +36,8 @@ export default function TabButton({
         borderColor: active ? theme.palette.primary.main : 'transparent',
         transition: '.3s',
         '&:hover': {
-          borderColor: active ? theme.palette.primary.dark : 'transparent',
-          backgroundColor: theme.palette.primary.dark
+          borderColor: active ? theme.palette.primary.dark : theme.palette.primary.main,
+          backgroundColor: theme.palette.background.paper
         },
         '&:disabled': {
           opacity: theme.palette.action.disabledOpacity,

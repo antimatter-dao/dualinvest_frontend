@@ -32,7 +32,7 @@ const StyledHomeSvg = styled(HomeSvg)(({ theme }) => ({
 
 export default function Home() {
   const history = useHistory()
-  const isDownMd = useBreakpoint()
+  const isDownMd = useBreakpoint('md')
   useBindModal()
   const { totalInvest, totalProgress } = useHomeStatistics()
 
@@ -50,7 +50,7 @@ export default function Home() {
         justifyContent="center"
         sx={{
           width: '100%',
-          height: { xs: '365px', md: '340px' },
+          height: { xs: 'auto', md: '340px' },
           background: theme => theme.palette.background.paper,
           padding: { xs: '32px 20px', md: '44px 61px' }
         }}
@@ -163,6 +163,7 @@ export default function Home() {
           <Grid container spacing={20}>
             <ProductCard
               large
+              actionText="Explore"
               src={recurringVaultUrl}
               title="Recurring Strategy"
               synospis="Automatic management of funds, cyclic compound interest.
@@ -270,6 +271,7 @@ function ProductCard({
   onClick?: () => void
   large?: boolean
 }) {
+  const isDownMd = useBreakpoint('md')
   return (
     <Grid item xs={12} sm={large ? 12 : 6}>
       <Card style={{ height: '100%' }}>
@@ -277,17 +279,29 @@ function ProductCard({
           padding={large ? '0 24px' : '32px 24px'}
           display="grid"
           gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }}
-          rowGap={25}
-          columnGap={20}
+          rowGap={24}
+          columnGap={27}
+          height="100%"
         >
           <Box paddingTop={large ? '32px' : 0}>
             <Typography fontSize={24} fontWeight={700}>
               {title}
             </Typography>
-            <Typography sx={{ color: theme => theme.palette.text.secondary, mt: 8 }}>{synospis}</Typography>
+            <Typography
+              sx={{ color: theme => theme.palette.text.secondary, mt: 8 }}
+              fontSize={16}
+              maxWidth={large ? '408px' : undefined}
+            >
+              {synospis}
+            </Typography>
           </Box>
 
-          <Button disabled={!onClick} onClick={onClick} style={{ marginBottom: large ? '32px' : 0 }}>
+          <Button
+            width={large ? (isDownMd ? '100%' : '240px') : '100%'}
+            disabled={!onClick}
+            onClick={onClick}
+            style={{ marginBottom: large ? '32px' : 0, marginTop: 'auto', borderRadius: 1.6 }}
+          >
             {!onClick ? 'Coming soon' : actionText ?? 'Start now'}
           </Button>
           <Image
@@ -299,7 +313,7 @@ function ProductCard({
               gridRowEnd: { xs: 'span 1', md: 'span 2' },
               height: '100%',
               width: '100%',
-              padding: '10px 15px',
+              padding: large ? '0px' : '10px 15px',
               gridColumnStart: { xs: 'unset', md: '2' }
             }}
           />
