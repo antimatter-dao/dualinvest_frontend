@@ -4,12 +4,13 @@ import Card from 'components/Card/Card'
 
 interface Props {
   title?: string
+  valueColor?: string
   primary?: boolean
   width?: string | number
   height?: string | number
-  value?: string
+  value?: string | React.ReactNode
   subValue?: string
-  unit?: string
+  unit?: string | JSX.Element
   fontSize?: string
   gray?: boolean
   rate?: string
@@ -18,6 +19,9 @@ interface Props {
   children?: React.ReactNode
   border?: boolean
   padding?: string
+  gap?: string | number
+  unitFontSize?: number | string
+  valueMt?: number | string
 }
 
 export default function NumericalCard(props: Props) {
@@ -36,7 +40,11 @@ export default function NumericalCard(props: Props) {
     actions,
     children,
     border,
-    padding
+    padding,
+    valueColor,
+    unitFontSize,
+    valueMt,
+    gap
   } = props
   const theme = useTheme()
 
@@ -45,13 +53,12 @@ export default function NumericalCard(props: Props) {
       primary={primary}
       gray={gray}
       width={width || '100%'}
-      style={{ position: 'relative', border: border ? '1px solid #00000010' : undefined }}
+      style={{ position: 'relative', border: border ? '1px solid #00000010' : undefined, height: height || 'auto' }}
     >
-      {children}
       <Box
         sx={{
           padding: padding ?? '20px',
-          gap: '24px',
+          gap: gap ?? '24px',
           height: height || 'auto',
           display: 'flex',
           flexDirection: 'column',
@@ -97,7 +104,8 @@ export default function NumericalCard(props: Props) {
           sx={{
             display: 'flex',
             alignItems: 'baseline',
-            color: primary ? theme.palette.primary.contrastText : theme.palette.text.primary
+            color: valueColor ? valueColor : primary ? theme.palette.primary.contrastText : theme.palette.text.primary,
+            marginTop: valueMt ?? 0
           }}
         >
           <Typography
@@ -109,7 +117,9 @@ export default function NumericalCard(props: Props) {
           >
             {value}
           </Typography>
-          {unit && <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>{unit}</Typography>}
+          {unit && (
+            <Typography sx={{ fontSize: unitFontSize ?? 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>{unit}</Typography>
+          )}
           {dayChange && (
             <Box
               component="div"
@@ -135,9 +145,30 @@ export default function NumericalCard(props: Props) {
             </Box>
           )}
         </Box>
-        {subValue && <Typography sx={{ fontSize: 12, fontWeight: 400, opacity: 0.5 }}>{subValue}</Typography>}
+        {subValue && (
+          <Typography sx={{ fontSize: 12, fontWeight: 400, opacity: 0.5 }} align="left">
+            {subValue}
+          </Typography>
+        )}
         {actions && <Box mt={20}>{actions}</Box>}
       </Box>
+      {children && (
+        <Box sx={{ position: { xs: 'relative', sm: 'unset' } }}>
+          <Box
+            sx={{
+              position: { xs: 'unset', sm: 'absolute' },
+              right: 20,
+              top: '50%',
+              transform: { xs: 'translateY(-20px)', sm: 'translateY(-50%)' },
+              borderRadius: 40,
+              padding: { xs: '0 20px', sm: 0 },
+              mt: { xs: '20px', sm: 0 }
+            }}
+          >
+            {children}
+          </Box>
+        </Box>
+      )}
     </Card>
   )
 }

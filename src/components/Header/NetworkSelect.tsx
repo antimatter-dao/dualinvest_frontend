@@ -23,7 +23,7 @@ export default function NetworkSelect() {
         style={{
           background: 'transparent',
           border: '1px solid rgba(0, 0, 0, 0.1)',
-          '& .Mui-disabled.MuiInputBase-input': {
+          '& .Mui-disabled.MuiSelect-select.MuiInputBase-input': {
             paddingRight: isDownSm ? 0 : 10,
             color: theme => theme.palette.text.primary,
             WebkitTextFillColor: theme => theme.palette.text.primary

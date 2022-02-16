@@ -1,19 +1,21 @@
 import { useMemo, useState } from 'react'
-import { Box, Typography, Container, Collapse } from '@mui/material'
+import { Box, Typography, Container } from '@mui/material'
 import Card from 'components/Card/Card'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
 import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useActiveWeb3React } from 'hooks'
-import { useOrderRecords, InvestStatus } from 'hooks/useDualInvestData'
+import { useOrderRecords, InvestStatus, INVEST_TYPE, FilterType } from 'hooks/useAccountData'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
-import { AccordionButton } from './Position'
-import Divider from 'components/Divider'
+import HistoryTableCards from 'components/Account/HistoryTableCards'
 // import Button from 'components/Button/Button'
 import StatusTag from 'components/Status/StatusTag'
 // import { useShowClaimSuccessModal } from 'hooks/useSuccessImage'
+import Filter from 'components/Filter'
+import { CURRENCIES } from 'constants/currencies'
+import CurrencyLogo from 'components/essential/CurrencyLogo'
 
 enum HistoryMoreHeaderIndex {
   OrderID,
@@ -25,23 +27,31 @@ enum HistoryMoreHeaderIndex {
 }
 
 const HistoryTableHeader = [
+  'Token',
   'Invest Amount\n(Subscription Amount)',
-  'APY',
   'Subscribed Time',
+  'APY',
+  'Delivery Date',
   'Strike Price',
   'Exercise',
   'Holding Days',
-  'Execute Amount',
-  'Delivery Date'
+  'Refund Amount'
 ]
 
 const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '', '']
 
-export default function History() {
+export default function HistoryDualInvest() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
-  const { orderList, pageParams } = useOrderRecords(InvestStatus.Settled, page, 8)
+  const [checkedFilterOption, setCheckedFilterOption] = useState<FilterType>('All')
+  const { orderList, pageParams } = useOrderRecords(
+    INVEST_TYPE.recur,
+    checkedFilterOption,
+    InvestStatus.Settled,
+    page,
+    8
+  )
   const [hiddenParts, setHiddenParts] = useState<JSX.Element[]>([])
   // const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
 
@@ -63,7 +73,8 @@ export default function History() {
         investCurrency,
         orderId,
         productId,
-        type
+        type,
+        currency
       } = order
       const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
       const hiddenData = [
@@ -113,18 +124,22 @@ export default function History() {
         </Box>
       )
       return [
+        <Box key="token" display="flex" alignItems="center" gap={13}>
+          <CurrencyLogo currency={CURRENCIES[currency]} size="22px" />
+          <Typography fontSize={16}>{CURRENCIES[currency].symbol}</Typography>
+        </Box>,
         `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
           1
         )} ${investCurrency} (${amount})`,
+        dayjs(ts * 1000).format('MMM DD, YYYY\nhh:mm A') + ' UTC',
         <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
           {(+annualRor * 100).toFixed(2)}%
         </Typography>,
-        dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC',
+        dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + '\n08:30 AM UTC',
         strikePrice,
         type === 'CALL' ? 'Upward' : 'Down',
         `${dayjs().diff(dayjs(ts * 1000), 'day')} days`,
-        `${returnedAmount} ${returnedCurrency}`,
-        dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + '\n08:30 AM UTC'
+        `${returnedAmount} ${returnedCurrency}`
       ]
     })
     setHiddenParts(hiddenPartsList)
@@ -141,7 +156,14 @@ export default function History() {
   return (
     <Box sx={{ mt: 48, width: '100%' }}>
       <Card>
-        <Box padding="38px 24px" display="grid" gap={36} position="relative">
+        <Box padding="38px 24px" display="grid" position="relative" style={{ maxWidth: '100%', overflowX: 'auto' }}>
+          <Filter
+            checkedOption={checkedFilterOption}
+            options={['All', 'BTC']}
+            onChange={option => {
+              setCheckedFilterOption(option)
+            }}
+          />
           {!orderList && (
             <Box
               position="absolute"
@@ -159,8 +181,9 @@ export default function History() {
               <Spinner size={60} />
             </Box>
           )}
+
           {data.summaryList.length && isDownMd ? (
-            <HistoryTableCards data={data} />
+            <HistoryTableCards data={data} header={HistoryTableHeader} moreHeader={HistoryMoreHeader} />
           ) : data.summaryList.length ? (
             <>
               <Table
@@ -180,63 +203,10 @@ export default function History() {
               />
             </>
           ) : (
-            <NoDataCard height="20vh" />
+            <NoDataCard height="40vh" />
           )}
         </Box>
       </Card>
-    </Box>
-  )
-}
-
-function HistoryTableCards({ data }: { data: { summaryList: any[][]; hiddenList: any[][] } }) {
-  const [expanded, setExpanded] = useState<null | number>(null)
-
-  return (
-    <Box display="flex" flexDirection="column" gap={8} mt={24} mb={24}>
-      {data.summaryList.map((dataRow, idx) => (
-        <Card key={idx} color="#F2F5FA" padding="17px 16px">
-          <Box display="flex" flexDirection="column" gap={16}>
-            {dataRow.map((datum, idx2) => {
-              return (
-                <Box key={idx2} display="flex" justifyContent="space-between">
-                  <Typography component="div" fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                    {HistoryTableHeader[idx2]}
-                  </Typography>
-                  <Typography fontSize={12} fontWeight={600} component="div">
-                    {datum}
-                  </Typography>
-                </Box>
-              )
-            })}
-            <Box marginLeft="auto">
-              <AccordionButton
-                onClick={() => {
-                  expanded === idx ? setExpanded(null) : setExpanded(idx)
-                }}
-                expanded={expanded === idx}
-              />
-            </Box>
-          </Box>
-
-          <Collapse in={expanded === idx && !!data.hiddenList[idx]}>
-            <Divider extension={16} color="1px solid #252525" />
-            <Box display="flex" flexDirection="column" gap={16} mt={20}>
-              {data.hiddenList[idx].map((datum, idx) => {
-                return (
-                  <Box key={idx} display="flex" justifyContent="space-between">
-                    <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
-                      {HistoryMoreHeader[idx]}
-                    </Typography>
-                    <Typography fontSize={12} fontWeight={600}>
-                      {datum}
-                    </Typography>
-                  </Box>
-                )
-              })}
-            </Box>
-          </Collapse>
-        </Card>
-      ))}
     </Box>
   )
 }

@@ -3,12 +3,12 @@ import { ChainId } from '../constants/chain'
 
 export const OVERLAY_READY = 'OVERLAY_READY'
 
-type FormaticSupportedChains = Extract<ChainId, ChainId.BSC>
+type FormaticSupportedChains = Extract<ChainId, ChainId.ROPSTEN>
 
 const CHAIN_ID_NETWORK_ARGUMENT: { readonly [chainId in FormaticSupportedChains]: string | undefined } = {
   // [ChainId.MAINNET]: undefined,
-  // [ChainId.ROPSTEN]: 'ropsten',
-  [ChainId.BSC]: 'Binance Smart Chain'
+  [ChainId.ROPSTEN]: 'ropsten'
+  // [ChainId.BSC]: 'Binance Smart Chain'
 }
 
 export class FortmaticConnector extends FortmaticConnectorCore {

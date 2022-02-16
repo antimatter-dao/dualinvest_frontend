@@ -1,3 +1,5 @@
+import { trimNumberString } from 'utils/trimNumberString'
+
 interface assetBalanceRaw {
   Investing: string
   Available: string
@@ -15,9 +17,9 @@ export interface BalanceInfo {
 export function assetBalanceFormatter(data: assetBalanceRaw) {
   if (!data) return undefined
   return {
-    available: data.Available,
-    locked: data.Investing,
-    pnl: data.PnL,
-    totalInvest: data.Deposit_Amount
+    available: trimNumberString(data.Available, 4),
+    locked: trimNumberString(data.Investing, 4),
+    pnl: trimNumberString(data.PnL, 4),
+    totalInvest: trimNumberString(data.Deposit_Amount, 4)
   }
 }

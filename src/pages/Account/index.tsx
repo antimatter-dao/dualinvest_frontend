@@ -4,8 +4,8 @@ import { useParams, useHistory } from 'react-router-dom'
 import Tabs from 'components/Tabs/Tabs'
 import Image from 'components/Image'
 import Dashboard from './Dashboard'
-import Position from './Position'
-import History from './History'
+import Position from './Position/index'
+import History from './History/index'
 import Referral from './Referral'
 import dashboardUrl from 'assets/images/dashboard.png'
 import positionUrl from 'assets/images/position.png'
@@ -36,7 +36,7 @@ export default function Account() {
   const handleTabClick = useCallback(
     tabNum => {
       setCurrentTab(tabNum)
-      history.push(routes.account.replace(':tab', AccountTabsRoute[tabNum as keyof typeof AccountTabsRoute]))
+      history.replace(routes.accountTab.replace(':tab', AccountTabsRoute[tabNum as keyof typeof AccountTabsRoute]))
     },
     [history]
   )

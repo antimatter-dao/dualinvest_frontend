@@ -117,9 +117,12 @@ function Accordion({ children, placeholder }: { children: React.ReactNode; place
           }}
         />
       </Box>
-      <Box mt={-25} mb={12}>
-        {isOpen && children}
-      </Box>
+
+      {isOpen && (
+        <Box mt={-25} mb={12}>
+          {children}
+        </Box>
+      )}
     </>
   )
 }

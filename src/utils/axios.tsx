@@ -1,19 +1,28 @@
 import axios, { AxiosResponse, AxiosPromise } from 'axios'
+import { IS_TEST_NET } from 'constants/chain'
 import { retry } from 'utils/retry'
 
 const axiosInstance = axios.create({
-  baseURL: 'https://dualinvest-api.antimatter.finance/web/',
+  baseURL: IS_TEST_NET
+    ? 'https://dualinvest-testapi.antimatter.finance/web/'
+    : 'https://dualinvest-api.antimatter.finance/web/',
   timeout: 10000,
   headers: { 'content-type': 'application/json', accept: 'application/json' }
 })
 
-export const getSignatures = async <T, R>(args: T, numberOfSignRequired = 3, route: string): Promise<Array<R>> => {
+export const getSignatures = async <T, R>(
+  args: T,
+  numberOfSignRequired = IS_TEST_NET ? 1 : 3,
+  route: string
+): Promise<Array<R>> => {
   try {
-    const signRoutes = [
-      'https://node1.antimatter.finance/web/' + route,
-      'https://node2.antimatter.finance/web/' + route,
-      'https://node3.antimatter.finance/web/' + route
-    ]
+    const signRoutes = IS_TEST_NET
+      ? ['https://dualinvest-testapi.antimatter.finance:8081/web/' + route]
+      : [
+          'https://node1.antimatter.finance/web/' + route,
+          'https://node2.antimatter.finance/web/' + route,
+          'https://node3.antimatter.finance/web/' + route
+        ]
     const httpRequestsList = signRoutes.map(
       route =>
         retry(
@@ -59,7 +68,7 @@ export const getSignatures = async <T, R>(args: T, numberOfSignRequired = 3, rou
 
     return signRes
   } catch (e) {
-    throw Error('Cannot get signature99')
+    throw Error('Cannot get signature')
   }
 }
 

@@ -1,5 +1,5 @@
 import { Suspense, useEffect } from 'react'
-import { Route, Switch, Redirect, useLocation } from 'react-router-dom'
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { styled } from '@mui/material'
 import Header from '../components/Header'
 import Polling from '../components/essential/Polling'
@@ -15,6 +15,12 @@ import Spinner from 'components/Spinner'
 import { fetchLocation } from 'utils/fetch/location'
 import Account from './Account'
 import { BindModalProvider } from 'context/BindContext'
+import Home from './Home'
+// import ChainOption from './ChainOption'
+// import ChainOptionMgmt from './ChainOptionMgmt'
+import RecurringVault from './RecurringVault'
+import RecurringVaultMgmt from './RecurringVaultMgmt'
+import { IS_TEST_NET } from 'constants/chain'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -68,14 +74,21 @@ export default function App() {
                 <BindModalProvider>
                   <LocatoinVerification resource={resource}>
                     <Switch>
+                      {/* <Route exact strict path={routes.chainOption} component={ChainOption} />
+                      <Route exact strict path={routes.chainOptionTyped} component={ChainOption} />
+                      <Route exact strict path={routes.chainOptionMgmt} component={ChainOptionMgmt} /> */}
                       <Route exact strict path={routes.noService} component={NoService} />
-                      <Route exact strict path={routes.account} component={Account} />
-                      <Route exact strict path={routes.referral} component={DualInvest} />
+                      <Route exact strict path={routes.accountTab} component={Account} />
+                      <Route exact strict path={routes.accountTabType} component={Account} />
+
                       <Route exact strict path={routes.dualInvest} component={DualInvest} />
                       <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
-                      <Route exact strict path={routes.dualInvestMgmtImg} component={DualInvestMgmt} />
+                      <Route exact strict path={routes.recurringVault} component={RecurringVault} />
+                      <Route exact strict path={routes.recurringVaultMgmt} component={RecurringVaultMgmt} />
+                      <Route exact strict path={routes.home} component={Home} />
+                      <Route exact strict path={routes.referral} component={Home} />
                       <Route path="/">
-                        <Redirect to={routes.dualInvest} />
+                        <Redirect to={routes.home} />
                       </Route>
                     </Switch>
                   </LocatoinVerification>
@@ -88,13 +101,13 @@ export default function App() {
     </Suspense>
   )
 }
-
+const isDev = process.env.NODE_ENV === 'development'
 function LocatoinVerification({ resource, children }: { resource: { read(): any }; children: React.ReactNode }) {
   const location = resource.read()
 
   return (
     <Suspense fallback={<Spinner size={100} />}>
-      {(location === 'US' || location === 'CN') && false ? <NoService /> : children}
+      {location === 'US' || location === 'CN' ? isDev ? children : IS_TEST_NET ? children : <NoService /> : children}
       {/*{location === 'US' || location === 'CN' || !location || location === 'Not found' ? children : children}*/}
     </Suspense>
   )

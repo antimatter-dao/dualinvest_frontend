@@ -3,7 +3,7 @@ import { Typography, useTheme, Box, Container } from '@mui/material'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import Card from 'components/Card/Card'
 import NumericalCard from 'components/Card/NumericalCard'
-import { BTC, NO_REFERRER, USDT } from 'constants/index'
+import { NO_REFERRER } from 'constants/index'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import LogoText from 'components/LogoText'
 import Button from 'components/Button/Button'
@@ -11,11 +11,12 @@ import { useBindModal, useReferalModal } from 'hooks/useReferralModal'
 import { useReferral } from 'hooks/useReferral'
 import { useActiveWeb3React } from 'hooks'
 import NoDataCard from 'components/Card/NoDataCard'
-import TextButton from 'components/Button/TextButton'
 import { usePrice } from 'hooks/usePriceSet'
 import { trimNumberString } from 'utils/trimNumberString'
 import { shortenAddress } from 'utils'
+import { CURRENCIES } from 'constants/currencies'
 import Copy from '../../components/essential/Copy'
+import OutlineButton from 'components/Button/OutlineButton'
 
 export default function Referral() {
   const theme = useTheme()
@@ -63,22 +64,18 @@ export default function Referral() {
                 <Copy toCopy={invitation} />
               </>
             ) : (
-              <TextButton
+              <OutlineButton
                 primary
-                underline
-                fontSize={14}
                 onClick={showBindModal}
+                height="32px"
                 style={{
-                  '&:hover': {
-                    textDecoration: 'none'
-                  },
-                  '&:active': {
-                    transform: 'translateY(1px)'
-                  }
+                  padding: '8px 20px',
+                  borderRadius: 6,
+                  fontSize: 14
                 }}
               >
                 Bind referral account
-              </TextButton>
+              </OutlineButton>
             )}
           </Box>
         </Box>
@@ -96,20 +93,20 @@ export default function Referral() {
           />
           <NumericalCard title="Number of Referral Accounts" value={inviteCount ?? '-'} border fontSize="44px">
             <Button
-              style={{ position: 'absolute', width: 148, height: 44, right: 20, bottom: 20, fontSize: 14 }}
+              style={{ width: 148, height: 44, fontSize: 14, transform: 'translateY(50%)' }}
               onClick={handleOpenReferral}
             >
               Referral Link
             </Button>
           </NumericalCard>
           <Card padding="16px 22px 28px" gray>
-            <LogoText logo={<CurrencyLogo currency={BTC} />} text="BTC" />
+            <LogoText logo={<CurrencyLogo currency={CURRENCIES.BTC} />} text="BTC" />
             <Typography fontSize={24} fontWeight={700} mt={19}>
               {btcBalance}
             </Typography>
           </Card>
           <Card padding="16px 22px 28px" gray>
-            <LogoText logo={<CurrencyLogo currency={USDT} />} text="USDT" />
+            <LogoText logo={<CurrencyLogo currency={CURRENCIES.USDT} />} text="USDT" />
             <Typography fontSize={24} fontWeight={700} mt={19}>
               {usdtBalance}
             </Typography>

@@ -211,7 +211,7 @@ export default function BindModal({
             error={error}
             disableAction={!value || !!error}
             pending={pending}
-            pendingText="Pending Confirmation"
+            pendingText="Pending"
           />
         )}
       </Box>

@@ -20,7 +20,7 @@ export default function ReferalModal({ showRedirectButton = true }: { showRedire
   const { hideModal } = useModal()
 
   const handleRedirect = useCallback(() => {
-    history.push(routes.account.replace(':tab', 'referral'))
+    history.push(routes.accountTab.replace(':tab', 'referral'))
     hideModal()
   }, [hideModal, history])
 

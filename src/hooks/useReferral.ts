@@ -4,8 +4,8 @@ import { useSingleCallResult } from 'state/multicall/hooks'
 import { calculateGasMargin } from 'utils'
 import { Axios } from 'utils/axios'
 import { useDualInvestContract } from './useContract'
-import { BTC, USDT } from 'constants/index'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
+import { CURRENCIES } from 'constants/currencies'
 
 export function useReferral(): {
   invitation: undefined | string
@@ -39,7 +39,11 @@ export function useReferral(): {
 
   const BtcPromiseFn = useCallback(() => {
     if (!account) return new Promise((resolve, reject) => reject(null))
-    return Axios.post('getUserAssets', {}, { account, chainId, currency: BTC.address, symbol: BTC.symbol })
+    return Axios.post(
+      'getUserAssets',
+      {},
+      { account, chainId, currency: CURRENCIES.BTC.address, symbol: CURRENCIES.BTC.symbol }
+    )
   }, [account, chainId])
 
   const BtcCallbackFn = useCallback(r => {
@@ -52,7 +56,11 @@ export function useReferral(): {
 
   const UsdtPromiseFn = useCallback(() => {
     if (!account) return new Promise((resolve, reject) => reject(null))
-    return Axios.post('getUserAssets', {}, { account, chainId, currency: USDT.address, symbol: USDT.symbol })
+    return Axios.post(
+      'getUserAssets',
+      {},
+      { account, chainId, currency: CURRENCIES.USDT.address, symbol: CURRENCIES.USDT.symbol }
+    )
   }, [account, chainId])
 
   const UsdtCallbackFn = useCallback(r => {

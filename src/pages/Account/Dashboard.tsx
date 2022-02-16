@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
+import dayjs from 'dayjs'
 import { Container, Box, Typography, useTheme } from '@mui/material'
 import Card from 'components/Card/Card'
 import Table from 'components/Table'
@@ -17,15 +18,15 @@ import { routes } from 'constants/routes'
 import useBreakpoint from 'hooks/useBreakpoint'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_right_icon.svg'
-import { useAccountRecord } from 'hooks/useDualInvestData'
-import dayjs from 'dayjs'
-import { BTC, USDT } from 'constants/index'
+import { useAccountRecord } from 'hooks/useAccountData'
 import Spinner from 'components/Spinner'
 import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
 import { usePrice } from 'hooks/usePriceSet'
 import { useAccountBalances } from 'hooks/useAccountBalance'
 import { toChecksumAddress } from 'web3-utils'
+import { CURRENCIES } from 'constants/currencies'
+import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -36,9 +37,11 @@ enum BalanceTableHeaderIndex {
   actions
 }
 
-const RecordType: { [key in number]: 'withdraw' | 'deposit' } = {
+const RecordType: { [key in number]: 'withdraw' | 'deposit' | 'vault deposit' | 'vault withdraw' } = {
   1: 'deposit',
-  2: 'withdraw'
+  2: 'withdraw',
+  3: 'vault deposit',
+  4: 'vault withdraw'
 }
 
 const BalanceTableHeader = ['', 'Deposit Amount', 'Available', 'Investing(Locked)', 'PnL', '']
@@ -67,15 +70,17 @@ export default function Dashboard() {
   const isDownMd = useBreakpoint('md')
   const [page, setPage] = useState(1)
   const btcPrice = usePrice('BTC', 30000)
+  const ethPrice = usePrice('ETH', 30000)
   const accountBalances = useAccountBalances()
   const { accountRecord, pageParams } = useAccountRecord(page)
 
   const indexPrices = useMemo(() => {
     return {
       BTC: btcPrice,
+      ETH: ethPrice,
       USDT: 1
     }
-  }, [btcPrice])
+  }, [btcPrice, ethPrice])
 
   const totalInvest = useMemo(() => {
     if (!accountBalances) return '-'
@@ -148,46 +153,28 @@ export default function Dashboard() {
 
   const balanceData = useMemo(() => {
     return accountBalances
-      ? [
-          [
-            <TokenHeader key="btc" token={BTC} />,
-            accountBalances?.BTC?.totalInvest ?? '-',
-            accountBalances?.BTC?.available ?? '-',
-            accountBalances?.BTC?.locked ?? '-',
-            accountBalances?.BTC?.pnl ?? '-',
+      ? Object.keys(accountBalances).map(key => {
+          const balances = accountBalances[key as keyof typeof accountBalances]
+          return [
+            <TokenHeader key="btc" token={CURRENCIES[key]} />,
+            balances?.totalInvest ?? '-',
+            balances?.available ?? '-',
+            balances?.locked ?? '-',
+            balances?.pnl ?? '-',
             <BalanceActions
-              key="1"
+              key="btc1"
               onDeposit={() => {
-                setCurrentCurrency(BTC)
+                setCurrentCurrency(CURRENCIES[key])
                 handleDepositOpen()
               }}
               onWithdraw={() => {
-                setCurrentCurrency(BTC)
+                setCurrentCurrency(CURRENCIES[key])
                 handleWithdrawOpen()
               }}
-              buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c"
-            />
-          ],
-          [
-            <TokenHeader key="usdt" token={USDT} />,
-            accountBalances?.USDT?.totalInvest ?? '-',
-            accountBalances?.USDT?.available ?? '-',
-            accountBalances?.USDT?.locked ?? '-',
-            accountBalances?.USDT?.pnl ?? '-',
-            <BalanceActions
-              key="1"
-              onDeposit={() => {
-                setCurrentCurrency(USDT)
-                handleDepositOpen()
-              }}
-              onWithdraw={() => {
-                setCurrentCurrency(USDT)
-                handleWithdrawOpen()
-              }}
-              buyHref="https://www.pancakeswap.finance/swap?outputCurrency=0x55d398326f99059ff775485246999027b3197955"
+              buyHref={'https://www.pancakeswap.finance/swap?outputCurrency=' + CURRENCIES[key].address}
             />
           ]
-        ]
+        })
       : []
   }, [accountBalances, handleDepositOpen, handleWithdrawOpen])
 
@@ -209,7 +196,7 @@ export default function Dashboard() {
       <Container disableGutters sx={{ mt: 48 }}>
         <Box display="grid" gap={48}>
           <Card>
-            <Box padding="38px 24px" display="grid" gap={36}>
+            <Box padding="38px 24px" display="grid" gap={36} style={{ maxWidth: '100%', overflowX: 'auto' }}>
               <Box>
                 <Typography fontSize={{ xs: 20, sm: 24 }} fontWeight={700}>
                   My Account Balance
@@ -239,19 +226,13 @@ export default function Dashboard() {
 
                 {isDownMd ? (
                   <InvestmentValueCard
-                    value={(+totalInvest).toLocaleString('en-US', {
-                      minimumFractionDigits: 6,
-                      maximumFractionDigits: 6
-                    })}
+                    value={toLocaleNumberString(totalInvest, 6)}
                     unit="$"
                     // dayChange="+ 8.91% / $350.28 "
                   />
                 ) : (
                   <NumericalCard
-                    value={(+totalInvest).toLocaleString('en-US', {
-                      minimumFractionDigits: 6,
-                      maximumFractionDigits: 6
-                    })}
+                    value={toLocaleNumberString(totalInvest, 6)}
                     border
                     title="Portfolio Value"
                     unit="$"
@@ -264,9 +245,6 @@ export default function Dashboard() {
                         history.push(routes.dualInvest)
                       }}
                       style={{
-                        position: 'absolute',
-                        right: '180px',
-                        bottom: '20px',
                         width: 148,
                         height: 44,
                         fontSize: 14
@@ -278,9 +256,7 @@ export default function Dashboard() {
                       href={'https://exchange.chainswap.com/'}
                       primary
                       style={{
-                        position: 'absolute',
-                        right: '20px',
-                        bottom: '20px',
+                        marginLeft: 12,
                         width: 148,
                         height: 44,
                         fontSize: 14
@@ -436,7 +412,7 @@ function BalanceActions({
   buyHref: string
 }) {
   return (
-    <Box display="flex" key="action" gap={10} pl={20}>
+    <Box display="flex" key="action" gap={10} pl={20} justifyContent="flex-end">
       <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
         Deposit
       </Button>
