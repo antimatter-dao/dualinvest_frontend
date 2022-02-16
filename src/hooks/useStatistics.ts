@@ -64,19 +64,18 @@ export function useRecurStatistics() {
 }
 
 export function useHomeStatistics(): { totalInvest: string; totalProgress: string } {
-  const [dualStatistics, setdualStatistics] = useState<{ totalProgress: string; totalReInvest: string } | undefined>(
-    undefined
-  )
-
+  const BTCPrice = usePrice(CURRENCIES.BTC.symbol, 600000)
+  const ETHPrice = usePrice(CURRENCIES.ETH.symbol, 600000)
   const recurStatistics = useRecurStatistics()
 
-  const promiseFn = useCallback(() => {
-    return Axios.get('getReinDashboard')
-  }, [])
+  const [dualStatistics, setDualStatistics] = useState<DualStatisticsType>(undefined)
 
+  const promiseFn = useCallback(() => {
+    return Axios.get('getDashboard')
+  }, [])
   const callbackFn = useCallback(r => {
     if (r.data.data) {
-      setdualStatistics(r.data.data)
+      setDualStatistics(r.data.data)
     }
   }, [])
 
@@ -84,15 +83,21 @@ export function useHomeStatistics(): { totalInvest: string; totalProgress: strin
 
   const res = useMemo(() => {
     const totalInvest =
-      dualStatistics && recurStatistics
-        ? toLocaleNumberString(+dualStatistics.totalReInvest + +recurStatistics.totalReInvest, 0)
+      dualStatistics && recurStatistics && ETHPrice && BTCPrice
+        ? toLocaleNumberString(
+            +dualStatistics.totalBtcDeposit * +BTCPrice +
+              +dualStatistics.totalEthDeposit * +ETHPrice +
+              +dualStatistics.totalUsdtDeposit +
+              +recurStatistics.totalReInvest,
+            0
+          )
         : '-'
     const totalProgress =
-      dualStatistics && recurStatistics
-        ? toLocaleNumberString(+dualStatistics.totalProgress + +recurStatistics.totalProgress, 0)
+      dualStatistics && recurStatistics && ETHPrice && BTCPrice
+        ? toLocaleNumberString(+dualStatistics.totalInvestAmount + +recurStatistics.totalProgress, 0)
         : '-'
     return { totalInvest, totalProgress }
-  }, [dualStatistics, recurStatistics])
+  }, [BTCPrice, ETHPrice, dualStatistics, recurStatistics])
 
   return res
 }

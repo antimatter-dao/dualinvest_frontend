@@ -32,6 +32,14 @@ export const SUPPORTED_CURRENCIES: {
     logoUrl: BtcLogo,
     color: '#FD8B00'
   },
+  BTCB: {
+    address: IS_TEST_NET ? '0x9c1CFf4E5762e8e1F95DD3Cc74025ba8d0e71F93' : '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+    decimals: 18,
+    symbol: 'BTC',
+    name: 'Binance-Peg BTCB Token',
+    logoUrl: BtcLogo,
+    color: '#FD8B00'
+  },
   USDT: {
     address: IS_TEST_NET ? '0xE78D911B56a6321bF622172D32D916f9563e8D84' : '0x55d398326f99059fF775485246999027B3197955',
     decimals: 18,
