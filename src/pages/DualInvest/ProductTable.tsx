@@ -88,7 +88,6 @@ export default function ProductTable({
       gap={{ xs: 36, md: 48 }}
       justifyItems={{ xs: 'flex-start', md: 'center' }}
       width="100%"
-      margin={{ xs: '0px auto' }}
       alignContent="flex-start"
     >
       <Box
@@ -100,7 +99,7 @@ export default function ProductTable({
           background: theme => theme.palette.background.paper,
           borderRadius: 2,
           padding: '34px 24px',
-          margin: '0 auto',
+          margin: { xs: 0, md: '0 auto' },
           maxWidth: theme => ({ xs: '100%', sm: `calc(100% - 40px)`, md: theme.width.maxContent })
         }}
       >
@@ -131,7 +130,7 @@ export default function ProductTable({
           background: theme => theme.palette.background.paper,
           borderRadius: 2,
           padding: '34px 24px',
-          margin: '0 auto',
+          margin: { xs: 0, md: '0 auto' },
           maxWidth: theme => ({ xs: '100%', sm: `calc(100% - 40px)`, md: theme.width.maxContent })
         }}
       >

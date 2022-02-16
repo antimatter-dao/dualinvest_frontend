@@ -105,7 +105,12 @@ export default function MgmtPage(props: Props) {
         </Box>
 
         <Box padding={isDownMd || vaultForm ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
-          <Box mb={isDownMd ? 24 : 60} display="flex" gap={8} flexDirection={isDownMd ? 'column' : 'row'}>
+          <Box
+            mb={isDownMd ? 24 : 60}
+            display="flex"
+            gap={{ xs: 0, md: 8 }}
+            flexDirection={isDownMd ? 'column' : 'row'}
+          >
             {pageTitle && (
               <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
                 {pageTitle}

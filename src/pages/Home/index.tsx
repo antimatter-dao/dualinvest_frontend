@@ -17,23 +17,22 @@ import Card from 'components/Card/Card'
 import { routes } from 'constants/routes'
 import { useBindModal } from 'hooks/useReferralModal'
 import { useHomeStatistics } from 'hooks/useStatistics'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 const StyledHomeSvg = styled(HomeSvg)(({ theme }) => ({
-  flexShrink: 1,
+  flexShrink: 0,
   minHeight: 200,
-  height: '30vh',
+  height: 340,
   maxHeight: 340,
   [theme.breakpoints.down('md')]: {
     width: 'calc(100vw - 80px)',
-    margin: '0 auto -20px 0'
-    // minHeight: 'unset',
-    // height: 'auto',
-    // maxHeight: 'unset'
+    height: 221
   }
 }))
 
 export default function Home() {
   const history = useHistory()
+  const isDownMd = useBreakpoint()
   useBindModal()
   const { totalInvest, totalProgress } = useHomeStatistics()
 
@@ -44,32 +43,38 @@ export default function Home() {
       width="100%"
       alignContent="flex-start"
       marginBottom="auto"
-      gap={{ xs: 36, md: 48 }}
+      gap={{ xs: 36, md: 80 }}
     >
       <Box
-        display="flex"
+        display={{ xs: 'grid', md: 'flex' }}
         justifyContent="center"
         sx={{
           width: '100%',
-          minHeight: 200,
-          height: { ms: 'auto', md: '30vh' },
-          maxHeight: { ms: 'unset', md: 340 },
+          height: { xs: '365px', md: '340px' },
           background: theme => theme.palette.background.paper,
-          padding: { xs: '20px', md: '40px', lg: '44px 61px' }
+          padding: { xs: '32px 20px', md: '44px 61px' }
         }}
       >
         <Box
-          sx={{ maxWidth: theme => ({ xs: 'calc(100vw - 88px)', md: theme.width.maxContent }) }}
+          sx={{ maxWidth: theme => ({ xs: '100%', md: theme.width.maxContent }) }}
           width="100%"
-          display={{ xs: 'grid', sm: 'flex' }}
-          justifyContent={{ sm: 'center', md: 'space-between' }}
+          display={{ xs: 'grid', md: 'flex' }}
+          justifyContent={{ sm: 'unset', md: 'space-between' }}
           alignItems="center"
         >
           <Box display="grid" gap={12}>
-            <Typography component="h1" sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700 }}>
+            <Typography
+              component="h1"
+              sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700, textAlign: { xs: 'center', md: 'left' } }}
+            >
               Structured Products
             </Typography>
-            <Box display={{ xs: 'grid', md: 'flex' }} gap={{ xs: 8, md: 32 }} paddingBottom={{ xs: 16, md: 30 }}>
+            <Box
+              display={{ xs: 'grid', md: 'flex' }}
+              gap={{ xs: 8, md: 32 }}
+              paddingBottom={{ xs: 24, md: 30 }}
+              justifyContent={{ xs: 'center', md: 'left' }}
+            >
               <LogoText
                 logo={<Image src={checkUrl} />}
                 text={
@@ -80,14 +85,22 @@ export default function Home() {
               />
             </Box>
           </Box>
-          <StyledHomeSvg />
+
+          <Box
+            width={{ xs: '100%', md: 'auto' }}
+            margin={{ xs: '0 auto -10px 0', md: '0' }}
+            height={{ xs: 221, md: 340 }}
+            border={{ xs: '1px solid rgba(0, 0, 0, 0.1)', md: 'none' }}
+            borderRadius={1.6}
+          >
+            <StyledHomeSvg />
+          </Box>
         </Box>
       </Box>
       <Box
-        id="up"
         display="grid"
         width="100%"
-        gap={80}
+        gap={{ xs: 36, md: 80 }}
         margin={{ xs: '0px 20px' }}
         sx={{
           maxWidth: theme => ({ xs: `calc(100% - 40px)`, lg: theme.width.maxContent })
@@ -97,27 +110,34 @@ export default function Home() {
           <Grid item xs={12} md={6}>
             <NumericalCard
               width={'100%'}
-              title={'Total investment amount'}
+              title={isDownMd ? undefined : 'Total investment amount'}
               value={totalInvest}
-              fontSize={'44px'}
+              subValue={isDownMd ? 'Total investment amount' : undefined}
+              fontSize={isDownMd ? '20px' : '44px'}
               unit="USDT"
-              border
+              valueMt={isDownMd ? 0 : 10}
+              gap={isDownMd ? 12 : 24}
+              unitFontSize={isDownMd ? 12 : undefined}
+              padding={isDownMd ? '20px' : '24px'}
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <NumericalCard
               width={'100%'}
-              title={'Amount of investment in progress'}
+              title={isDownMd ? undefined : 'Amount of investment in progress'}
+              subValue={isDownMd ? 'Amount of investment in progress' : undefined}
               value={totalProgress}
-              fontSize={'44px'}
+              fontSize={isDownMd ? '20px' : '44px'}
               unit="USDT"
-              border
+              valueMt={isDownMd ? 0 : 10}
+              unitFontSize={isDownMd ? 12 : undefined}
+              padding={isDownMd ? '20px' : '24px'}
             />
           </Grid>
         </Grid>
 
-        <Box display="grid" gap={32}>
-          <Typography fontSize={48} fontWeight={700}>
+        <Box display="grid" gap={{ xs: 16, md: 32 }}>
+          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
             Dual Investment
           </Typography>
           <Grid container spacing={20}>
@@ -136,8 +156,8 @@ export default function Home() {
             />
           </Grid>
         </Box>
-        <Box display="grid" gap={32}>
-          <Typography fontSize={48} fontWeight={700}>
+        <Box display="grid" gap={{ xs: 16, md: 32 }}>
+          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
             Recurring Strategy
           </Typography>
           <Grid container spacing={20}>
@@ -153,8 +173,8 @@ export default function Home() {
             />
           </Grid>
         </Box>
-        <Box display="grid" gap={32}>
-          <Typography fontSize={48} fontWeight={700}>
+        <Box display="grid" gap={{ xs: 16, md: 32 }}>
+          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
             Chain Option
           </Typography>
           <Grid container spacing={20}>

@@ -45,7 +45,7 @@ export default function DualInvest() {
         subVal2={'Cumulative Investment Amount'}
         unit2={'USDT'}
       />
-      <Box width={'100%'} sx={{ maxWidth: theme => theme.width.maxContent, margin: '0 24px' }}>
+      <Box width={'100%'} sx={{ maxWidth: theme => theme.width.maxContent, margin: '0 20px' }}>
         <CurrencyTabs
           contents={SUPPORTED_CURRENCY_SYMBOL.map(symbol => {
             const list = productList?.[symbol as keyof typeof productList]

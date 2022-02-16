@@ -19,7 +19,7 @@ const StyledImg = styled(Box)(({ theme }) => ({
     flexShrink: 1,
     [theme.breakpoints.down('md')]: {
       width: '100%',
-      margin: '0 auto'
+      margin: '20px auto 0'
     }
   }
 }))
@@ -55,7 +55,7 @@ export default function ProductBanner({
       sx={{
         width: '100%',
         background: theme => theme.palette.background.paper,
-        padding: { xs: '20px', md: '40px', lg: '44px 61px' }
+        padding: { xs: '32px 20px 20px', md: '40px', lg: '44px 61px' }
       }}
     >
       <Box
@@ -69,7 +69,7 @@ export default function ProductBanner({
           <Typography component="h1" sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700 }}>
             {title}
           </Typography>
-          <Box display={{ xs: 'grid', md: 'flex' }} gap={{ xs: 8, md: 32 }} paddingBottom={{ xs: 16, md: 30 }}>
+          <Box display={{ xs: 'grid', md: 'flex' }} gap={{ xs: 8, md: 32 }} paddingBottom={{ xs: 12, md: 30 }}>
             {checkpoints.map(point => (
               <LogoText
                 key={point}
@@ -79,22 +79,28 @@ export default function ProductBanner({
             ))}
           </Box>
           <Grid container spacing={{ xs: 8, md: 20 }}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} height={{ xs: 76, md: 'auto' }}>
               <NumericalCard
+                fontSize={isDownMd ? '20px' : undefined}
                 width={isDownSm ? '100%' : isDownMd ? '320px' : '264px'}
                 value={val1}
                 unit={unit1}
                 border
+                height={isDownMd ? 76 : 'auto'}
                 subValue={subVal1}
+                gap={isDownMd ? '12px' : undefined}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} mt={{ xs: 8, md: 0 }}>
               <NumericalCard
+                fontSize={isDownMd ? '20px' : undefined}
                 width={isDownSm ? '100%' : isDownMd ? '320px' : '264px'}
                 value={val2}
                 unit={unit2}
                 border
                 subValue={subVal2}
+                height={isDownMd ? 76 : 'auto'}
+                gap={isDownMd ? '12px' : undefined}
               />
             </Grid>
           </Grid>

@@ -42,6 +42,9 @@ const StyledOrderList = styled('ol')(({ theme }) => ({
     marginLeft: '24px',
     position: 'absolute',
     left: '-1px'
+  },
+  [theme.breakpoints.down('md')]: {
+    padding: '0px 0px 0px 36px'
   }
 }))
 
