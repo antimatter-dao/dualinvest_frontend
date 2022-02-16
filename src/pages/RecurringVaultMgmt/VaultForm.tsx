@@ -178,11 +178,13 @@ export default function VaultForm({
     ) {
       str = ErrorType.insufficientBalance
     }
-    const now = new Date(Date.now())
-    const h = now.getUTCHours()
-    const m = now.getUTCHours()
+    console.log(999, product?.expiredAt, dayjs(product.expiredAt).format('YYYYMMDDhhmmss'))
 
-    if (product.price === null || (h >= 6 && h < 8 && m < 30)) {
+    const now = Date.now()
+    const before = product.expiredAt - 7200000
+    const after = product.expiredAt + 1800000
+
+    if (product.price === null || (now >= before && now < after)) {
       str = ErrorType.notAvailable
     }
 
