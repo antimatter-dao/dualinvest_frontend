@@ -110,9 +110,9 @@ export default function Home() {
           <Grid item xs={12} md={6}>
             <NumericalCard
               width={'100%'}
-              title={isDownMd ? undefined : 'Total investment amount'}
+              title={isDownMd ? undefined : 'Cumulative Deposit Amount'}
               value={totalInvest}
-              subValue={isDownMd ? 'Total investment amount' : undefined}
+              subValue={isDownMd ? 'Cumulative Deposit Amount' : undefined}
               fontSize={isDownMd ? '20px' : '44px'}
               unit="USDT"
               valueMt={isDownMd ? 0 : 10}
@@ -124,8 +124,8 @@ export default function Home() {
           <Grid item xs={12} md={6}>
             <NumericalCard
               width={'100%'}
-              title={isDownMd ? undefined : 'Amount of investment in progress'}
-              subValue={isDownMd ? 'Amount of investment in progress' : undefined}
+              title={isDownMd ? undefined : 'Cumulative Investment Amount'}
+              subValue={isDownMd ? 'Cumulative Investment Amount' : undefined}
               value={totalProgress}
               fontSize={isDownMd ? '20px' : '44px'}
               unit="USDT"

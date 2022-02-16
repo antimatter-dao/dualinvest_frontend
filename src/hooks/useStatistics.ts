@@ -87,14 +87,13 @@ export function useHomeStatistics(): { totalInvest: string; totalProgress: strin
         ? toLocaleNumberString(
             +dualStatistics.totalBtcDeposit * +BTCPrice +
               +dualStatistics.totalEthDeposit * +ETHPrice +
-              +dualStatistics.totalUsdtDeposit +
-              +recurStatistics.totalReInvest,
+              +dualStatistics.totalUsdtDeposit,
             0
           )
         : '-'
     const totalProgress =
       dualStatistics && recurStatistics && ETHPrice && BTCPrice
-        ? toLocaleNumberString(+dualStatistics.totalInvestAmount + +recurStatistics.totalProgress, 0)
+        ? toLocaleNumberString(+dualStatistics.totalInvestAmount + +recurStatistics.totalReInvest, 0)
         : '-'
     return { totalInvest, totalProgress }
   }, [BTCPrice, ETHPrice, dualStatistics, recurStatistics])
