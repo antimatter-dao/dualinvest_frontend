@@ -17,6 +17,7 @@ import Card from 'components/Card/Card'
 import { routes } from 'constants/routes'
 import { useBindModal } from 'hooks/useReferralModal'
 import { useHomeStatistics } from 'hooks/useStatistics'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 const StyledHomeSvg = styled(HomeSvg)(({ theme }) => ({
   flexShrink: 1,
@@ -24,6 +25,7 @@ const StyledHomeSvg = styled(HomeSvg)(({ theme }) => ({
   height: '30vh',
   maxHeight: 340,
   [theme.breakpoints.down('md')]: {
+    height: 221,
     width: 'calc(100vw - 80px)',
     margin: '0 auto -20px 0'
     // minHeight: 'unset',
@@ -36,11 +38,15 @@ export default function Home() {
   const history = useHistory()
   useBindModal()
   const { totalInvest, totalProgress } = useHomeStatistics()
+  const isDownMd = useBreakpoint('md')
 
   return (
     <Box
-      display="grid"
-      justifyItems={{ xs: 'flex-start', md: 'center' }}
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      // display="grid"
+      // justifyItems={{ md: 'center' }}
       width="100%"
       alignContent="flex-start"
       marginBottom="auto"
@@ -59,28 +65,42 @@ export default function Home() {
         }}
       >
         <Box
-          sx={{ maxWidth: theme => ({ xs: 'calc(100vw - 88px)', md: theme.width.maxContent }) }}
+          sx={{ maxWidth: theme => ({ md: theme.width.maxContent }) }}
           width="100%"
-          display={{ xs: 'grid', sm: 'flex' }}
+          display="flex"
+          flexDirection={{ xs: 'column', md: 'row' }}
           justifyContent={{ sm: 'center', md: 'space-between' }}
-          alignItems="center"
+          alignItems={{ xs: 'unset', md: 'center' }}
         >
           <Box display="grid" gap={12}>
             <Typography component="h1" sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700 }}>
               Structured Products
             </Typography>
-            <Box display={{ xs: 'grid', md: 'flex' }} gap={{ xs: 8, md: 32 }} paddingBottom={{ xs: 16, md: 30 }}>
-              <LogoText
-                logo={<Image src={checkUrl} />}
-                text={
-                  <Typography sx={{ fontSize: { xs: 14, md: 18 }, opacity: 0.8 }}>
-                    Simple, safe, high-yield digital asset management
-                  </Typography>
-                }
-              />
-            </Box>
+            <LogoText
+              logo={<Image src={checkUrl} />}
+              text={
+                <Typography sx={{ fontSize: { xs: 14, md: 24 }, opacity: 0.8 }}>
+                  Simple, safe, high-yield digital asset management
+                </Typography>
+              }
+            />
           </Box>
-          <StyledHomeSvg />
+
+          {isDownMd ? (
+            <Box
+              mt={24}
+              width="100%"
+              height={221}
+              borderRadius="16px"
+              border="1px solid rgba(0,0,0,0.1)"
+              display="flex"
+              justifyContent="center"
+            >
+              <StyledHomeSvg />
+            </Box>
+          ) : (
+            <StyledHomeSvg />
+          )}
         </Box>
       </Box>
       <Box
