@@ -117,21 +117,25 @@ export default function Home() {
           <Grid item xs={12} md={6}>
             <NumericalCard
               width={'100%'}
-              title={'Total investment amount'}
+              title={isDownMd ? undefined : 'Total investment amount'}
               value={totalInvest}
-              fontSize={'44px'}
+              fontSize={isDownMd ? '20px' : '44px'}
               unit="USDT"
+              unitSize={isDownMd ? '12px' : '16px'}
               border
+              subValue={isDownMd ? 'Total investment amount' : undefined}
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <NumericalCard
               width={'100%'}
-              title={'Amount of investment in progress'}
+              title={isDownMd ? undefined : 'Amount of investment in progress'}
               value={totalProgress}
-              fontSize={'44px'}
+              fontSize={isDownMd ? '20px' : '44px'}
               unit="USDT"
+              unitSize={isDownMd ? '12px' : '16px'}
               border
+              subValue={isDownMd ? 'Amount of investment in progress' : undefined}
             />
           </Grid>
         </Grid>
