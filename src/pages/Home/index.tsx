@@ -25,8 +25,8 @@ const StyledHomeSvg = styled(HomeSvg)(({ theme }) => ({
   height: 340,
   maxHeight: 340,
   [theme.breakpoints.down('md')]: {
-    width: 'calc(100vw - 80px)',
-    height: 221
+    height: 221,
+    width: 'calc(100vw - 80px)'
   }
 }))
 
@@ -38,8 +38,11 @@ export default function Home() {
 
   return (
     <Box
-      display="grid"
-      justifyItems={{ xs: 'flex-start', md: 'center' }}
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      // display="grid"
+      // justifyItems={{ md: 'center' }}
       width="100%"
       alignContent="flex-start"
       marginBottom="auto"
@@ -56,11 +59,12 @@ export default function Home() {
         }}
       >
         <Box
-          sx={{ maxWidth: theme => ({ xs: '100%', md: theme.width.maxContent }) }}
+          sx={{ maxWidth: theme => ({ md: theme.width.maxContent }) }}
           width="100%"
-          display={{ xs: 'grid', md: 'flex' }}
-          justifyContent={{ sm: 'unset', md: 'space-between' }}
-          alignItems="center"
+          display="flex"
+          flexDirection={{ xs: 'column', md: 'row' }}
+          justifyContent={{ sm: 'center', md: 'space-between' }}
+          alignItems={{ xs: 'unset', md: 'center' }}
         >
           <Box display="grid" gap={12}>
             <Typography
@@ -69,32 +73,31 @@ export default function Home() {
             >
               Structured Products
             </Typography>
-            <Box
-              display={{ xs: 'grid', md: 'flex' }}
-              gap={{ xs: 8, md: 32 }}
-              paddingBottom={{ xs: 24, md: 30 }}
-              justifyContent={{ xs: 'center', md: 'left' }}
-            >
-              <LogoText
-                logo={<Image src={checkUrl} />}
-                text={
-                  <Typography sx={{ fontSize: { xs: 14, md: 18 }, opacity: 0.8 }}>
-                    Simple, safe, high-yield digital asset management
-                  </Typography>
-                }
-              />
-            </Box>
+            <LogoText
+              logo={<Image src={checkUrl} />}
+              text={
+                <Typography sx={{ fontSize: { xs: 14, md: 24 }, opacity: 0.8 }}>
+                  Simple, safe, high-yield digital asset management
+                </Typography>
+              }
+            />
           </Box>
 
-          <Box
-            width={{ xs: '100%', md: 'auto' }}
-            margin={{ xs: '0 auto -10px 0', md: '0' }}
-            height={{ xs: 221, md: 340 }}
-            border={{ xs: '1px solid rgba(0, 0, 0, 0.1)', md: 'none' }}
-            borderRadius={1.6}
-          >
+          {isDownMd ? (
+            <Box
+              mt={24}
+              width="100%"
+              height={221}
+              borderRadius="16px"
+              border="1px solid rgba(0,0,0,0.1)"
+              display="flex"
+              justifyContent="center"
+            >
+              <StyledHomeSvg />
+            </Box>
+          ) : (
             <StyledHomeSvg />
-          </Box>
+          )}
         </Box>
       </Box>
       <Box
