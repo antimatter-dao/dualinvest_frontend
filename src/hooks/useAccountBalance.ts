@@ -26,8 +26,8 @@ export function useAccountBalances(): {
 
   const btcBtcRecur = useRecurBalance(CURRENCIES.BTC, CURRENCIES.BTC)
   const ethEthRecur = useRecurBalance(CURRENCIES.ETH, CURRENCIES.ETH)
-  const btcUsdtRecur = useRecurBalance(CURRENCIES.USDT, CURRENCIES.BTC)
-  const ethUsdtRecur = useRecurBalance(CURRENCIES.USDT, CURRENCIES.ETH)
+  const btcUsdtRecur = useRecurBalance(CURRENCIES.BTC, CURRENCIES.USDT)
+  const ethUsdtRecur = useRecurBalance(CURRENCIES.ETH, CURRENCIES.USDT)
 
   const btcPromiseFn = useCallback(
     () =>
