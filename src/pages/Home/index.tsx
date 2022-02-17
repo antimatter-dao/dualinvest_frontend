@@ -137,10 +137,10 @@ export default function Home() {
         </Grid>
 
         <Box display="grid" gap={{ xs: 16, md: 32 }}>
-          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
+          <Typography fontSize={{ xs: 24, md: 48 }} fontWeight={700}>
             Dual Investment
           </Typography>
-          <Grid container spacing={20}>
+          <Grid container spacing={{ xs: 12, md: 20 }}>
             <ProductCard
               src={dualInvestUrl}
               title="Dual Investment"
@@ -157,7 +157,7 @@ export default function Home() {
           </Grid>
         </Box>
         <Box display="grid" gap={{ xs: 16, md: 32 }}>
-          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
+          <Typography fontSize={{ xs: 24, md: 48 }} fontWeight={700}>
             Recurring Strategy
           </Typography>
           <Grid container spacing={20}>
@@ -175,10 +175,10 @@ export default function Home() {
           </Grid>
         </Box>
         <Box display="grid" gap={{ xs: 16, md: 32 }}>
-          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
+          <Typography fontSize={{ xs: 24, md: 48 }} fontWeight={700}>
             Chain Option
           </Typography>
-          <Grid container spacing={20}>
+          <Grid container spacing={{ xs: 12, md: 20 }}>
             <ProductCard
               src={SaddleOptionUrl}
               title="Saddle Options"
@@ -198,11 +198,11 @@ export default function Home() {
           </Grid>
         </Box>
 
-        <Box display="grid" gap={32}>
-          <Typography fontSize={48} fontWeight={700}>
-            Features
+        <Box display="grid" gap={{ xs: 16, md: 32 }}>
+          <Typography fontSize={{ xs: 24, md: 48 }} fontWeight={700}>
+            Recurring Strategy
           </Typography>
-          <Grid container sx={{ justifyContent: 'space-between' }} spacing={20}>
+          <Grid container sx={{ justifyContent: 'space-between' }} spacing={{ xs: 8, md: 20 }}>
             <Grid item xs={12} md={4}>
               <FeatureCard
                 icon={
@@ -287,11 +287,7 @@ function ProductCard({
             <Typography fontSize={24} fontWeight={700}>
               {title}
             </Typography>
-            <Typography
-              sx={{ color: theme => theme.palette.text.secondary, mt: 8 }}
-              fontSize={16}
-              maxWidth={large ? '408px' : undefined}
-            >
+            <Typography sx={{ color: theme => theme.palette.text.secondary, mt: 8, fontSize: 16 }}>
               {synospis}
             </Typography>
           </Box>
