@@ -137,7 +137,7 @@ export default function Home() {
         </Grid>
 
         <Box display="grid" gap={{ xs: 16, md: 32 }}>
-          <Typography fontSize={{ xs: 24, md: 48 }} fontWeight={700}>
+          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
             Dual Investment
           </Typography>
           <Grid container spacing={{ xs: 12, md: 20 }}>
@@ -157,7 +157,7 @@ export default function Home() {
           </Grid>
         </Box>
         <Box display="grid" gap={{ xs: 16, md: 32 }}>
-          <Typography fontSize={{ xs: 24, md: 48 }} fontWeight={700}>
+          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
             Recurring Strategy
           </Typography>
           <Grid container spacing={20}>
@@ -175,7 +175,7 @@ export default function Home() {
           </Grid>
         </Box>
         <Box display="grid" gap={{ xs: 16, md: 32 }}>
-          <Typography fontSize={{ xs: 24, md: 48 }} fontWeight={700}>
+          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
             Chain Option
           </Typography>
           <Grid container spacing={{ xs: 12, md: 20 }}>
@@ -199,8 +199,8 @@ export default function Home() {
         </Box>
 
         <Box display="grid" gap={{ xs: 16, md: 32 }}>
-          <Typography fontSize={{ xs: 24, md: 48 }} fontWeight={700}>
-            Recurring Strategy
+          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
+            Features
           </Typography>
           <Grid container sx={{ justifyContent: 'space-between' }} spacing={{ xs: 8, md: 20 }}>
             <Grid item xs={12} md={4}>
@@ -279,9 +279,8 @@ function ProductCard({
           padding={large ? '0 24px' : '32px 24px'}
           display="grid"
           gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }}
-          rowGap={24}
-          columnGap={27}
-          height="100%"
+          rowGap={25}
+          columnGap={60}
         >
           <Box paddingTop={large ? '32px' : 0}>
             <Typography fontSize={24} fontWeight={700}>
@@ -293,10 +292,10 @@ function ProductCard({
           </Box>
 
           <Button
-            width={large ? (isDownMd ? '100%' : '240px') : '100%'}
+            width={isDownMd ? '100%' : '240px'}
             disabled={!onClick}
             onClick={onClick}
-            style={{ marginBottom: large ? '32px' : 0, marginTop: 'auto', borderRadius: 1.6 }}
+            style={{ marginBottom: large ? '32px' : 0 }}
           >
             {!onClick ? 'Coming soon' : actionText ?? 'Start now'}
           </Button>
