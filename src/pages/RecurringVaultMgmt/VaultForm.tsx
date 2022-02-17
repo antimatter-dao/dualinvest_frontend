@@ -178,7 +178,6 @@ export default function VaultForm({
     ) {
       str = ErrorType.insufficientBalance
     }
-    console.log(999, product?.expiredAt, dayjs(product.expiredAt).format('YYYYMMDDhhmmss'))
 
     const now = Date.now()
     const before = product.expiredAt - 7200000
