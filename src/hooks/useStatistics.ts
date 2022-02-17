@@ -64,11 +64,11 @@ export function useRecurStatistics() {
 }
 
 export function useHomeStatistics(): { totalInvest: string; totalProgress: string } {
+  const [dualStatistics, setDualStatistics] = useState<DualStatisticsType>(undefined)
+
   const BTCPrice = usePrice(CURRENCIES.BTC.symbol, 600000)
   const ETHPrice = usePrice(CURRENCIES.ETH.symbol, 600000)
   const recurStatistics = useRecurStatistics()
-
-  const [dualStatistics, setDualStatistics] = useState<DualStatisticsType>(undefined)
 
   const promiseFn = useCallback(() => {
     return Axios.get('getDashboard')

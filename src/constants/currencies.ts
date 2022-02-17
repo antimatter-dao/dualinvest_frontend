@@ -9,7 +9,8 @@ export const SYMBOL_MAP = {
   BTC: 'BTC',
   USDT: 'USDT',
   BTCT: 'BTC',
-  ETH: 'ETH'
+  ETH: 'ETH',
+  BTCB: 'BTC'
 }
 
 export const SUPPORTED_CURRENCY_SYMBOL = [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH]
