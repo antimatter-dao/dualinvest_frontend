@@ -141,7 +141,7 @@ export default function Home() {
         </Grid>
 
         <Box display="grid" gap={{ xs: 16, md: 32 }}>
-          <Typography fontSize={{ xs: 24, md: 48 }} fontWeight={700}>
+          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
             Dual Investment
           </Typography>
           <Grid container spacing={{ xs: 12, md: 20 }}>
@@ -161,7 +161,7 @@ export default function Home() {
           </Grid>
         </Box>
         <Box display="grid" gap={{ xs: 16, md: 32 }}>
-          <Typography fontSize={{ xs: 24, md: 48 }} fontWeight={700}>
+          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
             Recurring Strategy
           </Typography>
           <Grid container spacing={20}>
@@ -178,7 +178,7 @@ export default function Home() {
           </Grid>
         </Box>
         <Box display="grid" gap={{ xs: 16, md: 32 }}>
-          <Typography fontSize={{ xs: 24, md: 48 }} fontWeight={700}>
+          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
             Chain Option
           </Typography>
           <Grid container spacing={{ xs: 12, md: 20 }}>
@@ -202,8 +202,8 @@ export default function Home() {
         </Box>
 
         <Box display="grid" gap={{ xs: 16, md: 32 }}>
-          <Typography fontSize={{ xs: 24, md: 48 }} fontWeight={700}>
-            Recurring Strategy
+          <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
+            Features
           </Typography>
           <Grid container sx={{ justifyContent: 'space-between' }} spacing={{ xs: 8, md: 20 }}>
             <Grid item xs={12} md={4}>
@@ -274,6 +274,8 @@ function ProductCard({
   onClick?: () => void
   large?: boolean
 }) {
+  const isDownMd = useBreakpoint('md')
+
   return (
     <Grid item xs={12} sm={large ? 12 : 6}>
       <Card style={{ height: '100%' }}>
@@ -282,7 +284,7 @@ function ProductCard({
           display="grid"
           gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }}
           rowGap={25}
-          columnGap={20}
+          columnGap={60}
         >
           <Box paddingTop={large ? '32px' : 0}>
             <Typography fontSize={24} fontWeight={700}>
@@ -293,7 +295,12 @@ function ProductCard({
             </Typography>
           </Box>
 
-          <Button disabled={!onClick} onClick={onClick} style={{ marginBottom: large ? '32px' : 0 }}>
+          <Button
+            width={isDownMd ? '100%' : '240px'}
+            disabled={!onClick}
+            onClick={onClick}
+            style={{ marginBottom: large ? '32px' : 0 }}
+          >
             {!onClick ? 'Coming soon' : actionText ?? 'Start now'}
           </Button>
           <Image
