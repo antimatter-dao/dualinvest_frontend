@@ -113,28 +113,25 @@ export default function Home() {
           <Grid item xs={12} md={6}>
             <NumericalCard
               width={'100%'}
-              title={isDownMd ? undefined : 'Cumulative Deposit Amount'}
+              title={isDownMd ? undefined : 'Total investment amount'}
               value={totalInvest}
-              subValue={isDownMd ? 'Cumulative Deposit Amount' : undefined}
               fontSize={isDownMd ? '20px' : '44px'}
               unit="USDT"
-              valueMt={isDownMd ? 0 : 10}
-              gap={isDownMd ? 12 : 24}
-              unitFontSize={isDownMd ? 12 : undefined}
-              padding={isDownMd ? '20px' : '24px'}
+              unitSize={isDownMd ? '12px' : '16px'}
+              border
+              subValue={isDownMd ? 'Total investment amount' : undefined}
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <NumericalCard
               width={'100%'}
-              title={isDownMd ? undefined : 'Cumulative Investment Amount'}
-              subValue={isDownMd ? 'Cumulative Investment Amount' : undefined}
+              title={isDownMd ? undefined : 'Amount of investment in progress'}
               value={totalProgress}
               fontSize={isDownMd ? '20px' : '44px'}
               unit="USDT"
-              valueMt={isDownMd ? 0 : 10}
-              unitFontSize={isDownMd ? 12 : undefined}
-              padding={isDownMd ? '20px' : '24px'}
+              unitSize={isDownMd ? '12px' : '16px'}
+              border
+              subValue={isDownMd ? 'Amount of investment in progress' : undefined}
             />
           </Grid>
         </Grid>
