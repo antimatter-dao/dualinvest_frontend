@@ -44,8 +44,12 @@ export default function Tabs(props: Props) {
                   key={idx}
                   label={tab}
                   sx={{
-                    padding: { xs: '20px 0px 17px 0px', md: tabPadding ?? '20px 10px 25px 0px' },
-                    mr: { xs: 23, md: 25 },
+                    minWidth: 'fit-content',
+                    fontSize: { xs: 16 },
+                    fontWeight: 700,
+                    padding: tabPadding,
+                    // padding: { xs: '12px 0px 12px 0px', md: tabPadding ?? '20px 10px 25px 0px' },
+                    mr: { xs: 23, md: 28 },
                     textTransform: 'none',
                     color: theme => theme.palette.text.primary,
                     opacity: 0.4,
