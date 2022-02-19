@@ -129,7 +129,7 @@ export default function HistoryDualInvest() {
           <Typography fontSize={16}>{CURRENCIES[currency].symbol}</Typography>
         </Box>,
         `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
-          1
+          2
         )} ${investCurrency} (${amount})`,
         dayjs(ts * 1000).format('MMM DD, YYYY\nhh:mm A') + ' UTC',
         <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>

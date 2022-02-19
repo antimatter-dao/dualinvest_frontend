@@ -115,7 +115,7 @@ export default function PositionDualInvest() {
             : 'progressing'
         const apy = `${(+annualRor * 100).toFixed(2)}%`
         const investAmount = `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
-          1
+          2
         )} ${investCurrency}`
         const deliveryDate = dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + '\n08:30 AM UTC'
         const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
