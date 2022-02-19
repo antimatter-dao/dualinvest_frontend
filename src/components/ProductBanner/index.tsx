@@ -64,6 +64,7 @@ export default function ProductBanner({
         display={{ xs: 'grid', sm: 'flex' }}
         justifyContent={{ sm: 'center', md: 'space-between' }}
         alignItems="center"
+        gap={15}
       >
         <Box display="grid" gap={12}>
           <Typography component="h1" sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700 }}>
