@@ -12,7 +12,9 @@ const StyledOrderList = styled('ol')(({ theme }) => ({
   position: 'relative',
   marginBlockEnd: '0px',
   paddingLeft: 36,
-  paddingRight: `calc( 100vw * 0.2 )`,
+  [theme.breakpoints.up('sm')]: {
+    paddingRight: `calc( 100vw * 0.2 )`
+  },
   '& li': {
     paddingBottom: '24px',
     paddingLeft: '12px',
@@ -121,8 +123,8 @@ export function FAQ() {
                   365)]
                 </p>
                 <p>
-                  <b>Downward Exercise:</b> Yields = (Subscription Amount / Strike Price) * [1 + (APY % * Cycle (days)
-                  / 365)]
+                  <b>Downward Exercise:</b> Yields = (Subscription Amount / Strike Price) * [1 + (APY % * Cycle (days) /
+                  365)]
                 </p>
                 <p>
                   When a subscription is &quot;unexercised&quot;, the subscription amount and yields will not be
