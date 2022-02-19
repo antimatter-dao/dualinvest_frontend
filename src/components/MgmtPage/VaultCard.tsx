@@ -49,7 +49,7 @@ export default function VaultCard(props: Props) {
 
   return (
     <Card>
-      <Box padding="34px 29px 39px">
+      <Box padding={{ xs: '24px 16px 25px', md: '34px 24px 48px' }}>
         <ProductCardHeader
           logoCurSymbol={logoCurSymbol}
           title={title}
@@ -102,12 +102,7 @@ export default function VaultCard(props: Props) {
                   <Typography fontSize={16}>Order in progress</Typography>
                   <Box display="flex" alignItems="center" gap={5}>
                     <span style={{ textDecoration: 'none' }}> {activeOrder}</span>
-                    <TextButton
-                      primary
-                      onClick={handleDetails}
-                      style={{ textDecoration: 'underline', width: 'max-content' }}
-                      disabled={!account}
-                    >
+                    <TextButton primary onClick={handleDetails} style={{ width: 'max-content' }} disabled={!account}>
                       Details
                     </TextButton>
                   </Box>

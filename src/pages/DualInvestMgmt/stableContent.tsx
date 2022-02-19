@@ -12,7 +12,9 @@ const StyledOrderList = styled('ol')(({ theme }) => ({
   position: 'relative',
   marginBlockEnd: '0px',
   paddingLeft: 36,
-  paddingRight: `calc( 100vw * 0.2 )`,
+  [theme.breakpoints.up('sm')]: {
+    paddingRight: `calc( 100vw * 0.2 )`
+  },
   '& li': {
     paddingBottom: '24px',
     paddingLeft: '12px',
