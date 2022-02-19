@@ -31,7 +31,7 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
       <Box display="grid" columnGap={20} mb={{ xs: 10, md: 0 }}>
         <CurrencyLogo
           currency={CURRENCIES[logoCurSymbol]}
-          size="64px"
+          size={isDownMd ? '32px' : '64px'}
           style={{
             gridRowStart: 1,
             gridRowEnd: isDownSm ? 'span 1' : 'span 2',
@@ -45,13 +45,16 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
           sx={{
             gridColumnStart: isDownSm ? 1 : 2,
             gridColumnEnd: 'span 1',
-            fontSize: 24
+            fontSize: {
+              xs: 20,
+              md: 24
+            }
           }}
         >
           {title}
         </Typography>
         {description && (
-          <Typography fontSize={16} sx={{ opacity: 0.5 }} align="left">
+          <Typography fontSize={{ xs: 14, md: 16 }} sx={{ opacity: 0.5 }} align="left">
             {description}
           </Typography>
         )}
