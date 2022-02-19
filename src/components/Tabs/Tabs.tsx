@@ -16,7 +16,7 @@ function TabPanel({ children, value, index }: { children: React.ReactNode; value
 }
 
 export default function Tabs(props: Props) {
-  const { titles, contents, customCurrentTab, customOnChange, tabPadding, CustomTab, fontWeight } = props
+  const { titles, contents, customCurrentTab, customOnChange, tabPadding, CustomTab } = props
   const [value, setValue] = React.useState(0)
 
   const onChange = useCallback(
@@ -45,11 +45,12 @@ export default function Tabs(props: Props) {
                   key={idx}
                   label={tab}
                   sx={{
-                    fontWeight: fontWeight ?? 400,
-                    padding: { xs: '20px 0px 17px 0px', md: tabPadding ?? '20px 10px 25px 0px' },
-                    mr: { xs: 23, md: 25 },
+                    minWidth: 'fit-content',
+                    fontSize: { xs: 16 },
+                    fontWeight: 700,
+                    padding: tabPadding,
+                    mr: { xs: 23, md: 28 },
                     textTransform: 'none',
-                    minWidth: '45px',
                     color: theme => theme.palette.text.primary,
                     opacity: 0.4,
                     '&.Mui-selected': {
