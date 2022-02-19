@@ -51,51 +51,52 @@ export default function VaultForm({
   const isDownSm = useBreakpoint('sm')
 
   return (
-    <Box width="100%" position="relative">
+    <Box width="100%">
       {isDownSm && <Divider sx={{ opacity: 0.1 }} />}
-      <Tabs
-        fontWeight={700}
-        titles={['Invest', 'Redeem']}
-        tabPadding="12px 0"
-        contents={[
-          <Form
-            error={error}
-            key="invest"
-            type={TYPE.invest}
-            formData={formData}
-            currencySymbol={currencySymbol}
-            available={available}
-            onChange={onInvestChange}
-            val={investAmount}
-            multiplier={multiplier}
-            formula={formula}
-            onClick={onInvest}
-            disabled={investDisabled}
-          />,
-          <Form
-            key="redeem"
-            type={TYPE.redeem}
-            formData={formData}
-            currencySymbol={currencySymbol}
-            multiplier={multiplier}
-            formula={formula}
-            onClick={onWithdraw}
-            disabled={redeemDisabled}
-          />
-        ]}
-      />
-      <Typography
-        position="absolute"
-        sx={{ top: 0, right: 0, height: 48 }}
-        display="flex"
-        alignItems={'center'}
-        variant="inherit"
-      >
-        APY:
-        <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
-          {apy}
+      <Box mt={12} position="relative">
+        <Tabs
+          titles={['Invest', 'Redeem']}
+          tabPadding="12px 0px 12px 0px"
+          contents={[
+            <Form
+              error={error}
+              key="invest"
+              type={TYPE.invest}
+              formData={formData}
+              currencySymbol={currencySymbol}
+              available={available}
+              onChange={onInvestChange}
+              val={investAmount}
+              multiplier={multiplier}
+              formula={formula}
+              onClick={onInvest}
+              disabled={investDisabled}
+            />,
+            <Form
+              key="redeem"
+              type={TYPE.redeem}
+              formData={formData}
+              currencySymbol={currencySymbol}
+              multiplier={multiplier}
+              formula={formula}
+              onClick={onWithdraw}
+              disabled={redeemDisabled}
+            />
+          ]}
+        />
+        <Typography
+          position="absolute"
+          sx={{ top: 0, right: 0, height: 48 }}
+          display="flex"
+          alignItems={'center'}
+          variant="inherit"
+        >
+          APY:
+          <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
+            {apy}
+          </Typography>
         </Typography>
-      </Typography>
+      </Box>
     </Box>
   )
 }
