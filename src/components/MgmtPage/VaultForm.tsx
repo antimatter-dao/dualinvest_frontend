@@ -11,6 +11,8 @@ import { useWalletModalToggle } from 'state/application/hooks'
 import { useCallback } from 'react'
 import { OutlinedCard } from 'components/Card/Card'
 import { ErrorType } from 'pages/RecurringVaultMgmt/VaultForm'
+import Divider from 'components/Divider'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 enum TYPE {
   invest = 'Invest',
@@ -46,8 +48,11 @@ export default function VaultForm({
   investDisabled: boolean
   error: string
 }) {
+  const isDownSm = useBreakpoint('sm')
+
   return (
     <Box width="100%" position="relative">
+      {isDownSm && <Divider sx={{ opacity: 0.1 }} />}
       <Tabs
         fontWeight={700}
         titles={['Invest', 'Redeem']}
@@ -79,7 +84,6 @@ export default function VaultForm({
           />
         ]}
       />
-
       <Typography
         position="absolute"
         sx={{ top: 0, right: 0, height: 48 }}

@@ -54,7 +54,7 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
           {title}
         </Typography>
         {description && (
-          <Typography fontSize={{ xs: 14, md: 16 }} sx={{ opacity: 0.5 }} align="left">
+          <Typography fontSize={{ xs: 14, md: 16 }} sx={{ opacity: 0.5 }} align="left" mt={{ xs: 8, md: 0 }}>
             {description}
           </Typography>
         )}
