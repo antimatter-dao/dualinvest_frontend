@@ -11,6 +11,7 @@ import dayjs from 'dayjs'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import { useRecurBalance } from 'hooks/useRecur'
 import { CURRENCIES } from 'constants/currencies'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 export default function VaultProductCard({
   logoCurSymbol,
@@ -33,12 +34,14 @@ export default function VaultProductCard({
     CURRENCIES[product?.currency ?? ''] ?? undefined,
     CURRENCIES[product?.investCurrency ?? ''] ?? undefined
   )
+  const isDownMd = useBreakpoint('md')
+  const isDownSm = useBreakpoint('sm')
 
   return (
     <Box
       display="grid"
       width="100%"
-      gap={32}
+      gap={{ xs: '20px', md: '32px' }}
       margin={{ xs: '0px 20px' }}
       sx={{
         border: '1px solid transparent',
@@ -58,7 +61,7 @@ export default function VaultProductCard({
       <Divider color="#00000010" extension={25} style={{ marginBottom: 20 }} />
 
       {product ? (
-        <Box display={{ xs: 'grid' }} gap={24} gridTemplateColumns={{ xs: '100%', md: '35% auto' }}>
+        <Box display={{ xs: 'grid' }} gap={{ xs: 8, md: 24 }} gridTemplateColumns={{ xs: '100%', md: '35% auto' }}>
           <NumericalCard value={product?.apy ?? '-'} subValue="Current APY" border valueColor={color} />
           <NumericalCard
             value={`${
@@ -68,8 +71,8 @@ export default function VaultProductCard({
             border
           >
             <Button
-              style={{ borderRadius: 40 }}
-              width={'132px'}
+              style={{ borderRadius: 40, marginTop: isDownMd ? 14 : 0 }}
+              width={isDownSm ? '100%' : '132px'}
               height="36px"
               backgroundColor={color}
               onClick={onClick}
@@ -87,7 +90,7 @@ export default function VaultProductCard({
             subValue="Countdown until delivery date"
             gray
           >
-            <OutlinedCard color="rgba(0, 0, 0, 0.1)">
+            <OutlinedCard color="rgba(0, 0, 0, 0.1)" style={{ marginTop: isDownMd ? 14 : 0 }}>
               <Box display="grid" padding="14px 18px" gap={4} height={60} minWidth={248}>
                 <Typography sx={{ color: theme => theme.palette.text.secondary }} fontSize={12} textAlign={'left'}>
                   Delivery Date
