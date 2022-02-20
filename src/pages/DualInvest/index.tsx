@@ -28,10 +28,12 @@ export default function DualInvest() {
 
   return (
     <Box
-      display="grid"
-      justifyItems={{ xs: 'flex-start', md: 'center' }}
+      display="flex"
+      // justifyItems={{ xs: 'flex-start', md: 'center' }}
+      flexDirection="column"
+      alignItems="center"
       width="100%"
-      alignContent="flex-start"
+      // alignContent="flex-start"
       marginBottom="auto"
       gap={{ xs: 36, md: 48 }}
     >
@@ -45,7 +47,7 @@ export default function DualInvest() {
         subVal2={'Cumulative Investment Amount'}
         unit2={'USDT'}
       />
-      <Box width={'100%'} sx={{ maxWidth: theme => theme.width.maxContent, margin: '0 20px' }}>
+      <Box width={'100%'} sx={{ maxWidth: theme => theme.width.maxContent, margin: '0 24px', padding: '0 20px' }}>
         <CurrencyTabs
           contents={SUPPORTED_CURRENCY_SYMBOL.map(symbol => {
             const list = productList?.[symbol as keyof typeof productList]
