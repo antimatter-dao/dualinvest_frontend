@@ -167,7 +167,7 @@ export default function SubscribeForm({
                 }
                 fail++
               })
-          }, 3000)
+          }, 5000)
         })
         await polling
 
@@ -223,7 +223,7 @@ export default function SubscribeForm({
         product={product}
         data={data}
         inputPlaceholder={`Each unit represents ${
-          product ? (+product.multiplier * multiplier).toFixed(1) : '-'
+          product ? +product.multiplier * multiplier : '-'
         } ${product?.investCurrency || ''}`}
         amount={amount}
         onChange={handleChange}

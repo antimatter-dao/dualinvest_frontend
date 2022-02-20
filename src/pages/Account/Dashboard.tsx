@@ -464,10 +464,13 @@ function InvestmentValueCard({ value, unit }: { value?: string; unit?: string; d
               fontWeight: 700,
               lineHeight: 1
             }}
+            component="div"
           >
             {value}
           </Typography>
-          <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>{unit}</Typography>
+          <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }} component="div">
+            {unit}
+          </Typography>
           {/* <Box
             component="div"
             borderRadius={22}
