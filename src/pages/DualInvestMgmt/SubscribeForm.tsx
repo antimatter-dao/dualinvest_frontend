@@ -22,6 +22,8 @@ import { useDualInvestCallback } from 'hooks/useDualInvest'
 import { trimNumberString } from 'utils/trimNumberString'
 import { MgmtForm } from 'components/MgmtForm/MgmtForm'
 import { CURRENCIES } from 'constants/currencies'
+import useBreakpoint from 'hooks/useBreakpoint'
+import SecondaryButton from 'components/Button/SecondaryButton'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -39,6 +41,7 @@ export default function SubscribeForm({
   setAmount: (val: string) => void
   id: string
 }) {
+  const isDownMd = useBreakpoint('md')
   const [currentCurrency, setCurrentCurrency] = useState(CURRENCIES[product?.investCurrency ?? 'BTC'])
   const [pending, setPending] = useState(false)
   const [isDepositOpen, setIsDepositOpen] = useState(false)
@@ -245,9 +248,15 @@ export default function SubscribeForm({
                 </InputLabel>
               )}
 
-              <TextButton fontSize={12} color="#11BF2D" style={{ marginLeft: 8 }} onClick={showDeposit}>
-                Deposit
-              </TextButton>
+              {isDownMd ? (
+                <SecondaryButton width={20} height={20} fontSize={12} style={{ marginLeft: 8 }} onClick={showDeposit}>
+                  +
+                </SecondaryButton>
+              ) : (
+                <TextButton fontSize={12} color="#11BF2D" style={{ marginLeft: 8 }} onClick={showDeposit}>
+                  Deposit
+                </TextButton>
+              )}
             </Box>
           </Box>
           <OutlinedCard>
