@@ -1,7 +1,6 @@
-import { useState, useRef, useMemo } from 'react'
+import { useState, SyntheticEvent, useMemo } from 'react'
 import { Box, styled, Typography, useTheme } from '@mui/material'
 import { ReactComponent as RiskStatementIcon } from 'assets/svg/risk_statement.svg'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import Accordion from 'components/Accordion'
 import { ReactComponent as Faq } from 'assets/svg/faq.svg'
 import { ReactComponent as Put1 } from 'assets/svg/recurPolicy/put1.svg'
@@ -113,10 +112,16 @@ export function RiskStatement({ subject }: { subject: Subject }) {
 }
 
 export function FAQ({ subject }: { subject: Subject }) {
-  const [expanded, setExpanded] = useState<number | null>(null)
+  // const [expanded, setExpanded] = useState<number | null>(null)
 
-  const node = useRef<any>()
-  useOnClickOutside(node, () => setExpanded(null))
+  // const node = useRef<any>()
+  // useOnClickOutside(node, () => setExpanded(null))
+
+  const [expanded, setExpanded] = useState<string | null>(null)
+
+  const handleChange = (panel: string) => (event: SyntheticEvent<Element, Event>, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : null)
+  }
 
   const FAQItems = useMemo(() => {
     const items = {
@@ -255,8 +260,8 @@ export function FAQ({ subject }: { subject: Subject }) {
             key={idx}
             summary={summary}
             details={details}
-            expanded={expanded === idx}
-            onChange={() => setExpanded(idx)}
+            expanded={expanded === `panel${idx}`}
+            onChange={handleChange(`panel${idx}`)}
           />
         ))}
       </Box>

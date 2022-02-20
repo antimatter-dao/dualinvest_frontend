@@ -1,7 +1,7 @@
-import { useState, useRef } from 'react'
+import { useState, SyntheticEvent } from 'react'
 import { Box, styled, Typography } from '@mui/material'
 import { ReactComponent as RiskStatementIcon } from 'assets/svg/risk_statement.svg'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
+// import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import Accordion from 'components/Accordion'
 import { ReactComponent as Faq } from 'assets/svg/faq.svg'
 
@@ -84,10 +84,11 @@ export function RiskStatement() {
 }
 
 export function FAQ() {
-  const [expanded, setExpanded] = useState<number | null>(null)
+  const [expanded, setExpanded] = useState<string | null>(null)
 
-  const node = useRef<any>()
-  useOnClickOutside(node, () => setExpanded(null))
+  const handleChange = (panel: string) => (event: SyntheticEvent<Element, Event>, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : null)
+  }
 
   return (
     <Box>
@@ -171,8 +172,8 @@ export function FAQ() {
             key={idx}
             summary={summary}
             details={details}
-            expanded={expanded === idx}
-            onChange={() => setExpanded(idx)}
+            expanded={expanded === `panel${idx}`}
+            onChange={handleChange(`panel${idx}`)}
           />
         ))}
       </Box>
