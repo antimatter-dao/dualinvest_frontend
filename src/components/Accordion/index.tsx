@@ -1,18 +1,18 @@
+import { SyntheticEvent } from 'react'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
-// import Typography from '@mui/material/Typography'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 interface Props {
   summary: string | JSX.Element
   details: string | JSX.Element
   expanded: boolean
-  onChange: () => void
+  onChange: (event: SyntheticEvent, isExpanded: boolean) => void
 }
 
 export default function _Accordion(props: Props) {
-  const { summary, details, onChange, expanded } = props
+  const { summary, details, expanded, onChange } = props
 
   return (
     <Accordion

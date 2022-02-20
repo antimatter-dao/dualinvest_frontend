@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, SyntheticEvent, useMemo } from 'react'
 import { Box, styled, Typography, useTheme } from '@mui/material'
 import { ReactComponent as RiskStatementIcon } from 'assets/svg/risk_statement.svg'
 import Accordion from 'components/Accordion'
@@ -115,10 +115,11 @@ export function RiskStatement({ subject }: { subject: Subject }) {
 }
 
 export function FAQ({ subject }: { subject: Subject }) {
-  const [expanded, setExpanded] = useState<number | null>(null)
+  const [expanded, setExpanded] = useState<string | null>(null)
 
-  // const node = useRef<any>()
-  // useOnClickOutside(node, () => setExpanded(null))
+  const handleChange = (panel: string) => (event: SyntheticEvent<Element, Event>, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : null)
+  }
 
   const FAQItems = useMemo(() => {
     const items = {
@@ -257,14 +258,8 @@ export function FAQ({ subject }: { subject: Subject }) {
             key={idx}
             summary={summary}
             details={details}
-            expanded={expanded === idx}
-            onChange={() => {
-              if (expanded === idx) {
-                setExpanded(null)
-                return
-              }
-              setExpanded(idx)
-            }}
+            expanded={expanded === `panel${idx}`}
+            onChange={handleChange(`panel${idx}`)}
           />
         ))}
       </Box>
