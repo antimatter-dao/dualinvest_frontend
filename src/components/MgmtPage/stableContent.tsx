@@ -112,11 +112,6 @@ export function RiskStatement({ subject }: { subject: Subject }) {
 }
 
 export function FAQ({ subject }: { subject: Subject }) {
-  // const [expanded, setExpanded] = useState<number | null>(null)
-
-  // const node = useRef<any>()
-  // useOnClickOutside(node, () => setExpanded(null))
-
   const [expanded, setExpanded] = useState<string | null>(null)
 
   const handleChange = (panel: string) => (event: SyntheticEvent<Element, Event>, isExpanded: boolean) => {

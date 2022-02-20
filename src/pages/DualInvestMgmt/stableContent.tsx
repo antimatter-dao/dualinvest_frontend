@@ -1,7 +1,6 @@
 import { useState, SyntheticEvent } from 'react'
 import { Box, styled, Typography } from '@mui/material'
 import { ReactComponent as RiskStatementIcon } from 'assets/svg/risk_statement.svg'
-// import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import Accordion from 'components/Accordion'
 import { ReactComponent as Faq } from 'assets/svg/faq.svg'
 
