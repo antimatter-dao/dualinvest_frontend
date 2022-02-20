@@ -71,6 +71,7 @@ export default function Account() {
           <Referral key="referral" />,
           <History key="history" />
         ]}
+        tabPadding="18px 0"
       />
     </Box>
   )
@@ -79,11 +80,7 @@ export default function Account() {
 function Tab({ text, iconUrl }: { text: string; iconUrl: string }) {
   const isDownMd = useBreakpoint('md')
   return (
-    <Typography
-      key="dashboard"
-      fontWeight={500}
-      sx={{ display: 'flex', alignItems: 'center', gap: { xs: 8.45, md: 12 } }}
-    >
+    <Typography key={text} fontWeight={500} sx={{ display: 'flex', alignItems: 'center', gap: { xs: 8.45, md: 12 } }}>
       {isDownMd ? (
         <Image src={iconUrl} style={{ width: 17, height: 'auto' }} />
       ) : (
