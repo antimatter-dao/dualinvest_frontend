@@ -194,150 +194,146 @@ export default function Dashboard() {
         type={ActionType.WITHDRAW}
         token={currentCurrency}
       />
-      <Container disableGutters sx={{ mt: 48 }}>
-        <Box display="grid" gap={48}>
-          <Card>
-            <Box padding="38px 24px" display="grid" gap={36} style={{ maxWidth: '100%', overflowX: 'auto' }}>
-              <Box>
-                <Typography fontSize={{ xs: 20, sm: 24 }} fontWeight={700}>
-                  My Account Balance
-                </Typography>
-                <Typography sx={{ color: theme => theme.palette.text.secondary, mt: 8 }}>
-                  Deposit funds to your Dual Investment account, you can withdraw available amount at any time
-                </Typography>
-              </Box>
-              <Box position="relative">
-                {!accountRecord && (
-                  <Box
-                    position="absolute"
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      background: '#ffffff',
-                      zIndex: 3,
-                      borderRadius: 2
+      <Box width="100%" mt={48} display="flex" flexDirection="column" gap={19}>
+        <Card>
+          <Box width="100%" padding="38px 24px" display="flex" flexDirection="column" gap={36}>
+            <Typography fontSize={{ xs: 20, sm: 24 }} fontWeight={700}>
+              My Account Balance
+            </Typography>
+            <Typography sx={{ color: theme => theme.palette.text.secondary, mt: 8 }}>
+              Deposit funds to your Dual Investment account, you can withdraw available amount at any time
+            </Typography>
+            <Box position="relative">
+              {!accountRecord && (
+                <Box
+                  position="absolute"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    background: '#ffffff',
+                    zIndex: 3,
+                    borderRadius: 2
+                  }}
+                >
+                  <Spinner size={60} />
+                </Box>
+              )}
+
+              {isDownMd ? (
+                <InvestmentValueCard
+                  value={toLocaleNumberString(totalInvest, 6)}
+                  unit="$"
+                  // dayChange="+ 8.91% / $350.28 "
+                />
+              ) : (
+                <NumericalCard
+                  value={toLocaleNumberString(totalInvest, 6)}
+                  border
+                  title="Portfolio Value"
+                  unit="$"
+                  padding="20px 24px"
+                  fontSize={'44px'}
+                  // dayChange="+ 8.91% / $350.28 "
+                >
+                  <Button
+                    onClick={() => {
+                      history.push(routes.dualInvest)
+                    }}
+                    style={{
+                      width: 148,
+                      height: 44,
+                      fontSize: 14
                     }}
                   >
-                    <Spinner size={60} />
-                  </Box>
-                )}
+                    Invest
+                  </Button>
+                  <OutlineButton
+                    href={'https://exchange.chainswap.com/'}
+                    primary
+                    style={{
+                      marginLeft: 12,
+                      width: 148,
+                      height: 44,
+                      fontSize: 14
+                    }}
+                  >
+                    Bridge
+                  </OutlineButton>
+                </NumericalCard>
+              )}
 
-                {isDownMd ? (
-                  <InvestmentValueCard
-                    value={toLocaleNumberString(totalInvest, 6)}
-                    unit="$"
-                    // dayChange="+ 8.91% / $350.28 "
+              {balanceData && isDownMd ? (
+                <AccountBalanceCards data={balanceData} />
+              ) : balanceData ? (
+                <Table header={BalanceTableHeader} rows={balanceData} />
+              ) : (
+                <NoDataCard height="20vh" />
+              )}
+            </Box>
+          </Box>
+        </Card>
+
+        <Card>
+          <Box padding="38px 24px" display="flex" flexDirection="column" gap={36}>
+            <Typography fontSize={24} fontWeight={700}>
+              Account Details
+            </Typography>
+            <Box position="relative">
+              {!accountRecord && (
+                <Box
+                  position="absolute"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    background: '#ffffff',
+                    zIndex: 3,
+                    borderRadius: 2
+                  }}
+                >
+                  <Spinner size={60} />
+                </Box>
+              )}
+
+              {accountDetailsData.length > 0 ? (
+                <>
+                  {isDownMd ? (
+                    <AccountDetailCards data={accountDetailsData} />
+                  ) : (
+                    <Table header={DetailTableHeader} rows={accountDetailsData} />
+                  )}
+
+                  <Pagination
+                    count={pageParams?.count}
+                    page={page}
+                    perPage={pageParams?.perPage}
+                    boundaryCount={0}
+                    total={pageParams.total}
+                    onChange={handlePage}
                   />
-                ) : (
-                  <NumericalCard
-                    value={toLocaleNumberString(totalInvest, 6)}
-                    border
-                    title="Portfolio Value"
-                    unit="$"
-                    padding="20px 24px"
-                    fontSize={'44px'}
-                    // dayChange="+ 8.91% / $350.28 "
-                  >
-                    <Button
-                      onClick={() => {
-                        history.push(routes.dualInvest)
-                      }}
-                      style={{
-                        width: 148,
-                        height: 44,
-                        fontSize: 14
-                      }}
-                    >
-                      Invest
-                    </Button>
-                    <OutlineButton
-                      href={'https://exchange.chainswap.com/'}
-                      primary
-                      style={{
-                        marginLeft: 12,
-                        width: 148,
-                        height: 44,
-                        fontSize: 14
-                      }}
-                    >
-                      Bridge
-                    </OutlineButton>
-                  </NumericalCard>
-                )}
-
-                {balanceData && isDownMd ? (
-                  <AccountBalanceCards data={balanceData} />
-                ) : balanceData ? (
-                  <Table header={BalanceTableHeader} rows={balanceData} />
-                ) : (
-                  <NoDataCard height="20vh" />
-                )}
-              </Box>
+                </>
+              ) : (
+                <NoDataCard height="20vh" />
+              )}
             </Box>
-          </Card>
-
-          <Card>
-            <Box padding="38px 24px" display="grid" gap={36}>
-              <Typography fontSize={24} fontWeight={700}>
-                Account Details
-              </Typography>
-              <Box position="relative">
-                {!accountRecord && (
-                  <Box
-                    position="absolute"
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      background: '#ffffff',
-                      zIndex: 3,
-                      borderRadius: 2
-                    }}
-                  >
-                    <Spinner size={60} />
-                  </Box>
-                )}
-
-                {accountDetailsData.length > 0 ? (
-                  <>
-                    {isDownMd ? (
-                      <AccountDetailCards data={accountDetailsData} />
-                    ) : (
-                      <Table header={DetailTableHeader} rows={accountDetailsData} />
-                    )}
-
-                    <Pagination
-                      count={pageParams?.count}
-                      page={page}
-                      perPage={pageParams?.perPage}
-                      boundaryCount={0}
-                      total={pageParams.total}
-                      onChange={handlePage}
-                    />
-                  </>
-                ) : (
-                  <NoDataCard height="20vh" />
-                )}
-              </Box>
-            </Box>
-          </Card>
-        </Box>
-      </Container>
+          </Box>
+        </Card>
+      </Box>
     </>
   )
 }
 
 function AccountBalanceCards({ data }: { data: any[][] }) {
   return (
-    <Box mt={24} display="grid" gap={8}>
+    <Box mt={24} display="flex" flexDirection="column" gap={8}>
       {data.map((dataRow, idx) => (
         <Card color="#F2F5FA" padding="17px 16px" key={`balance-row-${idx}`}>
-          <Box display="grid" gap={20}>
+          <Box display="flex" flexDirection="column" gap={20}>
             {dataRow[BalanceTableHeaderIndex.token]}
             {dataRow[BalanceTableHeaderIndex.actions]}
           </Box>
@@ -412,8 +408,10 @@ function BalanceActions({
   onWithdraw: () => void
   buyHref: string
 }) {
+  const isDownMd = useBreakpoint('md')
+
   return (
-    <Box display="flex" key="action" gap={10} pl={20} justifyContent="flex-end">
+    <Box display="flex" key="action" gap={10} pl={isDownMd ? 0 : 20}>
       <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
         Deposit
       </Button>
@@ -436,7 +434,7 @@ function InvestmentValueCard({ value, unit }: { value?: string; unit?: string; d
   const theme = useTheme()
   const history = useHistory()
   return (
-    <Card width={1} style={{ position: 'relative', border: '1px solid #00000010' }}>
+    <Card style={{ position: 'relative', border: '1px solid #00000010' }}>
       <Box
         sx={{
           padding: '16px',
