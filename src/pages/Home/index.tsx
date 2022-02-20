@@ -41,8 +41,6 @@ export default function Home() {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      // display="grid"
-      // justifyItems={{ md: 'center' }}
       width="100%"
       alignContent="flex-start"
       marginBottom="auto"
