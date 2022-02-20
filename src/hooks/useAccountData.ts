@@ -75,12 +75,8 @@ export function useOrderRecords(
       investType,
       investStatus: Array.isArray(investStatus) ? undefined : investStatus,
       pageNum: Array.isArray(investStatus) ? undefined : pageNum,
-      pageSize: Array.isArray(investStatus) ? undefined : pageSize,
-      ...(currency === 'All'
-        ? {}
-        : {
-            currency: currency
-          })
+      pageSize: pageSize,
+      currency: currency === 'All' ? undefined : currency
     })
   }, [account, currency, investStatus, investType, pageNum, pageSize])
 
