@@ -49,7 +49,7 @@ export function usePrice(symbol: string | undefined, delay = 5000) {
 
   useEffect(() => {
     if (!symbol) return undefined
-
+    let isMounted = true
     const call = () => {
       return fetch(`https://api.binance.com/api/v3/avgPrice?symbol=${symbol}USDT`, {
         method: 'GET',
@@ -60,7 +60,9 @@ export function usePrice(symbol: string | undefined, delay = 5000) {
           return r.clone().json()
         })
         .then(json => {
-          setPrice(json.price)
+          if (isMounted) {
+            setPrice(json.price)
+          }
         })
         .catch(e => console.error(e))
     }
@@ -69,6 +71,7 @@ export function usePrice(symbol: string | undefined, delay = 5000) {
 
     return () => {
       clearInterval(id)
+      isMounted = false
     }
   }, [delay, symbol])
   return price

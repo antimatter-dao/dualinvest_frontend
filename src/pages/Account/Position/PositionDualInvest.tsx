@@ -28,6 +28,7 @@ import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
 import PositionTableCards from 'components/Account/PositionTableCards'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import Filter from 'components/Filter'
+import { getAddress } from 'ethers/lib/utils'
 
 export const THIRTY_MINUTES_MS = 1800000
 export enum PositionMoreHeaderIndex {
@@ -107,6 +108,7 @@ export default function PositionDualInvest() {
         investCurrency,
         returnedCurrency,
         returnedAmount,
+        strikeCurrency,
         type
       }) => {
         const status =
@@ -183,12 +185,14 @@ export default function PositionDualInvest() {
                 el.disabled = true
                 showModal(<TransacitonPendingModal />)
                 finishOrderCallback(orderId + '', productId + '')
-                  .then(({ r, returnedAmount, returnedCurrency, earned }) => {
+                  .then(prop => {
+                    const { r, returnedAmount, returnedCurrency, earned } = prop
                     hideModal()
+                    const cur =
+                      CURRENCY_ADDRESS_MAP[getAddress(returnedCurrency)] ??
+                      CURRENCY_ADDRESS_MAP[exercised ? (type === 'CALL' ? strikeCurrency : currency) : investCurrency]
                     addTransaction(r, {
-                      summary: `Claim ${parseBalance(returnedAmount, CURRENCY_ADDRESS_MAP[returnedCurrency], 6)} ${
-                        CURRENCY_ADDRESS_MAP[returnedCurrency]?.symbol
-                      }`
+                      summary: `Claim ${parseBalance(returnedAmount, cur, 6)} ${cur?.symbol}`
                     })
                     el.innerHTML = 'Claim'
 

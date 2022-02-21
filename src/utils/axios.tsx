@@ -26,8 +26,8 @@ export const getSignatures = async <T, R>(
     const httpRequestsList = signRoutes.map(
       route =>
         retry(
-          () =>
-            new Promise((resolve, reject) => {
+          () => {
+            return new Promise((resolve, reject) => {
               axios
                 .post<AxiosResponse<ResponseType<R>>>(route, args, { timeout: 3000 })
                 .then(r => {
@@ -40,7 +40,8 @@ export const getSignatures = async <T, R>(
                 .catch(() => {
                   reject('singnature request failed')
                 })
-            }),
+            })
+          },
           { n: 2, minWait: 0, maxWait: 0 }
         ).promise
     )

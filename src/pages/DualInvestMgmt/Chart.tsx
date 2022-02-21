@@ -57,12 +57,17 @@ export default function DualInvestChart({
         <Grid item xs={12} md={3} sx={{ height: { xs: 'auto', md: '100%' } }} paddingBottom={{ xs: 0, md: 22 }}>
           <Box display={{ xs: 'flex', md: 'grid' }} gap={20} maxWidth="100%">
             <Card gray>
-              <Box padding="16px" fontSize={14} sx={{ overflowWrap: 'anywhere' }}>
+              <Box padding="16px" fontSize={14} sx={{ overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
                 {str1}
               </Box>
             </Card>
             <Card gray>
-              <Box padding="16px" fontSize={14} maxWidth="100%" sx={{ overflowWrap: 'anywhere' }}>
+              <Box
+                padding="16px"
+                fontSize={14}
+                maxWidth="100%"
+                sx={{ overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}
+              >
                 {str2}
               </Box>
             </Card>

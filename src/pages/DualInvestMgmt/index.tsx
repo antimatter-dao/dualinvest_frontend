@@ -22,12 +22,12 @@ export default function DualInvestMgmt() {
     product && amount
       ? ((+product.price + 1) * (isCall ? +product.strikePrice : 1) * +amount * +product.multiplier).toFixed(4)
       : '-'
-  } ${product ? (isCall ? product?.strikeCurrency : product?.currency) : ''} `
+  } \n${product ? (isCall ? product?.strikeCurrency : product?.currency) : ''} `
   const ltStr = `${
     product && amount
       ? ((isCall ? 1 : +product.strikePrice) * (1 + +product.price) * +amount * +product.multiplier).toFixed(4)
       : '-'
-  } ${product ? product.investCurrency : ''}`
+  } \n${product ? product.investCurrency : ''}`
 
   const handleInput = useCallback(val => {
     setAmount(val)
