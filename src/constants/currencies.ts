@@ -3,6 +3,7 @@ import BtcLogo from 'assets/svg/btc_logo.svg'
 import UsdtLogo from 'assets/svg/usdt_logo.svg'
 import EthLogo from 'assets/svg/eth_logo.svg'
 import MatterLogo from 'assets/svg/antimatter_circle_black.svg'
+import BSCLogo from 'assets/svg/binance.svg'
 import { IS_TEST_NET } from './chain'
 
 export const SYMBOL_MAP = {
@@ -10,7 +11,9 @@ export const SYMBOL_MAP = {
   USDT: 'USDT',
   BTCT: 'BTC',
   ETH: 'ETH',
-  BTCB: 'BTC'
+  BTCB: 'BTC',
+  BNB: 'BNB',
+  WBNB: 'BNB'
 }
 
 export const SUPPORTED_CURRENCY_SYMBOL = [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH]
@@ -63,6 +66,13 @@ export const SUPPORTED_CURRENCIES: {
     symbol: 'MATTER',
     name: 'Antimatter',
     logoUrl: MatterLogo
+  },
+  BNB: {
+    address: IS_TEST_NET ? '0x570D3f51D7406b641e63614E4584e3B3dEC90Bc5' : '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+    decimals: 18,
+    symbol: 'BNB',
+    name: 'Wrapped BNB',
+    logoUrl: BSCLogo
   }
 }
 

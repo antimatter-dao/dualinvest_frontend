@@ -463,6 +463,19 @@
   },
   {
     "inputs": [],
+    "name": "WETH",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "WITHDRAWN_TYPEHASH",
     "outputs": [
       {
@@ -490,6 +503,11 @@
         "internalType": "address",
         "name": "_BBaddress",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_WETH",
+        "type": "address"
       }
     ],
     "name": "__Dual_Invest_init",
@@ -507,6 +525,11 @@
       {
         "internalType": "address",
         "name": "_BBaddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_WETH",
         "type": "address"
       }
     ],
@@ -735,7 +758,7 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct Dual_Invest.Signature[]",
+        "internalType": "struct Signature[]",
         "name": "signatures",
         "type": "tuple[]"
       }
@@ -907,6 +930,19 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "currency",
+        "type": "address"
+      }
+    ],
+    "name": "depositETH",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       },
@@ -996,7 +1032,7 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct Dual_Invest.Signature[]",
+        "internalType": "struct Signature[]",
         "name": "signatures",
         "type": "tuple[]"
       }
@@ -1284,91 +1320,8 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "orderId",
-        "type": "uint256"
-      }
-    ],
-    "name": "queryOrder",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "currency",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "order_id",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "product_id",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "expired_at",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bool",
-            "name": "is_liquidated",
-            "type": "bool"
-          },
-          {
-            "internalType": "address",
-            "name": "returned_currency",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "returned_amount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "account",
-            "type": "address"
-          },
-          {
-            "internalType": "uint8",
-            "name": "status",
-            "type": "uint8"
-          },
-          {
-            "internalType": "uint256",
-            "name": "suppliers",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Dual_Invest.Order",
-        "name": "order",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "renounceGovernorship",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "resetReentrant",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1680,12 +1633,57 @@
             "type": "bytes32"
           }
         ],
-        "internalType": "struct Dual_Invest.Signature",
+        "internalType": "struct Signature",
         "name": "signatures",
         "type": "tuple"
       }
     ],
     "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "currency",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "signatory",
+            "type": "address"
+          },
+          {
+            "internalType": "uint8",
+            "name": "v",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "r",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "s",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct Signature",
+        "name": "signatures",
+        "type": "tuple"
+      }
+    ],
+    "name": "withdrawETH",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1703,25 +1701,6 @@
       {
         "internalType": "uint256",
         "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "withdrawNonces",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "withdraw_nonces",
         "type": "uint256"
       }
     ],
