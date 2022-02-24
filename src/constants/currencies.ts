@@ -73,6 +73,13 @@ export const SUPPORTED_CURRENCIES: {
     symbol: 'BNB',
     name: 'Wrapped BNB',
     logoUrl: BSCLogo
+  },
+  WBNB: {
+    address: IS_TEST_NET ? '0x570D3f51D7406b641e63614E4584e3B3dEC90Bc5' : '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+    decimals: 18,
+    symbol: 'BNB',
+    name: 'Wrapped BNB',
+    logoUrl: BSCLogo
   }
 }
 
