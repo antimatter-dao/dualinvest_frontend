@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { Axios } from 'utils/axios'
 import { assetBalanceFormatter, BalanceInfo } from 'utils/fetch/balance'
-import { CURRENCIES } from 'constants/currencies'
+import { CURRENCIES, SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import { useRecurBalance } from './useRecur'
 import { trimNumberString } from 'utils/trimNumberString'
 
@@ -15,9 +15,7 @@ const getRecurTotal = (balanceLocked: string, balanceAvailable: string) => {
 }
 
 export function useAccountBalances(): {
-  BTC: BalanceInfo | undefined
-  USDT: BalanceInfo | undefined
-  ETH: BalanceInfo | undefined
+  [key: typeof SUPPORTED_CURRENCY_SYMBOL[number]]: BalanceInfo | undefined
 } {
   const [btcRes, setBtcRes] = useState<BalanceInfo | undefined>(undefined)
   const [usdtRes, setUsdtRes] = useState<BalanceInfo | undefined>(undefined)
