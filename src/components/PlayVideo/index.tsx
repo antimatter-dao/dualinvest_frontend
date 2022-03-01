@@ -7,9 +7,11 @@ export function PlayVideo() {
   const [isOpen, setIsOpen] = useState(false)
   const isDownMd = useBreakpoint('md')
   const [width, setWidth] = useState(500)
+  const [visited, setVisited] = useState(true)
 
   const handleClose = useCallback(() => {
     setIsOpen(false)
+    setVisited(true)
   }, [])
 
   const handleOpen = useCallback(() => {
@@ -18,7 +20,6 @@ export function PlayVideo() {
 
   useEffect(() => {
     const resize = () => {
-      console.log(999, document)
       setWidth((document.documentElement.clientWidth ?? 500) - 30)
     }
     resize()
@@ -28,13 +29,21 @@ export function PlayVideo() {
     }
   }, [])
 
+  useEffect(() => {
+    const visited = window.localStorage.getItem('visited')
+    if (visited !== 'true') {
+      setVisited(false)
+      window.localStorage.setItem('visited', 'true')
+    }
+  }, [])
+
   return (
     <>
       <IconButton onClick={handleOpen}>
         <PlayButton />
       </IconButton>
       <Dialog
-        open={isOpen}
+        open={!visited || isOpen}
         onClose={handleClose}
         PaperProps={{
           sx: {
