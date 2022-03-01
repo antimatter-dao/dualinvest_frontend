@@ -69,8 +69,9 @@ export default function Dashboard() {
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
   const [page, setPage] = useState(1)
-  const btcPrice = usePrice('BTC', 30000)
-  const ethPrice = usePrice('ETH', 30000)
+  const btcPrice = usePrice('BTC', 60000)
+  const ethPrice = usePrice('ETH', 60000)
+  const bnbPrice = usePrice('ETH', 60000)
   const accountBalances = useAccountBalances()
   const { accountRecord, pageParams } = useAccountRecord(page)
 
@@ -78,9 +79,10 @@ export default function Dashboard() {
     return {
       BTC: btcPrice,
       ETH: ethPrice,
+      BNB: bnbPrice,
       USDT: 1
     }
-  }, [btcPrice, ethPrice])
+  }, [bnbPrice, btcPrice, ethPrice])
 
   const totalInvest = useMemo(() => {
     if (!accountBalances) return '-'
