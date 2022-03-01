@@ -41,7 +41,7 @@ export function useAccountBalances(): {
     [account, chainId]
   )
 
-  const bnbCallbackFn = useCallback(r => {
+  const bnbCallbackFn = useCallback(() => {
     // setBnbRes(assetBalanceFormatter(r.data.data))
   }, [])
 
