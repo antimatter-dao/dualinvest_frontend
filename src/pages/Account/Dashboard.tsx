@@ -34,6 +34,7 @@ enum BalanceTableHeaderIndex {
   amount,
   cumulativeInvest,
   pnl,
+  recurring,
   actions
 }
 
@@ -331,6 +332,7 @@ export default function Dashboard() {
 }
 
 function AccountBalanceCards({ data }: { data: any[][] }) {
+  console.log(data)
   return (
     <Box mt={24} display="flex" flexDirection="column" gap={8}>
       {data.map((dataRow, idx) => (
@@ -349,7 +351,7 @@ function AccountBalanceCards({ data }: { data: any[][] }) {
                   <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
                     {BalanceTableHeader[idx2]}
                   </Typography>
-                  <Typography fontSize={12} fontWeight={600}>
+                  <Typography fontSize={12} fontWeight={600} component="div">
                     {datum}
                   </Typography>
                 </Box>
@@ -391,7 +393,7 @@ function AccountDetailCards({ data }: { data: any[][] }) {
             justifyContent="center"
             mt={20}
           >
-            <Typography fontSize={14} color="#11BF2D" textAlign="center">
+            <Typography fontSize={14} color="#11BF2D" textAlign="center" component="div">
               Completed
             </Typography>
           </Box>
@@ -413,7 +415,7 @@ function BalanceActions({
   const isDownMd = useBreakpoint('md')
 
   return (
-    <Box display="flex" key="action" gap={10} pl={isDownMd ? 0 : 20}>
+    <Box display="flex" key="action" gap={10} pl={isDownMd ? 0 : 20} component="div">
       <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
         Deposit
       </Button>
