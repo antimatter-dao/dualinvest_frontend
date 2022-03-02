@@ -99,7 +99,8 @@ export default function SubscribeForm({
     if (!product || !balance) return ''
     let str = ''
     if (amount !== '' && +balance < +amount * +product.multiplier * multiplier) str = ErrorType.insufficientBalance
-    if (amount !== '' && (+amount > +product?.orderLimit || +amount < 1)) str = ErrorType.singleLimitExceed
+    if (amount !== '' && (+amount > +product.orderLimit / +product.multiplier || +amount < 1))
+      str = ErrorType.singleLimitExceed
     return str
   }, [amount, balance, multiplier, product])
 
@@ -290,10 +291,7 @@ export default function SubscribeForm({
               <span>Min: {product ? +product.multiplier * multiplier + ' ' + product.investCurrency : '-'}</span>
             </Typography>
             <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-              <span>
-                Max:{' '}
-                {product ? +product.orderLimit * +product.multiplier * multiplier + ' ' + product.investCurrency : '-'}
-              </span>
+              <span>Max: {product ? +product.orderLimit * multiplier + ' ' + product.investCurrency : '-'}</span>
             </Typography>
           </Box>
         </Box>
