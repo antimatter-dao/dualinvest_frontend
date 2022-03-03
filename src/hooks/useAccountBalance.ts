@@ -20,7 +20,7 @@ export function useAccountBalances(): {
   const [btcRes, setBtcRes] = useState<BalanceInfo | undefined>(undefined)
   const [usdtRes, setUsdtRes] = useState<BalanceInfo | undefined>(undefined)
   const [ethRes, setEthRes] = useState<BalanceInfo | undefined>(undefined)
-  // const [bnbRes, setBnbRes] = useState<BalanceInfo | undefined>(undefined)
+  const [bnbRes, setBnbRes] = useState<BalanceInfo | undefined>(undefined)
   const { account, chainId } = useActiveWeb3React()
 
   const btcBtcRecur = useRecurBalance(CURRENCIES.BTC, CURRENCIES.BTC)
@@ -39,8 +39,8 @@ export function useAccountBalances(): {
     [account, chainId]
   )
 
-  const bnbCallbackFn = useCallback(() => {
-    // setBnbRes(assetBalanceFormatter(r.data.data))
+  const bnbCallbackFn = useCallback(r => {
+    setBnbRes(assetBalanceFormatter(r.data.data))
   }, [])
 
   const btcPromiseFn = useCallback(
@@ -128,8 +128,8 @@ export function useAccountBalances(): {
               ? trimNumberString(getRecurTotal(usdtRes.totalInvest, usdtRecurTotal), 2)
               : '-'
           }
-        : undefined
-      // BNB: bnbRes ? { ...bnbRes } : undefined
+        : undefined,
+      BNB: bnbRes ? { ...bnbRes } : undefined
     }
   }, [
     btcBtcRecur.autoLockedBalance,
@@ -142,6 +142,7 @@ export function useAccountBalances(): {
     ethUsdtRecur.autoBalance,
     btcRes,
     ethRes,
-    usdtRes
+    usdtRes,
+    bnbRes
   ])
 }

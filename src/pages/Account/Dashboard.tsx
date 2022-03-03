@@ -72,7 +72,7 @@ export default function Dashboard() {
   const [page, setPage] = useState(1)
   const btcPrice = usePrice('BTC', 60000)
   const ethPrice = usePrice('ETH', 60000)
-  const bnbPrice = usePrice('ETH', 60000)
+  const bnbPrice = usePrice('BNB', 60000)
   const accountBalances = useAccountBalances()
   const { accountRecord, pageParams } = useAccountRecord(page)
 
