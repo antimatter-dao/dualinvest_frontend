@@ -18,6 +18,7 @@ import { routes } from 'constants/routes'
 import { useBindModal } from 'hooks/useReferralModal'
 import { useHomeStatistics } from 'hooks/useStatistics'
 import useBreakpoint from 'hooks/useBreakpoint'
+import { PlayVideo } from 'components/PlayVideo'
 
 const StyledHomeSvg = styled(HomeSvg)(({ theme }) => ({
   flexShrink: 0,
@@ -70,6 +71,7 @@ export default function Home() {
               sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700, textAlign: { xs: 'center', md: 'left' } }}
             >
               Structured Products
+              <PlayVideo />
             </Typography>
             <LogoText
               logo={<Image src={checkUrl} />}
