@@ -218,7 +218,7 @@ export default function PositionDualInvest() {
                   })
                   .catch(err => {
                     hideModal()
-                    showModal(<MessageBox type="error">Claim failed</MessageBox>)
+                    // showModal(<MessageBox type="error">Claim failed</MessageBox>)
                     console.error(err)
                     el.innerHTML = 'Claim'
                     el.disabled = false
