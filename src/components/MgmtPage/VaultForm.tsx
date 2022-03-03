@@ -176,7 +176,6 @@ function Form({
             value={val}
             disabled={!account || error === ErrorType.notAvailable}
           />
-
           <Box mt={12}>
             <Box display="flex" justifyContent="space-between">
               <InputLabel>{TYPE.invest} Amount</InputLabel>

@@ -43,6 +43,7 @@ export function useOrderRecords(
 
   const filteredOrderList = useMemo(() => {
     if (!Array.isArray(investStatus) || !orderList) return undefined
+    console.log(orderList)
     return orderList.reduce((acc, order) => {
       if (currency !== 'All' && order.currency !== currency) {
         return acc

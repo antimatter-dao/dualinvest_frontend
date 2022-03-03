@@ -148,7 +148,7 @@ export default function PositionRecur() {
         )
         return [
           <Box key="token" display="flex" alignItems="center" gap={13}>
-            <CurrencyLogo currency={CURRENCIES[currency]} size="22px" />
+            <CurrencyLogo currency={CURRENCIES[investCurrency]} size="22px" />
             <Typography fontSize={16}>{CURRENCIES[currency].symbol}</Typography>
           </Box>,
           `${investAmount}(${amount})`,
