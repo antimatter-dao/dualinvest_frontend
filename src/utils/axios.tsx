@@ -12,12 +12,16 @@ const axiosInstance = axios.create({
 
 export const getSignatures = async <T, R>(
   args: T,
-  numberOfSignRequired = IS_TEST_NET ? 1 : 3,
+  numberOfSignRequired = IS_TEST_NET ? 3 : 3,
   route: string
 ): Promise<Array<R>> => {
   try {
     const signRoutes = IS_TEST_NET
-      ? ['https://dualinvest-testapi.antimatter.finance:8081/web/' + route]
+      ? [
+          'https://dualinvest-testapi.antimatter.finance:8081/web/' + route,
+          'https://dualinvest-testapi.antimatter.finance:8081/web/' + route,
+          'https://dualinvest-testapi.antimatter.finance:8081/web/' + route
+        ]
       : [
           'https://node1.antimatter.finance/web/' + route,
           'https://node2.antimatter.finance/web/' + route,
