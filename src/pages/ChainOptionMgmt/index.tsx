@@ -41,7 +41,7 @@ export default function DualInvestMgmt() {
       graphTitle="Purchase expected income graph"
       backLink={routes.chainOption}
       product={product}
-      pageTitle={`${product?.currency} Saddle Option`}
+      pageTitle={`${product?.currency ?? '-'} Saddle Option`}
       returnOnInvestmentListItems={returnOnInvestmentListItems}
       subject={Subject.ChainOption}
       chart={<></>}

@@ -41,7 +41,16 @@ export default function MessageBox({ type, children, width = '480px', header, ac
       <Box display={'grid'} alignItems={'center'} padding={'40px'} justifyItems="center" gap="20px">
         <Box>{icon}</Box>
         {header && <Typography variant="h6">{header}</Typography>}
-        <Box fontSize="18px" textAlign="center" display="grid" justifyItems="center" width="100%">
+        <Box
+          fontSize="18px"
+          textAlign="center"
+          display="grid"
+          justifyItems="center"
+          width="100%"
+          maxHeight={200}
+          overflow="auto"
+          sx={{ wordBreak: 'break-word' }}
+        >
           {children}
         </Box>
 

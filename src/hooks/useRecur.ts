@@ -4,6 +4,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useDualInvestContract } from './useContract'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { parseBalance } from 'utils/parseAmount'
+import { trimNumberString } from 'utils/trimNumberString'
 
 export function useRecurBalance(
   currency: Token | undefined,
@@ -26,11 +27,11 @@ export function useRecurBalance(
       autoBalanceRaw: autoBalanceRes?.result?.[0].toString() ?? '0',
       autoBalance:
         investCucrrency && autoBalanceRes?.result
-          ? parseBalance(autoBalanceRes.result?.[0].toString(), investCucrrency)
+          ? trimNumberString(parseBalance(autoBalanceRes.result?.[0].toString(), investCucrrency, 18), 6)
           : '-',
       autoLockedBalance:
         investCucrrency && autoLockedBalanceRes?.result
-          ? parseBalance(autoLockedBalanceRes.result?.[0].toString(), investCucrrency)
+          ? trimNumberString(parseBalance(autoLockedBalanceRes.result?.[0].toString(), investCucrrency, 18), 6)
           : '-'
     }
   }, [autoBalanceRes.result, autoLockedBalanceRes.result, investCucrrency])

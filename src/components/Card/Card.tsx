@@ -9,7 +9,8 @@ export default function Card({
   width,
   style,
   gray,
-  primary
+  primary,
+  height
 }: {
   children?: React.ReactNode
   color?: string
@@ -18,6 +19,7 @@ export default function Card({
   style?: React.CSSProperties & SxProps<Theme>
   gray?: boolean
   primary?: boolean
+  height?: string | number
 }) {
   return (
     <Paper
@@ -28,6 +30,7 @@ export default function Card({
         boxShadow: 'none',
         padding,
         width,
+        height,
         ...style
       }}
     >

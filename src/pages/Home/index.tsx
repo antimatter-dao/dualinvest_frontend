@@ -18,27 +18,24 @@ import { routes } from 'constants/routes'
 import { useBindModal } from 'hooks/useReferralModal'
 import { useHomeStatistics } from 'hooks/useStatistics'
 import useBreakpoint from 'hooks/useBreakpoint'
+import { PlayVideo } from 'components/PlayVideo'
 
 const StyledHomeSvg = styled(HomeSvg)(({ theme }) => ({
-  flexShrink: 1,
+  flexShrink: 0,
   minHeight: 200,
-  height: '30vh',
+  height: 340,
   maxHeight: 340,
   [theme.breakpoints.down('md')]: {
     height: 221,
-    width: 'calc(100vw - 80px)',
-    margin: '0 auto -20px 0'
-    // minHeight: 'unset',
-    // height: 'auto',
-    // maxHeight: 'unset'
+    width: 'calc(100vw - 80px)'
   }
 }))
 
 export default function Home() {
   const history = useHistory()
+  const isDownMd = useBreakpoint('md')
   useBindModal()
   const { totalInvest, totalProgress } = useHomeStatistics()
-  const isDownMd = useBreakpoint('md')
 
   return (
     <Box
@@ -48,18 +45,16 @@ export default function Home() {
       width="100%"
       alignContent="flex-start"
       marginBottom="auto"
-      gap={{ xs: 36, md: 48 }}
+      gap={{ xs: 36, md: 80 }}
     >
       <Box
-        display="flex"
+        display={{ xs: 'grid', md: 'flex' }}
         justifyContent="center"
         sx={{
           width: '100%',
-          minHeight: 200,
-          height: { ms: 'auto', md: '30vh' },
-          maxHeight: { ms: 'unset', md: 340 },
+          height: { xs: 'auto', md: '340px' },
           background: theme => theme.palette.background.paper,
-          padding: { xs: '20px', md: '40px', lg: '44px 61px' }
+          padding: { xs: '32px 20px', md: '44px 61px' }
         }}
       >
         <Box
@@ -71,8 +66,11 @@ export default function Home() {
           alignItems={{ xs: 'unset', md: 'center' }}
         >
           <Box display="grid" gap={12}>
-            <Typography component="h1" sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700 }}>
-              Structured Products
+            <Typography
+              component="h1"
+              sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700, textAlign: { xs: 'center', md: 'left' } }}
+            >
+              Structured Products <PlayVideo />
             </Typography>
             <LogoText
               logo={<Image src={checkUrl} />}
@@ -102,7 +100,6 @@ export default function Home() {
         </Box>
       </Box>
       <Box
-        id="up"
         display="grid"
         width="100%"
         gap={{ xs: 36, md: 80 }}
@@ -165,6 +162,7 @@ export default function Home() {
           <Grid container spacing={20}>
             <ProductCard
               large
+              actionText="Explore"
               src={recurringVaultUrl}
               title="Recurring Strategy"
               synospis="Automatic management of funds, cyclic compound interest.
@@ -273,7 +271,6 @@ function ProductCard({
   large?: boolean
 }) {
   const isDownMd = useBreakpoint('md')
-
   return (
     <Grid item xs={12} sm={large ? 12 : 6}>
       <Card style={{ height: '100%' }}>
@@ -310,6 +307,7 @@ function ProductCard({
               gridRowEnd: { xs: 'span 1', md: 'span 2' },
               height: '100%',
               width: '100%',
+              padding: large ? '0px' : '10px 15px',
               gridColumnStart: { xs: 'unset', md: '2' }
             }}
           />

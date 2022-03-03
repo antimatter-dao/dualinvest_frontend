@@ -2,7 +2,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Token } from './token'
 import { binance, injected, walletconnect, walletlink } from '../connectors'
 import JSBI from 'jsbi'
-import { ChainId } from './chain'
+import { ChainId, IS_TEST_NET } from './chain'
 
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
@@ -110,10 +110,9 @@ export const BLOCKED_ADDRESSES: string[] = [
   '0x8576aCC5C05D6Ce88f4e49bf65BdF0C62F91353C'
 ]
 
-export const DUAL_INVEST_ADDRESS =
-  parseInt(process.env.REACT_APP_CHAIN_ID ?? '') === 3
-    ? '0x162D6e1c5878933566417e494F66D9f9A9FC6285'
-    : '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16'
+export const DUAL_INVEST_ADDRESS = IS_TEST_NET
+  ? '0xCD8C8C39DcE7E5846a7b1BaBb0621250DB7b7430'
+  : '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16'
 
 export const NO_REFERRER = '0x0000000000000000000000000000000000000000'
 

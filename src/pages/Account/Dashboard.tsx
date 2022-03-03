@@ -34,6 +34,7 @@ enum BalanceTableHeaderIndex {
   amount,
   cumulativeInvest,
   pnl,
+  recurring,
   actions
 }
 
@@ -44,7 +45,7 @@ const RecordType: { [key in number]: 'withdraw' | 'deposit' | 'vault deposit' | 
   4: 'vault withdraw'
 }
 
-const BalanceTableHeader = ['', 'Deposit Amount', 'Available', 'Investing(Locked)', 'PnL', '']
+const BalanceTableHeader = ['', 'Deposit Amount', 'Available', 'Investing (Locked)', 'PnL', 'Recurring', '']
 const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
 
 function TokenHeader({ token }: { token: Currency }) {
@@ -69,8 +70,9 @@ export default function Dashboard() {
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
   const [page, setPage] = useState(1)
-  const btcPrice = usePrice('BTC', 30000)
-  const ethPrice = usePrice('ETH', 30000)
+  const btcPrice = usePrice('BTC', 60000)
+  const ethPrice = usePrice('ETH', 60000)
+  const bnbPrice = usePrice('ETH', 60000)
   const accountBalances = useAccountBalances()
   const { accountRecord, pageParams } = useAccountRecord(page)
 
@@ -78,9 +80,10 @@ export default function Dashboard() {
     return {
       BTC: btcPrice,
       ETH: ethPrice,
+      BNB: bnbPrice,
       USDT: 1
     }
-  }, [btcPrice, ethPrice])
+  }, [bnbPrice, btcPrice, ethPrice])
 
   const totalInvest = useMemo(() => {
     if (!accountBalances) return '-'
@@ -161,6 +164,7 @@ export default function Dashboard() {
             balances?.available ?? '-',
             balances?.locked ?? '-',
             balances?.pnl ?? '-',
+            balances?.recurTotal ?? '-',
             <BalanceActions
               key="btc1"
               onDeposit={() => {
@@ -328,6 +332,7 @@ export default function Dashboard() {
 }
 
 function AccountBalanceCards({ data }: { data: any[][] }) {
+  console.log(data)
   return (
     <Box mt={24} display="flex" flexDirection="column" gap={8}>
       {data.map((dataRow, idx) => (
@@ -346,7 +351,7 @@ function AccountBalanceCards({ data }: { data: any[][] }) {
                   <Typography fontSize={12} color="#000000" sx={{ opacity: 0.5 }}>
                     {BalanceTableHeader[idx2]}
                   </Typography>
-                  <Typography fontSize={12} fontWeight={600}>
+                  <Typography fontSize={12} fontWeight={600} component="div">
                     {datum}
                   </Typography>
                 </Box>
@@ -388,7 +393,7 @@ function AccountDetailCards({ data }: { data: any[][] }) {
             justifyContent="center"
             mt={20}
           >
-            <Typography fontSize={14} color="#11BF2D" textAlign="center">
+            <Typography fontSize={14} color="#11BF2D" textAlign="center" component="div">
               Completed
             </Typography>
           </Box>
@@ -410,7 +415,7 @@ function BalanceActions({
   const isDownMd = useBreakpoint('md')
 
   return (
-    <Box display="flex" key="action" gap={10} pl={isDownMd ? 0 : 20}>
+    <Box display="flex" key="action" gap={10} pl={isDownMd ? 0 : 20} component="div">
       <Button fontSize={14} style={{ width: 92, borderRadius: 4, height: 36 }} onClick={onDeposit}>
         Deposit
       </Button>
@@ -461,10 +466,13 @@ function InvestmentValueCard({ value, unit }: { value?: string; unit?: string; d
               fontWeight: 700,
               lineHeight: 1
             }}
+            component="div"
           >
             {value}
           </Typography>
-          <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>{unit}</Typography>
+          <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }} component="div">
+            {unit}
+          </Typography>
           {/* <Box
             component="div"
             borderRadius={22}

@@ -7,6 +7,8 @@ import { Axios } from 'utils/axios'
 import { parseBalance } from 'utils/parseAmount'
 import { useDualInvestContract } from './useContract'
 import { Signature, SignatureRequest, SignatureRequestClaim, SignatureResponseClaim } from 'utils/fetch/signature'
+import { IS_TEST_NET } from 'constants/chain'
+import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
 
 export function useDualInvestBalance(token?: Token) {
   const contract = useDualInvestContract()
@@ -21,6 +23,7 @@ export function useDualInvestBalance(token?: Token) {
 }
 
 export function useDualInvestCallback(): {
+  depositETHCallback: undefined | ((val: string, tokenAddress: string) => Promise<any>)
   depositCallback: undefined | ((val: string, tokenAddress: string) => Promise<any>)
   withdrawCallback: undefined | ((amount: string, currency: string) => Promise<any>)
   createOrderCallback:
@@ -37,6 +40,20 @@ export function useDualInvestCallback(): {
 } {
   const { account, chainId } = useActiveWeb3React()
   const contract = useDualInvestContract()
+
+  const depositETHCallback = useCallback(
+    async (val, tokenAddress): Promise<any> => {
+      if (!contract) {
+        throw Error('no contract')
+      }
+      const estimatedGas = await contract.estimateGas.depositETH(tokenAddress, { value: val }).catch((error: Error) => {
+        console.debug(`Failed to deposit BNB`, error)
+        throw error
+      })
+      return contract?.depositETH(tokenAddress, { value: val, gasLimit: estimatedGas })
+    },
+    [contract]
+  )
 
   const deposit = useCallback(
     async (val, tokenAddress): Promise<any> => {
@@ -59,7 +76,7 @@ export function useDualInvestCallback(): {
           if (!contract || !account || !chainId) {
             throw Error('Failed to withdraw')
           }
-          const nonce = await contract?.withdrawNonces(account)
+          const nonce = await contract?.withdrawNonce(account)
           const signRes = await Axios.getSignatures<SignatureRequest, Signature>(
             {
               account: account,
@@ -77,14 +94,19 @@ export function useDualInvestCallback(): {
             currency,
             [signRes[0].signatory, signRes[0].signV, signRes[0].signR, signRes[0].signS]
           ]
-          const estimatedGas = await contract.estimateGas.withdraw(...withdrawArgs).catch((error: Error) => {
-            console.debug('Failed to create order', error)
-            throw error
-          })
-          const contractRes = await contract?.withdraw(...withdrawArgs, { gasLimit: estimatedGas })
+          const estimatedGas =
+            CURRENCY_ADDRESS_MAP[currency].symbol === 'BNB'
+              ? await contract.estimateGas.withdrawETH(...withdrawArgs)
+              : await contract.estimateGas.withdraw(...withdrawArgs)
+
+          const contractRes =
+            CURRENCY_ADDRESS_MAP[currency].symbol === 'BNB'
+              ? await contract?.withdrawETH(...withdrawArgs, { gasLimit: estimatedGas })
+              : await contract?.withdraw(...withdrawArgs, { gasLimit: estimatedGas })
           resolve(contractRes)
         } catch (e) {
           reject(e)
+          console.debug('Failed to withdraw', e)
         }
       })
     },
@@ -127,7 +149,7 @@ export function useDualInvestCallback(): {
             chainId: chainId,
             orderId: orderId
           },
-          3,
+          IS_TEST_NET ? 1 : 3,
           'getFinishOrderSign'
         )
 
@@ -138,11 +160,13 @@ export function useDualInvestCallback(): {
           returnedCurrency,
           returnedAmount,
           fee + '',
-          [
-            [signRes[0].signatory, signRes[0].signV, signRes[0].signR, signRes[0].signS],
-            [signRes[1].signatory, signRes[1].signV, signRes[1].signR, signRes[1].signS],
-            [signRes[2].signatory, signRes[2].signV, signRes[2].signR, signRes[2].signS]
-          ]
+          IS_TEST_NET
+            ? [[signRes[0].signatory, signRes[0].signV, signRes[0].signR, signRes[0].signS]]
+            : [
+                [signRes[0].signatory, signRes[0].signV, signRes[0].signR, signRes[0].signS],
+                [signRes[1].signatory, signRes[1].signV, signRes[1].signR, signRes[1].signS],
+                [signRes[2].signatory, signRes[2].signV, signRes[2].signR, signRes[2].signS]
+              ]
         ]
         const estimatedGas = await contract.estimateGas.finishOrder(...args).catch((error: Error) => {
           console.debug('Failed to finish order', error)
@@ -171,9 +195,10 @@ export function useDualInvestCallback(): {
       withdrawCallback: withdraw,
       createOrderCallback: createOrder,
       finishOrderCallback: finishOrder,
-      checkOrderStatusCallback: checkOrderStatus
+      checkOrderStatusCallback: checkOrderStatus,
+      depositETHCallback
     }
-  }, [checkOrderStatus, createOrder, deposit, finishOrder, withdraw])
+  }, [checkOrderStatus, createOrder, deposit, finishOrder, withdraw, depositETHCallback])
 
   return res
 }

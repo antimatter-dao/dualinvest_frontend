@@ -8,6 +8,7 @@ interface Props {
   customOnChange?: (val: number) => void
   tabPadding?: string
   CustomTab?: React.FC<TabProps>
+  fontWeight?: number
 }
 
 function TabPanel({ children, value, index }: { children: React.ReactNode; value: number; index: number }) {
@@ -48,7 +49,6 @@ export default function Tabs(props: Props) {
                     fontSize: { xs: 16 },
                     fontWeight: 700,
                     padding: tabPadding,
-                    // padding: { xs: '12px 0px 12px 0px', md: tabPadding ?? '20px 10px 25px 0px' },
                     mr: { xs: 23, md: 28 },
                     textTransform: 'none',
                     color: theme => theme.palette.text.primary,

@@ -1,6 +1,7 @@
 import { Box, Grid } from '@mui/material'
 import Card from 'components/Card/Card'
 import LineChart from 'components/Chart'
+import BarChart from 'components/Chart/BarChart'
 import Spinner from 'components/Spinner'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { usePriceSet } from 'hooks/usePriceSet'
@@ -56,18 +57,43 @@ export default function DualInvestChart({
         <Grid item xs={12} md={3} sx={{ height: { xs: 'auto', md: '100%' } }} paddingBottom={{ xs: 0, md: 22 }}>
           <Box display={{ xs: 'flex', md: 'grid' }} gap={20} maxWidth="100%">
             <Card gray>
-              <Box padding="16px" fontSize={14} sx={{ overflowWrap: 'anywhere' }}>
+              <Box padding="16px" fontSize={14} sx={{ overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
                 {str1}
               </Box>
             </Card>
             <Card gray>
-              <Box padding="16px" fontSize={14} maxWidth="100%" sx={{ overflowWrap: 'anywhere' }}>
+              <Box
+                padding="16px"
+                fontSize={14}
+                maxWidth="100%"
+                sx={{ overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}
+              >
                 {str2}
               </Box>
             </Card>
           </Box>
         </Grid>
       )}
+    </>
+  )
+}
+
+export function PastAggrChart() {
+  const graphContainer = useRef<HTMLDivElement>(null)
+
+  return (
+    <>
+      <Grid
+        item
+        sx={{
+          height: { xs: '100%', md: '100%' },
+          maxWidth: '100%',
+          width: { xs: '100%', md: 'auto' }
+        }}
+        ref={graphContainer}
+      >
+        <BarChart />
+      </Grid>
     </>
   )
 }

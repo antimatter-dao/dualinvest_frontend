@@ -31,6 +31,7 @@ interface Props {
   product: any
   pageTitle?: string
   chart: React.ReactNode
+  chart2?: React.ReactNode
   subject: Subject
   type?: string
   subscribeForm: React.ReactNode
@@ -104,7 +105,12 @@ export default function MgmtPage(props: Props) {
         </Box>
 
         <Box padding={isDownMd || vaultForm ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
-          <Box mb={isDownMd ? 24 : 60} display="flex" gap={8} flexDirection={isDownMd ? 'column' : 'row'}>
+          <Box
+            mb={isDownMd ? 24 : 60}
+            display="flex"
+            gap={{ xs: 0, md: 8 }}
+            flexDirection={isDownMd ? 'column' : 'row'}
+          >
             {pageTitle && (
               <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
                 {pageTitle}
@@ -157,7 +163,7 @@ export default function MgmtPage(props: Props) {
                       <Box display="flex" alignItems="center" gap={8}>
                         <Box height={10} width={10} borderRadius="50%" bgcolor="#F0B90B" />
                         <Typography fontSize={12} color="#F0B90B">
-                          Strike price
+                          Strike Price
                         </Typography>
                       </Box>
                     </Box>
@@ -183,11 +189,8 @@ export default function MgmtPage(props: Props) {
                 </Box>
               </Card>
             </Grid>
-            {children && (
-              <Grid xs={12} item>
-                {children}
-              </Grid>
-            )}
+
+            {children && <>{children}</>}
 
             <Grid xs={12} item>
               <Card style={{ height: '100%' }}>

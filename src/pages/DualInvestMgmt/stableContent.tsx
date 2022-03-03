@@ -123,7 +123,7 @@ export function FAQ() {
                   365)]
                 </p>
                 <p>
-                  <b>Downward Exercise:</b> Yields = (Subscription Amount / Strike Price) * [1 + (APY % * Cycle (days) /
+                  <b>Downward Exercise:</b> Yields = (Subscription Amount / Strike Price) * [1 + (APY % * Cycle (Days) /
                   365)]
                 </p>
                 <p>

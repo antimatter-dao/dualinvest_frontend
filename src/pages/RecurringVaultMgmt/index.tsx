@@ -1,14 +1,19 @@
 import { useMemo, useState, useCallback, ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
-import { Typography, Box, useTheme, styled } from '@mui/material'
+import { Typography, Box, useTheme, styled, Grid } from '@mui/material'
 import MgmtPage from 'components/MgmtPage'
 import { routes } from 'constants/routes'
 import { Subject } from 'components/MgmtPage/stableContent'
 import TextButton from 'components/Button/TextButton'
 import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
-import { useSingleRecurProcuct } from 'hooks/useRecurData'
-import DualInvestChart from 'pages/DualInvestMgmt/Chart'
+import { useLastCycleRecurDetails, useSingleRecurProcuct } from 'hooks/useRecurData'
+import DualInvestChart /*,{ PastAggrChart }*/ from 'pages/DualInvestMgmt/Chart'
+import Card from 'components/Card/Card'
+import { CURRENCIES } from 'constants/currencies'
+import { PrevRecur } from 'utils/fetch/recur'
+import dayjs from 'dayjs'
+import useBreakpoint from 'hooks/useBreakpoint'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -27,51 +32,58 @@ export const StyledUnorderList = styled('ul')(({ theme }) => ({
   }
 }))
 
-export default function RecurringValueMgmt() {
+export default function RecurringVaultMgmt() {
   const [investAmount, setInvestAmount] = useState('')
 
   const theme = useTheme()
   const { currency, type } = useParams<{ currency: string; type: string }>()
   const product = useSingleRecurProcuct(currency ?? '', type ?? '')
-
+  const prevDetails = useLastCycleRecurDetails(
+    product?.investCurrency ? CURRENCIES[product.investCurrency].address : undefined,
+    product?.currency ? CURRENCIES[product.currency].address : undefined
+  )
+  const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
+  const isCall = product?.type === 'CALL'
 
   const returnOnInvestmentListItems = useMemo(() => {
     return [
       <>
-        When the final settlement price ≥ {product?.strikePrice ?? '-'} USDT, you will receive{' '}
+        When the final settlement price {isCall ? '≥' : '≤'} {product?.strikePrice ?? '-'} USDT, you will receive{' '}
         <span style={{ color: theme.palette.text.primary }}>
-          (Subscription Amount * Strike Price) * [1 + (APY % * Period (days) / 365)]
+          (Subscription Amount {isCall ? '*' : '/'} Strike Price) * [1 + (APY% / 365)]
         </span>
         .
       </>,
       <>
-        When the settlement price &lt; {product?.strikePrice ?? '-'} USDT, you will receive{' '}
-        <span style={{ color: theme.palette.text.primary }}>
-          Subscription Amount * [1 + (APY% * Period (days) / 365)]
-        </span>
-        .
+        When the settlement price {isCall ? '<' : '>'} {product?.strikePrice ?? '-'} USDT, you will receive{' '}
+        <span style={{ color: theme.palette.text.primary }}>Subscription Amount * [1 + (APY% / 365)]</span>.
       </>,
       <>
         APY will be refreshed instantly, and Antimatter will use and lock in the latest APY when you successfully
         complete the subscription.
       </>
     ]
-  }, [product?.strikePrice, theme.palette.text.primary])
+  }, [isCall, product?.strikePrice, theme.palette.text.primary])
 
   const chart = useMemo(() => {
     return (
       <DualInvestChart
         product={product}
-        str1={`Settlement Price ≥ ${strikePrice} USDT, will be exercised`}
-        str2={`Settlement Price < ${strikePrice} USDT, will not be exercised`}
+        str1={`Settlement Price ${isCall ? '≥' : '≤'} ${strikePrice} USDT, will be exercised`}
+        str2={`Settlement Price ${isCall ? '<' : '>'} ${strikePrice} USDT, will not be exercised`}
       />
     )
-  }, [product, strikePrice])
+  }, [isCall, product, strikePrice])
 
   const handleInput = useCallback((val: string) => {
     setInvestAmount(val)
   }, [])
+
+  // const chart2 = useMemo(() => {
+  //   return <PastAggrChart />
+  //   return null
+  // }, [])
 
   return (
     <>
@@ -90,7 +102,73 @@ export default function RecurringValueMgmt() {
         returnOnInvestmentListItems={returnOnInvestmentListItems}
         vaultForm={<VaultForm product={product} setInvestAmount={handleInput} investAmount={investAmount} />}
         chart={chart}
-      />
+      >
+        <Grid xs={12} md={4} item>
+          <PrevCycleStats prevDetails={prevDetails} />
+        </Grid>
+        {!isDownMd && (
+          <Grid xs={12} md={8} item>
+            <Card style={{ height: '100%' }}>
+              <Box height="100%" width="100%" display="flex" alignItems={'center'} padding="24px">
+                <Typography sx={{ margin: 'auto auto' }} align="center">
+                  Past aggregate earnings graph <br />
+                  Coming soon...
+                </Typography>
+              </Box>
+              {/* <Box
+              maxHeight="100%"
+              height="100%"
+              gap={0}
+              display={{ xs: 'grid', md: 'flex', maxWidth: 'calc(100vw - 100px)' }}
+              flexDirection={'column'}
+              padding={'32px 24px'}
+            >
+              <Typography fontSize={{ xs: 14, md: 16 }} paddingTop={18} paddingLeft={24} sx={{ opacity: 0.5 }}>
+                Past Aggregate Earnings (Platform)
+              </Typography>
+              <Box
+                display="flex"
+                justifyContent={isDownMd ? 'flex-start' : 'space-between'}
+                flexDirection={isDownMd ? 'column' : 'row'}
+                alignItems="center"
+                gap={18}
+              >
+                <Typography
+                  component="div"
+                  display="flex"
+                  alignItems="baseline"
+                  fontSize={{ xs: 40, md: 44 }}
+                  paddingTop={13}
+                  paddingLeft={24}
+                  fontWeight={700}
+                >
+                  82,890
+                  <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>$</Typography>
+                </Typography>
+                <Box display="flex" flexDirection={'column'} gap={8}>
+                  <Box display="flex" alignItems="center" gap={8}>
+                    <Box height={10} width={10} borderRadius="50%" bgcolor="#ADDFB5" />
+                    <Typography fontSize={14} color="#ADDFB5">
+                      Unexercised
+                    </Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center" gap={8}>
+                    <Box height={10} width={10} borderRadius="50%" bgcolor="#E3E3E3" />
+                    <Typography fontSize={14} color="#E3E3E3">
+                      Exercised
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+              <Typography fontSize={{ xs: 11, md: 13 }} paddingLeft={24}>
+                Aug 26, 2021
+              </Typography>
+              {chart2}
+            </Box> */}
+            </Card>
+          </Grid>
+        )}
+      </MgmtPage>
     </>
   )
 }
@@ -190,5 +268,52 @@ function RecurringPolicyPage({ img, text }: { img: ReactElement<any, any>; text:
         </Typography>
       </Box>
     </Box>
+  )
+}
+
+function PrevCycleStats({ prevDetails }: { prevDetails: PrevRecur | undefined }) {
+  const theme = useTheme()
+  const data = useMemo(
+    () => ({
+      ['APY']: prevDetails?.apy ?? '-',
+      ['Strike Price']: `${prevDetails?.strikePrice ?? '-'} USDT`,
+      ['Executed Price']: `${prevDetails?.deliveryPrice ?? '-'} USDT`,
+      ['Status']: prevDetails?.status ?? '-',
+      ['Your P&L']: prevDetails?.pnl ?? '-',
+      ['Date']: prevDetails
+        ? `From ${dayjs(prevDetails.ts).format('MMM DD, YYYY')} to ${dayjs(prevDetails.expiredAt).format(
+            'MMM DD, YYYY'
+          )}`
+        : '-'
+    }),
+    [prevDetails]
+  )
+  return (
+    <Card width={'100%'}>
+      <Box display="flex" gap="21px" padding="28px" flexDirection="column" alignItems={'stretch'}>
+        <Typography fontSize={24} fontWeight={700}>
+          Previous Cycle Statistics
+        </Typography>
+
+        {Object.keys(data).map((key, idx) => (
+          <Box key={idx} display="flex" justifyContent={'space-between'}>
+            <Typography fontSize={16} sx={{ opacity: 0.8 }}>
+              {key}
+            </Typography>
+
+            <Typography
+              fontWeight={key === 'APY' || (key === 'Status' && data.Status === 'Exercised') ? 400 : 500}
+              color={
+                key === 'APY' || (key === 'Status' && data.Status === 'Exercised')
+                  ? theme.palette.primary.main
+                  : theme.palette.text.primary
+              }
+            >
+              {data[key as keyof typeof data]}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+    </Card>
   )
 }

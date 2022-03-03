@@ -1,63 +1,47 @@
 import { useActiveWeb3React } from 'hooks'
 import { useCallback, useMemo, useState } from 'react'
-import { useSingleCallResult } from 'state/multicall/hooks'
-import { useDualInvestContract } from './useContract'
-import { parseBalance } from 'utils/parseAmount'
-import { Token } from 'constants/token'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { Axios } from 'utils/axios'
 import { assetBalanceFormatter, BalanceInfo } from 'utils/fetch/balance'
-import { CURRENCIES } from 'constants/currencies'
+import { CURRENCIES, SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
+import { useRecurBalance } from './useRecur'
+import { trimNumberString } from 'utils/trimNumberString'
 
-export function useCurrencyBalances(token: Token): BalanceInfo | undefined {
-  const { account } = useActiveWeb3React()
-  const contract = useDualInvestContract()
-
-  const balanceArgs = useMemo(() => [token.address ?? '', account ?? undefined], [account, token.address])
-
-  const balanceRes = useSingleCallResult(contract, 'balances', balanceArgs)
-  const balanceLockRes = useSingleCallResult(contract, 'balances_lock', balanceArgs)
-  const earnedRes = useSingleCallResult(contract, 'earned', balanceArgs)
-
-  return useMemo(() => {
-    const aBalance = balanceRes?.result?.[0]
-    const lBalance = balanceLockRes?.result?.[0]
-    const e = earnedRes?.result?.[0]
-    if (!aBalance || !lBalance || !e) return undefined
-
-    const res = {
-      available: aBalance ? parseBalance(aBalance, token) : undefined,
-      locked: lBalance ? parseBalance(lBalance, token) : undefined,
-      totalInvest:
-        aBalance && lBalance ? +parseBalance(aBalance, token) + +parseBalance(lBalance, token) + '' : undefined,
-      pnl: e ? parseBalance(e, token) : undefined
-    }
-
-    return res
-  }, [balanceLockRes?.result, balanceRes?.result, earnedRes?.result, token])
+const getRecurTotal = (balanceLocked: string, balanceAvailable: string) => {
+  if (balanceLocked === '-' || balanceAvailable === '-') {
+    return '-'
+  }
+  return trimNumberString((+balanceLocked + +balanceAvailable).toFixed(4), 4)
 }
 
-// export function useAccountBalances(): { BTC: BalanceInfo | undefined; USDT: BalanceInfo | undefined } {
-//   const btcRes = useCurrencyBalances(BTC)
-//   const usdtRes = useCurrencyBalances(USDT)
-
-//   return useMemo(() => {
-//     return {
-//       BTC: btcRes,
-//       USDT: usdtRes
-//     }
-//   }, [btcRes, usdtRes])
-// }
-
 export function useAccountBalances(): {
-  BTC: BalanceInfo | undefined
-  USDT: BalanceInfo | undefined
-  ETH: BalanceInfo | undefined
+  [key: typeof SUPPORTED_CURRENCY_SYMBOL[number]]: BalanceInfo | undefined
 } {
   const [btcRes, setBtcRes] = useState<BalanceInfo | undefined>(undefined)
   const [usdtRes, setUsdtRes] = useState<BalanceInfo | undefined>(undefined)
   const [ethRes, setEthRes] = useState<BalanceInfo | undefined>(undefined)
+  // const [bnbRes, setBnbRes] = useState<BalanceInfo | undefined>(undefined)
   const { account, chainId } = useActiveWeb3React()
+
+  const btcBtcRecur = useRecurBalance(CURRENCIES.BTC, CURRENCIES.BTC)
+  const ethEthRecur = useRecurBalance(CURRENCIES.ETH, CURRENCIES.ETH)
+  const btcUsdtRecur = useRecurBalance(CURRENCIES.BTC, CURRENCIES.USDT)
+  const ethUsdtRecur = useRecurBalance(CURRENCIES.ETH, CURRENCIES.USDT)
+
+  const bnbPromiseFn = useCallback(
+    () =>
+      Axios.post('getUserAssets', undefined, {
+        account,
+        chainId,
+        currency: CURRENCIES.BNB.address,
+        symbol: CURRENCIES.BNB.symbol
+      }),
+    [account, chainId]
+  )
+
+  const bnbCallbackFn = useCallback(() => {
+    // setBnbRes(assetBalanceFormatter(r.data.data))
+  }, [])
 
   const btcPromiseFn = useCallback(
     () =>
@@ -69,9 +53,11 @@ export function useAccountBalances(): {
       }),
     [account, chainId]
   )
+
   const btcCallbackFn = useCallback(r => {
     setBtcRes(assetBalanceFormatter(r.data.data))
   }, [])
+
   const usdtPromiseFn = useCallback(
     () =>
       Axios.post('getUserAssets', undefined, {
@@ -101,12 +87,61 @@ export function useAccountBalances(): {
   usePollingWithMaxRetries(btcPromiseFn, btcCallbackFn, 300000)
   usePollingWithMaxRetries(usdtPromiseFn, usdtCallbackFn, 300000)
   usePollingWithMaxRetries(ethPromiseFn, ethCallbackFn, 30000)
+  usePollingWithMaxRetries(bnbPromiseFn, bnbCallbackFn, 30000)
 
   return useMemo(() => {
+    const btcRecurTotal = getRecurTotal(btcBtcRecur.autoLockedBalance, btcBtcRecur.autoBalance)
+    const ethRecurTotal = getRecurTotal(ethEthRecur.autoLockedBalance, ethEthRecur.autoBalance)
+    const usdtRecurTotal = getRecurTotal(
+      getRecurTotal(btcUsdtRecur.autoLockedBalance, btcUsdtRecur.autoBalance),
+      getRecurTotal(ethUsdtRecur.autoLockedBalance, ethUsdtRecur.autoBalance)
+    )
+
     return {
-      BTC: btcRes,
-      ETH: ethRes,
+      BTC: btcRes
+        ? {
+            ...btcRes,
+            recurAvailable: btcBtcRecur.autoBalance,
+            recurLocked: btcBtcRecur.autoLockedBalance,
+            recurTotal: btcRecurTotal,
+            totalInvest: btcRes.totalInvest
+              ? trimNumberString(getRecurTotal(btcRes.totalInvest, btcRecurTotal), 2)
+              : '-'
+          }
+        : undefined,
+      ETH: ethRes
+        ? {
+            ...ethRes,
+            recurAvailable: ethEthRecur.autoBalance,
+            recurLocked: ethEthRecur.autoLockedBalance,
+            recurTotal: ethRecurTotal,
+            totalInvest: ethRes.totalInvest
+              ? trimNumberString(getRecurTotal(ethRes.totalInvest, ethRecurTotal), 2)
+              : '-'
+          }
+        : undefined,
       USDT: usdtRes
+        ? {
+            ...usdtRes,
+            recurTotal: usdtRecurTotal,
+            totalInvest: usdtRes.totalInvest
+              ? trimNumberString(getRecurTotal(usdtRes.totalInvest, usdtRecurTotal), 2)
+              : '-'
+          }
+        : undefined
+      // BNB: bnbRes ? { ...bnbRes } : undefined
     }
-  }, [btcRes, usdtRes, ethRes])
+  }, [
+    btcBtcRecur.autoLockedBalance,
+    btcBtcRecur.autoBalance,
+    ethEthRecur.autoLockedBalance,
+    ethEthRecur.autoBalance,
+    btcUsdtRecur.autoLockedBalance,
+    btcUsdtRecur.autoBalance,
+    ethUsdtRecur.autoLockedBalance,
+    ethUsdtRecur.autoBalance,
+    btcRes,
+    ethRes,
+    usdtRes
+  ])
 }

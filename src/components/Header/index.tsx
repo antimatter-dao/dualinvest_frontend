@@ -77,7 +77,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   boxShadow: 'none',
-  padding: '0 60px 0 0!important',
+  padding: '0 40px 0 25px!important',
   zIndex: theme.zIndex.drawer,
   borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
   // [theme.breakpoints.down('md')]: {

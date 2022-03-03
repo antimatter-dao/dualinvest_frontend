@@ -11,6 +11,8 @@ import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
 import { PRODUCT_TYPE_ROUTE } from 'components/Tabs/InvestTabs'
 import Divider from 'components/Divider'
+import { RECUR_TOGGLE_STATUS } from 'hooks/useRecurData'
+import QuestionHelper from 'components/essential/QuestionHelper'
 
 interface Props {
   logoCurSymbol: string
@@ -20,7 +22,7 @@ interface Props {
   account?: string | null
   vaultForm: React.ReactNode
   timer: number
-  isRecurOpen: boolean
+  recurStatus: RECUR_TOGGLE_STATUS | null
   onRecurOpen: () => void
   activeOrder: number | string
 }
@@ -34,7 +36,7 @@ export default function VaultCard(props: Props) {
     account,
     vaultForm,
     timer,
-    isRecurOpen,
+    recurStatus,
     onRecurOpen,
     activeOrder
   } = props
@@ -63,7 +65,12 @@ export default function VaultCard(props: Props) {
                   <Box display={'flex'}>
                     <Divider
                       orientation="vertical"
-                      sx={{ marginRight: 12, width: 2, backgroundColor: theme => theme.palette.primary.main }}
+                      sx={{
+                        marginRight: 12,
+                        width: 2,
+                        backgroundColor: theme => theme.palette.primary.main,
+                        borderColor: 'transparent'
+                      }}
                     />
                     <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
                       When you stop recurring, all your existing orders will not be taken into next cycle and you can
@@ -71,7 +78,21 @@ export default function VaultCard(props: Props) {
                     </Typography>
                   </Box>
                   <Box display={'flex'} alignItems={'center'} gap={15}>
-                    <SwitchToggle checked={isRecurOpen} onChange={onRecurOpen} disabled={!account} />
+                    <QuestionHelper
+                      text={
+                        recurStatus === null
+                          ? 'Please make sure you have invested in the recuring strategy first'
+                          : undefined
+                      }
+                      title={
+                        <SwitchToggle
+                          checked={recurStatus === RECUR_TOGGLE_STATUS.open}
+                          onChange={onRecurOpen}
+                          disabled={!account || recurStatus === null}
+                        />
+                      }
+                    />
+
                     <Typography fontWeight={700}>Recurring</Typography>
                   </Box>
                 </Box>

@@ -1,6 +1,7 @@
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { SHA1 } from 'crypto-js'
 import { CURRENCIES } from 'constants/currencies'
 import { useActiveWeb3React } from 'hooks'
-import { useCallback, useEffect, useMemo, useState } from 'react'
 import { isAddress } from 'utils'
 import { Axios } from 'utils/axios'
 import { OrderRecord } from 'utils/fetch/record'
@@ -9,12 +10,13 @@ import {
   recurProductListFormatter,
   RecurProductList,
   singleRecurProductFormatter,
-  RecurProduct
+  RecurProduct,
+  prevRecurDetailsFormatter,
+  PrevRecur
 } from 'utils/fetch/recur'
 import { INVEST_TYPE } from './useAccountData'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { InvestStatus } from './useAccountData'
-import { SHA1 } from 'crypto-js'
 
 export function useRecurProcuctList() {
   const [productList, setProductList] = useState<RecurProductList | undefined>(undefined)
@@ -97,7 +99,7 @@ export function useRecurToggle(
               sign: SHA1(`@#MATTER@#invest#${account}#$${curAddress}#$${vaultAddress}#$${setting}#$`).toString()
             }
       ).then(r => {
-        if (r.data.data) {
+        if (r.data.data?.onOff !== undefined) {
           setStatus(r.data.data.onOff)
         }
       })
@@ -121,7 +123,7 @@ export function useRecurToggle(
 export function useRecurActiveOrderCount(
   vaultSymbol: string | undefined,
   curSymbol: string | undefined,
-  refresh: number
+  refresh: string
 ) {
   const [count, setCount] = useState(0)
   const { account } = useActiveWeb3React()
@@ -148,7 +150,32 @@ export function useRecurActiveOrderCount(
     [refresh]
   )
 
-  usePollingWithMaxRetries(curSymbol ? promiseFn : undefined, callbackFn, 300000)
+  usePollingWithMaxRetries(curSymbol ? promiseFn : undefined, callbackFn, 30000)
 
   return count
+}
+
+export function useLastCycleRecurDetails(currencyAddress: string | undefined, vaultAddress: string | undefined) {
+  const [details, setDetails] = useState<undefined | PrevRecur>(undefined)
+  const { account } = useActiveWeb3React()
+
+  useEffect(() => {
+    if (!currencyAddress || !currencyAddress) return
+    ;(async () => {
+      try {
+        const r = await Axios.get<any>('lastCycleProductDetail', {
+          account: account,
+          currency: currencyAddress,
+          vault: vaultAddress
+        })
+        if (r.data.data) {
+          setDetails(prevRecurDetailsFormatter(r.data.data))
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    })()
+  }, [account, currencyAddress, vaultAddress])
+
+  return details
 }

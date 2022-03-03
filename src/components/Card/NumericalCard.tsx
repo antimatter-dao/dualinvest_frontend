@@ -20,6 +20,9 @@ interface Props {
   children?: React.ReactNode
   border?: boolean
   padding?: string
+  gap?: string | number
+  unitFontSize?: number | string
+  valueMt?: number | string
 }
 
 export default function NumericalCard(props: Props) {
@@ -40,7 +43,8 @@ export default function NumericalCard(props: Props) {
     children,
     border,
     padding,
-    valueColor
+    valueColor,
+    valueMt
   } = props
   const theme = useTheme()
 
@@ -49,7 +53,7 @@ export default function NumericalCard(props: Props) {
       primary={primary}
       gray={gray}
       width={width || '100%'}
-      style={{ position: 'relative', border: border ? '1px solid #00000010' : undefined }}
+      style={{ position: 'relative', border: border ? '1px solid #00000010' : undefined, height: height || 'auto' }}
     >
       <Box
         sx={{
@@ -103,7 +107,8 @@ export default function NumericalCard(props: Props) {
           sx={{
             display: 'flex',
             alignItems: 'baseline',
-            color: valueColor ? valueColor : primary ? theme.palette.primary.contrastText : theme.palette.text.primary
+            color: valueColor ? valueColor : primary ? theme.palette.primary.contrastText : theme.palette.text.primary,
+            marginTop: valueMt ?? 0
           }}
         >
           <Typography

@@ -1,12 +1,13 @@
 import { Box, useTheme } from '@mui/material'
 import OutlineButton from 'components/Button/OutlineButton'
+import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 
 export default function Filter({
-  options,
+  options = ['All', ...SUPPORTED_CURRENCY_SYMBOL],
   checkedOption,
   onChange
 }: {
-  options: string[]
+  options?: string[]
   checkedOption: string
   onChange: (option: string) => void
 }) {

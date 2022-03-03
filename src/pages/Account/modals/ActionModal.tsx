@@ -4,13 +4,13 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import OutlineButton from 'components/Button/OutlineButton'
 import NumericalInput from 'components/Input/InputNumerical'
 import Modal from 'components/Modal'
-import { Token } from 'constants/token'
+import { ETHER, Token } from 'constants/token'
 // import Select from 'components/Select/Select'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { StatusIcon } from 'components/Modal/TransactionModals/DestinationAddress'
 import { useActiveWeb3React } from 'hooks'
-import { useTokenBalance } from 'state/wallet/hooks'
+import { useETHBalances, useTokenBalance } from 'state/wallet/hooks'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import ActionButton from 'components/Button/ActionButton'
 import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
@@ -55,17 +55,22 @@ export default function ActionModal({
   const [hash, setHash] = useState('')
   const { hideModal, showModal } = useModal()
   const contractBalance = useDualInvestBalance(token)
-  const balance = useTokenBalance(account ?? undefined, token)
+  const balanceToken = useTokenBalance(account ?? undefined, token)
+  const balanceETH = useETHBalances([account ?? undefined])?.[account ?? '']
   const txn = useTransaction(hash)
-  const [approvalState, approveCallback] = useApproveCallback(tryParseAmount(val, token), DUAL_INVEST_ADDRESS)
+  const [approvalState, approveCallback] = useApproveCallback(
+    tryParseAmount(val, token?.symbol === 'BNB' ? ETHER : token),
+    DUAL_INVEST_ADDRESS
+  )
+  const balance = token?.symbol === 'BNB' ? balanceETH : balanceToken
 
   // const handleSelect = useCallback(e => {
   //   setSelectedCur(e.target.value)
-  // }, [])
+  // }, [])\
 
   const handleMax = useCallback(() => {
     if (balance && type === ActionType.DEPOSIT) {
-      setVal(balance.toExact())
+      setVal(balance?.toExact())
       return
     }
     if (contractBalance && type === ActionType.WITHDRAW) {
@@ -286,7 +291,7 @@ export default function ActionModal({
                   }
                 }}
                 pending={pending}
-                pendingText="Pending Confirmation"
+                pendingText="Pending"
                 actionText={actionStr}
               />
             )}
@@ -305,23 +310,28 @@ function useActionCallback(
 ) {
   const { account } = useActiveWeb3React()
   const { showModal, hideModal } = useModal()
-  const { depositCallback, withdrawCallback } = useDualInvestCallback()
+  const { depositCallback, withdrawCallback, depositETHCallback } = useDualInvestCallback()
   const addTransaction = useTransactionAdder()
 
-  const handleDeposit = useCallback(() => {
-    if (!token || !depositCallback || !val || !account) return
+  const handleDeposit = useCallback(async () => {
+    if (!token || !depositCallback || !val || !account || !depositETHCallback) return
     showModal(<TransactionPendingModal />)
-    depositCallback(val, token.address)
-      .then(r => {
-        hideModal()
-        setHash(r.hash)
-        const tokenAmount = new TokenAmount(token, val)
-        addTransaction(r, {
-          summary: `Deposit ${tokenAmount.toExact()} ${token.symbol}`
-        })
+    try {
+      const r =
+        token.symbol === 'BNB'
+          ? await depositETHCallback(val, token.address)
+          : await depositCallback(val, token.address)
+
+      hideModal()
+      setHash(r.hash)
+      const tokenAmount = new TokenAmount(token, val)
+      addTransaction(r, {
+        summary: `Deposit ${tokenAmount.toExact()} ${token.symbol}`
       })
-      .catch(onError)
-  }, [depositCallback, val, account, showModal, token, onError, hideModal, setHash, addTransaction])
+    } catch (e) {
+      onError(e as Error)
+    }
+  }, [token, depositCallback, val, account, depositETHCallback, showModal, onError, hideModal, setHash, addTransaction])
 
   const handleWithdraw = useCallback(() => {
     if (!token || !withdrawCallback || !val || !account) return

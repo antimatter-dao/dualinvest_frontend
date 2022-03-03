@@ -20,11 +20,10 @@ import RedeemConfirmModal from './RedeemConfirmModal'
 import InvestConfirmModal from './InvestConfirmModal'
 import { feeRate } from 'constants/index'
 
-enum ErrorType {
-  insufficientBalance = 'Insufficient Balance'
+export enum ErrorType {
+  insufficientBalance = 'Insufficient Balance',
+  notAvailable = 'The current status is not available for subscription, please try again after the current period is settled'
 }
-
-let refresh = 0
 
 export default function VaultForm({
   product,
@@ -56,13 +55,13 @@ export default function VaultForm({
   const contractBalance = useDualInvestBalance(investCurrency)
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()
-  const activeOrderCount = useRecurActiveOrderCount(currency?.symbol, investCurrency?.symbol, refresh)
+  const activeOrderCount = useRecurActiveOrderCount(currency?.symbol, investCurrency?.symbol, autoLockedBalance)
 
   const formData = useMemo(
     () => ({
-      ['Current cycle invested amount:']: autoLockedBalance + currencySymbol,
-      ['Redeemable:']: autoBalance + currencySymbol,
-      ['P&L:']: pnl + currencySymbol
+      ['Current cycle invested amount:']: autoLockedBalance + ' ' + currencySymbol,
+      ['Redeemable:']: autoBalance + ' ' + currencySymbol,
+      ['P&L:']: pnl + ' ' + currencySymbol
     }),
     [autoLockedBalance, currencySymbol, autoBalance, pnl]
   )
@@ -142,9 +141,10 @@ export default function VaultForm({
     showModal,
     investAmount,
     hideModal,
+    toggleRecur,
+
     addPopup,
-    setInvestAmount,
-    toggleRecur
+    setInvestAmount
   ])
 
   const handleRedeem = useCallback(async () => {
@@ -171,11 +171,22 @@ export default function VaultForm({
   const error = useMemo(() => {
     if (!product || !contractBalance) return ''
     let str = ''
+
     if (
       investAmount !== '' &&
       +contractBalance < +investAmount * +product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice)
-    )
+    ) {
       str = ErrorType.insufficientBalance
+    }
+
+    const now = Date.now()
+    const before = product.expiredAt - 7200000
+    const after = product.expiredAt + 1800000
+
+    if (product.price === null || (now >= before && now < after)) {
+      str = ErrorType.notAvailable
+    }
+
     return str
   }, [contractBalance, investAmount, product])
 
@@ -249,7 +260,7 @@ export default function VaultForm({
           logoCurSymbol={currencySymbol}
           priceCurSymbol={product?.currency ?? ''}
           timer={product?.expiredAt ?? 0}
-          isRecurOpen={recurStatus === RECUR_TOGGLE_STATUS.open}
+          recurStatus={recurStatus}
           onRecurOpen={() => {
             setIsConfirmOpen(true)
           }}

@@ -6,12 +6,13 @@ import Table from 'components/Table'
 import PaginationView from 'components/Pagination'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useActiveWeb3React } from 'hooks'
-import { useOrderRecords, InvestStatus, INVEST_TYPE } from 'hooks/useAccountData'
+import { useOrderRecords, InvestStatus, INVEST_TYPE, FilterType } from 'hooks/useAccountData'
 import dayjs from 'dayjs'
 import Spinner from 'components/Spinner'
 import HistoryTableCards from 'components/Account/HistoryTableCards'
 // import Button from 'components/Button/Button'
 import StatusTag from 'components/Status/StatusTag'
+import Filter from 'components/Filter'
 // import { useShowClaimSuccessModal } from 'hooks/useSuccessImage'
 
 enum HistoryMoreHeaderIndex {
@@ -37,11 +38,19 @@ const HistoryTableHeader = [
 const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '', '']
 
 export default function HistoryDualInvest() {
+  const [page, setPage] = useState(1)
+  const [hiddenParts, setHiddenParts] = useState<JSX.Element[]>([])
+  const [checkedFilterOption, setCheckedFilterOption] = useState<FilterType>('All')
+  const { orderList, pageParams } = useOrderRecords(
+    INVEST_TYPE.dualInvest,
+    checkedFilterOption,
+    InvestStatus.Settled,
+    page,
+    8
+  )
+
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
-  const [page, setPage] = useState(1)
-  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, 'All', InvestStatus.Settled, page, 8)
-  const [hiddenParts, setHiddenParts] = useState<JSX.Element[]>([])
   // const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
 
   const data = useMemo(() => {
@@ -113,7 +122,7 @@ export default function HistoryDualInvest() {
       )
       return [
         `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
-          1
+          2
         )} ${investCurrency} (${amount})`,
         <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
           {(+annualRor * 100).toFixed(2)}%
@@ -141,6 +150,12 @@ export default function HistoryDualInvest() {
     <Box sx={{ mt: 48, width: '100%' }}>
       <Card>
         <Box padding="38px 24px" display="grid" gap={36} position="relative">
+          <Filter
+            checkedOption={checkedFilterOption}
+            onChange={option => {
+              setCheckedFilterOption(option)
+            }}
+          />
           {!orderList && (
             <Box
               position="absolute"

@@ -28,6 +28,7 @@ import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
 import PositionTableCards from 'components/Account/PositionTableCards'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import Filter from 'components/Filter'
+import { getAddress } from 'ethers/lib/utils'
 
 export const THIRTY_MINUTES_MS = 1800000
 export enum PositionMoreHeaderIndex {
@@ -107,6 +108,7 @@ export default function PositionDualInvest() {
         investCurrency,
         returnedCurrency,
         returnedAmount,
+        strikeCurrency,
         type
       }) => {
         const status =
@@ -115,7 +117,7 @@ export default function PositionDualInvest() {
             : 'progressing'
         const apy = `${(+annualRor * 100).toFixed(2)}%`
         const investAmount = `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
-          1
+          2
         )} ${investCurrency}`
         const deliveryDate = dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + '\n08:30 AM UTC'
         const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
@@ -177,18 +179,20 @@ export default function PositionDualInvest() {
               disabled={status === 'progressing'}
               onClick={e => {
                 if (!finishOrderCallback) return
-                const el = e.target as HTMLButtonElement
+                const el = e.currentTarget as HTMLButtonElement
                 el.innerHTML =
                   '<span class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary css-z0i010-MuiCircularProgress-root" role="progressbar" style="width: 16px; height: 16px; position: relative"><svg class="MuiCircularProgress-svg css-1idz92c-MuiCircularProgress-svg" viewBox="22 22 44 44" color="#ffffff"><circle class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate MuiCircularProgress-circleDisableShrink css-79nvmn-MuiCircularProgress-circle" cx="44" cy="44" r="20.5" fill="none" stroke-width="3"></circle></svg></span>'
                 el.disabled = true
                 showModal(<TransacitonPendingModal />)
                 finishOrderCallback(orderId + '', productId + '')
-                  .then(({ r, returnedAmount, returnedCurrency, earned }) => {
+                  .then(prop => {
+                    const { r, returnedAmount, returnedCurrency, earned } = prop
                     hideModal()
+                    const cur =
+                      CURRENCY_ADDRESS_MAP[getAddress(returnedCurrency)] ??
+                      CURRENCY_ADDRESS_MAP[exercised ? (type === 'CALL' ? strikeCurrency : currency) : investCurrency]
                     addTransaction(r, {
-                      summary: `Claim ${parseBalance(returnedAmount, CURRENCY_ADDRESS_MAP[returnedCurrency], 6)} ${
-                        CURRENCY_ADDRESS_MAP[returnedCurrency]?.symbol
-                      }`
+                      summary: `Claim ${parseBalance(returnedAmount, cur, 6)} ${cur?.symbol}`
                     })
                     el.innerHTML = 'Claim'
 
@@ -250,7 +254,6 @@ export default function PositionDualInvest() {
             <Box mt={27} pl={10}>
               <Filter
                 checkedOption={checkedFilterOption}
-                options={['All', 'BTC']}
                 onChange={option => {
                   setCheckedFilterOption(option)
                 }}
