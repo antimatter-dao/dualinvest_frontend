@@ -72,7 +72,7 @@ export function PlayVideo() {
             Your browser does not support the video tag.
           </video>
           <Box display="flex" width="100%" justifyContent={'space-between'} alignItems="center">
-            <Typography fontSize={24}>How it work</Typography>
+            <Typography fontSize={24}>How Antimatter Structured products work?</Typography>
             <IconButton onClick={handleClose}>
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
                 <path
