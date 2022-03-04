@@ -56,6 +56,7 @@ export default function Select(props: Props) {
         sx={{
           borderRadius: 0,
           padding: 0,
+          fontWeight: '400!important',
           color: theme => theme.palette.text.primary,
           opacity: open ? 1 : 0.5,
           '&:hover': {
