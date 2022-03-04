@@ -104,6 +104,7 @@ export default function ActionModal({
 
   const handleErrorModal = useCallback(
     e => {
+      console.error(e)
       hideModal()
       handleDismiss()
       if (e.code === 4001) {

@@ -9,6 +9,7 @@ import { useDualInvestContract } from './useContract'
 import { Signature, SignatureRequest, SignatureRequestClaim, SignatureResponseClaim } from 'utils/fetch/signature'
 import { IS_TEST_NET } from 'constants/chain'
 import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
+import { toChecksumAddress } from 'web3-utils'
 
 export function useDualInvestBalance(token?: Token) {
   const contract = useDualInvestContract()
@@ -94,13 +95,14 @@ export function useDualInvestCallback(): {
             currency,
             [signRes[0].signatory, signRes[0].signV, signRes[0].signR, signRes[0].signS]
           ]
+
           const estimatedGas =
-            CURRENCY_ADDRESS_MAP[currency].symbol === 'BNB'
+            CURRENCY_ADDRESS_MAP[toChecksumAddress(currency)]?.symbol === 'BNB'
               ? await contract.estimateGas.withdrawETH(...withdrawArgs)
               : await contract.estimateGas.withdraw(...withdrawArgs)
 
           const contractRes =
-            CURRENCY_ADDRESS_MAP[currency].symbol === 'BNB'
+            CURRENCY_ADDRESS_MAP[toChecksumAddress(currency)]?.symbol === 'BNB'
               ? await contract?.withdrawETH(...withdrawArgs, { gasLimit: estimatedGas })
               : await contract?.withdraw(...withdrawArgs, { gasLimit: estimatedGas })
           resolve(contractRes)

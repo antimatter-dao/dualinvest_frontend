@@ -190,7 +190,13 @@ export default function PositionDualInvest() {
                     hideModal()
                     const cur =
                       CURRENCY_ADDRESS_MAP[getAddress(returnedCurrency)] ??
-                      CURRENCY_ADDRESS_MAP[exercised ? (type === 'CALL' ? strikeCurrency : currency) : investCurrency]
+                      CURRENCY_ADDRESS_MAP[
+                        exercised
+                          ? type === 'CALL'
+                            ? getAddress(strikeCurrency)
+                            : getAddress(currency)
+                          : getAddress(investCurrency)
+                      ]
                     addTransaction(r, {
                       summary: `Claim ${parseBalance(returnedAmount, cur, 6)} ${cur?.symbol}`
                     })
@@ -209,8 +215,8 @@ export default function PositionDualInvest() {
                         investAmount={investAmount}
                         earn={earned}
                         returnedCurrency={
-                          CURRENCY_ADDRESS_MAP[returnedCurrency]
-                            ? CURRENCY_ADDRESS_MAP[returnedCurrency]?.symbol ?? ''
+                          CURRENCY_ADDRESS_MAP[getAddress(returnedCurrency)]
+                            ? CURRENCY_ADDRESS_MAP[getAddress(returnedCurrency)]?.symbol ?? ''
                             : ''
                         }
                       />
