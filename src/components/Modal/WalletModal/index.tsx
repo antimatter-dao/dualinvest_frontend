@@ -80,9 +80,6 @@ export default function WalletModal({
     async (connector: (() => Promise<AbstractConnector>) | AbstractConnector | undefined) => {
       const conn = typeof connector === 'function' ? await connector() : connector
 
-      Object.keys(SUPPORTED_WALLETS).map(key => {
-        return true
-      })
       setPendingWallet(conn) // set wallet for pending view
       setWalletView(WALLET_VIEWS.PENDING)
 
