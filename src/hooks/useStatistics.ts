@@ -11,6 +11,7 @@ type DualStatisticsType =
       totalInvestAmount: string
       totalUsdtDeposit: string
       totalEthDeposit: string
+      totalBnbDeposit: string
       totalDeposit: string
     }
   | undefined
@@ -18,6 +19,7 @@ type DualStatisticsType =
 export function useDualStatistics(): DualStatisticsType {
   const BTCPrice = usePrice(CURRENCIES.BTC.symbol, 600000)
   const ETHPrice = usePrice(CURRENCIES.ETH.symbol, 600000)
+  const BNBPrice = usePrice(CURRENCIES.BNB.symbol, 600000)
 
   const [statistics, setStatistics] = useState<DualStatisticsType>(undefined)
 
@@ -31,16 +33,17 @@ export function useDualStatistics(): DualStatisticsType {
   const result = useMemo(() => {
     if (!statistics) return undefined
     const totalDeposit =
-      statistics && BTCPrice && ETHPrice
+      statistics && BTCPrice && ETHPrice && BNBPrice
         ? toLocaleNumberString(
             +statistics.totalBtcDeposit * +BTCPrice +
               +statistics.totalEthDeposit * +ETHPrice +
+              +statistics.totalBnbDeposit * +BNBPrice +
               +statistics.totalUsdtDeposit,
             0
           )
         : '-'
     return { ...statistics, totalDeposit }
-  }, [BTCPrice, ETHPrice, statistics])
+  }, [BNBPrice, BTCPrice, ETHPrice, statistics])
 
   return result
 }
@@ -68,6 +71,7 @@ export function useHomeStatistics(): { totalInvest: string; totalProgress: strin
 
   const BTCPrice = usePrice(CURRENCIES.BTC.symbol, 600000)
   const ETHPrice = usePrice(CURRENCIES.ETH.symbol, 600000)
+  const BNBPrice = usePrice(CURRENCIES.ETH.symbol, 600000)
   const recurStatistics = useRecurStatistics()
 
   const promiseFn = useCallback(() => {
@@ -83,20 +87,21 @@ export function useHomeStatistics(): { totalInvest: string; totalProgress: strin
 
   const res = useMemo(() => {
     const totalInvest =
-      dualStatistics && recurStatistics && ETHPrice && BTCPrice
+      dualStatistics && recurStatistics && ETHPrice && BTCPrice && BNBPrice
         ? toLocaleNumberString(
             +dualStatistics.totalBtcDeposit * +BTCPrice +
               +dualStatistics.totalEthDeposit * +ETHPrice +
+              +dualStatistics.totalBnbDeposit * +BNBPrice +
               +dualStatistics.totalUsdtDeposit,
             0
           )
         : '-'
     const totalProgress =
-      dualStatistics && recurStatistics && ETHPrice && BTCPrice
+      dualStatistics && recurStatistics && ETHPrice && BTCPrice && BNBPrice
         ? toLocaleNumberString(+dualStatistics.totalInvestAmount + +recurStatistics.totalReInvest, 0)
         : '-'
     return { totalInvest, totalProgress }
-  }, [BTCPrice, ETHPrice, dualStatistics, recurStatistics])
+  }, [BNBPrice, BTCPrice, ETHPrice, dualStatistics, recurStatistics])
 
   return res
 }
