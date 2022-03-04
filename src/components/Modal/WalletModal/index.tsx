@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from 'react'
-import ReactGA from 'react-ga'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
@@ -79,20 +78,10 @@ export default function WalletModal({
 
   const tryActivation = useCallback(
     async (connector: (() => Promise<AbstractConnector>) | AbstractConnector | undefined) => {
-      let name = ''
       const conn = typeof connector === 'function' ? await connector() : connector
 
       Object.keys(SUPPORTED_WALLETS).map(key => {
-        if (connector === SUPPORTED_WALLETS[key].connector) {
-          return (name = SUPPORTED_WALLETS[key].name)
-        }
         return true
-      })
-      // log selected wallet
-      ReactGA.event({
-        category: 'Wallet',
-        action: 'Change Wallet',
-        label: name
       })
       setPendingWallet(conn) // set wallet for pending view
       setWalletView(WALLET_VIEWS.PENDING)
