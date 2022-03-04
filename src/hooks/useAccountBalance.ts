@@ -129,7 +129,15 @@ export function useAccountBalances(): {
               : '-'
           }
         : undefined,
-      BNB: bnbRes ? { ...bnbRes } : undefined
+      BNB: bnbRes
+        ? {
+            ...bnbRes,
+            recurAvailable: '0.0000',
+            recurLocked: '0.0000',
+            recurTotal: '0.0000',
+            totalInvest: bnbRes.totalInvest ? trimNumberString(getRecurTotal(bnbRes.totalInvest, '0'), 2) : '-'
+          }
+        : undefined
     }
   }, [
     btcBtcRecur.autoLockedBalance,
