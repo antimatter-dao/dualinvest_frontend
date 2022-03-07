@@ -22,7 +22,7 @@ import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
 import ClaimSuccessModal from '../modals/ClaimSuccessModal'
 import { parseBalance } from 'utils/parseAmount'
-// import MessageBox from 'components/Modal/TransactionModals/MessageBox'
+import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
 /* import { PositionMoreHeader, PositionMoreHeaderIndex, PositionTableHeader } from 'components/Account/PositionTableCards' */
 import PositionTableCards from 'components/Account/PositionTableCards'
@@ -224,7 +224,7 @@ export default function PositionDualInvest() {
                   })
                   .catch(err => {
                     hideModal()
-                    // showModal(<MessageBox type="error">Claim failed</MessageBox>)
+                    showModal(<MessageBox type="error">Claim failed</MessageBox>)
                     console.error(err)
                     el.innerHTML = 'Claim'
                     el.disabled = false
