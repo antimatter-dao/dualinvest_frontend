@@ -72,8 +72,7 @@ export default function Home() {
               component="h1"
               sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700, textAlign: { xs: 'center', md: 'left' } }}
             >
-              Structured Products
-              <PlayVideo />
+              Structured Products <PlayVideo />
             </Typography>
             <LogoText
               logo={<Image src={checkUrl} />}

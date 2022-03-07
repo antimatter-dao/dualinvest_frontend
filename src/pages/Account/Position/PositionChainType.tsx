@@ -27,6 +27,7 @@ import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
 /* import { PositionMoreHeader, PositionMoreHeaderIndex, PositionTableHeader } from 'components/Account/PositionTableCards'
  */ import PositionTableCards from 'components/Account/PositionTableCards'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
+import { getAddress } from 'ethers/lib/utils'
 
 export const THIRTY_MINUTES_MS = 1800000
 export enum PositionMoreHeaderIndex {
@@ -177,10 +178,11 @@ export default function PositionChainType() {
                 showModal(<TransacitonPendingModal />)
                 finishOrderCallback(orderId + '', productId + '')
                   .then(({ r, returnedAmount, returnedCurrency, earned }) => {
+                    const checkedReturnCurrency = getAddress(returnedCurrency)
                     hideModal()
                     addTransaction(r, {
-                      summary: `Claim ${parseBalance(returnedAmount, CURRENCY_ADDRESS_MAP[returnedCurrency], 6)} ${
-                        CURRENCY_ADDRESS_MAP[returnedCurrency]?.symbol
+                      summary: `Claim ${parseBalance(returnedAmount, CURRENCY_ADDRESS_MAP[checkedReturnCurrency], 6)} ${
+                        CURRENCY_ADDRESS_MAP[checkedReturnCurrency]?.symbol
                       }`
                     })
                     el.innerHTML = 'Claim'
@@ -198,8 +200,8 @@ export default function PositionChainType() {
                         investAmount={investAmount}
                         earn={earned}
                         returnedCurrency={
-                          CURRENCY_ADDRESS_MAP[returnedCurrency]
-                            ? CURRENCY_ADDRESS_MAP[returnedCurrency]?.symbol ?? ''
+                          CURRENCY_ADDRESS_MAP[getAddress(returnedCurrency)]
+                            ? CURRENCY_ADDRESS_MAP[getAddress(returnedCurrency)]?.symbol ?? ''
                             : ''
                         }
                       />
