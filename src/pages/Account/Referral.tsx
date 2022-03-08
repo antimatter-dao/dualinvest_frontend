@@ -14,7 +14,7 @@ import NoDataCard from 'components/Card/NoDataCard'
 import { usePrice } from 'hooks/usePriceSet'
 import { trimNumberString } from 'utils/trimNumberString'
 import { shortenAddress } from 'utils'
-import { CURRENCIES } from 'constants/currencies'
+import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 import Copy from '../../components/essential/Copy'
 import OutlineButton from 'components/Button/OutlineButton'
 
@@ -100,13 +100,13 @@ export default function Referral() {
             </Button>
           </NumericalCard>
           <Card padding="16px 22px 28px" gray>
-            <LogoText logo={<CurrencyLogo currency={CURRENCIES.BTC} />} text="BTC" />
+            <LogoText logo={<CurrencyLogo currency={SUPPORTED_CURRENCIES.BTC} />} text="BTC" />
             <Typography fontSize={24} fontWeight={700} mt={19}>
               {btcBalance}
             </Typography>
           </Card>
           <Card padding="16px 22px 28px" gray>
-            <LogoText logo={<CurrencyLogo currency={CURRENCIES.USDT} />} text="USDT" />
+            <LogoText logo={<CurrencyLogo currency={SUPPORTED_CURRENCIES.USDT} />} text="USDT" />
             <Typography fontSize={24} fontWeight={700} mt={19}>
               {usdtBalance}
             </Typography>

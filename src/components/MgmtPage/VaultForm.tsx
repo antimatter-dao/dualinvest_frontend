@@ -13,6 +13,7 @@ import { OutlinedCard } from 'components/Card/Card'
 import { ErrorType } from 'pages/RecurringVaultMgmt/VaultForm'
 import Divider from 'components/Divider'
 import useBreakpoint from 'hooks/useBreakpoint'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 enum TYPE {
   invest = 'Invest',
@@ -126,7 +127,7 @@ function Form({
   disabled: boolean
   error?: string
 }) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
 
   const handleMax = useCallback(() => {
@@ -186,7 +187,7 @@ function Form({
                     Available: {available ? available : '-'}
                     {currencySymbol}
                   </InputLabel>
-                  <DepositModalButton currentCurrency={CURRENCIES[currencySymbol]} />
+                  <DepositModalButton currentCurrency={CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currencySymbol]} />
                 </>
               </Box>
             </Box>

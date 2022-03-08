@@ -17,14 +17,18 @@ export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
 export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
 
 export const ChainList = [
-  {
-    icon: <ETH />,
-    logo: EthUrl,
-    symbol: 'Ropsten',
-    name: 'Ropsten Test Network',
-    id: ChainId.ROPSTEN,
-    hex: '0x3'
-  },
+  ...(IS_TEST_NET
+    ? [
+        {
+          icon: <ETH />,
+          logo: EthUrl,
+          symbol: 'Ropsten',
+          name: 'Ropsten Test Network',
+          id: ChainId.ROPSTEN,
+          hex: '0x3'
+        }
+      ]
+    : []),
   {
     icon: <BSCInvert height={20} width={20} />,
     logo: BSCUrl,

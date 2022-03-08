@@ -15,7 +15,7 @@ import Spinner from 'components/Spinner'
 import { usePrice } from 'hooks/usePriceSet'
 import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
-import { CURRENCIES } from 'constants/currencies'
+import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 import PositionTableCards from 'components/Account/PositionTableCards'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
@@ -148,8 +148,8 @@ export default function PositionRecur() {
         )
         return [
           <Box key="token" display="flex" alignItems="center" gap={13}>
-            <CurrencyLogo currency={CURRENCIES[currency]} size="22px" />
-            <Typography fontSize={16}>{CURRENCIES[currency].symbol}</Typography>
+            <CurrencyLogo currency={SUPPORTED_CURRENCIES[currency]} size="22px" />
+            <Typography fontSize={16}>{SUPPORTED_CURRENCIES[currency].symbol}</Typography>
           </Box>,
           `${investAmount}(${amount})`,
           dayjs(ts * 1000).format('MMM DD, YYYY'),

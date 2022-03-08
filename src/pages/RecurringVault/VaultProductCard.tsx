@@ -12,6 +12,8 @@ import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import { useRecurBalance } from 'hooks/useRecur'
 import { CURRENCIES } from 'constants/currencies'
 import useBreakpoint from 'hooks/useBreakpoint'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { useActiveWeb3React } from 'hooks'
 
 export default function VaultProductCard({
   logoCurSymbol,
@@ -30,9 +32,10 @@ export default function VaultProductCard({
   color: string
   product: RecurProduct | undefined
 }) {
+  const { chainId } = useActiveWeb3React()
   const { autoLockedBalance } = useRecurBalance(
-    CURRENCIES[product?.currency ?? ''] ?? undefined,
-    CURRENCIES[product?.investCurrency ?? ''] ?? undefined
+    CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product?.currency ?? ''] ?? undefined,
+    CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? ''] ?? undefined
   )
   const isDownMd = useBreakpoint('md')
   const isDownSm = useBreakpoint('sm')

@@ -14,7 +14,7 @@ import HistoryTableCards from 'components/Account/HistoryTableCards'
 import StatusTag from 'components/Status/StatusTag'
 // import { useShowClaimSuccessModal } from 'hooks/useSuccessImage'
 import Filter from 'components/Filter'
-import { CURRENCIES } from 'constants/currencies'
+import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 
 enum HistoryMoreHeaderIndex {
@@ -125,8 +125,8 @@ export default function HistoryDualInvest() {
       )
       return [
         <Box key="token" display="flex" alignItems="center" gap={13}>
-          <CurrencyLogo currency={CURRENCIES[currency]} size="22px" />
-          <Typography fontSize={16}>{CURRENCIES[currency].symbol}</Typography>
+          <CurrencyLogo currency={SUPPORTED_CURRENCIES[currency]} size="22px" />
+          <Typography fontSize={16}>{SUPPORTED_CURRENCIES[currency].symbol}</Typography>
         </Box>,
         `${(amount * +multiplier * (investCurrency === 'USDT' ? +strikePrice : 1)).toFixed(
           2

@@ -12,6 +12,8 @@ import { Product } from 'utils/fetch/product'
 import ConfirmModal from 'components/MgmtPage/ConfirmModal'
 import { CURRENCIES } from 'constants/currencies'
 import Spinner from 'components/Spinner'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { useActiveWeb3React } from 'hooks'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -60,6 +62,7 @@ export function MgmtForm({
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const theme = useTheme()
   const toggleWallet = useWalletModalToggle()
+  const { chainId } = useActiveWeb3React()
 
   const showConfirm = useCallback(() => {
     setIsConfirmOpen(true)
@@ -102,7 +105,7 @@ export function MgmtForm({
             : '-'
         }
         data={confirmData}
-        investCurrency={CURRENCIES[product?.investCurrency ?? 'USDT']}
+        investCurrency={CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? 'USDT']}
         title={` ${product?.investCurrency} Financial Management`}
         subTitle={`  [${product?.type === 'CALL' ? 'upward' : 'down'} exercise]`}
         showCancelWarning={false}
@@ -208,7 +211,7 @@ export function MgmtForm({
                   <Typography component="span" color="error" fontSize={12} sx={{ display: 'block' }}>
                     Single Limit Exceeded.
                   </Typography>
-                  Single financial management limit is {product?.multiplier ?? '-'}～
+                  Single financial management limit is {product?.multiplier ?? '-'}~
                   {product ? +product?.orderLimit * +product?.multiplier : '-'} BTC
                 </>
               )

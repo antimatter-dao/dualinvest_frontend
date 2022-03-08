@@ -18,6 +18,7 @@ import { useDualInvestCallback } from 'hooks/useDualInvest'
 import { trimNumberString } from 'utils/trimNumberString'
 import { MgmtForm } from 'components/MgmtForm/MgmtForm'
 import { CURRENCIES } from 'constants/currencies'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -35,14 +36,17 @@ export default function SubscribeForm({
   setAmount: (val: string) => void
   id: string
 }) {
-  const [currentCurrency, setCurrentCurrency] = useState(CURRENCIES[product?.investCurrency ?? 'BTC'])
+  const { account, chainId } = useActiveWeb3React()
+  const [currentCurrency, setCurrentCurrency] = useState(
+    CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? 'BTC']
+  )
   const [pending, setPending] = useState(false)
   const [isDepositOpen, setIsDepositOpen] = useState(false)
   const multiplier = product ? (product.type === 'CALL' ? 1 : +product.strikePrice) : 1
 
   const balance = useDualInvestBalance(currentCurrency)
   const { showModal, hideModal } = useModal()
-  const { account } = useActiveWeb3React()
+
   const addPopup = useAddPopup()
   const addTransaction = useTransactionAdder()
   const { createOrderCallback, checkOrderStatusCallback } = useDualInvestCallback()
@@ -205,8 +209,8 @@ export default function SubscribeForm({
   )
 
   useEffect(() => {
-    setCurrentCurrency(CURRENCIES[product?.investCurrency ?? 'BTC'])
-  }, [product?.investCurrency])
+    setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? 'BTC'])
+  }, [chainId, product?.investCurrency])
 
   return (
     <>

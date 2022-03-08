@@ -6,6 +6,7 @@ import { Axios } from 'utils/axios'
 import { useDualInvestContract } from './useContract'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { CURRENCIES } from 'constants/currencies'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 export function useReferral(): {
   invitation: undefined | string
@@ -42,7 +43,12 @@ export function useReferral(): {
     return Axios.post(
       'getUserAssets',
       {},
-      { account, chainId, currency: CURRENCIES.BTC.address, symbol: CURRENCIES.BTC.symbol }
+      {
+        account,
+        chainId,
+        currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].BTC.address,
+        symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].BTC.symbol
+      }
     )
   }, [account, chainId])
 
@@ -59,7 +65,12 @@ export function useReferral(): {
     return Axios.post(
       'getUserAssets',
       {},
-      { account, chainId, currency: CURRENCIES.USDT.address, symbol: CURRENCIES.USDT.symbol }
+      {
+        account,
+        chainId,
+        currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT.address,
+        symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT.symbol
+      }
     )
   }, [account, chainId])
 

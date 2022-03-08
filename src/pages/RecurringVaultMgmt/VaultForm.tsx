@@ -19,6 +19,7 @@ import TransactionSubmittedModal from 'components/Modal/TransactionModals/Transa
 import RedeemConfirmModal from './RedeemConfirmModal'
 import InvestConfirmModal from './InvestConfirmModal'
 import { feeRate } from 'constants/index'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 export enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -34,9 +35,10 @@ export default function VaultForm({
   investAmount: string
   setInvestAmount: (val: string) => void
 }) {
+  const { account, chainId } = useActiveWeb3React()
   const currencySymbol = product?.investCurrency ?? ''
-  const investCurrency = CURRENCIES[currencySymbol] ?? undefined
-  const currency = CURRENCIES[product?.currency ?? ''] ?? undefined
+  const investCurrency = CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currencySymbol] ?? undefined
+  const currency = CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product?.currency ?? ''] ?? undefined
   const title =
     product?.type === 'CALL'
       ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
@@ -51,7 +53,6 @@ export default function VaultForm({
   const { pnl } = useRecurPnl(currencySymbol)
   const { autoLockedBalance, autoBalance, autoBalanceRaw } = useRecurBalance(currency, investCurrency)
   const { recurStatus, toggleRecur } = useRecurToggle(investCurrency?.address, currency?.address)
-  const { account } = useActiveWeb3React()
   const contractBalance = useDualInvestBalance(investCurrency)
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()

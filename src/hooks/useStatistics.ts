@@ -3,7 +3,7 @@ import { Axios } from 'utils/axios'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { usePrice } from './usePriceSet'
-import { CURRENCIES } from 'constants/currencies'
+import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 
 type DualStatisticsType =
   | {
@@ -17,9 +17,9 @@ type DualStatisticsType =
   | undefined
 
 export function useDualStatistics(): DualStatisticsType {
-  const BTCPrice = usePrice(CURRENCIES.BTC.symbol, 600000)
-  const ETHPrice = usePrice(CURRENCIES.ETH.symbol, 600000)
-  const BNBPrice = usePrice(CURRENCIES.BNB.symbol, 600000)
+  const BTCPrice = usePrice(SUPPORTED_CURRENCIES.BTC.symbol, 600000)
+  const ETHPrice = usePrice(SUPPORTED_CURRENCIES.ETH.symbol, 600000)
+  const BNBPrice = usePrice(SUPPORTED_CURRENCIES.BNB.symbol, 600000)
 
   const [statistics, setStatistics] = useState<DualStatisticsType>(undefined)
 
@@ -69,9 +69,9 @@ export function useRecurStatistics() {
 export function useHomeStatistics(): { totalInvest: string; totalProgress: string } {
   const [dualStatistics, setDualStatistics] = useState<DualStatisticsType>(undefined)
 
-  const BTCPrice = usePrice(CURRENCIES.BTC.symbol, 600000)
-  const ETHPrice = usePrice(CURRENCIES.ETH.symbol, 600000)
-  const BNBPrice = usePrice(CURRENCIES.ETH.symbol, 600000)
+  const BTCPrice = usePrice(SUPPORTED_CURRENCIES.BTC.symbol, 600000)
+  const ETHPrice = usePrice(SUPPORTED_CURRENCIES.ETH.symbol, 600000)
+  const BNBPrice = usePrice(SUPPORTED_CURRENCIES.ETH.symbol, 600000)
   const recurStatistics = useRecurStatistics()
 
   const promiseFn = useCallback(() => {

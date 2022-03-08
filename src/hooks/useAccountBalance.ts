@@ -6,6 +6,7 @@ import { assetBalanceFormatter, BalanceInfo } from 'utils/fetch/balance'
 import { CURRENCIES, SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import { useRecurBalance } from './useRecur'
 import { trimNumberString } from 'utils/trimNumberString'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 const getRecurTotal = (balanceLocked: string, balanceAvailable: string) => {
   if (balanceLocked === '-' || balanceAvailable === '-') {
@@ -23,18 +24,30 @@ export function useAccountBalances(): {
   const [bnbRes, setBnbRes] = useState<BalanceInfo | undefined>(undefined)
   const { account, chainId } = useActiveWeb3React()
 
-  const btcBtcRecur = useRecurBalance(CURRENCIES.BTC, CURRENCIES.BTC)
-  const ethEthRecur = useRecurBalance(CURRENCIES.ETH, CURRENCIES.ETH)
-  const btcUsdtRecur = useRecurBalance(CURRENCIES.BTC, CURRENCIES.USDT)
-  const ethUsdtRecur = useRecurBalance(CURRENCIES.ETH, CURRENCIES.USDT)
+  const btcBtcRecur = useRecurBalance(
+    CURRENCIES[chainId ?? NETWORK_CHAIN_ID].BTC,
+    CURRENCIES[chainId ?? NETWORK_CHAIN_ID].BTC
+  )
+  const ethEthRecur = useRecurBalance(
+    CURRENCIES[chainId ?? NETWORK_CHAIN_ID].ETH,
+    CURRENCIES[chainId ?? NETWORK_CHAIN_ID].ETH
+  )
+  const btcUsdtRecur = useRecurBalance(
+    CURRENCIES[chainId ?? NETWORK_CHAIN_ID].BTC,
+    CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT
+  )
+  const ethUsdtRecur = useRecurBalance(
+    CURRENCIES[chainId ?? NETWORK_CHAIN_ID].ETH,
+    CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT
+  )
 
   const bnbPromiseFn = useCallback(
     () =>
       Axios.post('getUserAssets', undefined, {
         account,
         chainId,
-        currency: CURRENCIES.BNB.address,
-        symbol: CURRENCIES.BNB.symbol
+        currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].BNB.address,
+        symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].BNB.symbol
       }),
     [account, chainId]
   )
@@ -48,8 +61,8 @@ export function useAccountBalances(): {
       Axios.post('getUserAssets', undefined, {
         account,
         chainId,
-        currency: CURRENCIES.BTC.address,
-        symbol: CURRENCIES.BTC.symbol
+        currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].BTC.address,
+        symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].BTC.symbol
       }),
     [account, chainId]
   )
@@ -63,8 +76,8 @@ export function useAccountBalances(): {
       Axios.post('getUserAssets', undefined, {
         account,
         chainId,
-        currency: CURRENCIES.USDT.address,
-        symbol: CURRENCIES.USDT.symbol
+        currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT.address,
+        symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT.symbol
       }),
     [account, chainId]
   )
@@ -75,8 +88,8 @@ export function useAccountBalances(): {
       Axios.post('getUserAssets', undefined, {
         account,
         chainId,
-        currency: CURRENCIES.ETH.address,
-        symbol: CURRENCIES.ETH.symbol
+        currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].ETH.address,
+        symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].ETH.symbol
       }),
     [account, chainId]
   )

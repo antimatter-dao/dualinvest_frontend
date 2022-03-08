@@ -17,6 +17,7 @@ import {
 import { INVEST_TYPE } from './useAccountData'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { InvestStatus } from './useAccountData'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 export function useRecurProcuctList() {
   const [productList, setProductList] = useState<RecurProductList | undefined>(undefined)
@@ -46,15 +47,15 @@ export function useSingleRecurProcuct(currency: string, type: string) {
 export function useRecurPnl(currency: string | undefined): { totalReInvest: string; pnl: string } {
   const [data, setData] = useState<{ totalReInvest: string; pnl: string }>({ totalReInvest: '-', pnl: '-' })
 
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const promiseFn = useCallback(() => {
     return Axios.get<RecurProductRaw>('getTotalReInvest', {
       account,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      currency: CURRENCIES[currency!].address
+      currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currency!].address
     })
-  }, [account, currency])
+  }, [account, chainId, currency])
 
   const callbackFn = useCallback(r => {
     setData({ pnl: r?.data?.data?.pnl ?? '-', totalReInvest: r?.data?.data?.totalReInvest ?? '-' })

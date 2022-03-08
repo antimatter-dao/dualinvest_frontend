@@ -5,7 +5,7 @@ import Spinner from 'components/Spinner'
 import Table from 'components/Table'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { Product, SingleCurProductList } from 'utils/fetch/product'
-import { CURRENCIES } from 'constants/currencies'
+import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 import { ExpireDateAQuestionHelper } from 'components/essential/QuestionHelper'
 import Button from 'components/Button/Button'
 import { useHistory } from 'react-router-dom'
@@ -135,7 +135,7 @@ export default function ProductTable({
         }}
       >
         <ProductCardHeader
-          logoCurSymbol={CURRENCIES.USDT.symbol ?? ''}
+          logoCurSymbol={SUPPORTED_CURRENCIES.USDT.symbol ?? ''}
           title={
             <>
               {strikeCurrencySymbol} Financial Management&nbsp;

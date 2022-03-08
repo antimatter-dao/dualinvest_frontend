@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material'
 import Card from 'components/Card/Card'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import BlueRing from 'components/Icon/BlueRing'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 import { CURRENCIES } from 'constants/currencies'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { usePrice } from 'hooks/usePriceSet'
@@ -30,7 +31,7 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
     >
       <Box display="grid" columnGap={20} mb={{ xs: 10, md: 0 }}>
         <CurrencyLogo
-          currency={CURRENCIES[logoCurSymbol]}
+          currency={CURRENCIES[NETWORK_CHAIN_ID][logoCurSymbol]}
           size={isDownMd ? '32px' : '64px'}
           style={{
             gridRowStart: 1,

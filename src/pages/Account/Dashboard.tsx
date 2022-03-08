@@ -27,6 +27,7 @@ import { useAccountBalances } from 'hooks/useAccountBalance'
 import { toChecksumAddress } from 'web3-utils'
 import { CURRENCIES } from 'constants/currencies'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 enum BalanceTableHeaderIndex {
   token,
@@ -159,7 +160,7 @@ export default function Dashboard() {
       ? Object.keys(accountBalances).map(key => {
           const balances = accountBalances[key as keyof typeof accountBalances]
           return [
-            <TokenHeader key="btc" token={CURRENCIES[key]} />,
+            <TokenHeader key="btc" token={CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key]} />,
             balances?.totalInvest ?? '-',
             balances?.available ?? '-',
             balances?.locked ?? '-',
@@ -168,19 +169,22 @@ export default function Dashboard() {
             <BalanceActions
               key="btc1"
               onDeposit={() => {
-                setCurrentCurrency(CURRENCIES[key])
+                setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
                 handleDepositOpen()
               }}
               onWithdraw={() => {
-                setCurrentCurrency(CURRENCIES[key])
+                setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
                 handleWithdrawOpen()
               }}
-              buyHref={'https://www.pancakeswap.finance/swap?outputCurrency=' + CURRENCIES[key].address}
+              buyHref={
+                'https://www.pancakeswap.finance/swap?outputCurrency=' +
+                CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key].address
+              }
             />
           ]
         })
       : []
-  }, [accountBalances, handleDepositOpen, handleWithdrawOpen])
+  }, [accountBalances, chainId, handleDepositOpen, handleWithdrawOpen])
 
   if (!account)
     return (
@@ -332,7 +336,6 @@ export default function Dashboard() {
 }
 
 function AccountBalanceCards({ data }: { data: any[][] }) {
-  console.log(data)
   return (
     <Box mt={24} display="flex" flexDirection="column" gap={8}>
       {data.map((dataRow, idx) => (

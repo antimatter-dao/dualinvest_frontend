@@ -1,6 +1,6 @@
 import { Box, Tab, TabProps } from '@mui/material'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
-import { SUPPORTED_CURRENCIES, SUPPORTED_CURRENCY_SYMBOL, CURRENCIES } from 'constants/currencies'
+import { SUPPORTED_CURRENCIES, SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import Tabs from './Tabs'
 
 export default function CurrencyTabs({ contents }: { contents: JSX.Element[] }) {
@@ -17,7 +17,7 @@ export default function CurrencyTabs({ contents }: { contents: JSX.Element[] }) 
             gap={8}
             justifyContent={'center'}
           >
-            <CurrencyLogo currency={CURRENCIES[symbol]} size="22px" /> {cur.symbol}
+            <CurrencyLogo currency={SUPPORTED_CURRENCIES[symbol]} size="22px" /> {cur.symbol}
           </Box>
         )
       })}
