@@ -22,10 +22,10 @@ import { useAccountRecord } from 'hooks/useAccountData'
 import Spinner from 'components/Spinner'
 import { ExternalLink } from 'theme/components'
 import { getEtherscanLink } from 'utils/index'
-import { usePrice } from 'hooks/usePriceSet'
+import { usePriceForAll } from 'hooks/usePriceSet'
 import { useAccountBalances } from 'hooks/useAccountBalance'
 import { toChecksumAddress } from 'web3-utils'
-import { CURRENCIES } from 'constants/currencies'
+import { CURRENCIES, SYMBOL_MAP } from 'constants/currencies'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import { NETWORK_CHAIN_ID } from 'constants/chain'
 
@@ -71,23 +71,13 @@ export default function Dashboard() {
   const history = useHistory()
   const isDownMd = useBreakpoint('md')
   const [page, setPage] = useState(1)
-  const btcPrice = usePrice('BTC', 60000)
-  const ethPrice = usePrice('ETH', 60000)
-  const bnbPrice = usePrice('BNB', 60000)
   const accountBalances = useAccountBalances()
+  const indexPrices = usePriceForAll()
   const { accountRecord, pageParams } = useAccountRecord(page)
-
-  const indexPrices = useMemo(() => {
-    return {
-      BTC: btcPrice,
-      ETH: ethPrice,
-      BNB: bnbPrice,
-      USDT: 1
-    }
-  }, [bnbPrice, btcPrice, ethPrice])
 
   const totalInvest = useMemo(() => {
     if (!accountBalances) return '-'
+
     const accumulated = Object.keys(accountBalances).reduce((acc: number, key: string) => {
       const val = accountBalances?.[key as keyof typeof accountBalances]?.totalInvest
       const price = indexPrices[key as keyof typeof indexPrices]
@@ -112,7 +102,7 @@ export default function Dashboard() {
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
         <Box key={1} display="flex" gap={10} alignItems="center">
           <CurrencyLogo currency={token} size="16px" />
-          {record.symbol}
+          {SYMBOL_MAP[record.symbol as keyof typeof SYMBOL_MAP] ?? record.symbol}
         </Box>,
         <Box key={1} display="flex" alignItems="center">
           <ExternalLink

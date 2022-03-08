@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { LineSeriesData } from 'components/Chart'
 import { priceFormatter } from 'utils/fetch/price'
 import { Time } from 'lightweight-charts'
+import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 
 export function usePriceSet(symbol: string | undefined) {
   const [priceSet, setPriceSetList] = useState<LineSeriesData | undefined>(undefined)
@@ -75,4 +76,49 @@ export function usePrice(symbol: string | undefined, delay = 5000) {
     }
   }, [delay, symbol])
   return price
+}
+
+export function usePriceForAll() {
+  const [prices, setPrices] = useState({})
+
+  useEffect(() => {
+    let isMounted = true
+    const call = async () => {
+      try {
+        const r = await Promise.all(
+          SUPPORTED_CURRENCY_SYMBOL.map(symbol => {
+            return fetch(`https://api.binance.com/api/v3/avgPrice?symbol=${symbol}USDT`, {
+              method: 'GET',
+              mode: 'cors',
+              headers: {}
+            })
+          })
+        )
+
+        const res = await Promise.all(
+          r.map(item => {
+            return item.clone().json()
+          })
+        )
+        const priceMap = res.reduce((acc, { price }, idx) => {
+          acc[SUPPORTED_CURRENCY_SYMBOL[idx]] = price
+          return acc
+        }, {})
+
+        if (isMounted) {
+          setPrices({ ...priceMap, USDT: 1 })
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    call()
+    const id = setInterval(call, 120000)
+    return () => {
+      clearInterval(id)
+      isMounted = false
+    }
+  }, [])
+
+  return prices
 }

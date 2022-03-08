@@ -4,7 +4,8 @@ export default function usePollingWithMaxRetries(
   fn: (() => Promise<any>) | undefined,
   callback: (r: any) => void,
   delay = 20000,
-  retries = 5
+  retries = 5,
+  promiseAll = false
 ) {
   const savedFn = useRef(fn)
   const savedCallback = useRef(callback)
@@ -21,7 +22,14 @@ export default function usePollingWithMaxRetries(
     fn &&
       fn()
         .then(r => {
-          if (r.data.code !== 200) {
+          if (promiseAll) {
+            r.map((item: any) => {
+              if (item.data.code !== 200) {
+                throw Error(item.data.msg)
+              }
+            })
+          }
+          if (!promiseAll && r.data.code !== 200) {
             throw Error(r.data.msg)
           }
           if (isMounted) {
@@ -35,7 +43,7 @@ export default function usePollingWithMaxRetries(
     return () => {
       isMounted = false
     }
-  }, [fn, callback])
+  }, [fn, callback, promiseAll])
 
   useEffect(() => {
     let isMounted = true

@@ -245,6 +245,7 @@ export default function Header() {
                         disableRipple={true}
                         variant="text"
                         sx={{
+                          fontWeight: 400,
                           padding: 0,
                           height: 48,
                           marginTop: 'auto',

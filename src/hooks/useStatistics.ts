@@ -2,25 +2,23 @@ import { useCallback, useState, useMemo } from 'react'
 import { Axios } from 'utils/axios'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
-import { usePrice } from './usePriceSet'
-import { SUPPORTED_CURRENCIES } from 'constants/currencies'
+import { usePriceForAll } from './usePriceSet'
+import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 
 type DualStatisticsType =
   | {
-      totalBtcDeposit: string
-      totalInvestAmount: string
-      totalUsdtDeposit: string
-      totalEthDeposit: string
-      totalBnbDeposit: string
+      [key: string]: string
       totalDeposit: string
+      totalInvestAmount: string
     }
   | undefined
 
-export function useDualStatistics(): DualStatisticsType {
-  const BTCPrice = usePrice(SUPPORTED_CURRENCIES.BTC.symbol, 600000)
-  const ETHPrice = usePrice(SUPPORTED_CURRENCIES.ETH.symbol, 600000)
-  const BNBPrice = usePrice(SUPPORTED_CURRENCIES.BNB.symbol, 600000)
+function replaceAll(str: string, match: string, replace: string) {
+  return str.replace(new RegExp(match, 'g'), () => replace)
+}
 
+export function useDualStatistics(): DualStatisticsType {
+  const indexPrices = usePriceForAll()
   const [statistics, setStatistics] = useState<DualStatisticsType>(undefined)
 
   const promistFn = useCallback(() => Axios.get('getDashboard'), [])
@@ -32,18 +30,19 @@ export function useDualStatistics(): DualStatisticsType {
 
   const result = useMemo(() => {
     if (!statistics) return undefined
-    const totalDeposit =
-      statistics && BTCPrice && ETHPrice && BNBPrice
-        ? toLocaleNumberString(
-            +statistics.totalBtcDeposit * +BTCPrice +
-              +statistics.totalEthDeposit * +ETHPrice +
-              +statistics.totalBnbDeposit * +BNBPrice +
-              +statistics.totalUsdtDeposit,
-            0
-          )
-        : '-'
+    const totalDeposit = indexPrices
+      ? toLocaleNumberString(
+          SUPPORTED_CURRENCY_SYMBOL.reduce((acc: number, symbol) => {
+            acc +=
+              (+statistics[`total${symbol[0] + symbol.slice(1).toLowerCase()}Deposit` as keyof typeof statistics] ??
+                0) * +indexPrices[symbol as keyof typeof indexPrices]
+            return acc
+          }, 0) + +statistics.totalUsdtDeposit,
+          0
+        )
+      : '-'
     return { ...statistics, totalDeposit }
-  }, [BNBPrice, BTCPrice, ETHPrice, statistics])
+  }, [indexPrices, statistics])
 
   return result
 }
@@ -67,41 +66,21 @@ export function useRecurStatistics() {
 }
 
 export function useHomeStatistics(): { totalInvest: string; totalProgress: string } {
-  const [dualStatistics, setDualStatistics] = useState<DualStatisticsType>(undefined)
-
-  const BTCPrice = usePrice(SUPPORTED_CURRENCIES.BTC.symbol, 600000)
-  const ETHPrice = usePrice(SUPPORTED_CURRENCIES.ETH.symbol, 600000)
-  const BNBPrice = usePrice(SUPPORTED_CURRENCIES.ETH.symbol, 600000)
+  const dualStatistics = useDualStatistics()
   const recurStatistics = useRecurStatistics()
-
-  const promiseFn = useCallback(() => {
-    return Axios.get('getDashboard')
-  }, [])
-  const callbackFn = useCallback(r => {
-    if (r.data.data) {
-      setDualStatistics(r.data.data)
-    }
-  }, [])
-
-  usePollingWithMaxRetries(promiseFn, callbackFn, 600000)
 
   const res = useMemo(() => {
     const totalInvest =
-      dualStatistics && recurStatistics && ETHPrice && BTCPrice && BNBPrice
-        ? toLocaleNumberString(
-            +dualStatistics.totalBtcDeposit * +BTCPrice +
-              +dualStatistics.totalEthDeposit * +ETHPrice +
-              +dualStatistics.totalBnbDeposit * +BNBPrice +
-              +dualStatistics.totalUsdtDeposit,
-            0
-          )
+      dualStatistics?.totalDeposit && recurStatistics?.totalReInvest
+        ? toLocaleNumberString(+replaceAll(dualStatistics.totalDeposit, ',', '') + +recurStatistics.totalReInvest, 0)
         : '-'
+
     const totalProgress =
-      dualStatistics && recurStatistics && ETHPrice && BTCPrice && BNBPrice
-        ? toLocaleNumberString(+dualStatistics.totalInvestAmount + +recurStatistics.totalReInvest, 0)
+      dualStatistics?.totalInvestAmount && recurStatistics?.totalProgress
+        ? toLocaleNumberString(+dualStatistics.totalInvestAmount + +recurStatistics.totalProgress, 0)
         : '-'
     return { totalInvest, totalProgress }
-  }, [BNBPrice, BTCPrice, ETHPrice, dualStatistics, recurStatistics])
+  }, [dualStatistics, recurStatistics])
 
   return res
 }
