@@ -4,6 +4,7 @@ import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { usePriceForAll } from './usePriceSet'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 type DualStatisticsType =
   | {
@@ -32,15 +33,16 @@ export function useDualStatistics(): DualStatisticsType {
     if (!statistics) return undefined
     const totalDeposit = indexPrices
       ? toLocaleNumberString(
-          SUPPORTED_CURRENCY_SYMBOL.reduce((acc: number, symbol) => {
+          SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].reduce((acc: number, symbol: string) => {
             acc +=
               (+statistics[`total${symbol[0] + symbol.slice(1).toLowerCase()}Deposit` as keyof typeof statistics] ??
-                0) * +indexPrices[symbol as keyof typeof indexPrices]
+                0) * +(indexPrices[symbol as keyof typeof indexPrices] ?? 0)
             return acc
           }, 0) + +statistics.totalUsdtDeposit,
           0
         )
       : '-'
+
     return { ...statistics, totalDeposit }
   }, [indexPrices, statistics])
 

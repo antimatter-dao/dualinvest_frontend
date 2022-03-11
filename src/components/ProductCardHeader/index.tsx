@@ -4,6 +4,7 @@ import CurrencyLogo from 'components/essential/CurrencyLogo'
 import BlueRing from 'components/Icon/BlueRing'
 import { NETWORK_CHAIN_ID } from 'constants/chain'
 import { CURRENCIES } from 'constants/currencies'
+import { useActiveWeb3React } from 'hooks'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { usePrice } from 'hooks/usePriceSet'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
@@ -21,6 +22,7 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
 
   const isDownSm = useBreakpoint('sm')
   const isDownMd = useBreakpoint('md')
+  const { chainId } = useActiveWeb3React()
 
   return (
     <Box
@@ -31,7 +33,7 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
     >
       <Box display="grid" columnGap={20} mb={{ xs: 10, md: 0 }}>
         <CurrencyLogo
-          currency={CURRENCIES[NETWORK_CHAIN_ID][logoCurSymbol]}
+          currency={CURRENCIES[chainId ?? NETWORK_CHAIN_ID][logoCurSymbol]}
           size={isDownMd ? '32px' : '64px'}
           style={{
             gridRowStart: 1,

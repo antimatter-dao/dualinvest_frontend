@@ -15,7 +15,6 @@ export default function NetworkSelect() {
   return (
     <Box sx={{ width: '130', margin: { xs: '0', sm: '8px 0 15px' } }}>
       <Select
-        disabled
         defaultValue={chainId ?? 3}
         value={chainId ?? 3}
         width="max-content"
@@ -33,7 +32,7 @@ export default function NetworkSelect() {
         {ChainList.map(option => (
           <MenuItem
             onClick={() => {
-              if (Object.values(ChainId).includes(option.id)) {
+              if ([1, 3, 4, 5, 42].includes(option.id)) {
                 library?.send('wallet_switchEthereumChain', [
                   { chainId: SUPPORTED_NETWORKS[option.id as ChainId]?.chainId },
                   account

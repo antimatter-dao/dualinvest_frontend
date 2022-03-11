@@ -5,7 +5,7 @@ import { Axios } from 'utils/axios'
 import { assetBalanceFormatter, BalanceInfo } from 'utils/fetch/balance'
 import { CURRENCIES, SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import { trimNumberString } from 'utils/trimNumberString'
-import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { ChainId, NETWORK_CHAIN_ID } from 'constants/chain'
 import { useDualInvestContract } from './useContract'
 import { useSingleContractMultipleData } from 'state/multicall/hooks'
 import { parseBalance } from 'utils/parseAmount'
@@ -29,7 +29,7 @@ const formatRecur = (available: any, locked: any, token: Token) => {
 }
 
 type AccountBalanceType = {
-  [key: typeof SUPPORTED_CURRENCY_SYMBOL[number]]: BalanceInfo | undefined
+  [key: typeof SUPPORTED_CURRENCY_SYMBOL[ChainId][number]]: BalanceInfo | undefined
 }
 
 export function useAccountBalances(): AccountBalanceType {
@@ -40,14 +40,14 @@ export function useAccountBalances(): AccountBalanceType {
 
   const args = useMemo(() => {
     const CUR = CURRENCIES[chainId ?? NETWORK_CHAIN_ID]
-    return SUPPORTED_CURRENCY_SYMBOL.map(key => {
+    return SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].map(key => {
       return [CUR[key]?.address ?? '', CUR[key]?.address ?? '', account ?? undefined]
     })
   }, [chainId, account])
 
   const argsUsdt = useMemo(() => {
     const CUR = CURRENCIES[chainId ?? NETWORK_CHAIN_ID]
-    return SUPPORTED_CURRENCY_SYMBOL.map(key => {
+    return SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].map(key => {
       return [CUR[key]?.address ?? '', CUR.USDT?.address ?? '', account ?? undefined]
     })
   }, [chainId, account])
@@ -57,44 +57,46 @@ export function useAccountBalances(): AccountBalanceType {
   const recurUsdtBalanceRes = useSingleContractMultipleData(contract, 'autoBalances', argsUsdt)
   const recurUsdtLockedBalanceRes = useSingleContractMultipleData(contract, 'autoBalances_lock', argsUsdt)
 
-  const allTokenPromistFn = useCallback(() => {
+  const allTokenPromiseFn = useCallback(() => {
     return Promise.all(
-      SUPPORTED_CURRENCY_SYMBOL.map(symbol =>
+      SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].map(symbol =>
         Axios.post('getUserAssets', undefined, {
           account,
-          chainId,
-          currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][symbol].address,
-          symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][symbol].symbol
+          chainId: NETWORK_CHAIN_ID,
+          currency: CURRENCIES[NETWORK_CHAIN_ID][symbol]?.address,
+          symbol: CURRENCIES[NETWORK_CHAIN_ID][symbol]?.symbol
         })
       )
     )
-  }, [account, chainId])
+  }, [account])
 
   const usdtPromiseFn = useCallback(
     () =>
       Axios.post('getUserAssets', undefined, {
         account,
-        chainId,
-        currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT.address,
-        symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT.symbol
+        chainId: NETWORK_CHAIN_ID,
+        currency: CURRENCIES[NETWORK_CHAIN_ID].USDT.address,
+        symbol: CURRENCIES[NETWORK_CHAIN_ID].USDT.symbol
       }),
-    [account, chainId]
+    [account]
   )
-  const usdtCallbackFn = useCallback(r => setUsdtRes(assetBalanceFormatter(r.data.data)), [])
+  const usdtCallbackFn = useCallback(r => {
+    setUsdtRes(assetBalanceFormatter(r.data.data))
+  }, [])
 
   const allTokenCallbackFn = useCallback(r => {
     setAllRes(r)
   }, [])
 
   usePollingWithMaxRetries(usdtPromiseFn, usdtCallbackFn, 300000)
-  usePollingWithMaxRetries(allTokenPromistFn, allTokenCallbackFn, 300000, 5, true)
+  usePollingWithMaxRetries(allTokenPromiseFn, allTokenCallbackFn, 300000, 5, true)
 
   const usdtResult: BalanceInfo | undefined = useMemo(() => {
-    const usdtRecurTotal = SUPPORTED_CURRENCY_SYMBOL.reduce((acc, symbol, idx) => {
+    const usdtRecurTotal = SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].reduce((acc, symbol, idx) => {
       const { recurAvailable, recurLocked } = formatRecur(
         recurUsdtBalanceRes?.[idx]?.result?.[0],
         recurUsdtLockedBalanceRes?.[idx]?.result?.[0],
-        CURRENCIES[chainId ?? NETWORK_CHAIN_ID][symbol]
+        CURRENCIES[NETWORK_CHAIN_ID][symbol]
       )
       return getRecurTotal(acc, getRecurTotal(recurAvailable, recurLocked))
     }, '0')
@@ -108,16 +110,15 @@ export function useAccountBalances(): AccountBalanceType {
             : '-'
         }
       : undefined
-  }, [chainId, recurUsdtBalanceRes, recurUsdtLockedBalanceRes, usdtRes])
+  }, [recurUsdtBalanceRes, recurUsdtLockedBalanceRes, usdtRes])
 
   const result = useMemo(() => {
-    const resultMap = SUPPORTED_CURRENCY_SYMBOL.reduce((acc, symbol, idx) => {
+    const resultMap = SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].reduce((acc, symbol, idx) => {
       const res = allRes?.[idx]?.data?.data ? assetBalanceFormatter(allRes[idx].data.data) : undefined
-
       const { recurAvailable, recurLocked } = formatRecur(
         recurBalanceRes?.[idx]?.result?.[0],
         recurLockedBalanceRes?.[idx]?.result?.[0],
-        CURRENCIES[chainId ?? NETWORK_CHAIN_ID][symbol]
+        CURRENCIES[NETWORK_CHAIN_ID][symbol]
       )
 
       const recurTotal = getRecurTotal(recurLocked, recurAvailable)
@@ -134,7 +135,7 @@ export function useAccountBalances(): AccountBalanceType {
     }, {} as AccountBalanceType)
     resultMap.USDT = usdtResult
     return resultMap
-  }, [allRes, chainId, recurBalanceRes, recurLockedBalanceRes, usdtResult])
+  }, [allRes, recurBalanceRes, recurLockedBalanceRes, usdtResult])
 
   return result
 }

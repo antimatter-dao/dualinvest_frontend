@@ -5,6 +5,7 @@ import { useActiveWeb3React } from 'hooks'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import { AccountRecord } from 'utils/fetch/account'
+import { ChainId } from 'constants/chain'
 
 export enum InvestStatus {
   Confirming = 1,
@@ -24,7 +25,7 @@ export enum INVEST_TYPE {
 
 const PageSize = 8
 
-export type FilterType = 'All' | typeof SUPPORTED_CURRENCY_SYMBOL[number]
+export type FilterType = 'All' | typeof SUPPORTED_CURRENCY_SYMBOL[ChainId][number]
 
 export function useOrderRecords(
   investType: INVEST_TYPE,

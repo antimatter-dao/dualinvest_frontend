@@ -145,6 +145,7 @@ const MainLogo = styled(NavLink)(({ theme }) => ({
 
 const LinksWrapper = muiStyled('div')(({ theme }) => ({
   marginLeft: 60,
+  whiteSpace: 'nowrap',
   [theme.breakpoints.down('lg')]: {
     marginLeft: 0
   }

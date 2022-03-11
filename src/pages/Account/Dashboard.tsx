@@ -54,9 +54,9 @@ function TokenHeader({ token }: { token: Currency }) {
     <Box display="flex" alignItems="center" gap={16}>
       <CurrencyLogo currency={token} size="32px" />
       <Box>
-        <Typography fontSize={16}>{token.symbol}</Typography>
+        <Typography fontSize={16}>{token?.symbol}</Typography>
         <Typography fontSize={12} sx={{}}>
-          <span style={{ opacity: 0.5, fontSize: '12px' }}>{token.name}</span>
+          <span style={{ opacity: 0.5, fontSize: '12px' }}>{token?.name}</span>
         </Typography>
       </Box>
     </Box>
@@ -81,8 +81,8 @@ export default function Dashboard() {
     const accumulated = Object.keys(accountBalances).reduce((acc: number, key: string) => {
       const val = accountBalances?.[key as keyof typeof accountBalances]?.totalInvest
       const price = indexPrices[key as keyof typeof indexPrices]
-      if (val && price) {
-        return acc + +val * +price
+      if (val && val !== '-' && price) {
+        return acc + +val * (key === 'USDT' ? 1 : +price)
       } else {
         return acc
       }
@@ -150,7 +150,7 @@ export default function Dashboard() {
       ? Object.keys(accountBalances).map(key => {
           const balances = accountBalances[key as keyof typeof accountBalances]
           return [
-            <TokenHeader key="btc" token={CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key]} />,
+            <TokenHeader key={key} token={CURRENCIES[NETWORK_CHAIN_ID][key]} />,
             balances?.totalInvest ?? '-',
             balances?.available ?? '-',
             balances?.locked ?? '-',
@@ -159,16 +159,16 @@ export default function Dashboard() {
             <BalanceActions
               key="btc1"
               onDeposit={() => {
-                setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
+                setCurrentCurrency(CURRENCIES[NETWORK_CHAIN_ID][key])
                 handleDepositOpen()
               }}
               onWithdraw={() => {
-                setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
+                setCurrentCurrency(CURRENCIES[NETWORK_CHAIN_ID][key])
                 handleWithdrawOpen()
               }}
               buyHref={
                 'https://www.pancakeswap.finance/swap?outputCurrency=' +
-                CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key].address
+                CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key]?.address
               }
             />
           ]

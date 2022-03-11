@@ -17,7 +17,7 @@ export function useReferral(): {
 } {
   const [btcBalance, setBtcBalance] = useState('-')
   const [usdtBalance, setUsdtBalance] = useState('-')
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const contract = useDualInvestContract()
   const args = useMemo(() => [account ?? undefined], [account])
 
@@ -45,12 +45,12 @@ export function useReferral(): {
       {},
       {
         account,
-        chainId,
-        currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].BTC.address,
-        symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].BTC.symbol
+        NETWORK_CHAIN_ID,
+        currency: CURRENCIES[NETWORK_CHAIN_ID]?.BTC?.address,
+        symbol: CURRENCIES[NETWORK_CHAIN_ID]?.BTC?.symbol
       }
     )
-  }, [account, chainId])
+  }, [account])
 
   const BtcCallbackFn = useCallback(r => {
     if (r?.data?.data?.balance === undefined) {
@@ -67,12 +67,12 @@ export function useReferral(): {
       {},
       {
         account,
-        chainId,
-        currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT.address,
-        symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT.symbol
+        NETWORK_CHAIN_ID,
+        currency: CURRENCIES[NETWORK_CHAIN_ID].USDT.address,
+        symbol: CURRENCIES[NETWORK_CHAIN_ID].USDT.symbol
       }
     )
-  }, [account, chainId])
+  }, [account])
 
   const UsdtCallbackFn = useCallback(r => {
     if (r?.data?.data?.balance === undefined) {

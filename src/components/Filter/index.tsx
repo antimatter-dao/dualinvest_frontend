@@ -1,9 +1,10 @@
 import { Box, useTheme } from '@mui/material'
 import OutlineButton from 'components/Button/OutlineButton'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 
 export default function Filter({
-  options = ['All', ...SUPPORTED_CURRENCY_SYMBOL],
+  options = ['All', ...SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID]],
   checkedOption,
   onChange
 }: {

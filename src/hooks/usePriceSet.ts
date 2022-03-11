@@ -3,6 +3,8 @@ import { LineSeriesData } from 'components/Chart'
 import { priceFormatter } from 'utils/fetch/price'
 import { Time } from 'lightweight-charts'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { useActiveWeb3React } from 'hooks'
 
 export function usePriceSet(symbol: string | undefined) {
   const [priceSet, setPriceSetList] = useState<LineSeriesData | undefined>(undefined)
@@ -52,6 +54,11 @@ export function usePrice(symbol: string | undefined, delay = 5000) {
     if (!symbol) return undefined
     let isMounted = true
     const call = () => {
+      if (symbol === 'USDT') {
+        return new Promise(() => {
+          return new Response(null, { status: 200, statusText: '' })
+        })
+      }
       return fetch(`https://api.binance.com/api/v3/avgPrice?symbol=${symbol}USDT`, {
         method: 'GET',
         mode: 'cors',
@@ -79,6 +86,7 @@ export function usePrice(symbol: string | undefined, delay = 5000) {
 }
 
 export function usePriceForAll() {
+  const { chainId } = useActiveWeb3React()
   const [prices, setPrices] = useState({})
 
   useEffect(() => {
@@ -86,7 +94,12 @@ export function usePriceForAll() {
     const call = async () => {
       try {
         const r = await Promise.all(
-          SUPPORTED_CURRENCY_SYMBOL.map(symbol => {
+          SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].map(symbol => {
+            if (symbol === 'USDT') {
+              return new Promise(() => {
+                return new Response(null, { status: 200, statusText: '' })
+              })
+            }
             return fetch(`https://api.binance.com/api/v3/avgPrice?symbol=${symbol}USDT`, {
               method: 'GET',
               mode: 'cors',
@@ -96,12 +109,15 @@ export function usePriceForAll() {
         )
 
         const res = await Promise.all(
-          r.map(item => {
+          r.map((item: any) => {
             return item.clone().json()
           })
         )
         const priceMap = res.reduce((acc, { price }, idx) => {
-          acc[SUPPORTED_CURRENCY_SYMBOL[idx]] = price
+          if (SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID][idx] === 'USDT') {
+            return acc
+          }
+          acc[SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID][idx]] = price
           return acc
         }, {})
 
@@ -118,7 +134,7 @@ export function usePriceForAll() {
       clearInterval(id)
       isMounted = false
     }
-  }, [])
+  }, [chainId])
 
   return prices
 }

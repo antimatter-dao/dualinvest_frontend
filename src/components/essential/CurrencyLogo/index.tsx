@@ -22,6 +22,7 @@ export default function CurrencyLogo({
     }
     return []
   }, [currency])
+
   return (
     <Logo
       style={{
