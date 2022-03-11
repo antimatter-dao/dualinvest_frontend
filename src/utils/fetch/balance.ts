@@ -12,9 +12,6 @@ export type BalanceInfo = {
   locked: undefined | string
   pnl: undefined | string
   totalInvest: undefined | string
-  recurLocked?: undefined | string
-  recurTotal?: undefined | string
-  recurAvailable?: undefined | string
 }
 
 export function assetBalanceFormatter(data: assetBalanceRaw): BalanceInfo | undefined {

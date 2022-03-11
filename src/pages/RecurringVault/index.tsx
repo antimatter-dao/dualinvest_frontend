@@ -29,8 +29,8 @@ export default function RecurringVault() {
       gap={{ xs: 36, md: 48 }}
     >
       <ProductBanner
-        title="Recurring Strategy"
-        checkpoints={['Automated strategy for yield generation']}
+        title="Defi option Vault"
+        checkpoints={['--']}
         val1={`${statustics ? toLocaleNumberString(statustics.totalReInvest, 0) : '-'} USDT`}
         val2={`${statustics ? toLocaleNumberString(statustics.totalProgress, 0) : '-'} USDT`}
         unit1={''}

@@ -12,8 +12,9 @@ import { Product } from 'utils/fetch/product'
 import ConfirmModal from 'components/MgmtPage/ConfirmModal'
 import { CURRENCIES } from 'constants/currencies'
 import Spinner from 'components/Spinner'
-import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { DUAL_SUPPORT_NETWORK, NETWORK_CHAIN_ID } from 'constants/chain'
 import { useActiveWeb3React } from 'hooks'
+import { useSwitchChainModal } from 'hooks/useSwitchChainModal'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -63,6 +64,8 @@ export function MgmtForm({
   const theme = useTheme()
   const toggleWallet = useWalletModalToggle()
   const { chainId } = useActiveWeb3React()
+  const { switchChain } = useSwitchChainModal()
+  const isCorrectChain = chainId && DUAL_SUPPORT_NETWORK.includes(chainId)
 
   const showConfirm = useCallback(() => {
     setIsConfirmOpen(true)
@@ -159,7 +162,7 @@ export function MgmtForm({
           smallPlaceholder
           onDeposit={children ? undefined : showDeposit}
           placeholder={inputPlaceholder}
-          disabled={!product || !account || isConfirmed}
+          disabled={!product || !account || isConfirmed || !isCorrectChain}
           value={amount}
           onMax={onMax}
           label={'Subscription Amount'}
@@ -171,7 +174,8 @@ export function MgmtForm({
         />
         {children}
         {!account && <BlackButton onClick={toggleWallet}>Connect Wallet</BlackButton>}
-        {!isConfirmed && account && (
+        {account && !isCorrectChain && <BlackButton onClick={switchChain}>Switch to BSC</BlackButton>}
+        {!isConfirmed && account && isCorrectChain && (
           <ActionButton
             pending={pending}
             pendingText={'Pending'}
@@ -183,7 +187,7 @@ export function MgmtForm({
             success={!product?.isActive}
           />
         )}
-        {isConfirmed && account && (
+        {isConfirmed && account && isCorrectChain && (
           <ActionButton
             pending={pending}
             pendingText={'Pending'}

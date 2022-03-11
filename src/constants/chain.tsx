@@ -23,7 +23,9 @@ export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
   ? [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.AVAX, ChainId.BSC]
   : [ChainId.MAINNET, ChainId.BSC, ChainId.AVAX]
 
-export const ChainList = [
+export const DUAL_SUPPORT_NETWORK = IS_TEST_NET ? [ChainId.ROPSTEN] : [ChainId.BSC]
+
+export const ChainList: Chain[] = [
   ...(IS_TEST_NET
     ? [
         {
@@ -70,7 +72,7 @@ export const ChainListMap: {
 }, {} as any)
 
 export const SUPPORTED_NETWORKS: {
-  [chainId in ChainId]?: {
+  [chainId in ChainId]: {
     chainId: string
     chainName: string
     nativeCurrency: {

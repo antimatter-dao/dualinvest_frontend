@@ -19,14 +19,16 @@ const ChainList = [
     symbol: 'ETH',
     id: 1,
     address: 'XXXXXXXXXXXXXXXXXXXX',
-    name: 'Ethereum Mainnet'
+    name: 'Ethereum Mainnet',
+    icon: <></>
   },
   {
     logo: DummyLogo,
     symbol: 'BSC',
     id: 1,
     address: 'XXXXXXXXXXXXXXXXXXXX',
-    name: 'Binance Smart Chain'
+    name: 'Binance Smart Chain',
+    icon: <></>
   }
 ]
 

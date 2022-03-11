@@ -42,8 +42,8 @@ export default function RecurringVaultMgmt() {
   const { currency, type } = useParams<{ currency: string; type: string }>()
   const product = useSingleRecurProcuct(currency ?? '', type ?? '')
   const prevDetails = useLastCycleRecurDetails(
-    product?.investCurrency ? CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product.investCurrency].address : undefined,
-    product?.currency ? CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product.currency].address : undefined
+    product?.investCurrency ? CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product.investCurrency]?.address : undefined,
+    product?.currency ? CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product.currency]?.address : undefined
   )
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'

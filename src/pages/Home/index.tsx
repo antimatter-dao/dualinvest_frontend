@@ -159,16 +159,15 @@ export default function Home() {
         </Box>
         <Box display="grid" gap={{ xs: 16, md: 32 }}>
           <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
-            Recurring Strategy
+            Defi option Vault
           </Typography>
           <Grid container spacing={20}>
             <ProductCard
               large
               actionText="Explore"
               src={recurringVaultUrl}
-              title="Recurring Strategy"
-              synospis="Automatic management of funds, cyclic compound interest.
-              Earn Yield on your idle assets"
+              title="Defi option Vault"
+              synospis="--"
               onClick={() => {
                 history.push(routes.recurringVault)
               }}
@@ -281,7 +280,7 @@ function ProductCard({
           display="grid"
           gridTemplateColumns={{ xs: '1fr', md: '1fr 1fr' }}
           rowGap={25}
-          columnGap={60}
+          columnGap={large ? 0 : 60}
         >
           <Box paddingTop={large ? '32px' : 0}>
             <Typography fontSize={24} fontWeight={700}>

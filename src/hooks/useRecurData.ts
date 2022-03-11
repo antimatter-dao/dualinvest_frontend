@@ -53,7 +53,7 @@ export function useRecurPnl(currency: string | undefined): { totalReInvest: stri
     return Axios.get<RecurProductRaw>('getTotalReInvest', {
       account,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currency!].address
+      currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currency!]?.address
     })
   }, [account, chainId, currency])
 

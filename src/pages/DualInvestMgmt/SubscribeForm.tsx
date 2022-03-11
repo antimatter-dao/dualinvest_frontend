@@ -24,7 +24,7 @@ import { MgmtForm } from 'components/MgmtForm/MgmtForm'
 import { CURRENCIES } from 'constants/currencies'
 import useBreakpoint from 'hooks/useBreakpoint'
 import SecondaryButton from 'components/Button/SecondaryButton'
-import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { DUAL_SUPPORT_NETWORK, NETWORK_CHAIN_ID } from 'constants/chain'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',

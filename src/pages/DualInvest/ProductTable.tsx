@@ -11,6 +11,9 @@ import Button from 'components/Button/Button'
 import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
 import ProductCardHeader from 'components/ProductCardHeader'
+import { useSwitchChainModal } from 'hooks/useSwitchChainModal'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { useActiveWeb3React } from 'hooks'
 
 const RowStr = styled(Typography)<{ component?: string }>(({ theme }) => ({
   fontWeight: 400,
@@ -74,12 +77,19 @@ export default function ProductTable({
 }) {
   const isDownMd = useBreakpoint('md')
   const history = useHistory()
+  const { chainId } = useActiveWeb3React()
+  const { switchChain } = useSwitchChainModal()
 
   const handleSubscribe = useCallback(
     (id: number) => () => {
+      if (chainId !== NETWORK_CHAIN_ID) {
+        switchChain()
+        return
+      }
+
       history.push(routes.dualInvestMgmt.replace(':id', id + ''))
     },
-    [history]
+    [chainId, history, switchChain]
   )
 
   return (
