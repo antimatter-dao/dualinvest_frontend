@@ -169,7 +169,7 @@ export default function Home() {
               title="Defi option Vault"
               synospis="--"
               onClick={() => {
-                history.push(routes.recurringVault)
+                history.push(routes.defiVault)
               }}
             />
           </Grid>

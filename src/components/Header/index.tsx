@@ -31,7 +31,7 @@ export const Tabs: Tab[] = [
     subTab: [
       { title: 'Dual Investment', route: routes.dualInvest },
       // { title: 'Chain-type Option', route: routes.chainOption },
-      { title: 'Recurring Strategy', route: routes.recurringVault }
+      { title: 'Defi Option Vault', route: routes.defiVault }
     ]
   },
   // { title: 'Dual Investment', route: routes.dualInvest },
@@ -191,7 +191,7 @@ export default function Header() {
                         title === 'Invest' &&
                         (pathname.includes(routes.chainOption) ||
                           pathname.includes(routes.dualInvest) ||
-                          pathname.includes(routes.recurringVault))
+                          pathname.includes(routes.defiVault))
                           ? theme.palette.text.primary
                           : 'transparnet',
                       display: 'inline'

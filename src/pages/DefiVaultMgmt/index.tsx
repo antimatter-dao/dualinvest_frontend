@@ -34,7 +34,7 @@ export const StyledUnorderList = styled('ul')(({ theme }) => ({
   }
 }))
 
-export default function RecurringVaultMgmt() {
+export default function DefiMgmt() {
   const [investAmount, setInvestAmount] = useState('')
 
   const theme = useTheme()
@@ -93,7 +93,12 @@ export default function RecurringVaultMgmt() {
       <MgmtPage
         graphTitle="Current Subscription Status"
         showFaq={false}
-        backLink={routes.recurringVault}
+        backLink={routes.defiVault}
+        pageTitle={
+          product?.type === 'CALL'
+            ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
+            : `${product?.currency ?? ''} Put Selling Recurring Strategy`
+        }
         product={product}
         subject={Subject.RecurringVault}
         subscribeForm={

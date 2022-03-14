@@ -9,8 +9,8 @@ export const routes = {
   dualInvestMgmtImg: '/dual-invest-mgmt/:id/:orderId',
   home: '/home',
   noService: 'no-service',
-  recurringVault: '/recurring-vault',
-  recurringVaultMgmt: '/recurring-vault-mgmt/:currency/:type',
+  defiVault: '/defi',
+  defiVaultMgmt: '/defi-vault-mgmt/:currency/:type',
   referral: '/:referrer'
 }
 

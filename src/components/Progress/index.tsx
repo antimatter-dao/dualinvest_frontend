@@ -1,14 +1,19 @@
-import { Box, Typography, LinearProgress, linearProgressClasses, styled } from '@mui/material'
+import { Box, Typography, LinearProgress, linearProgressClasses, styled, lighten } from '@mui/material'
 
-const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  height: 10,
+const StyledLinearProgress = styled(LinearProgress, {
+  shouldForwardProp: props => (props === 'customColor' ? false : true)
+})<{
+  customColor?: string
+  height?: number
+}>(({ theme, customColor, height }) => ({
+  height: height ?? 10,
   borderRadius: 5,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: 'rgba(37, 37, 37, 0.1)'
+    backgroundColor: customColor ? lighten(customColor, 0.9) : 'rgba(37, 37, 37, 0.1)'
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
-    backgroundColor: theme.palette.primary.main
+    backgroundColor: customColor ? customColor : theme.palette.primary.main
   }
 }))
 
@@ -36,18 +41,28 @@ export function SimpleProgress({
   val,
   total,
   hideValue,
-  width
+  width,
+  customColor,
+  height
 }: {
   val: number
   total: number
   hideValue?: boolean
   width?: string
+  customColor?: string
+  height?: number
 }) {
   const value = (val / total) * 100
   return (
     <Box display="flex" sx={{ width: width ?? 'max-content' }} alignItems="center">
       {!hideValue && <Typography mr={8}>{value | 0}%</Typography>}
-      <StyledLinearProgress variant="determinate" value={value} sx={{ width: width ?? '100px' }} />
+      <StyledLinearProgress
+        variant="determinate"
+        value={value}
+        sx={{ width: width ?? '100px' }}
+        customColor={customColor}
+        height={height}
+      />
     </Box>
   )
 }

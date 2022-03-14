@@ -18,6 +18,7 @@ interface Props {
   label?: string
   renderValue?: any
   style?: React.CSSProperties | SxProps<Theme>
+  selectedIcon?: boolean
 }
 
 const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
@@ -55,6 +56,7 @@ export default function Select(props: Props) {
     defaultValue,
     placeholder,
     renderValue,
+    selectedIcon = true,
     style
   } = props
   const theme = useTheme()
@@ -64,17 +66,19 @@ export default function Select(props: Props) {
       {label && <StyledInputLabel>{label}</StyledInputLabel>}
       <StyledSelect
         sx={{
-          backgroundColor: primary ? theme.palette.primary.main : theme.palette.background.default,
+          backgroundColor: primary ? theme.palette.primary.main : theme.palette.background.paper,
           width: width || '100%',
           height: height || '60px',
           '&:before': {
             content: value || defaultValue ? "''" : `"${placeholder}"`,
             position: 'absolute',
             left: 24,
-            top: 10,
+            top: '50%',
+            transform: 'translateY(-50%)',
             zIndex: 999,
             fontSize: 16,
-            fontWeight: 400
+            fontWeight: 400,
+            pointerEvents: 'none'
           },
           '&:hover': {
             backgroundColor: disabled ? theme.palette.background.paper : theme.palette.primary.main
@@ -89,7 +93,7 @@ export default function Select(props: Props) {
           },
           ...style
         }}
-        value={value}
+        value={value ?? ''}
         displayEmpty
         disabled={disabled}
         MenuProps={{
@@ -124,7 +128,7 @@ export default function Select(props: Props) {
                 gap: 8,
                 padding: 15,
                 '&.Mui-selected::after': {
-                  content: `url(${SelectedIcon})`,
+                  content: selectedIcon ? `url(${SelectedIcon})` : '""',
                   width: 30,
                   height: 20,
                   display: 'flex',

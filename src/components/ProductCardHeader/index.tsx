@@ -8,7 +8,7 @@ import { usePrice } from 'hooks/usePriceSet'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 
 interface Props {
-  logoCurSymbol: string
+  logoCurSymbol?: string
   title: string | JSX.Element
   priceCurSymbol: string
   description?: string
@@ -29,21 +29,23 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
       gap={{ xs: '0', sm: '40px' }}
     >
       <Box display="grid" columnGap={20} mb={{ xs: 10, md: 0 }}>
-        <CurrencyLogo
-          currency={SUPPORTED_CURRENCIES[logoCurSymbol]}
-          size={isDownMd ? '32px' : '64px'}
-          style={{
-            gridRowStart: 1,
-            gridRowEnd: isDownSm ? 'span 1' : 'span 2',
-            marginBottom: isDownSm ? 12 : 0
-          }}
-        />
+        {logoCurSymbol && (
+          <CurrencyLogo
+            currency={SUPPORTED_CURRENCIES[logoCurSymbol]}
+            size={isDownMd ? '32px' : '64px'}
+            style={{
+              gridRowStart: 1,
+              gridRowEnd: isDownSm ? 'span 1' : 'span 2',
+              marginBottom: isDownSm ? 12 : 0
+            }}
+          />
+        )}
 
         <Typography
           fontWeight={700}
           align="left"
           sx={{
-            gridColumnStart: isDownSm ? 1 : 2,
+            gridColumnStart: isDownSm || !logoCurSymbol ? 1 : 2,
             gridColumnEnd: 'span 1',
             fontSize: {
               xs: 20,

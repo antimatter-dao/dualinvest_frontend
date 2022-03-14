@@ -2,7 +2,7 @@ import { MenuItem, Box } from '@mui/material'
 import LogoText from 'components/LogoText'
 import Select from 'components/Select/Select'
 import { useActiveWeb3React } from 'hooks'
-import { ChainId, ChainList, SUPPORTED_NETWORKS } from 'constants/chain'
+import { ChainId, ChainList, NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from 'constants/chain'
 import useBreakpoint from 'hooks/useBreakpoint'
 import Image from 'components/Image'
 
@@ -15,8 +15,8 @@ export default function NetworkSelect() {
   return (
     <Box sx={{ width: '130', margin: { xs: '0', sm: '8px 0 15px' } }}>
       <Select
-        defaultValue={chainId ?? 3}
-        value={chainId ?? 3}
+        defaultValue={chainId ?? NETWORK_CHAIN_ID}
+        value={chainId ?? NETWORK_CHAIN_ID}
         width="max-content"
         height={isDownSm ? '24px' : '36px'}
         style={{

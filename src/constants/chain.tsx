@@ -5,6 +5,9 @@ import BSCUrl from 'assets/svg/binance.svg'
 import { ReactComponent as BSC } from 'assets/svg/binance.svg'
 import { ReactComponent as AVAX } from 'assets/svg/avax.svg'
 import AVAXUrl from 'assets/svg/avax.svg'
+import { ReactComponent as AVAXBg } from 'assets/svg/avax_bg.svg'
+import { ReactComponent as BSCBg } from 'assets/svg/bsc_bg.svg'
+import { ReactComponent as AVAXBgFilled } from 'assets/svg/avax_bg_filled.svg'
 
 export enum ChainId {
   MAINNET = 1,
@@ -128,4 +131,13 @@ export const SUPPORTED_NETWORKS: {
     rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
     blockExplorerUrls: ['https://cchain.explorer.avax.network']
   }
+}
+
+export const ChainsBgImgs: { [key in ChainId]?: JSX.Element } = {
+  [ChainId.AVAX]: <AVAXBg />,
+  [ChainId.BSC]: <BSCBg />
+}
+
+export const ChainsBgImgsFilled: { [key in ChainId]?: JSX.Element } = {
+  [ChainId.AVAX]: <AVAXBgFilled />
 }

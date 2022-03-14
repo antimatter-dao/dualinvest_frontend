@@ -67,7 +67,7 @@ export const SUPPORTED_CURRENCIES: {
     symbol: 'USDT',
     name: 'Binance-Peg BSC-USDT',
     logoUrl: UsdtLogo,
-    color: '#31B047'
+    color: '#1BA27A'
   },
   ETH: {
     address: {

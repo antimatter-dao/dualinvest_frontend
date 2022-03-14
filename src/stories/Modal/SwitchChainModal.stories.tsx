@@ -25,12 +25,12 @@ export default {
 } as ComponentMeta<typeof SwitchChainModal>
 
 export const Default = () => {
-  const { showModal, hideModal } = useModal()
+  const { showModal } = useModal()
 
   return (
     <Button
       onClick={() => {
-        showModal(<SwitchChainModal onConfirm={hideModal} fromChain={fromChain} toChain={toChain} />)
+        showModal(<SwitchChainModal fromChain={fromChain} toChain={toChain} />)
       }}
       variant="contained"
     >

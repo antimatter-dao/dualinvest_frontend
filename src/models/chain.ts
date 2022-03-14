@@ -4,5 +4,5 @@ export interface Chain {
   id: number
   name: string
   hex?: string
-  icon: JSX.Element
+  icon?: JSX.Element
 }

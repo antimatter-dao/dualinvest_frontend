@@ -15,10 +15,9 @@ import { RECUR_TOGGLE_STATUS } from 'hooks/useRecurData'
 import QuestionHelper from 'components/essential/QuestionHelper'
 
 interface Props {
-  logoCurSymbol: string
+  logoCurSymbol?: string
   title: string
   priceCurSymbol: string
-  description: string
   account?: string | null
   vaultForm: React.ReactNode
   timer: number
@@ -32,7 +31,6 @@ export default function VaultCard(props: Props) {
     logoCurSymbol,
     title,
     priceCurSymbol,
-    description,
     account,
     vaultForm,
     timer,
@@ -50,12 +48,7 @@ export default function VaultCard(props: Props) {
   return (
     <Card>
       <Box padding={{ xs: '24px 16px 25px', md: '34px 24px 48px' }}>
-        <ProductCardHeader
-          logoCurSymbol={logoCurSymbol}
-          title={title}
-          description={description}
-          priceCurSymbol={priceCurSymbol}
-        />
+        <ProductCardHeader logoCurSymbol={logoCurSymbol} title={title} priceCurSymbol={priceCurSymbol} />
         <Box display={isDownMd ? 'grid' : 'flex'} width="100%" gap={isDownMd ? '40px' : '80px'} mt={10}>
           <Box width={'100%'}>{vaultForm}</Box>
           <OutlinedCard width={'100%'} style={{ margin: '12px 0' }}>

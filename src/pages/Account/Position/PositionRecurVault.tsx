@@ -69,7 +69,7 @@ export default function PositionRecur() {
   const history = useHistory()
 
   const handleGoInvest = useCallback(() => {
-    history.push(routes.recurringVault)
+    history.push(routes.defiVault)
   }, [history])
 
   const data = useMemo(() => {

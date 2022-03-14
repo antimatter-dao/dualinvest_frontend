@@ -8,7 +8,6 @@ import NumericalCard from 'components/Card/NumericalCard'
 
 const StyledImg = styled(Box)(({ theme }) => ({
   svg: {
-    marginBottom: 13,
     '& #dualInvestGuide': {
       zIndex: 2,
       '&:hover, :focus, :active': {
@@ -36,12 +35,12 @@ export default function ProductBanner({
   img
 }: {
   title: string
-  val1: string
-  unit1: string | JSX.Element
-  subVal1: string
-  val2: string
-  unit2: string | JSX.Element
-  subVal2: string
+  val1?: string
+  unit1?: string | JSX.Element
+  subVal1?: string
+  val2?: string
+  unit2?: string | JSX.Element
+  subVal2?: string
   checkpoints: string[]
   img?: JSX.Element
 }) {
@@ -55,7 +54,10 @@ export default function ProductBanner({
       sx={{
         width: '100%',
         background: theme => theme.palette.background.paper,
-        padding: { xs: '32px 20px 20px', md: '40px', lg: '44px 61px' }
+        padding:
+          !val2 && !val1
+            ? { xs: '32px 20px 0px', md: '40px 40px 0', lg: '20px 61px 0' }
+            : { xs: '32px 20px 20px', md: '40px', lg: '44px 61px' }
       }}
     >
       <Box
@@ -79,34 +81,43 @@ export default function ProductBanner({
               />
             ))}
           </Box>
-          <Grid container spacing={{ xs: 8, md: 20 }}>
-            <Grid item xs={12} md={6} height={{ xs: 76, md: 'auto' }}>
-              <NumericalCard
-                fontSize={isDownMd ? '20px' : undefined}
-                width={isDownSm ? '100%' : isDownMd ? '320px' : '264px'}
-                value={val1}
-                unit={unit1}
-                border
-                height={isDownMd ? 76 : 'auto'}
-                subValue={subVal1}
-                gap={isDownMd ? '12px' : undefined}
-              />
+          {val1 && val2 && (
+            <Grid container spacing={{ xs: 8, md: 20 }}>
+              <Grid item xs={12} md={6} height={{ xs: 76, md: 'auto' }}>
+                <NumericalCard
+                  fontSize={isDownMd ? '20px' : undefined}
+                  width={isDownSm ? '100%' : isDownMd ? '320px' : '264px'}
+                  value={val1}
+                  unit={unit1}
+                  border
+                  height={isDownMd ? 76 : 'auto'}
+                  subValue={subVal1}
+                  gap={isDownMd ? '12px' : undefined}
+                />
+              </Grid>
+              <Grid item xs={12} md={6} mt={{ xs: 8, md: 0 }}>
+                <NumericalCard
+                  fontSize={isDownMd ? '20px' : undefined}
+                  width={isDownSm ? '100%' : isDownMd ? '320px' : '264px'}
+                  value={val2}
+                  unit={unit2}
+                  border
+                  subValue={subVal2}
+                  height={isDownMd ? 76 : 'auto'}
+                  gap={isDownMd ? '12px' : undefined}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={6} mt={{ xs: 8, md: 0 }}>
-              <NumericalCard
-                fontSize={isDownMd ? '20px' : undefined}
-                width={isDownSm ? '100%' : isDownMd ? '320px' : '264px'}
-                value={val2}
-                unit={unit2}
-                border
-                subValue={subVal2}
-                height={isDownMd ? 76 : 'auto'}
-                gap={isDownMd ? '12px' : undefined}
-              />
-            </Grid>
-          </Grid>
+          )}
         </Box>
-        <StyledImg> {img ? img : <DualInvestGuide />}</StyledImg>
+        <StyledImg
+          sx={{
+            marginBottom: val1 && val2 ? 13 : -6,
+            height: 'max-content'
+          }}
+        >
+          {img ? img : <DualInvestGuide />}
+        </StyledImg>
       </Box>
     </Box>
   )

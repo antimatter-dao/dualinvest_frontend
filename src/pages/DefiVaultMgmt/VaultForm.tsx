@@ -14,7 +14,7 @@ import TransactionPendingModal from 'components/Modal/TransactionModals/Transact
 import useModal from 'hooks/useModal'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import RecurConfirmModal from '../RecurringVaultMgmt/RecurConfirmModal'
+import RecurConfirmModal from './RecurConfirmModal'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import RedeemConfirmModal from './RedeemConfirmModal'
 import InvestConfirmModal from './InvestConfirmModal'
@@ -39,10 +39,7 @@ export default function VaultForm({
   const currencySymbol = product?.investCurrency ?? ''
   const investCurrency = CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currencySymbol] ?? undefined
   const currency = CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product?.currency ?? ''] ?? undefined
-  const title =
-    product?.type === 'CALL'
-      ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-      : `${product?.currency ?? ''} Put Selling Recurring Strategy`
+  const title = product?.type === 'CALL' ? `${product?.currency ?? ''}-C` : `${product?.currency ?? ''}-P`
 
   const [snackbarOpen, setSnackbarOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
@@ -226,7 +223,8 @@ export default function VaultForm({
         amount={autoBalance}
         currency={investCurrency}
       />
-      <Box display="grid" position="relative" gap="35px" mt={-24}>
+
+      <Box display="grid" position="relative" gap="35px" mt={32}>
         {snackbarOpen && (
           <Alert
             onClose={handleCloseSnakebar}
@@ -255,10 +253,6 @@ export default function VaultForm({
         <VaultCard
           account={account}
           title={title}
-          description={`Generates yield by running an automated ${
-            product?.type === 'CALL' ? `${product?.currency ?? ''} covered call strategy` : `put selling strategy`
-          }`}
-          logoCurSymbol={currencySymbol}
           priceCurSymbol={product?.currency ?? ''}
           timer={product?.expiredAt ?? 0}
           recurStatus={recurStatus}

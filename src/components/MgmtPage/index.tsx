@@ -8,6 +8,8 @@ import Divider from 'components/Divider'
 // import Spinner from 'components/Spinner'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { RiskStatement, FAQ, Subject } from './stableContent'
+import { LogoTitle } from './LogoTitle'
+import { DefiTemplateImage } from './DefiTemplateImage'
 // import { useSuccessImage } from 'hooks/useSuccessImage'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
@@ -44,7 +46,7 @@ interface Props {
 export default function MgmtPage(props: Props) {
   const {
     backLink,
-    // product,
+    product,
     pageTitle,
     chart,
     subject,
@@ -89,39 +91,54 @@ export default function MgmtPage(props: Props) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '100%',
-            background: isDownMd ? theme.palette.background.default : theme.palette.background.paper,
-            padding: isDownMd ? '0 0 28px 0' : '27px 0'
+            marginTop: isDownMd ? -24 : 0,
+            width: `calc(100% + ${vaultForm && isDownMd ? 40 : 0}px)`,
+            background: isDownMd && !vaultForm ? theme.palette.background.default : theme.palette.background.paper,
+            padding: isDownMd ? '24px 24px 28px' : '27px 24px'
           }}
         >
-          <Box maxWidth={theme.width.maxContent} width="100%">
-            <NavLink to={backLink} style={{ textDecoration: 'none' }}>
+          <Box maxWidth={theme.width.maxContent} width="100%" display="grid" position="relative">
+            <NavLink to={backLink} style={{ textDecoration: 'none', display: 'block' }}>
               <ArrowLeft />
               <Typography component="span" color={theme.bgColor.bg1} fontSize={{ xs: 12, md: 14 }} ml={16}>
                 Go Back
               </Typography>
             </NavLink>
+            <div style={{ height: '43px' }}></div>
+            {vaultForm && (
+              <LogoTitle
+                title={pageTitle ?? ''}
+                description={`Generates yield by running an automated ${
+                  product?.type === 'CALL' ? `${product?.currency ?? ''} covered call strategy` : `put selling strategy`
+                }`}
+                logoCurSymbol={product?.investCurrency ?? ''}
+              />
+            )}
+            <DefiTemplateImage chainId={43114} />
+            {!isDownMd && <div style={{ height: '78px' }}></div>}
           </Box>
         </Box>
 
         <Box padding={isDownMd || vaultForm ? 0 : '60px 0'} sx={{ maxWidth: theme.width.maxContent }} width="100%">
-          <Box
-            mb={isDownMd ? 24 : 60}
-            display="flex"
-            gap={{ xs: 0, md: 8 }}
-            flexDirection={isDownMd ? 'column' : 'row'}
-          >
-            {pageTitle && (
-              <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
-                {pageTitle}
-              </Typography>
-            )}
-            {subject === Subject.DualInvest && (
-              <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={400} component="span">
-                [{type === 'CALL' ? 'upward' : 'down'} exercise]
-              </Typography>
-            )}
-          </Box>
+          {!vaultForm && (
+            <Box
+              mb={isDownMd ? 24 : 60}
+              display="flex"
+              gap={{ xs: 0, md: 8 }}
+              flexDirection={isDownMd ? 'column' : 'row'}
+            >
+              {pageTitle && (
+                <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={700}>
+                  {pageTitle}
+                </Typography>
+              )}
+              {subject === Subject.DualInvest && (
+                <Typography fontSize={{ xs: 24, md: 44 }} fontWeight={400} component="span">
+                  [{type === 'CALL' ? 'upward' : 'down'} exercise]
+                </Typography>
+              )}
+            </Box>
+          )}
 
           <Grid container spacing={20}>
             {vaultForm && (
