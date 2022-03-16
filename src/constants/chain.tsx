@@ -26,7 +26,8 @@ export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
   ? [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.AVAX, ChainId.BSC]
   : [ChainId.MAINNET, ChainId.BSC, ChainId.AVAX]
 
-export const DUAL_SUPPORT_NETWORK = IS_TEST_NET ? [ChainId.ROPSTEN] : [ChainId.BSC]
+export const DUAL_SUPPORTED_NETWORK = IS_TEST_NET ? [ChainId.ROPSTEN] : [ChainId.BSC]
+export const DEFI_SUPPORTED_NETWORK = IS_TEST_NET ? [ChainId.AVAX] : [ChainId.AVAX]
 
 export const ChainList: Chain[] = [
   ...(IS_TEST_NET

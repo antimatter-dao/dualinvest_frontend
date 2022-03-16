@@ -50,7 +50,9 @@ export default function VaultCard(props: Props) {
       <Box padding={{ xs: '24px 16px 25px', md: '34px 24px 48px' }}>
         <ProductCardHeader logoCurSymbol={logoCurSymbol} title={title} priceCurSymbol={priceCurSymbol} />
         <Box display={isDownMd ? 'grid' : 'flex'} width="100%" gap={isDownMd ? '40px' : '80px'} mt={10}>
-          <Box width={'100%'}>{vaultForm}</Box>
+          <Box width={'100%'} mt={{ xs: 0, md: -20 }}>
+            {vaultForm}
+          </Box>
           <OutlinedCard width={'100%'} style={{ margin: '12px 0' }}>
             <Box width={'100%'} padding="34px 22px 27px" display="flex" flexDirection={'column'} gap={46}>
               <Card gray>

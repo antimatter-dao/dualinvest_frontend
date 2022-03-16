@@ -98,12 +98,17 @@ export default function MgmtPage(props: Props) {
           }}
         >
           <Box maxWidth={theme.width.maxContent} width="100%" display="grid" position="relative">
-            <NavLink to={backLink} style={{ textDecoration: 'none', display: 'block' }}>
+            <Box
+              component={NavLink}
+              to={backLink}
+              zIndex={2}
+              style={{ textDecoration: 'none', display: 'block', width: 'max-content' }}
+            >
               <ArrowLeft />
               <Typography component="span" color={theme.bgColor.bg1} fontSize={{ xs: 12, md: 14 }} ml={16}>
                 Go Back
               </Typography>
-            </NavLink>
+            </Box>
             <div style={{ height: '43px' }}></div>
             {vaultForm && (
               <LogoTitle

@@ -117,3 +117,7 @@ export const DUAL_INVEST_ADDRESS = IS_TEST_NET
 export const NO_REFERRER = '0x0000000000000000000000000000000000000000'
 
 export const feeRate = '3%'
+
+export const DEFI_VAULT_ADDRESS: { [chainId in ChainId]?: string } = {
+  [ChainId.AVAX]: '0x1ba02c36C0F6F07CA900a6C44e161833509A7768'
+}

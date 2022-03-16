@@ -4,13 +4,13 @@ import { ChainId, ChainsBgImgsFilled } from 'constants/chain'
 export function DefiTemplateImage({ chainId }: { chainId: ChainId }) {
   return (
     <Box
-      position={{ xs: 'static', md: 'absolute' }}
+      position={{ xs: 'absolute' }}
       bottom={0}
-      right={{ xs: '0', md: '-40px' }}
+      right={{ xs: '0', md: '0' }}
       zIndex={1}
       mb={{ xs: -30, md: 0 }}
       sx={{
-        width: '100%',
+        width: { xs: '100%', sm: '70%', md: '70%', lg: '100%' },
         display: 'flex',
         justifyContent: 'flex-end'
       }}

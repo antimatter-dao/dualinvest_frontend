@@ -10,9 +10,7 @@ import {
   recurProductListFormatter,
   RecurProductList,
   singleRecurProductFormatter,
-  RecurProduct,
-  prevRecurDetailsFormatter,
-  PrevRecur
+  RecurProduct
 } from 'utils/fetch/recur'
 import { INVEST_TYPE } from './useAccountData'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
@@ -154,29 +152,4 @@ export function useRecurActiveOrderCount(
   usePollingWithMaxRetries(curSymbol ? promiseFn : undefined, callbackFn, 30000)
 
   return count
-}
-
-export function useLastCycleRecurDetails(currencyAddress: string | undefined, vaultAddress: string | undefined) {
-  const [details, setDetails] = useState<undefined | PrevRecur>(undefined)
-  const { account } = useActiveWeb3React()
-
-  useEffect(() => {
-    if (!currencyAddress || !currencyAddress) return
-    ;(async () => {
-      try {
-        const r = await Axios.get<any>('lastCycleProductDetail', {
-          account: account,
-          currency: currencyAddress,
-          vault: vaultAddress
-        })
-        if (r.data.data) {
-          setDetails(prevRecurDetailsFormatter(r.data.data))
-        }
-      } catch (e) {
-        console.error(e)
-      }
-    })()
-  }, [account, currencyAddress, vaultAddress])
-
-  return details
 }

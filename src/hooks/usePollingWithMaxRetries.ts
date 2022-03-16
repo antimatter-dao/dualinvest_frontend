@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 
 export default function usePollingWithMaxRetries(
   fn: (() => Promise<any>) | undefined,
@@ -7,17 +7,11 @@ export default function usePollingWithMaxRetries(
   retries = 5,
   promiseAll = false
 ) {
-  const savedFn = useRef(fn)
-  const savedCallback = useRef(callback)
-
   useEffect(() => {
     let isMounted = true
     if (!fn || fn === undefined) {
       return
     }
-
-    savedFn.current = fn
-    savedCallback.current = callback
 
     fn &&
       fn()
@@ -47,7 +41,7 @@ export default function usePollingWithMaxRetries(
 
   useEffect(() => {
     let isMounted = true
-    if (!savedFn.current) {
+    if (!fn) {
       return
     }
     const id = setInterval(() => {
@@ -56,9 +50,8 @@ export default function usePollingWithMaxRetries(
         return
       }
 
-      savedFn.current &&
-        savedFn
-          .current()
+      fn &&
+        fn()
           .then(r => {
             if (r === null) {
               clearInterval(id)
@@ -68,7 +61,7 @@ export default function usePollingWithMaxRetries(
               throw Error(r.data.msg)
             }
             if (isMounted) {
-              savedCallback.current(r)
+              callback(r)
             }
           })
           .catch(e => {

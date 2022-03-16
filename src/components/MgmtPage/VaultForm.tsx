@@ -3,17 +3,12 @@ import Tabs from 'components/Tabs/Tabs'
 import InputNumerical from 'components/Input/InputNumerical'
 import Button, { BlackButton } from 'components/Button/Button'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import InputLabel from 'components/Input/InputLabel'
-import DepositModalButton from 'pages/Account/modals/DepositModalButton'
-import { CURRENCIES } from 'constants/currencies'
 import { useActiveWeb3React } from 'hooks'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useCallback } from 'react'
-import { OutlinedCard } from 'components/Card/Card'
 import { ErrorType } from 'pages/DefiVaultMgmt/VaultForm'
 import Divider from 'components/Divider'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 enum TYPE {
   invest = 'Invest',
@@ -27,22 +22,18 @@ export default function VaultForm({
   apy,
   onInvestChange,
   investAmount,
-  multiplier,
-  formula,
   onWithdraw,
   onInvest,
   redeemDisabled,
   investDisabled,
   error
 }: {
-  formula: string
   formData: { [key: string]: any }
   currencySymbol: string
   available?: string
   apy: string
   onInvestChange: (val: string) => void
   investAmount: string
-  multiplier: number
   onWithdraw: () => void
   onInvest: () => void
   redeemDisabled: boolean
@@ -68,8 +59,6 @@ export default function VaultForm({
               available={available}
               onChange={onInvestChange}
               val={investAmount}
-              multiplier={multiplier}
-              formula={formula}
               onClick={onInvest}
               disabled={investDisabled}
             />,
@@ -78,8 +67,6 @@ export default function VaultForm({
               type={TYPE.redeem}
               formData={formData}
               currencySymbol={currencySymbol}
-              multiplier={multiplier}
-              formula={formula}
               onClick={onWithdraw}
               disabled={redeemDisabled}
             />
@@ -109,8 +96,6 @@ function Form({
   available,
   onChange,
   val,
-  multiplier,
-  formula,
   onClick,
   disabled,
   error
@@ -121,23 +106,17 @@ function Form({
   available?: string
   onChange?: (val: string) => void
   val?: string
-  multiplier: number
-  formula: string
   onClick: () => void
   disabled: boolean
   error?: string
 }) {
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
 
   const handleMax = useCallback(() => {
     onChange &&
-      onChange(
-        type === TYPE.invest
-          ? Math.floor(+(available ?? 0) / multiplier)
-          : formData['Redeemable:'].replace(currencySymbol, '')
-      )
-  }, [available, currencySymbol, formData, onChange, type, multiplier])
+      onChange(type === TYPE.invest ? +(available ?? '0') : formData['Redeemable:'].replace(currencySymbol, ''))
+  }, [available, currencySymbol, formData, onChange, type])
 
   const handleChange = useCallback(
     e => {
@@ -169,59 +148,17 @@ function Form({
       {type === TYPE.invest && val !== undefined && onChange && (
         <Box>
           <InputNumerical
+            label={`${TYPE.invest} Amount`}
+            balance={available ? available : '-'}
+            unit={currencySymbol}
             error={!!error && error !== ErrorType.notAvailable}
             smallPlaceholder
-            placeholder={`Each unit represents ${multiplier} ${currencySymbol}`}
+            placeholder={'0.00'}
             onChange={handleChange}
             onMax={handleMax}
             value={val}
             disabled={!account || error === ErrorType.notAvailable}
           />
-
-          <Box mt={12}>
-            <Box display="flex" justifyContent="space-between">
-              <InputLabel>{TYPE.invest} Amount</InputLabel>
-              <Box display="flex" alignItems="flex-start" gap="5px">
-                <>
-                  <InputLabel>
-                    Available: {available ? available : '-'}
-                    {currencySymbol}
-                  </InputLabel>
-                  <DepositModalButton currentCurrency={CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currencySymbol]} />
-                </>
-              </Box>
-            </Box>
-            <OutlinedCard>
-              <Box height="60px" display="flex" alignItems="center" padding="16px" justifyContent="space-between">
-                <>
-                  <Typography
-                    component="span"
-                    color="primary"
-                    fontSize={16}
-                    maxWidth={'55%'}
-                    sx={{ wordBreak: 'break-all' }}
-                  >
-                    {(multiplier * +val).toFixed(2)} {currencySymbol}
-                  </Typography>
-                  <Typography
-                    component="span"
-                    fontSize={12}
-                    sx={{ color: theme => theme.palette.text.secondary, wordBreak: 'break-all' }}
-                    maxWidth={'45%'}
-                  >
-                    ={val}*{formula}
-                  </Typography>
-                </>
-              </Box>
-            </OutlinedCard>
-            <Box display="flex" mt={8} justifyContent="space-between">
-              <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-                <span>
-                  Min:{multiplier} {currencySymbol}
-                </span>
-              </Typography>
-            </Box>
-          </Box>
         </Box>
       )}
       <Box mt={16}>

@@ -10,7 +10,7 @@ export const routes = {
   home: '/home',
   noService: 'no-service',
   defiVault: '/defi',
-  defiVaultMgmt: '/defi-vault-mgmt/:currency/:type',
+  defiVaultMgmt: '/defi-vault-mgmt/:chainName/:currency/:type',
   referral: '/:referrer'
 }
 

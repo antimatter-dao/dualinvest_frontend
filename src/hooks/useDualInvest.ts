@@ -48,7 +48,7 @@ export function useDualInvestCallback(): {
         throw Error('no contract')
       }
       const estimatedGas = await contract.estimateGas.depositETH(tokenAddress, { value: val }).catch((error: Error) => {
-        console.debug(`Failed to deposit BNB`, error)
+        console.debug(`Failed to deposit coin`, error)
         throw error
       })
       return contract?.depositETH(tokenAddress, { value: val, gasLimit: estimatedGas })

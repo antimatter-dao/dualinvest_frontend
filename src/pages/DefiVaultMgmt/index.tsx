@@ -7,15 +7,12 @@ import { Subject } from 'components/MgmtPage/stableContent'
 import TextButton from 'components/Button/TextButton'
 import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
-import { useLastCycleRecurDetails, useSingleRecurProcuct } from 'hooks/useRecurData'
 import DualInvestChart /*,{ PastAggrChart }*/ from 'pages/DualInvestMgmt/Chart'
 import Card from 'components/Card/Card'
-import { CURRENCIES } from 'constants/currencies'
-import { PrevRecur } from 'utils/fetch/recur'
 import dayjs from 'dayjs'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { NETWORK_CHAIN_ID } from 'constants/chain'
-import { useActiveWeb3React } from 'hooks'
+import { useSingleDefiVault } from 'hooks/useDefiVault'
+import { PrevRecur } from 'utils/fetch/recur'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -38,16 +35,14 @@ export default function DefiMgmt() {
   const [investAmount, setInvestAmount] = useState('')
 
   const theme = useTheme()
-  const { chainId } = useActiveWeb3React()
-  const { currency, type } = useParams<{ currency: string; type: string }>()
-  const product = useSingleRecurProcuct(currency ?? '', type ?? '')
-  const prevDetails = useLastCycleRecurDetails(
-    product?.investCurrency ? CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product.investCurrency]?.address : undefined,
-    product?.currency ? CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product.currency]?.address : undefined
-  )
+  const { currency, type, chainName } = useParams<{ currency: string; type: string; chainName: string }>()
+
+  const product = useSingleDefiVault(chainName ?? '', currency ?? '', type ?? '')
+
+  const prevDetails = undefined
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
-  const isCall = product?.type === 'CALL'
+  const isCall = type.toUpperCase() === 'CALL'
 
   const returnOnInvestmentListItems = useMemo(() => {
     return [
@@ -123,56 +118,6 @@ export default function DefiMgmt() {
                   Coming soon...
                 </Typography>
               </Box>
-              {/* <Box
-              maxHeight="100%"
-              height="100%"
-              gap={0}
-              display={{ xs: 'grid', md: 'flex', maxWidth: 'calc(100vw - 100px)' }}
-              flexDirection={'column'}
-              padding={'32px 24px'}
-            >
-              <Typography fontSize={{ xs: 14, md: 16 }} paddingTop={18} paddingLeft={24} sx={{ opacity: 0.5 }}>
-                Past Aggregate Earnings (Platform)
-              </Typography>
-              <Box
-                display="flex"
-                justifyContent={isDownMd ? 'flex-start' : 'space-between'}
-                flexDirection={isDownMd ? 'column' : 'row'}
-                alignItems="center"
-                gap={18}
-              >
-                <Typography
-                  component="div"
-                  display="flex"
-                  alignItems="baseline"
-                  fontSize={{ xs: 40, md: 44 }}
-                  paddingTop={13}
-                  paddingLeft={24}
-                  fontWeight={700}
-                >
-                  82,890
-                  <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>$</Typography>
-                </Typography>
-                <Box display="flex" flexDirection={'column'} gap={8}>
-                  <Box display="flex" alignItems="center" gap={8}>
-                    <Box height={10} width={10} borderRadius="50%" bgcolor="#ADDFB5" />
-                    <Typography fontSize={14} color="#ADDFB5">
-                      Unexercised
-                    </Typography>
-                  </Box>
-                  <Box display="flex" alignItems="center" gap={8}>
-                    <Box height={10} width={10} borderRadius="50%" bgcolor="#E3E3E3" />
-                    <Typography fontSize={14} color="#E3E3E3">
-                      Exercised
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
-              <Typography fontSize={{ xs: 11, md: 13 }} paddingLeft={24}>
-                Aug 26, 2021
-              </Typography>
-              {chart2}
-            </Box> */}
             </Card>
           </Grid>
         )}

@@ -7,7 +7,8 @@ import {
   ANTIMATTER_ADDRESS,
   GOVERNANCE_ADDRESS,
   ANTIMATTER_GOVERNANCE_ADDRESS,
-  DUAL_INVEST_ADDRESS
+  DUAL_INVEST_ADDRESS,
+  DEFI_VAULT_ADDRESS
 } from '../constants'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ENS_ABI from '../constants/abis/ens-registrar.json'
@@ -19,6 +20,8 @@ import UNISOCKS_ABI from '../constants/abis/unisocks.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
+import DEFI_VAULT_ABI from '../constants/abis/defi_vault.json'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -104,4 +107,10 @@ export function useAntiMatterGovernanceContract(): Contract | null {
 
 export function useDualInvestContract(): Contract | null {
   return useContract(DUAL_INVEST_ADDRESS, DUAL_INVEST_ABI, true)
+}
+
+export function useDefiVaultContract(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+
+  return useContract(DEFI_VAULT_ADDRESS[chainId ?? NETWORK_CHAIN_ID], DEFI_VAULT_ABI, true)
 }

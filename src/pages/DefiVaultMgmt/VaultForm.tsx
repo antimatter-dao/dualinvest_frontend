@@ -5,8 +5,6 @@ import VaultCard from 'components/MgmtPage/VaultCard'
 import VaultFormComponent from 'components/MgmtPage/VaultForm'
 import { useActiveWeb3React } from 'hooks'
 import { useDualInvestBalance } from 'hooks/useDualInvest'
-import { CURRENCIES } from 'constants/currencies'
-import { RecurProduct } from 'utils/fetch/recur'
 import { useRecurBalance, useRecurCallback } from 'hooks/useRecur'
 import { RECUR_TOGGLE_STATUS, useRecurActiveOrderCount, useRecurPnl, useRecurToggle } from 'hooks/useRecurData'
 import { tryParseAmount } from 'utils/parseAmount'
@@ -19,7 +17,9 @@ import TransactionSubmittedModal from 'components/Modal/TransactionModals/Transa
 import RedeemConfirmModal from './RedeemConfirmModal'
 import InvestConfirmModal from './InvestConfirmModal'
 import { feeRate } from 'constants/index'
-import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from 'constants/chain'
+import { useETHBalances, useTokenBalance } from 'state/wallet/hooks'
+import { DefiProduct } from 'hooks/useDefiVault'
 
 export enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -31,16 +31,17 @@ export default function VaultForm({
   investAmount,
   setInvestAmount
 }: {
-  product: RecurProduct | undefined
+  product: DefiProduct | undefined
   investAmount: string
   setInvestAmount: (val: string) => void
 }) {
   const { account, chainId } = useActiveWeb3React()
   const currencySymbol = product?.investCurrency ?? ''
-  const investCurrency = CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currencySymbol] ?? undefined
-  const currency = CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product?.currency ?? ''] ?? undefined
-  const title = product?.type === 'CALL' ? `${product?.currency ?? ''}-C` : `${product?.currency ?? ''}-P`
-
+  const investCurrency = product?.investCurrencyToken
+  const currency = product?.currencyToken
+  const title = product?.type === 'CALL' ? `${currency?.name}-C` : `${currency?.name}-P`
+  const ETHBalance = useETHBalances([account ?? undefined])?.[account ?? '']
+  const tokenBalance = useTokenBalance(account ?? undefined, investCurrency)
   const [snackbarOpen, setSnackbarOpen] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [redeemConfirmOpen, setRedeemConfirmOpen] = useState(false)
@@ -67,7 +68,7 @@ export default function VaultForm({
   const confirmData = useMemo(
     () => ({
       ['Platform service fee']: feeRate,
-      ['Spot Price']: product?.indexPrice ?? '-' + ' USDT',
+      ['Spot Price']: '000' ?? '-' + ' USDT',
       ['APY']: product?.apy ?? '-',
       ['Strike Price']: product?.strikePrice ?? '-' + ' USDT',
       ['Delivery Date']: product ? dayjs(product.expiredAt).format('DD MMM YYYY') + ' 08:30:00 AM UTC' : '-'
@@ -102,12 +103,7 @@ export default function VaultForm({
   const handleInvest = useCallback(async () => {
     if (!currency || !investCallback || !product || !investCurrency) return
     showModal(<TransactionPendingModal />)
-    const val = tryParseAmount(
-      (
-        +investAmount * (product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
-      ).toFixed(2),
-      investCurrency
-    )?.raw?.toString()
+    const val = tryParseAmount((+investAmount).toFixed(2), investCurrency)?.raw?.toString()
     if (!val) return
     try {
       const r = await investCallback(val, currency.address, investCurrency.address)
@@ -116,9 +112,7 @@ export default function VaultForm({
       toggleRecur(RECUR_TOGGLE_STATUS.open)
 
       addPopup(r, {
-        summary: `Subscribed ${(
-          +investAmount * (product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
-        ).toFixed(2)} ${product.investCurrency} to ${
+        summary: `Subscribed ${(+investAmount).toFixed(2)} ${product.investCurrency} to ${
           product.type === 'CALL'
             ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
             : `${product?.currency ?? ''} Put Selling Recurring Strategy`
@@ -170,10 +164,7 @@ export default function VaultForm({
     if (!product || !contractBalance) return ''
     let str = ''
 
-    if (
-      investAmount !== '' &&
-      +contractBalance < +investAmount * +product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice)
-    ) {
+    if (investAmount !== '' && +contractBalance < +investAmount) {
       str = ErrorType.insufficientBalance
     }
 
@@ -181,7 +172,7 @@ export default function VaultForm({
     const before = product.expiredAt - 7200000
     const after = product.expiredAt + 1800000
 
-    if (product.price === null || (now >= before && now < after)) {
+    if (!product.isActive || (now >= before && now < after)) {
       str = ErrorType.notAvailable
     }
 
@@ -202,9 +193,7 @@ export default function VaultForm({
       <InvestConfirmModal
         currency={investCurrency}
         productTitle={title}
-        amount={(
-          +investAmount * (product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
-        ).toFixed(2)}
+        amount={(+investAmount).toFixed(2)}
         confirmData={confirmData}
         isOpen={investConfirmOpen}
         onDismiss={handleInvestConfirmDismiss}
@@ -269,13 +258,14 @@ export default function VaultForm({
               onInvest={handleInvestConfirmOpen}
               formData={formData}
               currencySymbol={currencySymbol}
-              available={contractBalance}
+              available={
+                product?.investCurrency === SUPPORTED_NETWORKS[chainId ?? NETWORK_CHAIN_ID].nativeCurrency.symbol
+                  ? ETHBalance?.toExact()
+                  : tokenBalance?.toExact()
+              }
               apy={product?.apy ?? ''}
               onInvestChange={handleInvestChange}
               investAmount={investAmount}
-              multiplier={product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1}
-              formula={`${product?.multiplier ?? '-'} ${product?.currency ?? '-'}
-            ${product?.type === 'CALL' ? '' : `*${product?.strikePrice ?? '-'}`}`}
             />
           }
         />
