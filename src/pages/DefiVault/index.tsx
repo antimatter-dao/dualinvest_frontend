@@ -5,22 +5,17 @@ import ProductBanner from 'components/ProductBanner'
 import VaultProductCard from './VaultProductCard'
 import { routes } from 'constants/routes'
 import { ReactComponent as RecurVault } from 'assets/svg/recurVault.svg'
-import { useRecurProcuctList } from 'hooks/useRecurData'
 import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 import Select from 'components/Select/Select'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { ChainId, ChainListMap } from 'constants/chain'
-
-const SUPPORTED: { [chainId in ChainId]?: string[] } = {
-  [ChainId.AVAX]: ['AVAX'],
-  [ChainId.MAINNET]: ['ETH', 'BTC']
-}
+import { ChainListMap } from 'constants/chain'
+import { DefiProduct, useDefiVaultList } from 'hooks/useDefiVault'
 
 export default function DefiVault() {
   const history = useHistory()
-  const data = useRecurProcuctList()
   const theme = useTheme()
   const isDownMd = useBreakpoint('md')
+  const allList = useDefiVaultList()
 
   return (
     <Box
@@ -74,41 +69,34 @@ export default function DefiVault() {
           maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
         }}
       >
-        {Object.keys(SUPPORTED).map((chainId: string) => {
-          return SUPPORTED[+chainId as keyof typeof SUPPORTED]?.map((key: string) => {
+        {allList === null && <Typography>No vault available</Typography>}
+        {allList &&
+          allList.map((item: DefiProduct) => {
+            if (!item) return null
+            const { chainId, currency, type, investCurrency } = item
+            if (!chainId || !currency) return null
             return (
-              <React.Fragment key={key}>
+              <React.Fragment key={chainId + (currency ?? '') + type}>
                 <VaultProductCard
                   onChain={+chainId}
-                  product={data?.[key as keyof typeof data]?.call}
-                  logoCurSymbol={key}
-                  title={`${key} Covered Call Strategy`}
-                  description={`Generates yield by running an automated ${key} covered call strategy`}
+                  product={item}
+                  title={`${currency} ${type === 'CALL' ? 'Covered Call' : 'Put Selling'} Recurring Strategy`}
+                  description={`Generates yield by running an automated ${currency} ${
+                    type === 'CALL' ? 'covered call' : 'put selling'
+                  } strategy`}
                   onClick={() => {
                     history.push(
                       routes.defiVaultMgmt
-                        .replace(':currency', key)
-                        .replace(':type', 'call')
-                        .replace(':chainName', ChainListMap[+chainId].name)
+                        .replace(':currency', currency ?? '')
+                        .replace(':type', type)
+                        .replace(':chainName', ChainListMap[+chainId].symbol)
                     )
                   }}
-                  color={SUPPORTED_CURRENCIES[key].color ?? theme.palette.primary.main}
-                />
-                <VaultProductCard
-                  onChain={+chainId}
-                  product={data?.[key as keyof typeof data]?.put}
-                  logoCurSymbol="USDT"
-                  title={`${key} Put Selling Strategy`}
-                  description="Generates yield by running an automated put selling strategy"
-                  onClick={() => {
-                    history.push(routes.defiVaultMgmt.replace(':currency', key).replace(':type', 'put'))
-                  }}
-                  color={SUPPORTED_CURRENCIES['USDT'].color ?? theme.palette.primary.main}
+                  color={SUPPORTED_CURRENCIES[investCurrency ?? ''].color ?? theme.palette.primary.main}
                 />
               </React.Fragment>
             )
-          })
-        })}
+          })}
       </Box>
     </Box>
   )

@@ -20,6 +20,7 @@ import { feeRate } from 'constants/index'
 import { NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from 'constants/chain'
 import { useETHBalances, useTokenBalance } from 'state/wallet/hooks'
 import { DefiProduct } from 'hooks/useDefiVault'
+import { CURRENCIES } from 'constants/currencies'
 
 export enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -37,8 +38,8 @@ export default function VaultForm({
 }) {
   const { account, chainId } = useActiveWeb3React()
   const currencySymbol = product?.investCurrency ?? ''
-  const investCurrency = product?.investCurrencyToken
-  const currency = product?.currencyToken
+  const investCurrency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? '']
+  const currency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.currency ?? '']
   const title = product?.type === 'CALL' ? `${currency?.name}-C` : `${currency?.name}-P`
   const ETHBalance = useETHBalances([account ?? undefined])?.[account ?? '']
   const tokenBalance = useTokenBalance(account ?? undefined, investCurrency)
@@ -172,7 +173,7 @@ export default function VaultForm({
     const before = product.expiredAt - 7200000
     const after = product.expiredAt + 1800000
 
-    if (!product.isActive || (now >= before && now < after)) {
+    if (now >= before && now < after) {
       str = ErrorType.notAvailable
     }
 

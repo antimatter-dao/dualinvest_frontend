@@ -111,15 +111,20 @@ export default function MgmtPage(props: Props) {
             </Box>
             <div style={{ height: '43px' }}></div>
             {vaultForm && (
-              <LogoTitle
-                title={pageTitle ?? ''}
-                description={`Generates yield by running an automated ${
-                  product?.type === 'CALL' ? `${product?.currency ?? ''} covered call strategy` : `put selling strategy`
-                }`}
-                logoCurSymbol={product?.investCurrency ?? ''}
-              />
+              <>
+                <LogoTitle
+                  title={pageTitle ?? ''}
+                  description={`Generates yield by running an automated ${
+                    product?.type === 'CALL'
+                      ? `${product?.currency ?? ''} covered call strategy`
+                      : `put selling strategy`
+                  }`}
+                  logoCurSymbol={product?.investCurrency ?? ''}
+                />{' '}
+                <DefiTemplateImage chainId={43114} />
+              </>
             )}
-            <DefiTemplateImage chainId={43114} />
+
             {!isDownMd && <div style={{ height: '78px' }}></div>}
           </Box>
         </Box>
@@ -190,12 +195,12 @@ export default function MgmtPage(props: Props) {
                       </Box>
                     </Box>
                   </Box>
-                  <Box sx={{ maxWidth: '100vw', height: '100%', flexGrow: 1 }} mt={20}>
+                  <Box sx={{ maxWidth: '100%', height: '100%', flexGrow: 1 }} mt={20}>
                     <Box
                       maxHeight="100%"
                       height="100%"
                       gap={0}
-                      display={{ xs: 'grid', md: 'flex', maxWidth: 'calc(100vw - 100px)' }}
+                      display={{ xs: 'grid', md: 'flex', maxWidth: 'calc(100% - 100px)' }}
                     >
                       {chart}
                     </Box>

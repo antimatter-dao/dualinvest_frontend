@@ -1,18 +1,14 @@
 import { Box, Typography } from '@mui/material'
 import { Timer } from 'components/Timer'
 import Button from 'components/Button/Button'
-import { RecurProduct } from 'utils/fetch/recur'
 import Spinner from 'components/Spinner'
-import { toLocaleNumberString } from 'utils/toLocaleNumberString'
-import { useRecurBalance } from 'hooks/useRecur'
-import { CURRENCIES, SUPPORTED_CURRENCIES } from 'constants/currencies'
-import { ChainId, ChainsBgImgs, NETWORK_CHAIN_ID } from 'constants/chain'
-import { useActiveWeb3React } from 'hooks'
+import { SUPPORTED_CURRENCIES } from 'constants/currencies'
+import { ChainId, ChainsBgImgs } from 'constants/chain'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { SimpleProgress } from 'components/Progress'
+import { DefiProduct } from 'hooks/useDefiVault'
 
 export default function VaultProductCard({
-  logoCurSymbol,
   title,
   description,
   onClick,
@@ -20,20 +16,13 @@ export default function VaultProductCard({
   product,
   onChain
 }: {
-  logoCurSymbol: string
   title: string
   description: string
   onClick: () => void
   color: string
-  product: RecurProduct | undefined
+  product: DefiProduct | undefined
   onChain: ChainId
 }) {
-  const { chainId } = useActiveWeb3React()
-  const { autoLockedBalance } = useRecurBalance(
-    CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product?.currency ?? ''] ?? undefined,
-    CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? ''] ?? undefined
-  )
-
   return (
     <Box
       display="grid"
@@ -55,7 +44,7 @@ export default function VaultProductCard({
       </Box>
 
       <CurrencyLogo
-        currency={SUPPORTED_CURRENCIES[logoCurSymbol]}
+        currency={SUPPORTED_CURRENCIES[product?.investCurrency ?? '']}
         size={'80px'}
         style={{ marginBottom: 20, zIndex: 2 }}
       />
@@ -74,9 +63,7 @@ export default function VaultProductCard({
             <Box display="flex" alignItems={'center'} justifyContent="space-between">
               <TextCard
                 subTextBold
-                text={`${
-                  autoLockedBalance === '-' ? '-' : toLocaleNumberString(autoLockedBalance)
-                }  ${product?.investCurrency ?? '-'}`}
+                text={`${product?.balance ?? '-'}  ${product?.investCurrency ?? '-'}`}
                 subText="Your existing position"
               />
             </Box>

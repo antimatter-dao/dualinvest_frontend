@@ -45,7 +45,7 @@ export function useReferral(): {
       {},
       {
         account,
-        NETWORK_CHAIN_ID,
+        chainId: NETWORK_CHAIN_ID,
         currency: CURRENCIES[NETWORK_CHAIN_ID]?.BTC?.address,
         symbol: CURRENCIES[NETWORK_CHAIN_ID]?.BTC?.symbol
       }
@@ -67,7 +67,7 @@ export function useReferral(): {
       {},
       {
         account,
-        NETWORK_CHAIN_ID,
+        chainId: NETWORK_CHAIN_ID,
         currency: CURRENCIES[NETWORK_CHAIN_ID].USDT.address,
         symbol: CURRENCIES[NETWORK_CHAIN_ID].USDT.symbol
       }

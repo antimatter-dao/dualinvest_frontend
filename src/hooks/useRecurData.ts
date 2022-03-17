@@ -5,28 +5,11 @@ import { useActiveWeb3React } from 'hooks'
 import { isAddress } from 'utils'
 import { Axios } from 'utils/axios'
 import { OrderRecord } from 'utils/fetch/record'
-import {
-  RecurProductRaw,
-  recurProductListFormatter,
-  RecurProductList,
-  singleRecurProductFormatter,
-  RecurProduct
-} from 'utils/fetch/recur'
+import { RecurProductRaw, singleRecurProductFormatter, RecurProduct } from 'utils/fetch/recur'
 import { INVEST_TYPE } from './useAccountData'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { InvestStatus } from './useAccountData'
 import { NETWORK_CHAIN_ID } from 'constants/chain'
-
-export function useRecurProcuctList() {
-  const [productList, setProductList] = useState<RecurProductList | undefined>(undefined)
-
-  const promiseFn = useCallback(() => Axios.get<RecurProductRaw>('getReinProducts'), [])
-  const callbackFn = useCallback(r => setProductList(recurProductListFormatter(r.data.data)), [])
-
-  usePollingWithMaxRetries(promiseFn, callbackFn, 60000)
-
-  return productList
-}
 
 export function useSingleRecurProcuct(currency: string, type: string) {
   const [productList, setProductList] = useState<RecurProduct | undefined>(undefined)

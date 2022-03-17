@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback, ReactElement } from 'react'
-import { useParams } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import { Typography, Box, useTheme, styled, Grid } from '@mui/material'
 import MgmtPage from 'components/MgmtPage'
 import { routes } from 'constants/routes'
@@ -13,6 +13,7 @@ import dayjs from 'dayjs'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { useSingleDefiVault } from 'hooks/useDefiVault'
 import { PrevRecur } from 'utils/fetch/recur'
+import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -67,7 +68,7 @@ export default function DefiMgmt() {
   const chart = useMemo(() => {
     return (
       <DualInvestChart
-        product={product}
+        product={product ?? undefined}
         str1={`Settlement Price ${isCall ? '≥' : '≤'} ${strikePrice} USDT, will be exercised`}
         str2={`Settlement Price ${isCall ? '<' : '>'} ${strikePrice} USDT, will not be exercised`}
       />
@@ -85,43 +86,73 @@ export default function DefiMgmt() {
 
   return (
     <>
-      <MgmtPage
-        graphTitle="Current Subscription Status"
-        showFaq={false}
-        backLink={routes.defiVault}
-        pageTitle={
-          product?.type === 'CALL'
-            ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-            : `${product?.currency ?? ''} Put Selling Recurring Strategy`
-        }
-        product={product}
-        subject={Subject.RecurringVault}
-        subscribeForm={
-          <RecurringPolicy
-            type={product?.type.toLocaleLowerCase() === 'call' ? 'call' : 'put'}
-            currencySymbol={product?.currency ?? '-'}
-          />
-        }
-        returnOnInvestmentListItems={returnOnInvestmentListItems}
-        vaultForm={<VaultForm product={product} setInvestAmount={handleInput} investAmount={investAmount} />}
-        chart={chart}
-      >
-        <Grid xs={12} md={4} item>
-          <PrevCycleStats prevDetails={prevDetails} />
-        </Grid>
-        {!isDownMd && (
-          <Grid xs={12} md={8} item>
-            <Card style={{ height: '100%' }}>
-              <Box height="100%" width="100%" display="flex" alignItems={'center'} padding="24px">
-                <Typography sx={{ margin: 'auto auto' }} align="center">
-                  Past aggregate earnings graph <br />
-                  Coming soon...
-                </Typography>
-              </Box>
-            </Card>
+      {product === null ? (
+        <Box
+          position="fixed"
+          top={{ xs: theme.height.mobileHeader, md: theme.height.header }}
+          left={0}
+          width={'100%'}
+          height={{
+            xs: `calc(100vh - ${theme.height.mobileHeader})`,
+            md: `calc(100vh - ${theme.height.header})`
+          }}
+          padding={isDownMd ? '24px 24px 28px' : '27px 24px'}
+          sx={{ background: '#ffffff' }}
+        >
+          <Box
+            component={NavLink}
+            to={routes.defiVault}
+            zIndex={2}
+            style={{ textDecoration: 'none', display: 'block', width: 'max-content' }}
+          >
+            <ArrowLeft />
+            <Typography component="span" color={theme.bgColor.bg1} fontSize={{ xs: 12, md: 14 }} ml={16}>
+              Go Back
+            </Typography>
+          </Box>
+          <Box width="100%" height="100%" display="flex" justifyContent={'center'} alignItems="center">
+            Product Not Available
+          </Box>
+        </Box>
+      ) : (
+        <MgmtPage
+          graphTitle="Current Subscription Status"
+          showFaq={false}
+          backLink={routes.defiVault}
+          pageTitle={
+            product?.type === 'CALL'
+              ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
+              : `${product?.currency ?? ''} Put Selling Recurring Strategy`
+          }
+          product={product ?? undefined}
+          subject={Subject.RecurringVault}
+          subscribeForm={
+            <RecurringPolicy
+              type={product?.type.toLocaleLowerCase() === 'call' ? 'call' : 'put'}
+              currencySymbol={product?.currency ?? '-'}
+            />
+          }
+          returnOnInvestmentListItems={returnOnInvestmentListItems}
+          vaultForm={<VaultForm product={product} setInvestAmount={handleInput} investAmount={investAmount} />}
+          chart={chart}
+        >
+          <Grid xs={12} md={4} item>
+            <PrevCycleStats prevDetails={prevDetails} />
           </Grid>
-        )}
-      </MgmtPage>
+          {!isDownMd && (
+            <Grid xs={12} md={8} item>
+              <Card style={{ height: '100%' }}>
+                <Box height="100%" width="100%" display="flex" alignItems={'center'} padding="24px">
+                  <Typography sx={{ margin: 'auto auto' }} align="center">
+                    Past aggregate earnings graph <br />
+                    Coming soon...
+                  </Typography>
+                </Box>
+              </Card>
+            </Grid>
+          )}
+        </MgmtPage>
+      )}
     </>
   )
 }

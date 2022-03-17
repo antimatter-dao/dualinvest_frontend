@@ -154,3 +154,8 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
 
   return acc
 }, {} as { [key: string]: Token })
+
+export const SUPPORTED_DEFI_VAULT: { [chainId in ChainId]?: string[] } = {
+  [ChainId.AVAX]: ['AVAX'],
+  [ChainId.MAINNET]: ['ETH', 'BTC']
+}
