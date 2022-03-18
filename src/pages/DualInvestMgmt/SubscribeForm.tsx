@@ -149,7 +149,7 @@ export default function SubscribeForm({
         let fail = 0
         const polling = new Promise((resolve, reject) => {
           const timeoutId = setInterval(() => {
-            Axios.get<{ records: OrderRecord[] }>('getOrderRecord?orderId=' + orderId, { address: account })
+            Axios.get<{ records: OrderRecord[] }>('getOrderRecord?orderId=' + orderId, { address: account, chainId })
               .then(r => {
                 const statusCode = r.data.data.records[0].investStatus as keyof typeof InvesStatus
                 if (InvesStatus[statusCode] === InvesStatusType.ERROR) {

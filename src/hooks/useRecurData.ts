@@ -13,8 +13,12 @@ import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 export function useSingleRecurProcuct(currency: string, type: string) {
   const [productList, setProductList] = useState<RecurProduct | undefined>(undefined)
+  const { chainId } = useActiveWeb3React()
 
-  const promiseFn = useCallback(() => Axios.get<RecurProductRaw>('getReinProducts'), [])
+  const promiseFn = useCallback(
+    () => Axios.get<RecurProductRaw>('getReinProducts', { chainId: chainId ?? NETWORK_CHAIN_ID }),
+    [chainId]
+  )
   const callbackFn = useCallback(r => setProductList(singleRecurProductFormatter(r.data.data, currency, type)), [
     currency,
     type
@@ -33,6 +37,7 @@ export function useRecurPnl(currency: string | undefined): { totalReInvest: stri
   const promiseFn = useCallback(() => {
     return Axios.get<RecurProductRaw>('getTotalReInvest', {
       account,
+      chainId,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currency!]?.address
     })
@@ -108,7 +113,7 @@ export function useRecurActiveOrderCount(
   refresh: string
 ) {
   const [count, setCount] = useState(0)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const promiseFn = useCallback(() => {
     if (!account) return new Promise((resolve, reject) => reject(null))
@@ -116,9 +121,10 @@ export function useRecurActiveOrderCount(
       address: account,
       investType: INVEST_TYPE.recur,
       currency: vaultSymbol,
-      investCurrency: curSymbol
+      investCurrency: curSymbol,
+      chainId: chainId ?? NETWORK_CHAIN_ID
     })
-  }, [account, curSymbol, vaultSymbol])
+  }, [account, chainId, curSymbol, vaultSymbol])
 
   const callbackFn = useCallback(
     r => {

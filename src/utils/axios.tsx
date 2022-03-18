@@ -81,7 +81,11 @@ export const Axios = {
   get<T = any>(url: string, params: { [key: string]: any } = {}): AxiosPromise<ResponseType<T>> {
     return axiosInstance.get(url, { params })
   },
-  post<T = any>(url: string, data: { [key: string]: any } | undefined, params = {}): AxiosPromise<ResponseType<T>> {
+  post<T = any>(
+    url: string,
+    data: { [key: string]: any } | undefined,
+    params: { [key: string]: any } | undefined = undefined
+  ): AxiosPromise<ResponseType<T>> {
     return axiosInstance.post(url, data, { params })
   },
   getSignatures: getSignatures
