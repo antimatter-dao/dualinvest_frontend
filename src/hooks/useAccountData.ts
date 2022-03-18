@@ -5,6 +5,7 @@ import { useActiveWeb3React } from 'hooks'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import { AccountRecord } from 'utils/fetch/account'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 export enum InvestStatus {
   Confirming = 1,
@@ -41,6 +42,8 @@ export function useOrderRecords(
     total: 0
   })
 
+  const { chainId } = useActiveWeb3React()
+
   const filteredOrderList = useMemo(() => {
     if (!Array.isArray(investStatus) || !orderList) return undefined
     return orderList.reduce((acc, order) => {
@@ -76,9 +79,10 @@ export function useOrderRecords(
       investStatus: Array.isArray(investStatus) ? undefined : investStatus,
       pageNum: Array.isArray(investStatus) ? undefined : pageNum,
       pageSize: pageSize,
-      currency: currency === 'All' ? undefined : currency
+      currency: currency === 'All' ? undefined : currency,
+      chainId: chainId ?? NETWORK_CHAIN_ID
     })
-  }, [account, currency, investStatus, investType, pageNum, pageSize])
+  }, [account, chainId, currency, investStatus, investType, pageNum, pageSize])
 
   const callbackFn = useCallback(r => {
     setOrderList(r.data.data.records)
@@ -110,7 +114,7 @@ export function useOrderRecords(
 }
 
 export function useAccountRecord(pageNum = 1, pageSize = 8) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const [accountRecord, setAccountRecord] = useState<AccountRecord | undefined>(undefined)
   const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
     count: 0,
@@ -120,8 +124,8 @@ export function useAccountRecord(pageNum = 1, pageSize = 8) {
 
   const promiseFn = useCallback(() => {
     if (!account) return new Promise((resolve, reject) => reject(null))
-    return Axios.get('getAccountRecord', { account, pageNum, pageSize })
-  }, [account, pageNum, pageSize])
+    return Axios.get('getAccountRecord', { account, pageNum, pageSize, chainId: chainId ?? NETWORK_CHAIN_ID })
+  }, [account, chainId, pageNum, pageSize])
 
   const callbackFn = useCallback(r => {
     setAccountRecord(r.data.data)
