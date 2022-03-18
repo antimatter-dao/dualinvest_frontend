@@ -125,7 +125,7 @@ export const SUPPORTED_CURRENCIES: {
     address: { [ChainId.ROPSTEN]: '0x30305a10c05f7fA6b5ac802CBC6A18Ca4ddDe4D9' },
     decimals: 18,
     symbol: 'LUNA',
-    name: '	Terra (LUNA)',
+    name: 'Terra (LUNA)',
     logoUrl: LUNALogo,
     color: '#172852'
   }
