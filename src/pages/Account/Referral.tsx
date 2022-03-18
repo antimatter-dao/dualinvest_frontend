@@ -85,7 +85,7 @@ export default function Referral() {
                 ? trimNumberString(
                     Object.keys(balance)
                       .reduce((acc, key) => {
-                        const amount = balance[key] === '-' ? +balance[key] : 0
+                        const amount = balance?.[key] && balance?.[key] !== '-' ? +balance[key] : 0
                         return acc + amount
                       }, 0)
                       .toFixed(4)

@@ -43,7 +43,7 @@ export function useReferral(): {
 
   const allTokenPromiseFn = useCallback(() => {
     return Promise.all(
-      SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].map(symbol =>
+      ['USDT', 'BTC'].map(symbol =>
         Axios.post('getUserAssets', undefined, {
           account,
           chainId: chainId ?? NETWORK_CHAIN_ID,
@@ -61,7 +61,7 @@ export function useReferral(): {
   usePollingWithMaxRetries(allTokenPromiseFn, allTokenCallbackFn, 300000, 5, true)
 
   const result = useMemo(() => {
-    const resultMap = SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].concat(['USDT']).reduce((acc, symbol, idx) => {
+    const resultMap = ['USDT', 'BTC'].reduce((acc, symbol, idx) => {
       acc[symbol] = allRes?.[idx]?.data?.data ? allRes[idx].data.data.balance : '-'
       return acc
     }, {} as ReferBalanceType)
