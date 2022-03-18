@@ -5,7 +5,7 @@ import { useActiveWeb3React } from 'hooks'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import { AccountRecord } from 'utils/fetch/account'
-import { ChainId } from 'constants/chain'
+import { ChainId, NETWORK_CHAIN_ID } from 'constants/chain'
 
 export enum InvestStatus {
   Confirming = 1,
@@ -34,7 +34,7 @@ export function useOrderRecords(
   pageNum?: number,
   pageSize?: number
 ) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const [orderList, setOrderList] = useState<OrderRecord[] | undefined>(undefined)
   const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
     count: 0,
@@ -74,12 +74,13 @@ export function useOrderRecords(
     return Axios.get<{ records: OrderRecord[]; pages: string; size: string; total: string }>('getOrderRecord', {
       address: account,
       investType,
+      chainId: chainId ?? NETWORK_CHAIN_ID,
       investStatus: Array.isArray(investStatus) ? undefined : investStatus,
       pageNum: Array.isArray(investStatus) ? undefined : pageNum,
       pageSize: pageSize,
       currency: currency === 'All' ? undefined : currency
     })
-  }, [account, currency, investStatus, investType, pageNum, pageSize])
+  }, [account, chainId, currency, investStatus, investType, pageNum, pageSize])
 
   const callbackFn = useCallback(r => {
     setOrderList(r.data.data.records)
@@ -111,7 +112,7 @@ export function useOrderRecords(
 }
 
 export function useAccountRecord(pageNum = 1, pageSize = 8) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const [accountRecord, setAccountRecord] = useState<AccountRecord | undefined>(undefined)
   const [pageParams, setPageParams] = useState<{ count: number; perPage: number; total: number }>({
     count: 0,
@@ -121,8 +122,8 @@ export function useAccountRecord(pageNum = 1, pageSize = 8) {
 
   const promiseFn = useCallback(() => {
     if (!account) return new Promise((resolve, reject) => reject(null))
-    return Axios.get('getAccountRecord', { account, pageNum, pageSize })
-  }, [account, pageNum, pageSize])
+    return Axios.get('getAccountRecord', { account, pageNum, pageSize, chainId: chainId ?? NETWORK_CHAIN_ID })
+  }, [account, chainId, pageNum, pageSize])
 
   const callbackFn = useCallback(r => {
     setAccountRecord(r.data.data)

@@ -123,6 +123,7 @@ export default function SubscribeForm({
           'createOrder',
           {},
           {
+            chainId,
             account,
             amount,
             product_id: id
