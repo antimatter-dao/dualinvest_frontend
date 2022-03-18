@@ -13,30 +13,30 @@ type AccountBalanceType = {
 export function useAccountBalances(): AccountBalanceType {
   const [usdtRes, setUsdtRes] = useState<BalanceInfo | undefined>(undefined)
   const [allRes, setAllRes] = useState<any | undefined>(undefined)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const allTokenPromiseFn = useCallback(() => {
     return Promise.all(
       SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].map(symbol =>
         Axios.post('getUserAssets', undefined, {
           account,
-          chainId: NETWORK_CHAIN_ID,
-          currency: CURRENCIES[NETWORK_CHAIN_ID][symbol]?.address,
-          symbol: CURRENCIES[NETWORK_CHAIN_ID][symbol]?.symbol
+          chainId: chainId ?? NETWORK_CHAIN_ID,
+          currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][symbol]?.address,
+          symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][symbol]?.symbol
         })
       )
     )
-  }, [account])
+  }, [account, chainId])
 
   const usdtPromiseFn = useCallback(
     () =>
       Axios.post('getUserAssets', undefined, {
         account,
-        chainId: NETWORK_CHAIN_ID,
-        currency: CURRENCIES[NETWORK_CHAIN_ID].USDT.address,
-        symbol: CURRENCIES[NETWORK_CHAIN_ID].USDT.symbol
+        chainId: chainId ?? NETWORK_CHAIN_ID,
+        currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT.address,
+        symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT.symbol
       }),
-    [account]
+    [account, chainId]
   )
   const usdtCallbackFn = useCallback(r => {
     setUsdtRes(assetBalanceFormatter(r.data.data))
@@ -57,10 +57,9 @@ export function useAccountBalances(): AccountBalanceType {
         }
       : undefined
   }, [usdtRes])
-
   const result = useMemo(() => {
-    const resultMap = SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].reduce((acc, symbol, idx) => {
-      const res = allRes?.[idx]?.data?.data ? assetBalanceFormatter(allRes[idx].data.data) : undefined
+    const resultMap = SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].reduce((acc, symbol, idx) => {
+      const res = allRes?.[idx]?.data?.data?.Available ? assetBalanceFormatter(allRes[idx].data.data) : undefined
       acc[symbol] = res
         ? {
             ...res,
@@ -71,7 +70,7 @@ export function useAccountBalances(): AccountBalanceType {
     }, {} as AccountBalanceType)
     resultMap.USDT = usdtResult
     return resultMap
-  }, [allRes, usdtResult])
+  }, [allRes, chainId, usdtResult])
 
   return result
 }

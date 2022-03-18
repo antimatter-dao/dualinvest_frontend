@@ -13,7 +13,8 @@ export enum ChainId {
   MAINNET = 1,
   ROPSTEN = 3,
   BSC = 56,
-  AVAX = 43114
+  AVAX = 43114,
+  RINKEBY = 4
 }
 
 export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
@@ -22,9 +23,7 @@ export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
 
 export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
 
-export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
-  ? [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.AVAX, ChainId.BSC]
-  : [ChainId.MAINNET, ChainId.BSC, ChainId.AVAX]
+export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET ? [ChainId.ROPSTEN] : [ChainId.BSC]
 
 export const DUAL_SUPPORTED_NETWORK = IS_TEST_NET ? [ChainId.ROPSTEN] : [ChainId.BSC]
 export const DEFI_SUPPORTED_NETWORK = IS_TEST_NET ? [ChainId.AVAX] : [ChainId.AVAX]
@@ -39,17 +38,34 @@ export const ChainList: Chain[] = [
           name: 'Ropsten Test Network',
           id: ChainId.ROPSTEN,
           hex: '0x3'
+        },
+        {
+          icon: <ETH />,
+          logo: EthUrl,
+          symbol: 'Rinkeby',
+          name: 'Rinkeby Testnet',
+          id: ChainId.RINKEBY,
+          hex: '0x4'
         }
       ]
-    : []),
-  {
-    icon: <BSC height={20} width={20} />,
-    logo: BSCUrl,
-    symbol: 'BSC',
-    name: 'Binance Smart Chain',
-    id: ChainId.BSC,
-    hex: '0x38'
-  },
+    : [
+        {
+          icon: <BSC height={20} width={20} />,
+          logo: BSCUrl,
+          symbol: 'BSC',
+          name: 'Binance Smart Chain',
+          id: ChainId.BSC,
+          hex: '0x38'
+        },
+        {
+          icon: <AVAX />,
+          logo: AVAXUrl,
+          symbol: 'AVAX',
+          name: 'Avalanche',
+          id: ChainId.AVAX,
+          hex: '0xA86A'
+        }
+      ]),
   {
     icon: <ETH />,
     logo: EthUrl,
@@ -57,14 +73,6 @@ export const ChainList: Chain[] = [
     name: 'Ethereum Mainnet',
     id: ChainId.MAINNET,
     hex: '0x1'
-  },
-  {
-    icon: <AVAX />,
-    logo: AVAXUrl,
-    symbol: 'AVAX',
-    name: 'Avalanche',
-    id: ChainId.AVAX,
-    hex: '0xA86A'
   }
 ]
 
@@ -131,6 +139,17 @@ export const SUPPORTED_NETWORKS: {
     },
     rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
     blockExplorerUrls: ['https://cchain.explorer.avax.network']
+  },
+  [ChainId.RINKEBY]: {
+    chainId: '0x4',
+    chainName: 'Rinkeby',
+    nativeCurrency: {
+      name: 'Rinkeby',
+      symbol: 'ETH',
+      decimals: 18
+    },
+    rpcUrls: ['https://rinkeby.infura.io/v3/'],
+    blockExplorerUrls: ['https://rinkeby.etherscan.io/']
   }
 }
 

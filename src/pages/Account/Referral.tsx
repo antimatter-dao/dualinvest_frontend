@@ -11,7 +11,6 @@ import { useBindModal, useReferalModal } from 'hooks/useReferralModal'
 import { useReferral } from 'hooks/useReferral'
 import { useActiveWeb3React } from 'hooks'
 import NoDataCard from 'components/Card/NoDataCard'
-import { usePrice } from 'hooks/usePriceSet'
 import { trimNumberString } from 'utils/trimNumberString'
 import { shortenAddress } from 'utils'
 import { SUPPORTED_CURRENCIES } from 'constants/currencies'
@@ -22,9 +21,8 @@ export default function Referral() {
   const theme = useTheme()
   const { account } = useActiveWeb3React()
   const { openReferralModal } = useReferalModal()
-  const { invitation, inviteCount, usdtBalance, btcBalance } = useReferral()
+  const { invitation, inviteCount, balance } = useReferral()
   const { showBindModal } = useBindModal()
-  const btcPrice = usePrice('BTC', 60000)
 
   const handleOpenReferral = useCallback(() => {
     openReferralModal(false)
@@ -83,8 +81,15 @@ export default function Referral() {
           <NumericalCard
             title="Total Referral Reward Value"
             value={
-              btcPrice && usdtBalance !== '-' && btcBalance !== '-'
-                ? trimNumberString((+btcBalance * +btcPrice).toFixed(4))
+              balance
+                ? trimNumberString(
+                    Object.keys(balance)
+                      .reduce((acc, key) => {
+                        const amount = balance[key] === '-' ? +balance[key] : 0
+                        return acc + amount
+                      }, 0)
+                      .toFixed(4)
+                  )
                 : '-'
             }
             unit="$"
@@ -99,18 +104,18 @@ export default function Referral() {
               Referral Link
             </Button>
           </NumericalCard>
-          <Card padding="16px 22px 28px" gray>
-            <LogoText logo={<CurrencyLogo currency={SUPPORTED_CURRENCIES.BTC} />} text="BTC" />
-            <Typography fontSize={24} fontWeight={700} mt={19}>
-              {btcBalance}
-            </Typography>
-          </Card>
-          <Card padding="16px 22px 28px" gray>
-            <LogoText logo={<CurrencyLogo currency={SUPPORTED_CURRENCIES.USDT} />} text="USDT" />
-            <Typography fontSize={24} fontWeight={700} mt={19}>
-              {usdtBalance}
-            </Typography>
-          </Card>
+          {balance &&
+            Object.keys(balance).map((key: string) => {
+              if (balance[key] === '-') return
+              return (
+                <Card padding="16px 22px 28px" gray key={key}>
+                  <LogoText logo={<CurrencyLogo currency={SUPPORTED_CURRENCIES[key]} />} text="BTC" />
+                  <Typography fontSize={24} fontWeight={700} mt={19}>
+                    {balance[key]}
+                  </Typography>
+                </Card>
+              )
+            })}
         </Box>
       </Card>
       <Card padding="36px 32px 29px 32px">

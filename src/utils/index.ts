@@ -68,16 +68,24 @@ interface ChainObject {
 }
 
 const chains: ChainObject = {
-  // [ChainId.MAINNET]: {
-  //   link: 'https://etherscan.io',
-  //   builder: explorers.etherscan
-  // },
+  [ChainId.MAINNET]: {
+    link: 'https://etherscan.io',
+    builder: explorers.etherscan
+  },
   [ChainId.ROPSTEN]: {
     link: 'https://ropsten.etherscan.io',
     builder: explorers.etherscan
   },
   [ChainId.BSC]: {
     link: 'https://bscscan.com',
+    builder: explorers.etherscan
+  },
+  [ChainId.AVAX]: {
+    link: 'https://cchain.explorer.avax.network',
+    builder: explorers.blockscout
+  },
+  [ChainId.RINKEBY]: {
+    link: 'https://rinkeby.etherscan.io/',
     builder: explorers.etherscan
   }
 }
