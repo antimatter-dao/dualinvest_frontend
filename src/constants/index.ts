@@ -7,7 +7,7 @@ import { ChainId, IS_TEST_NET } from './chain'
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-export const BAST_TOKEN: { [chainId in ChainId]: Token } = {
+export const BAST_TOKEN: { [chainId in ChainId]?: Token } = {
   // [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'MATTER', 'Matter'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'MATTER', 'Matter'),
   [ChainId.BSC]: new Token(ChainId.BSC, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'MATTER', 'Matter')
@@ -15,7 +15,7 @@ export const BAST_TOKEN: { [chainId in ChainId]: Token } = {
 
 export const ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 
-export const ANTIMATTER_ADDRESS: { [chainId in ChainId]: string } = {
+export const ANTIMATTER_ADDRESS: { [chainId in ChainId]?: string } = {
   // [ChainId.MAINNET]: '0x60d0769c4940cA58648C0AA34ecdf390a10F272e',
   [ChainId.ROPSTEN]: '0x60d0769c4940cA58648C0AA34ecdf390a10F272e',
   [ChainId.BSC]: ''
@@ -117,3 +117,7 @@ export const DUAL_INVEST_ADDRESS = IS_TEST_NET
 export const NO_REFERRER = '0x0000000000000000000000000000000000000000'
 
 export const feeRate = '3%'
+
+export const DEFI_VAULT_ADDRESS: { [chainId in ChainId]?: string } = {
+  [ChainId.AVAX]: '0x1ba02c36C0F6F07CA900a6C44e161833509A7768'
+}

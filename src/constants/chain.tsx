@@ -2,12 +2,18 @@ import { Chain } from 'models/chain'
 import { ReactComponent as ETH } from 'assets/svg/eth_logo.svg'
 import EthUrl from 'assets/svg/eth_logo.svg'
 import BSCUrl from 'assets/svg/binance.svg'
-import { ReactComponent as BSCInvert } from 'assets/svg/binance.svg'
+import { ReactComponent as BSC } from 'assets/svg/binance.svg'
+import { ReactComponent as AVAX } from 'assets/svg/avax.svg'
+import AVAXUrl from 'assets/svg/avax.svg'
+import { ReactComponent as AVAXBg } from 'assets/svg/avax_bg.svg'
+import { ReactComponent as BSCBg } from 'assets/svg/bsc_bg.svg'
+import { ReactComponent as AVAXBgFilled } from 'assets/svg/avax_bg_filled.svg'
 
 export enum ChainId {
-  // MAINNET = 1,
+  MAINNET = 1,
   ROPSTEN = 3,
-  BSC = 56
+  BSC = 56,
+  AVAX = 43114
 }
 
 export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
@@ -16,7 +22,14 @@ export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
 
 export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
 
-export const ChainList = [
+export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
+  ? [ChainId.MAINNET, ChainId.ROPSTEN, ChainId.AVAX, ChainId.BSC]
+  : [ChainId.MAINNET, ChainId.BSC, ChainId.AVAX]
+
+export const DUAL_SUPPORTED_NETWORK = IS_TEST_NET ? [ChainId.ROPSTEN] : [ChainId.BSC]
+export const DEFI_SUPPORTED_NETWORK = IS_TEST_NET ? [ChainId.AVAX] : [ChainId.AVAX]
+
+export const ChainList: Chain[] = [
   ...(IS_TEST_NET
     ? [
         {
@@ -30,12 +43,28 @@ export const ChainList = [
       ]
     : []),
   {
-    icon: <BSCInvert height={20} width={20} />,
+    icon: <BSC height={20} width={20} />,
     logo: BSCUrl,
     symbol: 'BSC',
     name: 'Binance Smart Chain',
     id: ChainId.BSC,
     hex: '0x38'
+  },
+  {
+    icon: <ETH />,
+    logo: EthUrl,
+    symbol: 'ETH',
+    name: 'Ethereum Mainnet',
+    id: ChainId.MAINNET,
+    hex: '0x1'
+  },
+  {
+    icon: <AVAX />,
+    logo: AVAXUrl,
+    symbol: 'AVAX',
+    name: 'Avalanche',
+    id: ChainId.AVAX,
+    hex: '0xA86A'
   }
 ]
 
@@ -47,7 +76,7 @@ export const ChainListMap: {
 }, {} as any)
 
 export const SUPPORTED_NETWORKS: {
-  [chainId in ChainId]?: {
+  [chainId in ChainId]: {
     chainId: string
     chainName: string
     nativeCurrency: {
@@ -59,17 +88,17 @@ export const SUPPORTED_NETWORKS: {
     blockExplorerUrls: string[]
   }
 } = {
-  // [ChainId.MAINNET]: {
-  //   chainId: '0x1',
-  //   chainName: 'Ethereum',
-  //   nativeCurrency: {
-  //     name: 'Ethereum',
-  //     symbol: 'ETH',
-  //     decimals: 18
-  //   },
-  //   rpcUrls: ['https://mainnet.infura.io/v3'],
-  //   blockExplorerUrls: ['https://etherscan.com']
-  // },
+  [ChainId.MAINNET]: {
+    chainId: '0x1',
+    chainName: 'Ethereum',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18
+    },
+    rpcUrls: ['https://mainnet.infura.io/v3'],
+    blockExplorerUrls: ['https://etherscan.com']
+  },
   [ChainId.ROPSTEN]: {
     chainId: '0x3',
     chainName: 'Ropsten',
@@ -91,5 +120,25 @@ export const SUPPORTED_NETWORKS: {
     },
     rpcUrls: ['https://bsc-dataseed.binance.org'],
     blockExplorerUrls: ['https://bscscan.com']
+  },
+  [ChainId.AVAX]: {
+    chainId: '0xA86A',
+    chainName: 'Avalanche',
+    nativeCurrency: {
+      name: 'Avalanche Token',
+      symbol: 'AVAX',
+      decimals: 18
+    },
+    rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+    blockExplorerUrls: ['https://cchain.explorer.avax.network']
   }
+}
+
+export const ChainsBgImgs: { [key in ChainId]?: JSX.Element } = {
+  [ChainId.AVAX]: <AVAXBg />,
+  [ChainId.BSC]: <BSCBg />
+}
+
+export const ChainsBgImgsFilled: { [key in ChainId]?: JSX.Element } = {
+  [ChainId.AVAX]: <AVAXBgFilled />
 }

@@ -1,12 +1,15 @@
 import { Box, Tab, TabProps } from '@mui/material'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 import { SUPPORTED_CURRENCIES, SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
+import { useActiveWeb3React } from 'hooks'
 import Tabs from './Tabs'
 
 export default function CurrencyTabs({ contents }: { contents: JSX.Element[] }) {
+  const { chainId } = useActiveWeb3React()
   return (
     <Tabs
-      titles={SUPPORTED_CURRENCY_SYMBOL.map(symbol => {
+      titles={SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].map(symbol => {
         const cur = SUPPORTED_CURRENCIES[symbol]
         return (
           <Box

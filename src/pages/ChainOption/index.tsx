@@ -18,6 +18,8 @@ import ProductBanner from 'components/ProductBanner'
 import BlueRing from 'components/Icon/BlueRing'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { useActiveWeb3React } from 'hooks'
 
 enum TYPE {
   Saddle = 'Saddle',
@@ -86,6 +88,7 @@ export default function ChainOption() {
   const BTCPrice = usePrice('BTC')
   const ETHPrice = usePrice('ETH')
   useBindModal()
+  const { chainId } = useActiveWeb3React()
 
   useEffect(() => {
     if (typePath) {
@@ -182,7 +185,7 @@ export default function ChainOption() {
           maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
         }}
       >
-        {SUPPORTED_CURRENCY_SYMBOL.map(symbol => {
+        {SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].map(symbol => {
           const list = productList?.[symbol as keyof typeof productList]
 
           return <DataTable onSubscribe={handleSubscribe} productList={list?.call} key={symbol} />

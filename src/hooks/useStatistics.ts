@@ -4,7 +4,6 @@ import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { usePriceForAll } from './usePriceSet'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
-import { useActiveWeb3React } from 'hooks'
 import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 type DualStatisticsType =
@@ -21,11 +20,9 @@ function replaceAll(str: string, match: string, replace: string) {
 
 export function useDualStatistics(): DualStatisticsType {
   const indexPrices = usePriceForAll()
-  const { chainId } = useActiveWeb3React()
   const [statistics, setStatistics] = useState<DualStatisticsType>(undefined)
 
-  const promistFn = useCallback(() => Axios.get('getDashboard', { chainId: chainId ?? NETWORK_CHAIN_ID }), [chainId])
-
+  const promistFn = useCallback(() => Axios.get('getDashboard'), [])
   const callbackFn = useCallback(r => {
     setStatistics(r.data.data)
   }, [])
@@ -36,15 +33,16 @@ export function useDualStatistics(): DualStatisticsType {
     if (!statistics) return undefined
     const totalDeposit = indexPrices
       ? toLocaleNumberString(
-          SUPPORTED_CURRENCY_SYMBOL.reduce((acc: number, symbol) => {
+          SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].reduce((acc: number, symbol: string) => {
             acc +=
               (+statistics[`total${symbol[0] + symbol.slice(1).toLowerCase()}Deposit` as keyof typeof statistics] ??
-                0) * +indexPrices[symbol as keyof typeof indexPrices]
+                0) * +(indexPrices[symbol as keyof typeof indexPrices] ?? 0)
             return acc
           }, 0) + +statistics.totalUsdtDeposit,
           0
         )
       : '-'
+
     return { ...statistics, totalDeposit }
   }, [indexPrices, statistics])
 
@@ -53,11 +51,10 @@ export function useDualStatistics(): DualStatisticsType {
 
 export function useRecurStatistics() {
   const [statistics, setStatistics] = useState<{ totalProgress: string; totalReInvest: string } | undefined>(undefined)
-  const { chainId } = useActiveWeb3React()
 
   const promiseFn = useCallback(() => {
-    return Axios.get('getReinDashboard', { chainId: chainId ?? NETWORK_CHAIN_ID })
-  }, [chainId])
+    return Axios.get('getReinDashboard')
+  }, [])
 
   const callbackFn = useCallback(r => {
     if (r.data.data) {

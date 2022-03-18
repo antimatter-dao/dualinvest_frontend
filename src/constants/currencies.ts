@@ -3,6 +3,7 @@ import BtcLogo from 'assets/svg/btc_logo.svg'
 import UsdtLogo from 'assets/svg/usdt_logo.svg'
 import EthLogo from 'assets/svg/eth_logo.svg'
 import BSCLogo from 'assets/svg/binance.svg'
+import AVAXLogo from 'assets/svg/avax.svg'
 import { ChainId, ChainList } from './chain'
 
 export const SYMBOL_MAP = {
@@ -12,14 +13,20 @@ export const SYMBOL_MAP = {
   ETH: 'ETH',
   BTCB: 'BTC',
   BNB: 'BNB',
-  WBNB: 'BNB'
+  WBNB: 'BNB',
+  AVAX: 'AVAX'
 }
 
-export const SUPPORTED_CURRENCY_SYMBOL = [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB]
+export const SUPPORTED_CURRENCY_SYMBOL = {
+  [ChainId.BSC]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB],
+  [ChainId.ROPSTEN]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB],
+  [ChainId.MAINNET]: [SYMBOL_MAP.ETH],
+  [ChainId.AVAX]: [SYMBOL_MAP.AVAX]
+}
 
 export const SUPPORTED_CURRENCIES: {
   [key: string]: {
-    address: { [key in ChainId]: string }
+    address: { [key in ChainId]?: string }
     decimals: number
     symbol: string
     name: string
@@ -52,18 +59,21 @@ export const SUPPORTED_CURRENCIES: {
   USDT: {
     address: {
       [ChainId.ROPSTEN]: '0xE78D911B56a6321bF622172D32D916f9563e8D84',
-      [ChainId.BSC]: '0x55d398326f99059fF775485246999027B3197955'
+      [ChainId.BSC]: '0x55d398326f99059fF775485246999027B3197955',
+      [ChainId.AVAX]: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
+      [ChainId.MAINNET]: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
     },
     decimals: 18,
     symbol: 'USDT',
     name: 'Binance-Peg BSC-USDT',
     logoUrl: UsdtLogo,
-    color: '#31B047'
+    color: '#1BA27A'
   },
   ETH: {
     address: {
       [ChainId.ROPSTEN]: '0x55795b02C44Bd098D21bC1854036C2E75d7E7c43',
-      [ChainId.BSC]: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8'
+      [ChainId.BSC]: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
+      [ChainId.MAINNET]: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
     },
     decimals: 18,
     symbol: 'ETH',
@@ -74,7 +84,8 @@ export const SUPPORTED_CURRENCIES: {
   BNB: {
     address: {
       [ChainId.ROPSTEN]: '0x570D3f51D7406b641e63614E4584e3B3dEC90Bc5',
-      [ChainId.BSC]: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+      [ChainId.BSC]: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+      [ChainId.AVAX]: '0x264c1383EA520f73dd837F915ef3a732e204a493'
     },
     decimals: 18,
     symbol: 'BNB',
@@ -85,13 +96,24 @@ export const SUPPORTED_CURRENCIES: {
   WBNB: {
     address: {
       [ChainId.ROPSTEN]: '0x570D3f51D7406b641e63614E4584e3B3dEC90Bc5',
-      [ChainId.BSC]: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+      [ChainId.BSC]: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+      [ChainId.AVAX]: '0x264c1383EA520f73dd837F915ef3a732e204a493'
     },
     decimals: 18,
     symbol: 'BNB',
     name: 'Wrapped BNB',
     logoUrl: BSCLogo,
     color: '#F3BA2F'
+  },
+  AVAX: {
+    address: {
+      [ChainId.AVAX]: '0x264c1383EA520f73dd837F915ef3a732e204a493'
+    },
+    decimals: 18,
+    symbol: 'AVAX',
+    name: 'Avalanche Token',
+    logoUrl: AVAXLogo,
+    color: '#E3453D'
   }
 }
 
@@ -101,13 +123,11 @@ export const CURRENCIES: { [key in ChainId]: { [key: string]: Token } } = ChainL
     // return acc
     const tokenMap = Object.keys(SUPPORTED_CURRENCIES).reduce((acc: { [key: string]: Token }, key) => {
       const item = SUPPORTED_CURRENCIES[key as keyof typeof SUPPORTED_CURRENCIES]
-      acc[key as keyof typeof SUPPORTED_CURRENCIES] = new Token(
-        id,
-        item.address[id],
-        item.decimals,
-        item.symbol,
-        item.name
-      )
+      const address = item.address[id]
+      if (address) {
+        acc[key as keyof typeof SUPPORTED_CURRENCIES] = new Token(id, address, item.decimals, item.symbol, item.name)
+      }
+
       return acc
     }, {} as { [key: string]: Token })
 
@@ -119,16 +139,23 @@ export const CURRENCIES: { [key in ChainId]: { [key: string]: Token } } = ChainL
 
 export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((acc, key) => {
   const item = SUPPORTED_CURRENCIES[key as keyof typeof SUPPORTED_CURRENCIES]
-  Object.keys(item.address).map((chainId: string) => {
-    const address = item.address[+chainId as ChainId]
-    acc[address as keyof typeof SUPPORTED_CURRENCIES] = new Token(
-      +chainId,
-      address,
-      item.decimals,
-      item.symbol,
-      item.name
-    )
+  ChainList.map(({ id: chainId }: { id: ChainId }) => {
+    const address = item.address[chainId]
+    if (address) {
+      acc[address as keyof typeof SUPPORTED_CURRENCIES] = new Token(
+        +chainId,
+        address,
+        item.decimals,
+        item.symbol,
+        item.name
+      )
+    }
   })
 
   return acc
 }, {} as { [key: string]: Token })
+
+export const SUPPORTED_DEFI_VAULT: { [chainId in ChainId]?: string[] } = {
+  [ChainId.AVAX]: ['AVAX'],
+  [ChainId.MAINNET]: ['ETH', 'BTC']
+}

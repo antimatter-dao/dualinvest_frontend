@@ -9,10 +9,13 @@ import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import CurrencyTabs from 'components/Tabs/CurrencyTabs'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import { useDualStatistics } from 'hooks/useStatistics'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { useActiveWeb3React } from 'hooks'
 
 export default function DualInvest() {
   const productList = useProductList()
   const statistics = useDualStatistics()
+  const { chainId } = useActiveWeb3React()
 
   useEffect(() => {
     const el = document.getElementById('dualInvestGuide')
@@ -49,7 +52,7 @@ export default function DualInvest() {
       />
       <Box width={'100%'} sx={{ maxWidth: theme => theme.width.maxContent, margin: '0 24px', padding: '0 20px' }}>
         <CurrencyTabs
-          contents={SUPPORTED_CURRENCY_SYMBOL.map(symbol => {
+          contents={SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].map(symbol => {
             const list = productList?.[symbol as keyof typeof productList]
 
             return <ProductTable strikeCurrencySymbol={symbol} productList={list} key={symbol} />
