@@ -10,7 +10,7 @@ export default function NetworkSelect() {
   const { chainId, account, library } = useActiveWeb3React()
   const isDownSm = useBreakpoint('sm')
 
-  if (!chainId || !account) return null
+  if (!account) return null
 
   return (
     <Box sx={{ width: '130', margin: { xs: '0', sm: '8px 0 15px' } }}>

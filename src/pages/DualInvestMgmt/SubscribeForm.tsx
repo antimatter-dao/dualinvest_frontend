@@ -207,6 +207,7 @@ export default function SubscribeForm({
       addPopup,
       addTransaction,
       amount,
+      chainId,
       checkOrderStatusCallback,
       createOrderCallback,
       currentCurrency,
