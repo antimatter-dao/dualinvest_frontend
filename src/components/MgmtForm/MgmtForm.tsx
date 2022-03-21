@@ -174,7 +174,9 @@ export function MgmtForm({
         />
         {children}
         {!account && <BlackButton onClick={toggleWallet}>Connect Wallet</BlackButton>}
-        {account && !isCorrectChain && <BlackButton onClick={switchChain}>Switch to BSC</BlackButton>}
+        {account && !isCorrectChain && (
+          <BlackButton onClick={() => switchChain(product?.chainId)}>Switch to {product?.chain}</BlackButton>
+        )}
         {!isConfirmed && account && isCorrectChain && (
           <ActionButton
             pending={pending}
