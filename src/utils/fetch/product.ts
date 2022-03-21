@@ -71,7 +71,7 @@ export const productFormatter = (raw: ProductRaw): Product => {
         return ChainId.RINKEBY
       }
       if (chain === 'BSC') {
-        return ChainId.RINKEBY
+        return ChainId.ROPSTEN
       }
     }
     return ChainList.find(chain => chain.symbol === raw.chain)?.id ?? NETWORK_CHAIN_ID
