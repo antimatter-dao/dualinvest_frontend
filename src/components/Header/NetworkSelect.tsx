@@ -15,6 +15,7 @@ export default function NetworkSelect() {
   return (
     <Box sx={{ width: '130', margin: { xs: '0', sm: '8px 0 15px' } }}>
       <Select
+        disabled
         defaultValue={chainId ?? NETWORK_CHAIN_ID}
         value={chainId ?? NETWORK_CHAIN_ID}
         width="max-content"
