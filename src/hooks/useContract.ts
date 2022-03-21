@@ -21,7 +21,7 @@ import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 import DEFI_VAULT_ABI from '../constants/abis/defi_vault.json'
-import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { ChainId, NETWORK_CHAIN_ID } from 'constants/chain'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -106,11 +106,19 @@ export function useAntiMatterGovernanceContract(): Contract | null {
 }
 
 export function useDualInvestContract(): Contract | null {
-  return useContract(DUAL_INVEST_ADDRESS, DUAL_INVEST_ABI, true)
-}
-
-export function useDefiVaultContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
 
-  return useContract(DEFI_VAULT_ADDRESS[chainId ?? NETWORK_CHAIN_ID], DEFI_VAULT_ABI, true)
+  return useContract(DUAL_INVEST_ADDRESS[chainId ?? NETWORK_CHAIN_ID], DUAL_INVEST_ABI, true)
+}
+
+export function useDefiVaultContract(
+  chainId: ChainId | undefined,
+  currencySymbol: string | undefined,
+  type: 'CALL' | 'PUT' | undefined
+): Contract | null {
+  return useContract(
+    currencySymbol && chainId && type ? DEFI_VAULT_ADDRESS[chainId]?.[currencySymbol]?.[type] : undefined,
+    DEFI_VAULT_ABI,
+    true
+  )
 }

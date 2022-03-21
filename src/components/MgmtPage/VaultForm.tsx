@@ -9,6 +9,12 @@ import { useCallback } from 'react'
 import { ErrorType } from 'pages/DefiVaultMgmt/VaultForm'
 import Divider from 'components/Divider'
 import useBreakpoint from 'hooks/useBreakpoint'
+import { ChainId, SUPPORTED_NETWORKS } from 'constants/chain'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { CURRENCIES } from 'constants/currencies'
+import { tryParseAmount } from 'utils/parseAmount'
+import { DEFI_VAULT_ADDRESS } from 'constants/index'
+import ActionButton from 'components/Button/ActionButton'
 
 enum TYPE {
   invest = 'Invest',
@@ -26,7 +32,9 @@ export default function VaultForm({
   onInvest,
   redeemDisabled,
   investDisabled,
-  error
+  error,
+  productChainId,
+  isCall
 }: {
   formData: { [key: string]: any }
   currencySymbol: string
@@ -39,6 +47,8 @@ export default function VaultForm({
   redeemDisabled: boolean
   investDisabled: boolean
   error: string
+  productChainId: ChainId | undefined
+  isCall?: boolean
 }) {
   const isDownSm = useBreakpoint('sm')
 
@@ -61,6 +71,8 @@ export default function VaultForm({
               val={investAmount}
               onClick={onInvest}
               disabled={investDisabled}
+              productChainId={productChainId}
+              isCall={isCall}
             />,
             <Form
               key="redeem"
@@ -69,6 +81,8 @@ export default function VaultForm({
               currencySymbol={currencySymbol}
               onClick={onWithdraw}
               disabled={redeemDisabled}
+              productChainId={productChainId}
+              isCall={isCall}
             />
           ]}
         />
@@ -98,7 +112,9 @@ function Form({
   val,
   onClick,
   disabled,
-  error
+  error,
+  productChainId,
+  isCall
 }: {
   type: TYPE
   formData: { [key: string]: any }
@@ -109,9 +125,16 @@ function Form({
   onClick: () => void
   disabled: boolean
   error?: string
+  productChainId: ChainId | undefined
+  isCall?: boolean
 }) {
   const { account } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
+  const { chainId } = useActiveWeb3React()
+  const [approvalState, approveCallback] = useApproveCallback(
+    tryParseAmount(val, productChainId ? CURRENCIES[productChainId ?? '']?.[currencySymbol] : undefined),
+    productChainId ? DEFI_VAULT_ADDRESS[productChainId]?.[currencySymbol]?.[isCall ? 'CALL' : 'PUT'] : undefined
+  )
 
   const handleMax = useCallback(() => {
     onChange &&
@@ -120,7 +143,7 @@ function Form({
 
   const handleChange = useCallback(
     e => {
-      onChange && onChange(e.target.value ? Math.floor(+e.target.value) + '' : '')
+      onChange && onChange(e.target.value)
     },
     [onChange]
   )
@@ -134,16 +157,6 @@ function Form({
             <Typography fontSize={16}>{formData[key as keyof typeof formData]}</Typography>
           </Box>
         ))}
-        <Box display="flex" alignItems="center">
-          <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 14, width: 14, mr: 8 }} />
-          <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
-            {type === TYPE.redeem ? (
-              <> your redeem amount will be available for withdraw once the current cycle finishes.</>
-            ) : (
-              <>Your deposit allows us to invest your {currencySymbol} in the strategy by default.</>
-            )}
-          </Typography>
-        </Box>
       </Box>
       {type === TYPE.invest && val !== undefined && onChange && (
         <Box>
@@ -157,33 +170,60 @@ function Form({
             onChange={handleChange}
             onMax={handleMax}
             value={val}
-            disabled={!account || error === ErrorType.notAvailable}
+            disabled={!account || error === ErrorType.notAvailable || chainId !== productChainId}
           />
         </Box>
       )}
       <Box mt={16}>
-        {account ? (
+        {account && chainId === productChainId && approvalState !== ApprovalState.APPROVED && (
+          <ActionButton
+            actionText="Approve"
+            onAction={approveCallback}
+            disableAction={disabled || !!error}
+            pending={approvalState === ApprovalState.PENDING}
+            pendingText="Approving"
+          ></ActionButton>
+        )}
+        {account && chainId === productChainId && approvalState === ApprovalState.APPROVED && (
           <Button onClick={onClick} disabled={disabled || !!error}>
             {type}
           </Button>
+        )}
+        {account && !(chainId === productChainId) && (
+          <BlackButton onClick={toggleWallet}>
+            Switch to {productChainId && SUPPORTED_NETWORKS[productChainId]?.chainName}
+          </BlackButton>
+        )}
+        {!account && <BlackButton onClick={toggleWallet}>Connect</BlackButton>}
+      </Box>
+
+      <Box display="flex" alignItems="center" mt={8}>
+        {error ? (
+          <>
+            <InfoOutlinedIcon sx={{ color: theme => theme.palette.error.main, height: 12 }} />
+            <Typography component="p" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
+              {
+                <>
+                  <Typography component="span" color="error" fontSize={12}>
+                    {error}
+                  </Typography>
+                </>
+              }
+            </Typography>
+          </>
         ) : (
-          <BlackButton onClick={toggleWallet}>Connect</BlackButton>
+          <>
+            <InfoOutlinedIcon sx={{ color: theme => theme.palette.primary.main, height: 14, width: 14, mr: 8 }} />
+            <Typography component="span" fontSize={12} sx={{ opacity: 0.5 }}>
+              {type === TYPE.redeem ? (
+                <> your redeem amount will be available for withdraw once the current cycle finishes.</>
+              ) : (
+                <>Your deposit allows us to invest your {currencySymbol} in the strategy by default.</>
+              )}
+            </Typography>
+          </>
         )}
       </Box>
-      {error && (
-        <Box display="flex" mt={8}>
-          <InfoOutlinedIcon sx={{ color: theme => theme.palette.error.main, height: 12 }} />
-          <Typography component="p" fontSize={12} sx={{ color: theme => theme.palette.text.secondary }}>
-            {
-              <>
-                <Typography component="span" color="error" fontSize={12}>
-                  {error}
-                </Typography>
-              </>
-            }
-          </Typography>
-        </Box>
-      )}
     </Box>
   )
 }

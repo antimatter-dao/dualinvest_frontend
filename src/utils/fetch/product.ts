@@ -1,3 +1,4 @@
+import { ChainId, ChainList, IS_TEST_NET, NETWORK_CHAIN_ID } from 'constants/chain'
 import { SYMBOL_MAP } from 'constants/currencies'
 
 const TYPE = {
@@ -33,9 +34,12 @@ interface ProductRaw {
   type: string
   gt_strike_price: string
   lt_strike_price: string
+  chain: string
 }
 
 export interface Product {
+  chainId: ChainId
+  chain: string
   productId: number
   expiredAt: number
   apy: string
@@ -61,7 +65,20 @@ export type ProductList = {
 }
 
 export const productFormatter = (raw: ProductRaw): Product => {
+  const chainIdFunc = (chain: string) => {
+    if (IS_TEST_NET) {
+      if (chain === 'AVAX') {
+        return ChainId.RINKEBY
+      }
+      if (chain === 'BSC') {
+        return ChainId.RINKEBY
+      }
+    }
+    return ChainList.find(chain => chain.symbol === raw.chain)?.id ?? NETWORK_CHAIN_ID
+  }
   return {
+    chain: raw.chain,
+    chainId: chainIdFunc(raw.chain),
     price: raw.price,
     currentPrice: raw.index_price,
     productId: raw.product_id,

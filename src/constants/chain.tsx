@@ -23,10 +23,9 @@ export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
 
 export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
 
-export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET ? [ChainId.ROPSTEN] : [ChainId.BSC]
-
-export const DUAL_SUPPORTED_NETWORK = IS_TEST_NET ? [ChainId.ROPSTEN] : [ChainId.BSC]
-export const DEFI_SUPPORTED_NETWORK = IS_TEST_NET ? [ChainId.AVAX] : [ChainId.AVAX]
+export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
+  ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.AVAX]
+  : [ChainId.BSC]
 
 export const ChainList: Chain[] = [
   ...(IS_TEST_NET
@@ -56,14 +55,6 @@ export const ChainList: Chain[] = [
           name: 'Binance Smart Chain',
           id: ChainId.BSC,
           hex: '0x38'
-        },
-        {
-          icon: <AVAX />,
-          logo: AVAXUrl,
-          symbol: 'AVAX',
-          name: 'Avalanche',
-          id: ChainId.AVAX,
-          hex: '0xA86A'
         }
       ]),
   {
@@ -73,6 +64,14 @@ export const ChainList: Chain[] = [
     name: 'Ethereum Mainnet',
     id: ChainId.MAINNET,
     hex: '0x1'
+  },
+  {
+    icon: <AVAX />,
+    logo: AVAXUrl,
+    symbol: 'AVAX',
+    name: 'Avalanche',
+    id: ChainId.AVAX,
+    hex: '0xA86A'
   }
 ]
 

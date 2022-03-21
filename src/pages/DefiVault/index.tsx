@@ -37,10 +37,10 @@ export default function DefiVault() {
         display={{ xs: 'grid', md: 'flex' }}
         justifyContent={{ xs: undefined, md: 'flex-end' }}
         gap={32}
-        marginLeft={20}
         alignItems="center"
+        padding={{ xs: '0 20px', lg: '0' }}
         sx={{
-          maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
+          maxWidth: theme => ({ xs: `calc(100%)`, lg: theme.width.maxContent })
         }}
       >
         <Typography fontSize={16}>Strategy:</Typography>
@@ -65,8 +65,9 @@ export default function DefiVault() {
         gap={21}
         width="100%"
         gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }}
+        padding={{ xs: '0 20px', lg: '0' }}
         sx={{
-          maxWidth: theme => ({ xs: `calc(100% - 40px)`, md: theme.width.maxContent })
+          maxWidth: theme => ({ xs: `calc(100%)`, lg: theme.width.maxContent })
         }}
       >
         {allList === null && <Typography>No vault available</Typography>}

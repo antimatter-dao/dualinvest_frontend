@@ -12,7 +12,7 @@ import { useHistory } from 'react-router-dom'
 import { routes } from 'constants/routes'
 import ProductCardHeader from 'components/ProductCardHeader'
 import { useSwitchChainModal } from 'hooks/useSwitchChainModal'
-import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { ChainId } from 'constants/chain'
 import { useActiveWeb3React } from 'hooks'
 
 const RowStr = styled(Typography)<{ component?: string }>(({ theme }) => ({
@@ -81,9 +81,9 @@ export default function ProductTable({
   const { switchChain } = useSwitchChainModal()
 
   const handleSubscribe = useCallback(
-    (id: number) => () => {
-      if (chainId !== NETWORK_CHAIN_ID) {
-        switchChain()
+    (id: number, productChainId) => () => {
+      if (chainId !== productChainId) {
+        switchChain(productChainId)
         return
       }
 
@@ -167,7 +167,7 @@ function DataTable({
   onSubscribe,
   productList
 }: {
-  onSubscribe: (id: number) => () => void
+  onSubscribe: (id: number, productChainId: ChainId) => () => void
   productList: Product[] | undefined
 }) {
   const [orderBy, setOrderBy] = useState(headers[0])
@@ -176,7 +176,7 @@ function DataTable({
 
   const formattedData = useMemo(() => {
     return productList
-      ? productList.map((item: Product) => formatData(item, isDownMd, onSubscribe(item.productId)))
+      ? productList.map((item: Product) => formatData(item, isDownMd, onSubscribe(item.productId, item.chainId)))
       : []
   }, [isDownMd, onSubscribe, productList])
 

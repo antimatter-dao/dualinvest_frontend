@@ -12,7 +12,7 @@ import { Product } from 'utils/fetch/product'
 import ConfirmModal from 'components/MgmtPage/ConfirmModal'
 import { CURRENCIES } from 'constants/currencies'
 import Spinner from 'components/Spinner'
-import { DUAL_SUPPORTED_NETWORK, NETWORK_CHAIN_ID } from 'constants/chain'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 import { useActiveWeb3React } from 'hooks'
 import { useSwitchChainModal } from 'hooks/useSwitchChainModal'
 
@@ -65,7 +65,7 @@ export function MgmtForm({
   const toggleWallet = useWalletModalToggle()
   const { chainId } = useActiveWeb3React()
   const { switchChain } = useSwitchChainModal()
-  const isCorrectChain = chainId && DUAL_SUPPORTED_NETWORK.includes(chainId)
+  const isCorrectChain = chainId && chainId === product?.chainId
 
   const showConfirm = useCallback(() => {
     setIsConfirmOpen(true)

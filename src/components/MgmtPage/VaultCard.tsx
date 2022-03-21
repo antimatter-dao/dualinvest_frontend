@@ -5,11 +5,6 @@ import { OutlinedCard } from 'components/Card/Card'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { Timer } from 'components/Timer'
 import SwitchToggle from 'components/SwitchToggle'
-import TextButton from 'components/Button/TextButton'
-import { useCallback } from 'react'
-import { useHistory } from 'react-router-dom'
-import { routes } from 'constants/routes'
-import { PRODUCT_TYPE_ROUTE } from 'components/Tabs/InvestTabs'
 import Divider from 'components/Divider'
 import { RECUR_TOGGLE_STATUS } from 'hooks/useRecurData'
 import QuestionHelper from 'components/essential/QuestionHelper'
@@ -23,27 +18,11 @@ interface Props {
   timer: number
   recurStatus: RECUR_TOGGLE_STATUS | null
   onRecurOpen: () => void
-  activeOrder: number | string
 }
 
 export default function VaultCard(props: Props) {
-  const {
-    logoCurSymbol,
-    title,
-    priceCurSymbol,
-    account,
-    vaultForm,
-    timer,
-    recurStatus,
-    onRecurOpen,
-    activeOrder
-  } = props
+  const { logoCurSymbol, title, priceCurSymbol, account, vaultForm, timer, recurStatus, onRecurOpen } = props
   const isDownMd = useBreakpoint('md')
-  const history = useHistory()
-
-  const handleDetails = useCallback(() => {
-    history.push(routes.accountTabType.replace(':tab', 'position').replace(':type', PRODUCT_TYPE_ROUTE.recurVault))
-  }, [history])
 
   return (
     <Card>
@@ -93,15 +72,6 @@ export default function VaultCard(props: Props) {
                 </Box>
               </Card>
               <Box display="flex" flexDirection="column" gap={16}>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography fontSize={16}>Order in progress</Typography>
-                  <Box display="flex" alignItems="center" gap={5}>
-                    <span style={{ textDecoration: 'none' }}> {activeOrder}</span>
-                    <TextButton primary onClick={handleDetails} style={{ width: 'max-content' }} disabled={!account}>
-                      Details
-                    </TextButton>
-                  </Box>
-                </Box>
                 <Box display="flex" justifyContent="space-between">
                   <Typography fontSize={16}>Next order due time</Typography>
                   <Typography

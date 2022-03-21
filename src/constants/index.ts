@@ -2,7 +2,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Token } from './token'
 import { binance, injected, walletconnect, walletlink } from '../connectors'
 import JSBI from 'jsbi'
-import { ChainId, IS_TEST_NET } from './chain'
+import { ChainId } from './chain'
 
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
@@ -110,14 +110,18 @@ export const BLOCKED_ADDRESSES: string[] = [
   '0x8576aCC5C05D6Ce88f4e49bf65BdF0C62F91353C'
 ]
 
-export const DUAL_INVEST_ADDRESS = IS_TEST_NET
-  ? '0xCD8C8C39DcE7E5846a7b1BaBb0621250DB7b7430'
-  : '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16'
+export const DUAL_INVEST_ADDRESS: { [chainId in ChainId]?: string } = {
+  [ChainId.ROPSTEN]: '0xCD8C8C39DcE7E5846a7b1BaBb0621250DB7b7430',
+  [ChainId.BSC]: '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16',
+  [ChainId.RINKEBY]: '0xa5F5954f3f229784BFefE1B4Cc8f3FB5e9CeA13B'
+}
 
 export const NO_REFERRER = '0x0000000000000000000000000000000000000000'
 
 export const feeRate = '3%'
 
-export const DEFI_VAULT_ADDRESS: { [chainId in ChainId]?: string } = {
-  [ChainId.AVAX]: '0x1ba02c36C0F6F07CA900a6C44e161833509A7768'
+export const DEFI_VAULT_ADDRESS: {
+  [chainId in ChainId]?: { [currencySymbol: string]: { CALL: string | undefined; PUT: string | undefined } }
+} = {
+  [ChainId.AVAX]: { AVAX: { CALL: '0x1ba02c36C0F6F07CA900a6C44e161833509A7768', PUT: undefined } }
 }

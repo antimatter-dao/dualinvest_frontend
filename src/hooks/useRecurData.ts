@@ -11,21 +11,6 @@ import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { InvestStatus } from './useAccountData'
 import { NETWORK_CHAIN_ID } from 'constants/chain'
 
-export function useRecurProcuctList() {
-  const [productList, setProductList] = useState<RecurProductList | undefined>(undefined)
-  const { chainId } = useActiveWeb3React()
-
-  const promiseFn = useCallback(
-    () => Axios.get<RecurProductRaw>('getReinProducts', { chainId: chainId ?? NETWORK_CHAIN_ID }),
-    [chainId]
-  )
-  const callbackFn = useCallback(r => setProductList(recurProductListFormatter(r.data.data)), [])
-
-  usePollingWithMaxRetries(promiseFn, callbackFn, 60000)
-
-  return productList
-}
-
 export function useSingleRecurProcuct(currency: string, type: string) {
   const [productList, setProductList] = useState<RecurProduct | undefined>(undefined)
   const { chainId } = useActiveWeb3React()

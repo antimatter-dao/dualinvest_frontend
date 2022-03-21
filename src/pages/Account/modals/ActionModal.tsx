@@ -24,6 +24,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { useDualInvestBalance, useDualInvestCallback } from 'hooks/useDualInvest'
 import useModal from 'hooks/useModal'
 import { TokenAmount } from 'constants/token'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 export enum ActionType {
   DEPOSIT = 'deposit',
@@ -50,7 +51,7 @@ export default function ActionModal({
   const actionStr = type === ActionType.DEPOSIT ? 'Deposit' : 'Withdraw'
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
-  const { connector, account } = useActiveWeb3React()
+  const { connector, account, chainId } = useActiveWeb3React()
   const theme = useTheme()
   const [hash, setHash] = useState('')
   const { hideModal, showModal } = useModal()
@@ -60,7 +61,7 @@ export default function ActionModal({
   const txn = useTransaction(hash)
   const [approvalState, approveCallback] = useApproveCallback(
     tryParseAmount(val, token?.symbol === 'BNB' ? ETHER : token),
-    DUAL_INVEST_ADDRESS
+    DUAL_INVEST_ADDRESS[chainId ?? NETWORK_CHAIN_ID]
   )
   const balance = token?.symbol === 'BNB' ? balanceETH : balanceToken
 

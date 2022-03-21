@@ -4,6 +4,7 @@ import UsdtLogo from 'assets/svg/usdt_logo.svg'
 import EthLogo from 'assets/svg/eth_logo.svg'
 import BSCLogo from 'assets/svg/binance.svg'
 import AVAXLogo from 'assets/svg/avax.svg'
+import LUNALogo from 'assets/svg/luna.svg'
 import { ChainId, ChainList } from './chain'
 
 export const SYMBOL_MAP = {
@@ -14,14 +15,16 @@ export const SYMBOL_MAP = {
   BTCB: 'BTC',
   BNB: 'BNB',
   WBNB: 'BNB',
-  AVAX: 'AVAX'
+  AVAX: 'AVAX',
+  LUNA: 'LUNA'
 }
 
-export const SUPPORTED_CURRENCY_SYMBOL = {
-  [ChainId.BSC]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB],
-  [ChainId.ROPSTEN]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB],
+export const SUPPORTED_CURRENCY_SYMBOL: { [key in ChainId]?: string[] } = {
+  [ChainId.BSC]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB, SYMBOL_MAP.LUNA, SYMBOL_MAP.AVAX],
+  [ChainId.ROPSTEN]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB, SYMBOL_MAP.LUNA, SYMBOL_MAP.AVAX],
   [ChainId.MAINNET]: [SYMBOL_MAP.ETH],
-  [ChainId.AVAX]: [SYMBOL_MAP.AVAX]
+  [ChainId.AVAX]: [SYMBOL_MAP.AVAX],
+  [ChainId.RINKEBY]: [SYMBOL_MAP.AVAX]
 }
 
 export const SUPPORTED_CURRENCIES: {
@@ -61,7 +64,8 @@ export const SUPPORTED_CURRENCIES: {
       [ChainId.ROPSTEN]: '0xE78D911B56a6321bF622172D32D916f9563e8D84',
       [ChainId.BSC]: '0x55d398326f99059fF775485246999027B3197955',
       [ChainId.AVAX]: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
-      [ChainId.MAINNET]: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+      [ChainId.MAINNET]: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+      [ChainId.RINKEBY]: '0xE78D911B56a6321bF622172D32D916f9563e8D84'
     },
     decimals: 18,
     symbol: 'USDT',
@@ -107,13 +111,23 @@ export const SUPPORTED_CURRENCIES: {
   },
   AVAX: {
     address: {
-      [ChainId.AVAX]: '0x264c1383EA520f73dd837F915ef3a732e204a493'
+      [ChainId.AVAX]: '0x264c1383EA520f73dd837F915ef3a732e204a493',
+      [ChainId.ROPSTEN]: '0x2bb4CE1e3e239D255973015459C50F307A399aCf',
+      [ChainId.RINKEBY]: '0x2bb4CE1e3e239D255973015459C50F307A399aCf'
     },
     decimals: 18,
     symbol: 'AVAX',
     name: 'Avalanche Token',
     logoUrl: AVAXLogo,
     color: '#E3453D'
+  },
+  LUNA: {
+    address: { [ChainId.ROPSTEN]: '0x30305a10c05f7fA6b5ac802CBC6A18Ca4ddDe4D9' },
+    decimals: 18,
+    symbol: 'LUNA',
+    name: '	Terra (LUNA)',
+    logoUrl: LUNALogo,
+    color: '#172852'
   }
 }
 

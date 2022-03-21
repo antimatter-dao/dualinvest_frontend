@@ -47,8 +47,8 @@ export function useReferral(): {
         Axios.post('getUserAssets', undefined, {
           account,
           chainId: chainId ?? NETWORK_CHAIN_ID,
-          currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][symbol]?.address,
-          symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][symbol]?.symbol
+          currency: CURRENCIES[(chainId ?? NETWORK_CHAIN_ID) as keyof typeof CURRENCIES]?.[symbol]?.address,
+          symbol: CURRENCIES[(chainId ?? NETWORK_CHAIN_ID) as keyof typeof CURRENCIES]?.[symbol]?.symbol
         })
       )
     )

@@ -1,5 +1,4 @@
-import { useMemo, useCallback, useState, useEffect } from 'react'
-import { useDefiVaultContract } from 'hooks/useContract'
+import { useMemo, useState, useEffect } from 'react'
 import { ChainId, ChainList, NETWORK_CHAIN_ID } from 'constants/chain'
 import { CURRENCIES, SUPPORTED_DEFI_VAULT } from 'constants/currencies'
 import { getOtherNetworkLibrary } from 'connectors/multiNetworkConnectors'
@@ -10,38 +9,20 @@ import { useActiveWeb3React } from 'hooks'
 import { useBlockNumber } from 'state/application/hooks'
 import { parseBalance } from 'utils/parseAmount'
 
+enum DefiProductDataOrder {
+  balanceOf,
+  order
+}
+
 export interface DefiProduct {
   apy: string
-  type: string
+  type: 'CALL' | 'PUT'
   expiredAt: number
   strikePrice: string
   currency: string
   investCurrency: string
   chainId: ChainId | undefined
   balance?: string
-}
-
-export function useDefiVaultCallback() {
-  const contract = useDefiVaultContract()
-  const depositETH = useCallback(
-    async (val: string): Promise<any> => {
-      if (!contract) {
-        throw Error('no contract')
-      }
-      const estimatedGas = await contract.estimateGas.depositETH({ value: val }).catch((error: Error) => {
-        console.debug(`Failed to deposit coin`, error)
-        throw error
-      })
-      return contract?.depositETH({ value: val, gasLimit: estimatedGas })
-    },
-    [contract]
-  )
-  return useMemo(
-    () => ({
-      depositETH
-    }),
-    [depositETH]
-  )
 }
 
 export function useSingleDefiVault(chainName: string, currency: string, type: string) {
@@ -80,15 +61,20 @@ export function useDefiVaultList() {
   useEffect(() => {
     const list = Object.keys(SUPPORTED_DEFI_VAULT).reduce((acc, chainId: string) => {
       const library = getOtherNetworkLibrary(+chainId)
-      const address = DEFI_VAULT_ADDRESS[+chainId as ChainId]
-      const contract = address && library ? getContract(address, DEFI_VAULT_ABI, library) : null
-      const list = SUPPORTED_DEFI_VAULT[+chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.reduce((
-        acc /*, symbol: string*/
-      ) => {
-        acc.push(Promise.all([contract?.balanceOf(account), contract?.owner()]))
-        acc.push(Promise.all([contract?.balanceOf(account), contract?.owner()]))
-        return acc
-      }, [] as any[])
+      const addresses = DEFI_VAULT_ADDRESS[+chainId as ChainId]
+
+      const list = SUPPORTED_DEFI_VAULT[+chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.reduce(
+        (acc, symbol: string) => {
+          const addressCall = addresses?.[symbol]?.CALL
+          const addressPut = addresses?.[symbol]?.PUT
+          const contractCall = addressCall && library ? getContract(addressCall, DEFI_VAULT_ABI, library) : null
+          const contractPut = addressPut && library ? getContract(addressPut, DEFI_VAULT_ABI, library) : null
+          acc.push(Promise.all([contractCall?.balanceOf(account), contractCall?.owner()]))
+          acc.push(Promise.all([contractPut?.balanceOf(account), contractPut?.owner()]))
+          return acc
+        },
+        [] as any[]
+      )
 
       acc.push(list ? Promise.all(list) : undefined)
       return acc
@@ -114,18 +100,18 @@ export function useDefiVaultList() {
   return defiVaultList
 }
 
-// { apy: string; investCurrency: Token; expiredAt: number; currency: Token }
-
 const defiVaultListUtil = (res?: any[][]) => {
   return Object.keys(SUPPORTED_DEFI_VAULT).reduce((accMain, chainId: string, idx1: number) => {
     SUPPORTED_DEFI_VAULT[+chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.map((symbol: string, idx2: number) => {
-      console.log(CURRENCIES, CURRENCIES[+chainId as ChainId], chainId)
       accMain.push({
         chainId: +chainId,
         currency: symbol,
         balance:
-          res && res[idx1][idx2][0]
-            ? parseBalance(res[idx1][idx2][0].toString(), CURRENCIES[+chainId as ChainId][symbol])
+          res && res[idx1][idx2 * 2][DefiProductDataOrder.balanceOf]
+            ? parseBalance(
+                res[idx1][idx2][DefiProductDataOrder.balanceOf].toString(),
+                CURRENCIES[+chainId as ChainId][symbol]
+              )
             : '-',
         type: 'CALL',
         apy: '100%',
@@ -137,8 +123,11 @@ const defiVaultListUtil = (res?: any[][]) => {
         chainId: +chainId,
         currency: symbol,
         balance:
-          res && res[idx1][idx2][0]
-            ? parseBalance(res[idx1][idx2][0].toString(), CURRENCIES[+chainId as ChainId]['USDT'])
+          res && res[idx1][idx2 * 2 + 1][DefiProductDataOrder.balanceOf]
+            ? parseBalance(
+                res[idx1][idx2][DefiProductDataOrder.balanceOf].toString(),
+                CURRENCIES[+chainId as ChainId]['USDT']
+              )
             : '-',
         type: 'PUT',
         apy: '100%',

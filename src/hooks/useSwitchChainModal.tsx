@@ -4,17 +4,20 @@ import { useActiveWeb3React } from 'hooks'
 import SwitchChainModal from 'components/Modal/SwitchChainModal'
 import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
 
-export function useSwitchChainModal(toChainId = NETWORK_CHAIN_ID) {
+export function useSwitchChainModal() {
   const { chainId } = useActiveWeb3React()
   const { showModal, hideModal } = useModal()
 
-  const switchChain = useCallback(() => {
-    if (chainId !== toChainId) {
-      if (!chainId) return
-      showModal(<SwitchChainModal fromChain={ChainListMap[chainId]} toChain={ChainListMap[toChainId]} />)
-      return
-    }
-  }, [chainId, showModal, toChainId])
+  const switchChain = useCallback(
+    (toChainId = NETWORK_CHAIN_ID) => {
+      if (chainId !== toChainId) {
+        if (!chainId) return
+        showModal(<SwitchChainModal fromChain={ChainListMap[chainId]} toChain={ChainListMap[toChainId]} />)
+        return
+      }
+    },
+    [chainId, showModal]
+  )
 
   useEffect(() => {
     hideModal()
