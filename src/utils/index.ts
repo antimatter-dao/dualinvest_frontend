@@ -83,6 +83,10 @@ const chains: ChainObject = {
   [ChainId.AVAX]: {
     link: 'https://cchain.explorer.avax.network',
     builder: explorers.blockscout
+  },
+  [ChainId.RINKEBY]: {
+    link: 'https://rinkeby.etherscan.io/',
+    builder: explorers.etherscan
   }
 }
 

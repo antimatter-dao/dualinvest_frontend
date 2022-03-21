@@ -11,6 +11,21 @@ import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { InvestStatus } from './useAccountData'
 import { NETWORK_CHAIN_ID } from 'constants/chain'
 
+export function useRecurProcuctList() {
+  const [productList, setProductList] = useState<RecurProductList | undefined>(undefined)
+  const { chainId } = useActiveWeb3React()
+
+  const promiseFn = useCallback(
+    () => Axios.get<RecurProductRaw>('getReinProducts', { chainId: chainId ?? NETWORK_CHAIN_ID }),
+    [chainId]
+  )
+  const callbackFn = useCallback(r => setProductList(recurProductListFormatter(r.data.data)), [])
+
+  usePollingWithMaxRetries(promiseFn, callbackFn, 60000)
+
+  return productList
+}
+
 export function useSingleRecurProcuct(currency: string, type: string) {
   const [productList, setProductList] = useState<RecurProduct | undefined>(undefined)
   const { chainId } = useActiveWeb3React()
@@ -141,4 +156,30 @@ export function useRecurActiveOrderCount(
   usePollingWithMaxRetries(curSymbol ? promiseFn : undefined, callbackFn, 30000)
 
   return count
+}
+
+export function useLastCycleRecurDetails(currencyAddress: string | undefined, vaultAddress: string | undefined) {
+  const [details, setDetails] = useState<undefined | PrevRecur>(undefined)
+  const { account, chainId } = useActiveWeb3React()
+
+  useEffect(() => {
+    if (!currencyAddress || !currencyAddress) return
+    ;(async () => {
+      try {
+        const r = await Axios.get<any>('lastCycleProductDetail', {
+          account: account,
+          currency: currencyAddress,
+          vault: vaultAddress,
+          chainId: chainId ?? NETWORK_CHAIN_ID
+        })
+        if (r.data.data) {
+          setDetails(prevRecurDetailsFormatter(r.data.data))
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    })()
+  }, [account, chainId, currencyAddress, vaultAddress])
+
+  return details
 }

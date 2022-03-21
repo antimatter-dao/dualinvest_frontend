@@ -104,6 +104,7 @@ export function useDefiVaultList() {
         const mappedRes = defiVaultListUtil(res)
         setDefiVaultList(mappedRes)
       } catch (e) {
+        console.error(e)
         setDefiVaultList(null)
       }
     })()
@@ -118,6 +119,7 @@ export function useDefiVaultList() {
 const defiVaultListUtil = (res?: any[][]) => {
   return Object.keys(SUPPORTED_DEFI_VAULT).reduce((accMain, chainId: string, idx1: number) => {
     SUPPORTED_DEFI_VAULT[+chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.map((symbol: string, idx2: number) => {
+      console.log(CURRENCIES, CURRENCIES[+chainId as ChainId], chainId)
       accMain.push({
         chainId: +chainId,
         currency: symbol,

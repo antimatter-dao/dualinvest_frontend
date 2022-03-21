@@ -5,6 +5,7 @@ import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { usePriceForAll } from './usePriceSet'
 import { SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { useActiveWeb3React } from 'hooks'
 
 type DualStatisticsType =
   | {
@@ -21,8 +22,10 @@ function replaceAll(str: string, match: string, replace: string) {
 export function useDualStatistics(): DualStatisticsType {
   const indexPrices = usePriceForAll()
   const [statistics, setStatistics] = useState<DualStatisticsType>(undefined)
+  const { chainId } = useActiveWeb3React()
 
-  const promistFn = useCallback(() => Axios.get('getDashboard'), [])
+  const promistFn = useCallback(() => Axios.get('getDashboard', { chainId: chainId ?? NETWORK_CHAIN_ID }), [chainId])
+
   const callbackFn = useCallback(r => {
     setStatistics(r.data.data)
   }, [])
@@ -31,12 +34,14 @@ export function useDualStatistics(): DualStatisticsType {
 
   const result = useMemo(() => {
     if (!statistics) return undefined
+
     const totalDeposit = indexPrices
       ? toLocaleNumberString(
-          SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].reduce((acc: number, symbol: string) => {
+          SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].reduce((acc: number, symbol: string) => {
             acc +=
-              (+statistics[`total${symbol[0] + symbol.slice(1).toLowerCase()}Deposit` as keyof typeof statistics] ??
-                0) * +(indexPrices[symbol as keyof typeof indexPrices] ?? 0)
+              +(
+                statistics[`total${symbol[0] + symbol.slice(1).toLowerCase()}Deposit` as keyof typeof statistics] ?? 0
+              ) * +(indexPrices[symbol as keyof typeof indexPrices] ?? 0)
             return acc
           }, 0) + +statistics.totalUsdtDeposit,
           0
@@ -44,17 +49,18 @@ export function useDualStatistics(): DualStatisticsType {
       : '-'
 
     return { ...statistics, totalDeposit }
-  }, [indexPrices, statistics])
+  }, [chainId, indexPrices, statistics])
 
   return result
 }
 
 export function useRecurStatistics() {
   const [statistics, setStatistics] = useState<{ totalProgress: string; totalReInvest: string } | undefined>(undefined)
+  const { chainId } = useActiveWeb3React()
 
   const promiseFn = useCallback(() => {
-    return Axios.get('getReinDashboard')
-  }, [])
+    return Axios.get('getReinDashboard', { chainId: chainId ?? NETWORK_CHAIN_ID })
+  }, [chainId])
 
   const callbackFn = useCallback(r => {
     if (r.data.data) {
