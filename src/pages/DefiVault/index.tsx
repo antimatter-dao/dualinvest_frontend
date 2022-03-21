@@ -67,7 +67,7 @@ export default function DefiVault() {
         gridTemplateColumns={{ xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' }}
         padding={{ xs: '0 20px', lg: '0' }}
         sx={{
-          maxWidth: theme => ({ xs: `calc(100%)`, lg: theme.width.maxContent })
+          maxWidth: theme => ({ xs: '100%', lg: theme.width.maxContent })
         }}
       >
         {allList === null && <Typography>No vault available</Typography>}

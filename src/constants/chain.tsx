@@ -7,7 +7,10 @@ import { ReactComponent as AVAX } from 'assets/svg/avax.svg'
 import AVAXUrl from 'assets/svg/avax.svg'
 import { ReactComponent as AVAXBg } from 'assets/svg/avax_bg.svg'
 import { ReactComponent as BSCBg } from 'assets/svg/bsc_bg.svg'
+import { ReactComponent as ETHBg } from 'assets/svg/eth_bg.svg'
 import { ReactComponent as AVAXBgFilled } from 'assets/svg/avax_bg_filled.svg'
+import { ReactComponent as ETHBgFilled } from 'assets/svg/eth_bg_filled.svg'
+import { ReactComponent as BSCBgFilled } from 'assets/svg/bsc_bg_filled.svg'
 
 export enum ChainId {
   MAINNET = 1,
@@ -154,9 +157,16 @@ export const SUPPORTED_NETWORKS: {
 
 export const ChainsBgImgs: { [key in ChainId]?: JSX.Element } = {
   [ChainId.AVAX]: <AVAXBg />,
-  [ChainId.BSC]: <BSCBg />
+  [ChainId.BSC]: <BSCBg />,
+  [ChainId.MAINNET]: <ETHBg />,
+  [ChainId.RINKEBY]: <AVAXBg />,
+  [ChainId.ROPSTEN]: <BSCBg />
 }
 
 export const ChainsBgImgsFilled: { [key in ChainId]?: JSX.Element } = {
-  [ChainId.AVAX]: <AVAXBgFilled />
+  [ChainId.AVAX]: <AVAXBgFilled />,
+  [ChainId.MAINNET]: <ETHBgFilled />,
+  [ChainId.RINKEBY]: <AVAXBgFilled />,
+  [ChainId.ROPSTEN]: <BSCBgFilled />,
+  [ChainId.BSC]: <BSCBgFilled />
 }

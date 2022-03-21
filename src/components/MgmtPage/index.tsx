@@ -10,6 +10,7 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import { RiskStatement, FAQ, Subject } from './stableContent'
 import { LogoTitle } from './LogoTitle'
 import { DefiTemplateImage } from './DefiTemplateImage'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 // import { useSuccessImage } from 'hooks/useSuccessImage'
 
 const StyledUnorderList = styled('ul')(({ theme }) => ({
@@ -120,8 +121,8 @@ export default function MgmtPage(props: Props) {
                       : `put selling strategy`
                   }`}
                   logoCurSymbol={product?.investCurrency ?? ''}
-                />{' '}
-                <DefiTemplateImage chainId={43114} />
+                />
+                <DefiTemplateImage chainId={product?.chainId ?? NETWORK_CHAIN_ID} />
               </>
             )}
 

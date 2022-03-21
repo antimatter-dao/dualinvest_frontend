@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
 import { ChainId, ChainList, NETWORK_CHAIN_ID } from 'constants/chain'
-import { CURRENCIES, SUPPORTED_DEFI_VAULT } from 'constants/currencies'
+import { CURRENCIES, SUPPORTED_CURRENCIES, SUPPORTED_DEFI_VAULT } from 'constants/currencies'
 import { getOtherNetworkLibrary } from 'connectors/multiNetworkConnectors'
 import { getContract } from 'utils'
 import { DEFI_VAULT_ADDRESS } from 'constants/index'
@@ -25,7 +25,7 @@ export interface DefiProduct {
   balance?: string
 }
 
-export function useSingleDefiVault(chainName: string, currency: string, type: string) {
+export function useSingleDefiVault(chainName: string, currency: string, type: string): DefiProduct | null {
   const cur = currency.toUpperCase()
   const productChainId: number = useMemo(() => {
     return ChainList.find(chain => chain.symbol.toUpperCase() === chainName.toUpperCase())?.id ?? NETWORK_CHAIN_ID
@@ -38,16 +38,13 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
       return {
         chainId: productChainId,
         type: type.toUpperCase() === 'CALL' ? 'CALL' : 'PUT',
-        currency: CURRENCIES[productChainId as keyof typeof CURRENCIES]?.[cur]?.symbol ?? '',
-        investCurrency:
-          type.toUpperCase() === 'CALL'
-            ? CURRENCIES[productChainId as keyof typeof CURRENCIES]?.[cur]?.symbol ?? ''
-            : 'USDT',
+        currency: SUPPORTED_CURRENCIES[cur]?.symbol ?? '',
+        investCurrency: type.toUpperCase() === 'CALL' ? SUPPORTED_CURRENCIES[cur]?.symbol ?? '' : 'USDT',
         strikePrice: '30000',
         expiredAt: 1000000000000000,
         apy: '100%',
         orderLimitU: '1000'
-      }
+      } as DefiProduct
     }
   }, [cur, currency, productChainId, type])
   return result

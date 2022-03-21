@@ -28,7 +28,7 @@ export default function VaultProductCard({
       display="grid"
       width="100%"
       gap={'32px'}
-      margin={{ xs: '0px 20px' }}
+      margin={{ xs: '0px auto' }}
       position="relative"
       overflow="hidden"
       sx={{
@@ -39,7 +39,7 @@ export default function VaultProductCard({
         width: '100%'
       }}
     >
-      <Box position="absolute" right={-45} top={-75}>
+      <Box position="absolute" left={182} bottom={380}>
         {ChainsBgImgs[onChain]}
       </Box>
 
