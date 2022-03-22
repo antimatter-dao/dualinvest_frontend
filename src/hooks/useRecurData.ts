@@ -142,29 +142,3 @@ export function useRecurActiveOrderCount(
 
   return count
 }
-
-export function useLastCycleRecurDetails(currencyAddress: string | undefined, vaultAddress: string | undefined) {
-  const [details, setDetails] = useState<undefined | PrevRecur>(undefined)
-  const { account, chainId } = useActiveWeb3React()
-
-  useEffect(() => {
-    if (!currencyAddress || !currencyAddress) return
-    ;(async () => {
-      try {
-        const r = await Axios.get<any>('lastCycleProductDetail', {
-          account: account,
-          currency: currencyAddress,
-          vault: vaultAddress,
-          chainId: chainId ?? NETWORK_CHAIN_ID
-        })
-        if (r.data.data) {
-          setDetails(prevRecurDetailsFormatter(r.data.data))
-        }
-      } catch (e) {
-        console.error(e)
-      }
-    })()
-  }, [account, chainId, currencyAddress, vaultAddress])
-
-  return details
-}

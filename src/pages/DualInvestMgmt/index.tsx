@@ -18,12 +18,12 @@ export default function DualInvestMgmt() {
   const strikePrice = product?.strikePrice ?? '-'
   const type = product?.type
   const isCall = type === 'CALL'
-  const gtStr = `${
+  const gtStr = `\n${
     product && amount
       ? ((+product.price + 1) * (isCall ? +product.strikePrice : 1) * +amount * +product.multiplier).toFixed(4)
       : '-'
   } \n${product ? (isCall ? product?.strikeCurrency : product?.currency) : ''} `
-  const ltStr = `${
+  const ltStr = `\n${
     product && amount
       ? ((isCall ? 1 : +product.strikePrice) * (1 + +product.price) * +amount * +product.multiplier).toFixed(4)
       : '-'

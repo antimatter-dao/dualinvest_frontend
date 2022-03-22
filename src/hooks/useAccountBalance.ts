@@ -5,6 +5,7 @@ import { Axios } from 'utils/axios'
 import { assetBalanceFormatter, BalanceInfo } from 'utils/fetch/balance'
 import { CURRENCIES, SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import { ChainId, NETWORK_CHAIN_ID } from 'constants/chain'
+import { trimNumberString } from 'utils/trimNumberString'
 
 type AccountBalanceType = {
   [key: typeof SUPPORTED_CURRENCY_SYMBOL[ChainId][number]]: BalanceInfo | undefined
@@ -53,17 +54,18 @@ export function useAccountBalances(): AccountBalanceType {
     return usdtRes
       ? {
           ...usdtRes,
-          totalInvest: usdtRes.totalInvest
+          totalInvest: usdtRes.totalInvest ? trimNumberString(usdtRes.totalInvest, 2) : '-'
         }
       : undefined
   }, [usdtRes])
+
   const result = useMemo(() => {
     const resultMap = SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].reduce((acc, symbol, idx) => {
       const res = allRes?.[idx]?.data?.data?.Available ? assetBalanceFormatter(allRes[idx].data.data) : undefined
       acc[symbol] = res
         ? {
             ...res,
-            totalInvest: res.totalInvest ?? '-'
+            totalInvest: res.totalInvest ? trimNumberString(res.totalInvest, 2) : '-'
           }
         : undefined
       return acc

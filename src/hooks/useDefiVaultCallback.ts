@@ -44,9 +44,16 @@ export function useDefiVaultCallback(
     [chainId, currencySymbol, deposit, depositETH]
   )
 
-  const withdrawCallback = useCallback(() => {
-    return {}
-  }, [])
+  const withdrawCallback = useCallback(async (): Promise<any> => {
+    if (!contract) {
+      throw Error('no contract')
+    }
+    const estimatedGas = await contract.estimateGas.withdraw().catch((error: Error) => {
+      console.debug(`Failed to deposit token`, error)
+      throw error
+    })
+    return contract?.withdraw({ gasLimit: estimatedGas })
+  }, [contract])
 
   return useMemo(
     () => ({

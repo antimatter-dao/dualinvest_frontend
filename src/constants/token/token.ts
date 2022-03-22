@@ -79,5 +79,5 @@ export const WETH = {
     'Wrapped ETH'
   ),
   [ChainId.BSC]: new Token(ChainId.BSC, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'Wrapped BNB'),
-  [ChainId.AVAX]: new Token(ChainId.AVAX, '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', 18, 'WAVAX', 'Wrapped HT')
+  [ChainId.AVAX]: new Token(ChainId.AVAX, '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', 18, 'WAVAX', 'Wrapped AXAX')
 }

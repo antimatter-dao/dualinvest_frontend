@@ -6,24 +6,31 @@ import Image from 'components/Image'
 import { Chain } from 'models/chain'
 import Modal from '.'
 import { useCallback } from 'react'
-import { ChainId, SUPPORTED_NETWORKS } from 'constants/chain'
+import { SUPPORTED_NETWORKS } from 'constants/chain'
 import { useActiveWeb3React } from 'hooks'
 
-export default function SwitchChainModal({ fromChain, toChain }: { fromChain: Chain | null; toChain: Chain | null }) {
+export default function SwitchChainModal({
+  fromChain,
+  toChain,
+  onConfirm
+}: {
+  fromChain: Chain | null
+  toChain: Chain | null
+  onConfirm?: () => void
+}) {
   const theme = useTheme()
   const { library, account } = useActiveWeb3React()
+
   const handleSwitchChain = useCallback(() => {
     if (!toChain?.id) return
     if ([1, 3, 4, 5, 42].includes(toChain.id)) {
-      library?.send('wallet_switchEthereumChain', [
-        { chainId: SUPPORTED_NETWORKS[toChain?.id as ChainId]?.chainId },
-        account
-      ])
+      library?.send('wallet_switchEthereumChain', [{ chainId: toChain?.hex }, account])
     } else {
-      const params = SUPPORTED_NETWORKS[toChain?.id as ChainId]
+      const params = SUPPORTED_NETWORKS[toChain?.id as keyof typeof SUPPORTED_NETWORKS]
       library?.send('wallet_addEthereumChain', [params, account])
     }
   }, [account, library, toChain])
+
   return (
     <Modal>
       <Box padding="40px" display="grid" gap="32px" justifyItems="center" width="100%">
@@ -67,7 +74,7 @@ export default function SwitchChainModal({ fromChain, toChain }: { fromChain: Ch
             </OutlinedCard>
           </Box>
         )}
-        <Button onClick={handleSwitchChain}>Confirm</Button>
+        <Button onClick={onConfirm ?? handleSwitchChain}>Confirm</Button>
       </Box>
     </Modal>
   )

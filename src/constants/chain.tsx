@@ -28,7 +28,7 @@ export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
 
 export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
   ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.AVAX]
-  : [ChainId.BSC]
+  : [ChainId.BSC, ChainId.AVAX, ChainId.MAINNET]
 
 export const ChainList: Chain[] = [
   ...(IS_TEST_NET

@@ -121,6 +121,7 @@ export default function Home() {
               unitSize={isDownMd ? '12px' : '16px'}
               border
               subValue={isDownMd ? 'Total investment amount' : undefined}
+              padding="24px"
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -133,6 +134,7 @@ export default function Home() {
               unitSize={isDownMd ? '12px' : '16px'}
               border
               subValue={isDownMd ? 'Amount of investment in progress' : undefined}
+              padding="24px"
             />
           </Grid>
         </Grid>

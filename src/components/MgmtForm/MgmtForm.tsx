@@ -209,14 +209,14 @@ export function MgmtForm({
                 <>
                   <Typography component="span" color="error" fontSize={12}>
                     Insufficient Balance.
-                  </Typography>
+                  </Typography>{' '}
                   Please recharge your account first before opening wealth management
                 </>
               ) : (
                 <>
-                  <Typography component="span" color="error" fontSize={12} sx={{ display: 'block' }}>
+                  <Typography component="span" color="error" fontSize={12}>
                     Single Limit Exceeded.
-                  </Typography>
+                  </Typography>{' '}
                   Single financial management limit is {product?.multiplier ?? '-'}~
                   {product ? +product?.orderLimit * +product?.multiplier : '-'} BTC
                 </>

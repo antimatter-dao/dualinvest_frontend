@@ -46,7 +46,7 @@ const RecordType: { [key in number]: 'withdraw' | 'deposit' | 'vault deposit' | 
   4: 'vault withdraw'
 }
 
-const BalanceTableHeader = ['', 'Deposit Amount', 'Available', 'Investing (Locked)', 'PnL', '']
+const BalanceTableHeader = ['', 'Deposit Amount', 'Available', 'Investing (Locked)', 'PnL', 'Recur', '']
 const DetailTableHeader = ['Type', 'Token', 'Amount', 'Date']
 
 function TokenHeader({ token }: { token: Currency }) {
