@@ -24,7 +24,7 @@ export function useDualStatistics(): DualStatisticsType {
   const [statistics, setStatistics] = useState<DualStatisticsType>(undefined)
   const { chainId } = useActiveWeb3React()
 
-  const promistFn = useCallback(() => Axios.get('getDashboard', { chainId: chainId ?? NETWORK_CHAIN_ID }), [chainId])
+  const promistFn = useCallback(() => Axios.get('getDashboard', { chainId: NETWORK_CHAIN_ID }), [])
 
   const callbackFn = useCallback(r => {
     setStatistics(r.data.data)

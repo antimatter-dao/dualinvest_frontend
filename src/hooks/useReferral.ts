@@ -19,7 +19,7 @@ export function useReferral(): {
   balance: ReferBalanceType
 } {
   const [allRes, setAllRes] = useState<any | undefined>(undefined)
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const contract = useDualInvestContract()
 
   const args = useMemo(() => [account ?? undefined], [account])
@@ -46,13 +46,13 @@ export function useReferral(): {
       ['USDT', 'BTC'].map(symbol =>
         Axios.post('getUserAssets', undefined, {
           account,
-          chainId: chainId ?? NETWORK_CHAIN_ID,
-          currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][symbol]?.address,
-          symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][symbol]?.symbol
+          chainId: NETWORK_CHAIN_ID,
+          currency: CURRENCIES[NETWORK_CHAIN_ID][symbol]?.address,
+          symbol: CURRENCIES[NETWORK_CHAIN_ID][symbol]?.symbol
         })
       )
     )
-  }, [account, chainId])
+  }, [account])
 
   const allTokenCallbackFn = useCallback(r => {
     setAllRes(r)

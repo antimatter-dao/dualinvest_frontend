@@ -19,6 +19,7 @@ import UNISOCKS_ABI from '../constants/abis/unisocks.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -103,5 +104,7 @@ export function useAntiMatterGovernanceContract(): Contract | null {
 }
 
 export function useDualInvestContract(): Contract | null {
-  return useContract(DUAL_INVEST_ADDRESS, DUAL_INVEST_ABI, true)
+  const { chainId } = useActiveWeb3React()
+
+  return useContract(DUAL_INVEST_ADDRESS[chainId ?? NETWORK_CHAIN_ID], DUAL_INVEST_ABI, true)
 }
