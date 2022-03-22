@@ -14,7 +14,7 @@ export function useDefiVaultCallback(
       if (!contract) {
         throw Error('no contract')
       }
-      return contract?.depositETH({ value: val, gasLimit: 70000000 })
+      return contract?.depositETH({ value: val })
     },
     [contract]
   )

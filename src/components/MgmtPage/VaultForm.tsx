@@ -15,6 +15,7 @@ import { CURRENCIES } from 'constants/currencies'
 import { tryParseAmount } from 'utils/parseAmount'
 import { DEFI_VAULT_ADDRESS } from 'constants/index'
 import ActionButton from 'components/Button/ActionButton'
+import { useSwitchChainModal } from 'hooks/useSwitchChainModal'
 
 enum TYPE {
   invest = 'Invest',
@@ -135,7 +136,8 @@ function Form({
     tryParseAmount(val, productChainId ? CURRENCIES[productChainId ?? '']?.[currencySymbol] : undefined),
     productChainId ? DEFI_VAULT_ADDRESS[productChainId]?.[currencySymbol]?.[isCall ? 'CALL' : 'PUT'] : undefined
   )
-
+  const { switchChainCallback } = useSwitchChainModal()
+  console.log(approvalState)
   const handleMax = useCallback(() => {
     onChange &&
       onChange(type === TYPE.invest ? +(available ?? '0') : formData['Redeemable:'].replace(currencySymbol, ''))
@@ -190,7 +192,7 @@ function Form({
           </Button>
         )}
         {account && !(chainId === productChainId) && (
-          <BlackButton onClick={toggleWallet}>
+          <BlackButton onClick={switchChainCallback(productChainId)}>
             Switch to {productChainId && SUPPORTED_NETWORKS[productChainId]?.chainName}
           </BlackButton>
         )}
