@@ -2,7 +2,7 @@ import { Suspense, useEffect } from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { styled } from '@mui/material'
 import Header from '../components/Header'
-import Polling from '../components/essential/Polling'
+// import Polling from '../components/essential/Polling'
 import Popups from '../components/essential/Popups'
 import Web3ReactManager from '../components/essential/Web3ReactManager'
 import WarningModal from '../components/Modal/WarningModal'
@@ -67,7 +67,7 @@ export default function App() {
             <Header />
             <BodyWrapper id="body">
               <Popups />
-              <Polling />
+              {/* <Polling /> */}
               <WarningModal />
               <ScrollToTop />
               <Web3ReactManager>

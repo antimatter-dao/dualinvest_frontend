@@ -10,11 +10,6 @@ import { ErrorType } from 'pages/DefiVaultMgmt/VaultForm'
 import Divider from 'components/Divider'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { ChainId, SUPPORTED_NETWORKS } from 'constants/chain'
-import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
-import { CURRENCIES } from 'constants/currencies'
-import { tryParseAmount } from 'utils/parseAmount'
-import { DEFI_VAULT_ADDRESS } from 'constants/index'
-import ActionButton from 'components/Button/ActionButton'
 import { useSwitchChainModal } from 'hooks/useSwitchChainModal'
 
 enum TYPE {
@@ -132,12 +127,7 @@ function Form({
   const { account } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
   const { chainId } = useActiveWeb3React()
-  const [approvalState, approveCallback] = useApproveCallback(
-    tryParseAmount(val, productChainId ? CURRENCIES[productChainId ?? '']?.[currencySymbol] : undefined),
-    productChainId ? DEFI_VAULT_ADDRESS[productChainId]?.[currencySymbol]?.[isCall ? 'CALL' : 'PUT'] : undefined
-  )
   const { switchChainCallback } = useSwitchChainModal()
-  console.log(approvalState)
   const handleMax = useCallback(() => {
     onChange &&
       onChange(type === TYPE.invest ? +(available ?? '0') : formData['Redeemable:'].replace(currencySymbol, ''))
@@ -177,16 +167,7 @@ function Form({
         </Box>
       )}
       <Box mt={16}>
-        {account && chainId === productChainId && approvalState !== ApprovalState.APPROVED && (
-          <ActionButton
-            actionText="Approve"
-            onAction={approveCallback}
-            disableAction={disabled || !!error}
-            pending={approvalState === ApprovalState.PENDING}
-            pendingText="Approving"
-          ></ActionButton>
-        )}
-        {account && chainId === productChainId && approvalState === ApprovalState.APPROVED && (
+        {account && chainId === productChainId && (
           <Button onClick={onClick} disabled={disabled || !!error}>
             {type}
           </Button>

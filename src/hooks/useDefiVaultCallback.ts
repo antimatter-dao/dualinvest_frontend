@@ -1,12 +1,14 @@
 import { useCallback, useMemo } from 'react'
 import { ChainId, SUPPORTED_NETWORKS } from 'constants/chain'
 import { useDefiVaultContract } from './useContract'
+import { useActiveWeb3React } from 'hooks'
 
 export function useDefiVaultCallback(
   chainId: ChainId | undefined,
   currencySymbol: string | undefined,
   type: 'CALL' | 'PUT' | undefined
 ) {
+  const { account } = useActiveWeb3React()
   const contract = useDefiVaultContract(chainId, currencySymbol, type)
 
   const depositETH = useCallback(
@@ -48,12 +50,15 @@ export function useDefiVaultCallback(
     if (!contract) {
       throw Error('no contract')
     }
-    const estimatedGas = await contract.estimateGas.withdraw().catch((error: Error) => {
-      console.debug(`Failed to deposit token`, error)
-      throw error
-    })
-    return contract?.withdraw({ gasLimit: estimatedGas })
-  }, [contract])
+    const amount = await contract.depositReceipts(account)
+    const estimatedGas = await contract.estimateGas
+      .withdrawInstantly(amount.amount.toString())
+      .catch((error: Error) => {
+        console.debug(`Failed to deposit token`, error)
+        throw error
+      })
+    return contract?.withdrawInstantly(amount.amount.toString(), { gasLimit: estimatedGas })
+  }, [account, contract])
 
   return useMemo(
     () => ({

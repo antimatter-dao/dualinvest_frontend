@@ -254,7 +254,7 @@ export default function VaultForm({
             <VaultFormComponent
               error={error}
               productChainId={product?.chainId}
-              redeemDisabled={!product || !+autoBalance || chainId !== product?.chainId}
+              redeemDisabled={!product || chainId !== product?.chainId}
               investDisabled={!product || !investAmount || chainId !== product?.chainId}
               onWithdraw={handleRedeemConfirmOpen}
               onInvest={handleInvestConfirmOpen}
