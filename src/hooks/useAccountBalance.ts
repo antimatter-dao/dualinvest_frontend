@@ -24,8 +24,9 @@ const getRecurTotal = (balanceLocked: string, balanceAvailable: string) => {
 }
 
 const formatRecur = (available: any, locked: any, token: Token) => {
-  const recurAvailable = available ? trimNumberString(parseBalance(available.toString(), token, 18), 6) : '-'
-  const recurLocked = locked ? trimNumberString(parseBalance(locked.toString(), token, 18), 6) : '-'
+  const recurAvailable =
+    available && token?.decimals ? trimNumberString(parseBalance(available.toString(), token, 18), 6) : '-'
+  const recurLocked = locked && token?.decimals ? trimNumberString(parseBalance(locked.toString(), token, 18), 6) : '-'
 
   return {
     recurAvailable,
@@ -60,7 +61,7 @@ export function useAccountBalances(): AccountBalanceType {
 
   const allTokenPromiseFn = useCallback(() => {
     return Promise.all(
-      SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].map(symbol =>
+      SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].map(symbol =>
         Axios.post('getUserAssets', undefined, {
           account,
           chainId: chainId ?? NETWORK_CHAIN_ID,
@@ -93,7 +94,7 @@ export function useAccountBalances(): AccountBalanceType {
   usePollingWithMaxRetries(allTokenPromiseFn, allTokenCallbackFn, 300000, 5, true)
 
   const usdtResult: BalanceInfo | undefined = useMemo(() => {
-    const usdtRecurTotal = SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].reduce((acc, symbol, idx) => {
+    const usdtRecurTotal = SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].reduce((acc, symbol, idx) => {
       const { recurAvailable, recurLocked } = formatRecur(
         recurUsdtBalanceRes?.[idx]?.result?.[0],
         recurUsdtLockedBalanceRes?.[idx]?.result?.[0],
@@ -101,6 +102,7 @@ export function useAccountBalances(): AccountBalanceType {
       )
       return getRecurTotal(acc, getRecurTotal(recurAvailable, recurLocked))
     }, '0')
+
     return usdtRes
       ? {
           ...usdtRes,
@@ -133,6 +135,5 @@ export function useAccountBalances(): AccountBalanceType {
     resultMap.USDT = usdtResult
     return resultMap
   }, [allRes, chainId, recurBalanceRes, recurLockedBalanceRes, usdtResult])
-
   return result
 }

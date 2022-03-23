@@ -24,6 +24,8 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { useDualInvestBalance, useDualInvestCallback } from 'hooks/useDualInvest'
 import useModal from 'hooks/useModal'
 import { TokenAmount } from 'constants/token'
+import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { DEFAULT_COIN_SYMBOL } from 'constants/currencies'
 
 export enum ActionType {
   DEPOSIT = 'deposit',
@@ -50,7 +52,7 @@ export default function ActionModal({
   const actionStr = type === ActionType.DEPOSIT ? 'Deposit' : 'Withdraw'
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
-  const { connector, account } = useActiveWeb3React()
+  const { connector, account, chainId } = useActiveWeb3React()
   const theme = useTheme()
   const [hash, setHash] = useState('')
   const { hideModal, showModal } = useModal()
@@ -59,10 +61,10 @@ export default function ActionModal({
   const balanceETH = useETHBalances([account ?? undefined])?.[account ?? '']
   const txn = useTransaction(hash)
   const [approvalState, approveCallback] = useApproveCallback(
-    tryParseAmount(val, token?.symbol === 'BNB' ? ETHER : token),
-    DUAL_INVEST_ADDRESS
+    tryParseAmount(val, token?.symbol === DEFAULT_COIN_SYMBOL[chainId ?? NETWORK_CHAIN_ID] ? ETHER : token),
+    DUAL_INVEST_ADDRESS[chainId ?? NETWORK_CHAIN_ID]
   )
-  const balance = token?.symbol === 'BNB' ? balanceETH : balanceToken
+  const balance = token?.symbol === DEFAULT_COIN_SYMBOL[chainId ?? NETWORK_CHAIN_ID] ? balanceETH : balanceToken
 
   // const handleSelect = useCallback(e => {
   //   setSelectedCur(e.target.value)
@@ -309,7 +311,7 @@ function useActionCallback(
   setHash: (hash: string) => void,
   onError: (e: Error) => void
 ) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const { showModal, hideModal } = useModal()
   const { depositCallback, withdrawCallback, depositETHCallback } = useDualInvestCallback()
   const addTransaction = useTransactionAdder()
@@ -319,7 +321,7 @@ function useActionCallback(
     showModal(<TransactionPendingModal />)
     try {
       const r =
-        token.symbol === 'BNB'
+        token.symbol === DEFAULT_COIN_SYMBOL[chainId ?? NETWORK_CHAIN_ID]
           ? await depositETHCallback(val, token.address)
           : await depositCallback(val, token.address)
 
@@ -332,7 +334,19 @@ function useActionCallback(
     } catch (e) {
       onError(e as Error)
     }
-  }, [token, depositCallback, val, account, depositETHCallback, showModal, onError, hideModal, setHash, addTransaction])
+  }, [
+    token,
+    depositCallback,
+    val,
+    account,
+    depositETHCallback,
+    showModal,
+    chainId,
+    hideModal,
+    setHash,
+    addTransaction,
+    onError
+  ])
 
   const handleWithdraw = useCallback(() => {
     if (!token || !withdrawCallback || !val || !account) return
