@@ -5,6 +5,8 @@ import EthLogo from 'assets/svg/eth_logo.svg'
 import BSCLogo from 'assets/svg/binance.svg'
 import AVAXLogo from 'assets/svg/avax.svg'
 import LUNALogo from 'assets/svg/luna.svg'
+import MATICLogo from 'assets/svg/matic.svg'
+import CAKELogo from 'assets/svg/cake.svg'
 import { ChainId, ChainList } from './chain'
 
 export const SYMBOL_MAP = {
@@ -16,11 +18,14 @@ export const SYMBOL_MAP = {
   BNB: 'BNB',
   WBNB: 'BNB',
   AVAX: 'AVAX',
-  LUNA: 'LUNA'
+  WAVAX: 'AVAX',
+  LUNA: 'LUNA',
+  MATIC: 'MATIC',
+  CAKE: 'CAKE'
 }
 
 export const SUPPORTED_CURRENCY_SYMBOL = {
-  [ChainId.BSC]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB, SYMBOL_MAP.AVAX],
+  [ChainId.BSC]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB, SYMBOL_MAP.AVAX, SYMBOL_MAP.CAKE, SYMBOL_MAP.MATIC],
   [ChainId.ROPSTEN]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB, SYMBOL_MAP.AVAX],
   [ChainId.MAINNET]: [SYMBOL_MAP.ETH],
   [ChainId.AVAX]: [SYMBOL_MAP.AVAX],
@@ -65,11 +70,12 @@ export const SUPPORTED_CURRENCIES: {
       [ChainId.BSC]: '0x55d398326f99059fF775485246999027B3197955',
       [ChainId.AVAX]: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
       [ChainId.MAINNET]: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-      [ChainId.RINKEBY]: '0xE78D911B56a6321bF622172D32D916f9563e8D84'
+      [ChainId.RINKEBY]: '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16'
     },
     decimals: 18,
     symbol: 'USDT',
-    name: 'Binance-Peg BSC-USDT',
+    name: 'Tether USD',
+    // name: 'Binance-Peg BSC-USDT',
     logoUrl: UsdtLogo,
     color: '#1BA27A'
   },
@@ -113,12 +119,25 @@ export const SUPPORTED_CURRENCIES: {
     address: {
       [ChainId.AVAX]: '0x264c1383EA520f73dd837F915ef3a732e204a493',
       [ChainId.ROPSTEN]: '0x2bb4CE1e3e239D255973015459C50F307A399aCf',
-      [ChainId.RINKEBY]: '0x2bb4CE1e3e239D255973015459C50F307A399aCf',
+      [ChainId.RINKEBY]: '0xA4560E8B4694B437d77452eBc2dE179AAA1137C3',
       [ChainId.BSC]: '0x1CE0c2827e2eF14D5C4f29a091d735A204794041'
     },
     decimals: 18,
     symbol: 'AVAX',
     name: 'Avalanche Token',
+    logoUrl: AVAXLogo,
+    color: '#E3453D'
+  },
+  WAVAX: {
+    address: {
+      [ChainId.AVAX]: '0x264c1383EA520f73dd837F915ef3a732e204a493',
+      [ChainId.ROPSTEN]: '0x2bb4CE1e3e239D255973015459C50F307A399aCf',
+      [ChainId.RINKEBY]: '0xA4560E8B4694B437d77452eBc2dE179AAA1137C3',
+      [ChainId.BSC]: '0x1CE0c2827e2eF14D5C4f29a091d735A204794041'
+    },
+    decimals: 18,
+    symbol: 'AVAX',
+    name: 'Wrapped AVAX',
     logoUrl: AVAXLogo,
     color: '#E3453D'
   },
@@ -129,6 +148,26 @@ export const SUPPORTED_CURRENCIES: {
     name: '	Terra (LUNA)',
     logoUrl: LUNALogo,
     color: '#172852'
+  },
+  MATIC: {
+    address: {
+      [ChainId.BSC]: '0xCC42724C6683B7E57334c4E856f4c9965ED682bD'
+    },
+    decimals: 18,
+    symbol: 'MATIC',
+    name: 'Matic Token',
+    logoUrl: MATICLogo,
+    color: '#2BBDF7'
+  },
+  CAKE: {
+    address: {
+      [ChainId.BSC]: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82'
+    },
+    decimals: 18,
+    symbol: 'CAKE',
+    name: 'PancakeSwap Token',
+    logoUrl: CAKELogo,
+    color: '#1FC7D4'
   }
 }
 
@@ -173,4 +212,12 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
 export const SUPPORTED_DEFI_VAULT: { [chainId in ChainId]?: string[] } = {
   [ChainId.AVAX]: ['AVAX'],
   [ChainId.MAINNET]: ['ETH', 'BTC']
+}
+
+export const DEFAULT_COIN_SYMBOL: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: 'ETH',
+  [ChainId.BSC]: 'BNB',
+  [ChainId.ROPSTEN]: 'BNB',
+  [ChainId.AVAX]: 'AVAX',
+  [ChainId.RINKEBY]: 'AVAX'
 }

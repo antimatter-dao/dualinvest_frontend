@@ -18,7 +18,7 @@ export function useAccountBalances(): AccountBalanceType {
 
   const allTokenPromiseFn = useCallback(() => {
     return Promise.all(
-      SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].map(symbol =>
+      SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].map(symbol =>
         Axios.post('getUserAssets', undefined, {
           account,
           chainId: chainId ?? NETWORK_CHAIN_ID,

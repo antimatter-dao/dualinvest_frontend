@@ -7,8 +7,8 @@ import { Axios } from 'utils/axios'
 import { parseBalance } from 'utils/parseAmount'
 import { useDualInvestContract } from './useContract'
 import { Signature, SignatureRequest, SignatureRequestClaim, SignatureResponseClaim } from 'utils/fetch/signature'
-import { IS_TEST_NET } from 'constants/chain'
-import { CURRENCY_ADDRESS_MAP } from 'constants/currencies'
+import { IS_TEST_NET, NETWORK_CHAIN_ID } from 'constants/chain'
+import { CURRENCY_ADDRESS_MAP, DEFAULT_COIN_SYMBOL } from 'constants/currencies'
 import { toChecksumAddress } from 'web3-utils'
 
 export function useDualInvestBalance(token?: Token) {
@@ -48,7 +48,7 @@ export function useDualInvestCallback(): {
         throw Error('no contract')
       }
       const estimatedGas = await contract.estimateGas.depositETH(tokenAddress, { value: val }).catch((error: Error) => {
-        console.debug(`Failed to deposit coin`, error)
+        console.debug(`Failed to deposit ${CURRENCY_ADDRESS_MAP[tokenAddress]?.symbol}`, error)
         throw error
       })
       return contract?.depositETH(tokenAddress, { value: val, gasLimit: estimatedGas })
@@ -97,12 +97,14 @@ export function useDualInvestCallback(): {
           ]
 
           const estimatedGas =
-            CURRENCY_ADDRESS_MAP[toChecksumAddress(currency)]?.symbol === 'BNB'
+            CURRENCY_ADDRESS_MAP[toChecksumAddress(currency)]?.symbol ===
+            DEFAULT_COIN_SYMBOL[chainId ?? NETWORK_CHAIN_ID]
               ? await contract.estimateGas.withdrawETH(...withdrawArgs)
               : await contract.estimateGas.withdraw(...withdrawArgs)
 
           const contractRes =
-            CURRENCY_ADDRESS_MAP[toChecksumAddress(currency)]?.symbol === 'BNB'
+            CURRENCY_ADDRESS_MAP[toChecksumAddress(currency)]?.symbol ===
+            DEFAULT_COIN_SYMBOL[chainId ?? NETWORK_CHAIN_ID]
               ? await contract?.withdrawETH(...withdrawArgs, { gasLimit: estimatedGas })
               : await contract?.withdraw(...withdrawArgs, { gasLimit: estimatedGas })
           resolve(contractRes)
@@ -204,7 +206,3 @@ export function useDualInvestCallback(): {
 
   return res
 }
-
-// const getWithdrawSignature = (data: SignatureRequest) => Axios.getSignature<Signature>('getWithdrawSign', data)
-
-// const getFinishOrderSignature = (data: SignatureRequest2) => Axios.getSignature<any>('getFinishOrderSign', data)
