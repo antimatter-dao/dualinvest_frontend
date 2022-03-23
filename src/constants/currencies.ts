@@ -157,7 +157,7 @@ export const SUPPORTED_CURRENCIES: {
     symbol: 'MATIC',
     name: 'Matic Token',
     logoUrl: MATICLogo,
-    color: '#2BBDF7'
+    color: '#8247E5'
   },
   CAKE: {
     address: {
