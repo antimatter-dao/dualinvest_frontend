@@ -10,6 +10,7 @@ import { useDualInvestContract } from './useContract'
 import { trimNumberString } from 'utils/trimNumberString'
 import { parseBalance } from 'utils/parseAmount'
 import { Token } from 'constants/token'
+import { ZERO_ADDRESS } from 'constants/index'
 
 type AccountBalanceType = {
   [key: typeof SUPPORTED_CURRENCY_SYMBOL[ChainId][number]]: BalanceInfo | undefined
@@ -42,14 +43,14 @@ export function useAccountBalances(): AccountBalanceType {
   const args = useMemo(() => {
     const CUR = CURRENCIES[NETWORK_CHAIN_ID]
     return SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].map(key => {
-      return [CUR[key]?.address ?? '', CUR[key]?.address ?? '', account ?? undefined]
+      return [CUR[key]?.address ?? '', CUR[key]?.address ?? '', account ?? ZERO_ADDRESS]
     })
   }, [account])
 
   const argsUsdt = useMemo(() => {
     const CUR = CURRENCIES[NETWORK_CHAIN_ID]
     return SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].map(key => {
-      return [CUR[key]?.address ?? '', CUR.USDT?.address ?? '', account ?? undefined]
+      return [CUR[key]?.address ?? '', CUR.USDT?.address ?? '', account ?? ZERO_ADDRESS]
     })
   }, [account])
 

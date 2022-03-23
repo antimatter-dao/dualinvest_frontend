@@ -5,6 +5,8 @@ import EthLogo from 'assets/svg/eth_logo.svg'
 import BSCLogo from 'assets/svg/binance.svg'
 import AVAXLogo from 'assets/svg/avax.svg'
 import LUNALogo from 'assets/svg/luna.svg'
+import MATICLogo from 'assets/svg/matic.svg'
+import CAKELogo from 'assets/svg/cake.svg'
 import { ChainId, ChainList } from './chain'
 
 export const SYMBOL_MAP = {
@@ -16,11 +18,14 @@ export const SYMBOL_MAP = {
   BNB: 'BNB',
   WBNB: 'BNB',
   AVAX: 'AVAX',
-  LUNA: 'LUNA'
+  WAVAX: 'AVAX',
+  LUNA: 'LUNA',
+  MATIC: 'MATIC',
+  CAKE: 'CAKE'
 }
 
 export const SUPPORTED_CURRENCY_SYMBOL = {
-  [ChainId.BSC]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB, SYMBOL_MAP.AVAX],
+  [ChainId.BSC]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB, SYMBOL_MAP.AVAX, SYMBOL_MAP.CAKE, SYMBOL_MAP.MATIC],
   [ChainId.ROPSTEN]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB, SYMBOL_MAP.AVAX],
   [ChainId.MAINNET]: [SYMBOL_MAP.ETH],
   [ChainId.AVAX]: [SYMBOL_MAP.AVAX],
@@ -143,6 +148,26 @@ export const SUPPORTED_CURRENCIES: {
     name: 'Terra (LUNA)',
     logoUrl: LUNALogo,
     color: '#172852'
+  },
+  MATIC: {
+    address: {
+      [ChainId.BSC]: '0xCC42724C6683B7E57334c4E856f4c9965ED682bD'
+    },
+    decimals: 18,
+    symbol: 'MATIC',
+    name: 'Matic Token',
+    logoUrl: MATICLogo,
+    color: '#2BBDF7'
+  },
+  CAKE: {
+    address: {
+      [ChainId.BSC]: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82'
+    },
+    decimals: 18,
+    symbol: 'CAKE',
+    name: 'PancakeSwap Token',
+    logoUrl: CAKELogo,
+    color: '#1FC7D4'
   }
 }
 
