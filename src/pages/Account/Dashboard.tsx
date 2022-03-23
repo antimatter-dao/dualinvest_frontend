@@ -96,7 +96,9 @@ export default function Dashboard() {
 
     return records.map(record => {
       const scanLink = chainId ? getEtherscanLink(chainId, record.hash, 'transaction') : ''
-      const token = chainId ? new Token(chainId, toChecksumAddress(record.currency), 18, record.symbol) : undefined
+      const token = chainId
+        ? new Token(chainId, toChecksumAddress(record.currency), 18, record.symbol.toUpperCase())
+        : undefined
 
       return [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
