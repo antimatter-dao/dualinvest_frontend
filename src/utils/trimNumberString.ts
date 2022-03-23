@@ -1,5 +1,6 @@
 export const trimNumberString = (string: string, toDecimal?: number) => {
-  const digitIndex = string.indexOf('.')
+  const digitIndex = string?.indexOf('.')
+  if (!digitIndex) return string
   if (digitIndex === -1) return string
 
   if ((toDecimal || toDecimal === 0) && toDecimal >= 0)
