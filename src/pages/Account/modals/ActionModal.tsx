@@ -334,7 +334,19 @@ function useActionCallback(
     } catch (e) {
       onError(e as Error)
     }
-  }, [token, depositCallback, val, account, depositETHCallback, showModal, onError, hideModal, setHash, addTransaction])
+  }, [
+    token,
+    depositCallback,
+    val,
+    account,
+    depositETHCallback,
+    showModal,
+    chainId,
+    hideModal,
+    setHash,
+    addTransaction,
+    onError
+  ])
 
   const handleWithdraw = useCallback(() => {
     if (!token || !withdrawCallback || !val || !account) return
