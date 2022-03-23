@@ -159,11 +159,11 @@ export default function Dashboard() {
             <BalanceActions
               key="btc1"
               onDeposit={() => {
-                setCurrentCurrency(CURRENCIES[NETWORK_CHAIN_ID][key])
+                setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
                 handleDepositOpen()
               }}
               onWithdraw={() => {
-                setCurrentCurrency(CURRENCIES[NETWORK_CHAIN_ID][key])
+                setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
                 handleWithdrawOpen()
               }}
               buyHref={
