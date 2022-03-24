@@ -110,9 +110,10 @@ export default function MgmtPage(props: Props) {
                 Go Back
               </Typography>
             </Box>
-            <div style={{ height: '43px' }}></div>
-            {vaultForm && (
-              <>
+
+            {vaultForm && !isDownMd && (
+              <Box padding="0 24px">
+                <div style={{ height: '43px' }}></div>
                 <LogoTitle
                   title={pageTitle ?? ''}
                   description={`Generates yield by running an automated ${
@@ -123,10 +124,9 @@ export default function MgmtPage(props: Props) {
                   logoCurSymbol={product?.investCurrency ?? ''}
                 />
                 <DefiTemplateImage chainId={product?.chainId ?? NETWORK_CHAIN_ID} />
-              </>
+                <div style={{ height: '78px' }}></div>
+              </Box>
             )}
-
-            {!isDownMd && <div style={{ height: '78px' }}></div>}
           </Box>
         </Box>
 
@@ -197,12 +197,7 @@ export default function MgmtPage(props: Props) {
                     </Box>
                   </Box>
                   <Box sx={{ maxWidth: '100%', height: '100%', flexGrow: 1 }} mt={20}>
-                    <Box
-                      maxHeight="100%"
-                      height="100%"
-                      gap={0}
-                      display={{ xs: 'grid', md: 'flex', maxWidth: 'calc(100% - 100px)' }}
-                    >
+                    <Box maxHeight="100%" height="100%" gap={0} display={{ xs: 'grid', md: 'flex' }}>
                       {chart}
                     </Box>
                   </Box>

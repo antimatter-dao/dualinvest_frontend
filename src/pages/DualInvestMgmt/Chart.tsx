@@ -34,7 +34,7 @@ export default function DualInvestChart({
         xs={12}
         md={9}
         sx={{
-          height: { xs: '300px', md: '100%', maxWidth: '100%', width: { xs: '100%', md: 'auto' } }
+          height: { xs: '300px', md: '100%', maxWidth: 'calc(100% - 100px)', width: { xs: '100%', md: 'auto' } }
         }}
         ref={graphContainer}
       >
@@ -56,12 +56,12 @@ export default function DualInvestChart({
       {!isDownMd && (
         <Grid item xs={12} md={3} sx={{ height: { xs: 'auto', md: '100%' } }} paddingBottom={{ xs: 0, md: 22 }}>
           <Box display={{ xs: 'flex', md: 'grid' }} gap={20} maxWidth="100%">
-            <Card gray>
+            <Card gray width="100%">
               <Box padding="16px" fontSize={14} sx={{ overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
                 {str1}
               </Box>
             </Card>
-            <Card gray>
+            <Card gray width="100%">
               <Box
                 padding="16px"
                 fontSize={14}

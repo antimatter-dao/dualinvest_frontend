@@ -2,9 +2,7 @@ import { useState, useCallback, useMemo } from 'react'
 import { Box, Alert, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 import VaultCard from 'components/MgmtPage/VaultCard'
-import VaultFormComponent from 'components/MgmtPage/VaultForm'
 import { useActiveWeb3React } from 'hooks'
-import { RECUR_TOGGLE_STATUS, useRecurToggle } from 'hooks/useRecurData'
 import { tryParseAmount } from 'utils/parseAmount'
 import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import useModal from 'hooks/useModal'
@@ -20,6 +18,7 @@ import { useETHBalances, useTokenBalance } from 'state/wallet/hooks'
 import { DefiProduct } from 'hooks/useDefiVault'
 import { useDefiVaultCallback } from 'hooks/useDefiVaultCallback'
 import { CURRENCIES } from 'constants/currencies'
+import { Timer } from 'components/Timer'
 
 export enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -39,7 +38,11 @@ export default function VaultForm({
   const currencySymbol = product?.investCurrency ?? ''
   const investCurrency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.investCurrency ?? '']
   const currency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.currency ?? '']
-  const title = product?.type === 'CALL' ? `${currency?.name}-C` : `${currency?.name}-P`
+  const title =
+    product?.type === 'CALL'
+      ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
+      : `${product?.currency ?? ''} Put Selling Recurring Strategy`
+
   const ETHBalance = useETHBalances([account ?? undefined])?.[account ?? '']
   const tokenBalance = useTokenBalance(account ?? undefined, investCurrency)
   const [snackbarOpen, setSnackbarOpen] = useState(true)
@@ -53,7 +56,6 @@ export default function VaultForm({
       : tokenBalance?.toExact()
 
   const { depositCallback, withdrawCallback } = useDefiVaultCallback(product?.chainId, product?.currency, product?.type)
-  const { recurStatus, toggleRecur } = useRecurToggle(investCurrency?.address, currency?.address)
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()
 
@@ -61,11 +63,11 @@ export default function VaultForm({
 
   const formData = useMemo(
     () => ({
+      ['P&L:']: '-' + ' ' + currencySymbol,
       ['Current cycle invested amount:']: '-' + ' ' + currencySymbol,
-      ['Redeemable:']: '-' + ' ' + currencySymbol,
-      ['P&L:']: '-' + ' ' + currencySymbol
+      ['Progress order due time:']: <Timer timer={product?.expiredAt ?? 0} />
     }),
-    [currencySymbol]
+    [currencySymbol, product?.expiredAt]
   )
 
   const confirmData = useMemo(
@@ -112,8 +114,6 @@ export default function VaultForm({
       const r = await depositCallback(val)
       hideModal()
 
-      toggleRecur(RECUR_TOGGLE_STATUS.open)
-
       addPopup(r, {
         summary: `Subscribed ${investAmount} ${product.investCurrency} to ${
           product.type === 'CALL'
@@ -136,7 +136,6 @@ export default function VaultForm({
     showModal,
     investAmount,
     hideModal,
-    toggleRecur,
     addPopup,
     setInvestAmount
   ])
@@ -186,9 +185,8 @@ export default function VaultForm({
       <RecurConfirmModal
         isOpen={isConfirmOpen}
         onDismiss={() => setIsConfirmOpen(false)}
-        type={recurStatus !== RECUR_TOGGLE_STATUS.open ? 'on' : 'off'}
+        type={'on'}
         onConfirm={() => {
-          toggleRecur(recurStatus === RECUR_TOGGLE_STATUS.open ? RECUR_TOGGLE_STATUS.close : RECUR_TOGGLE_STATUS.open)
           setIsConfirmOpen(false)
         }}
       />
@@ -242,31 +240,15 @@ export default function VaultForm({
         )}
 
         <VaultCard
-          account={account}
           title={title}
-          priceCurSymbol={product?.currency ?? ''}
-          timer={product?.expiredAt ?? 0}
-          recurStatus={recurStatus}
-          onRecurOpen={() => {
-            setIsConfirmOpen(true)
-          }}
-          vaultForm={
-            <VaultFormComponent
-              error={error}
-              productChainId={product?.chainId}
-              redeemDisabled={!product || chainId !== product?.chainId}
-              investDisabled={!product || !investAmount || chainId !== product?.chainId}
-              onWithdraw={handleRedeemConfirmOpen}
-              onInvest={handleInvestConfirmOpen}
-              formData={formData}
-              currencySymbol={currencySymbol}
-              available={balance}
-              apy={product?.apy ?? ''}
-              onInvestChange={handleInvestChange}
-              investAmount={investAmount}
-              isCall={!!(product?.type === 'CALL')}
-            />
-          }
+          formData={formData}
+          error={error}
+          product={product}
+          onWithdraw={handleRedeemConfirmOpen}
+          onInvest={handleInvestConfirmOpen}
+          available={balance}
+          onInvestChange={handleInvestChange}
+          investAmount={investAmount}
         />
       </Box>
     </>

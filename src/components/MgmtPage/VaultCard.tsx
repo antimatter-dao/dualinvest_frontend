@@ -1,91 +1,138 @@
 import { Box, Typography } from '@mui/material'
 import Card from 'components/Card/Card'
 import ProductCardHeader from 'components/ProductCardHeader'
-import { OutlinedCard } from 'components/Card/Card'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { Timer } from 'components/Timer'
-import SwitchToggle from 'components/SwitchToggle'
 import Divider from 'components/Divider'
-import { RECUR_TOGGLE_STATUS } from 'hooks/useRecurData'
-import QuestionHelper from 'components/essential/QuestionHelper'
+import Tabs from 'components/Tabs/Tabs'
+import VaultForm from './VaultForm'
+import { DefiProduct } from 'hooks/useDefiVault'
+import { useActiveWeb3React } from 'hooks'
+import { useCallback, useState } from 'react'
+import { Timer } from 'components/Timer'
+
+export enum TYPE {
+  invest,
+  standard,
+  instant
+}
 
 interface Props {
-  logoCurSymbol?: string
   title: string
-  priceCurSymbol: string
-  account?: string | null
-  vaultForm: React.ReactNode
-  timer: number
-  recurStatus: RECUR_TOGGLE_STATUS | null
-  onRecurOpen: () => void
+  formData: { [key: string]: any }
+  available?: string
+  onInvestChange: (val: string) => void
+  investAmount: string
+  onWithdraw: () => void
+  onInvest: () => void
+  error: string
+  product: DefiProduct | undefined
 }
 
 export default function VaultCard(props: Props) {
-  const { logoCurSymbol, title, priceCurSymbol, account, vaultForm, timer, recurStatus, onRecurOpen } = props
-  const isDownMd = useBreakpoint('md')
+  const { title, formData, available, onInvestChange, investAmount, onWithdraw, onInvest, error, product } = props
+  const [currentTab, setCurrentTab] = useState<TYPE>(0)
+  const { chainId } = useActiveWeb3React()
+
+  const isDownSm = useBreakpoint('md')
+  const productChainId = product?.chainId
+  const currencySymbol = product?.investCurrency ?? ''
+  const disabled = !product || !investAmount || chainId !== product?.chainId
+
+  const handleTabClick = useCallback(
+    (val: number) => {
+      setCurrentTab(val)
+      onInvestChange('')
+    },
+    [onInvestChange]
+  )
 
   return (
     <Card>
       <Box padding={{ xs: '24px 16px 25px', md: '34px 24px 48px' }}>
-        <ProductCardHeader logoCurSymbol={logoCurSymbol} title={title} priceCurSymbol={priceCurSymbol} />
-        <Box display={isDownMd ? 'grid' : 'flex'} width="100%" gap={isDownMd ? '40px' : '80px'} mt={10}>
-          <Box width={'100%'} mt={{ xs: 0, md: -20 }}>
-            {vaultForm}
-          </Box>
-          <OutlinedCard width={'100%'} style={{ margin: '12px 0' }}>
-            <Box width={'100%'} padding="34px 22px 27px" display="flex" flexDirection={'column'} gap={46}>
-              <Card gray>
-                <Box padding="22px" display="grid" gap={30}>
-                  <Box display={'flex'}>
-                    <Divider
-                      orientation="vertical"
-                      sx={{
-                        marginRight: 12,
-                        width: 2,
-                        backgroundColor: theme => theme.palette.primary.main,
-                        borderColor: 'transparent'
-                      }}
-                    />
-                    <Typography fontSize={16} sx={{ color: theme => theme.palette.text.secondary }}>
-                      When you stop recurring, all your existing orders will not be taken into next cycle and you can
-                      redeem your tokens once your existing orders expire.
-                    </Typography>
-                  </Box>
-                  <Box display={'flex'} alignItems={'center'} gap={15}>
-                    <QuestionHelper
-                      text={
-                        recurStatus === null
-                          ? 'Please make sure you have invested in the recuring strategy first'
-                          : undefined
-                      }
-                      title={
-                        <SwitchToggle
-                          checked={recurStatus === RECUR_TOGGLE_STATUS.open}
-                          onChange={onRecurOpen}
-                          disabled={!account || recurStatus === null}
-                        />
-                      }
-                    />
+        <ProductCardHeader
+          logoCurSymbol={product?.investCurrency}
+          title={title}
+          priceCurSymbol={product?.currency ?? ''}
+          description={`Generates yield by running an automated ${
+            product?.type === 'CALL' ? `${product?.currency ?? ''} covered call strategy` : `put selling strategy`
+          }`}
+        />
 
-                    <Typography fontWeight={700}>Recurring</Typography>
-                  </Box>
-                </Box>
-              </Card>
-              <Box display="flex" flexDirection="column" gap={16}>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography fontSize={16}>Next order due time</Typography>
-                  <Typography
-                    component="div"
-                    fontSize={16}
-                    fontWeight={700}
-                    sx={{ color: theme => theme.palette.text.secondary }}
-                  >
-                    <Timer timer={timer} />
+        <Box width={'100%'} mt={{ xs: 0, md: 30 }}>
+          <Box mt={12} position="relative">
+            <Typography
+              position={{ xs: 'static', md: 'absolute' }}
+              sx={{ top: 0, right: 0, height: 48 }}
+              display="flex"
+              alignItems={'center'}
+              variant="inherit"
+            >
+              Countdown to the start:
+              <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
+                <Timer timer={product?.expiredAt ?? 0} />
+              </Typography>
+            </Typography>
+            {isDownSm && <Divider sx={{ opacity: 0.1 }} />}
+            <Tabs
+              customCurrentTab={currentTab}
+              customOnChange={handleTabClick}
+              titles={['Invest', 'Standard Withdrawal', 'Instant Withdrawal']}
+              tabPadding="12px 0px 12px 0px"
+              contents={[
+                <VaultForm
+                  error={error}
+                  key="invest"
+                  type={'Invest'}
+                  currencySymbol={currencySymbol}
+                  available={available}
+                  onChange={onInvestChange}
+                  val={investAmount}
+                  onClick={onInvest}
+                  disabled={disabled}
+                  productChainId={productChainId}
+                  formData={formData}
+                >
+                  <Typography display="flex" alignItems={'center'} variant="inherit">
+                    APY:
+                    <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
+                      {product?.apy ?? '-'}
+                    </Typography>
                   </Typography>
-                </Box>
-              </Box>
-            </Box>
-          </OutlinedCard>
+                </VaultForm>,
+                <VaultForm
+                  key={TYPE.standard}
+                  type={'Standard'}
+                  val={investAmount}
+                  onChange={onInvestChange}
+                  currencySymbol={currencySymbol}
+                  onClick={onWithdraw}
+                  disabled={disabled}
+                  productChainId={productChainId}
+                  formData={formData}
+                >
+                  22
+                </VaultForm>,
+                <VaultForm
+                  key={TYPE.instant}
+                  type={'Instant'}
+                  val={investAmount}
+                  onChange={onInvestChange}
+                  currencySymbol={currencySymbol}
+                  onClick={onWithdraw}
+                  disabled={disabled}
+                  productChainId={productChainId}
+                  formData={formData}
+                >
+                  <Typography display="flex" alignItems={'center'} variant="inherit">
+                    Redeemable:
+                    <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
+                      {product?.apy ?? '-'}
+                    </Typography>
+                  </Typography>
+                </VaultForm>
+              ]}
+            />
+          </Box>
         </Box>
       </Box>
     </Card>

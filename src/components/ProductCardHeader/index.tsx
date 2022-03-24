@@ -1,8 +1,7 @@
 import { Box, Typography } from '@mui/material'
 import Card from 'components/Card/Card'
-import CurrencyLogo from 'components/essential/CurrencyLogo'
 import BlueRing from 'components/Icon/BlueRing'
-import { SUPPORTED_CURRENCIES } from 'constants/currencies'
+import { LogoTitle } from 'components/MgmtPage/LogoTitle'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { usePrice } from 'hooks/usePriceSet'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
@@ -28,7 +27,8 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
       justifyContent={{ xs: 'stretch', sm: 'space-between' }}
       gap={{ xs: '0', sm: '40px' }}
     >
-      <Box display="grid" columnGap={20} mb={{ xs: 10, md: 0 }}>
+      {logoCurSymbol && <LogoTitle description={description ?? ''} logoCurSymbol={logoCurSymbol} title={title} />}
+      {/* <Box display="grid" columnGap={20} mb={{ xs: 10, md: 0 }}>
         {logoCurSymbol && (
           <CurrencyLogo
             currency={SUPPORTED_CURRENCIES[logoCurSymbol]}
@@ -60,7 +60,7 @@ export default function ProductCardHeader({ logoCurSymbol, title, priceCurSymbol
             {description}
           </Typography>
         )}
-      </Box>
+      </Box> */}
       <Card gray={isDownSm} style={{ borderRadius: '16px', margin: isDownMd ? '16px 0' : 0 }}>
         <Box
           display="flex"

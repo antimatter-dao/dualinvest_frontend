@@ -10,11 +10,7 @@ const axiosInstance = axios.create({
   headers: { 'content-type': 'application/json', accept: 'application/json' }
 })
 
-export const getSignatures = async <T, R>(
-  args: T,
-  numberOfSignRequired = IS_TEST_NET ? 3 : 3,
-  route: string
-): Promise<Array<R>> => {
+export const getSignatures = async <T, R>(args: T, numberOfSignRequired = 3, route: string): Promise<Array<R>> => {
   try {
     const signRoutes = IS_TEST_NET
       ? [

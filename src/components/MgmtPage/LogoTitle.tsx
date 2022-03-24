@@ -9,7 +9,7 @@ export function LogoTitle({
   description
 }: {
   logoCurSymbol: string
-  title: string
+  title: string | JSX.Element
   description: string
 }) {
   const isDownMd = useBreakpoint('md')
