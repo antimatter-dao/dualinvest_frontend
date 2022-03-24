@@ -107,7 +107,7 @@ export function useAccountBalances(): AccountBalanceType {
       ? {
           ...usdtRes,
           totalInvest: usdtRes.totalInvest
-            ? trimNumberString(getRecurTotal(usdtRes.totalInvest, usdtRecurTotal), 2)
+            ? trimNumberString(getRecurTotal(usdtRes.totalInvest, usdtRecurTotal), 4)
             : '-',
           recurTotal: usdtRecurTotal
         }
@@ -127,7 +127,7 @@ export function useAccountBalances(): AccountBalanceType {
         ? {
             ...res,
             recurTotal,
-            totalInvest: res.totalInvest ? trimNumberString(getRecurTotal(res.totalInvest, recurTotal), 2) : '-'
+            totalInvest: res.totalInvest ? trimNumberString(getRecurTotal(res.totalInvest, recurTotal), 4) : '-'
           }
         : undefined
       return acc
