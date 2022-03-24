@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles'
 import { useActivePopups } from 'state/application/hooks'
 import PopupItem from './PopupItem'
 
-const MobilePopupWrapper = styled('div')(({ height, theme }: any) => ({
+const MobilePopupWrapper = styled('div')<any>(({ height, theme }: any) => ({
   position: 'relative',
   maxWidth: '100%',
   height: height,

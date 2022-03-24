@@ -147,9 +147,9 @@ export const override: any = {
     styleOverrides: {
       body: {
         backgroundColor: theme.palette.background.default,
-        fontSize: 16,
-        overflow: 'auto!important',
-        paddingRight: '0px!important'
+        fontSize: 16
+        // overflow: 'auto!important',
+        // paddingRight: '0px!important'
       },
       'html, input, textarea, button, body': {
         fontFamily: 'SF Pro, -apple-system, BlinkMacSystemFont, sans-serif',

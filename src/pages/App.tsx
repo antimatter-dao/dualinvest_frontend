@@ -25,17 +25,14 @@ import { IS_TEST_NET } from 'constants/chain'
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
-  overflowX: 'auto',
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column'
-    // height: '100vh'
   }
 }))
 
 const ContentWrapper = styled('div')({
   width: '100%',
   // maxHeight: '100vh',
-  overflow: 'auto',
   alignItems: 'center'
 })
 

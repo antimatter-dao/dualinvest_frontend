@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Box, MenuItem, Typography, useTheme } from '@mui/material'
 import ProductBanner from 'components/ProductBanner'
@@ -17,6 +17,9 @@ export default function DefiVault() {
   const theme = useTheme()
   const isDownSm = useBreakpoint('sm')
   const allList = useDefiVaultList()
+  const filteredList = useMemo(() => {
+    return allList
+  }, [allList])
 
   return (
     <Box
@@ -129,9 +132,9 @@ export default function DefiVault() {
           maxWidth: theme => ({ xs: '100%', lg: theme.width.maxContent })
         }}
       >
-        {allList === null && <Typography>No vault available</Typography>}
-        {allList &&
-          allList.map((item: DefiProduct) => {
+        {filteredList === null && <Typography>No vault available</Typography>}
+        {filteredList &&
+          filteredList.map((item: DefiProduct) => {
             if (!item) return null
             const { chainId, currency, type, investCurrency } = item
             if (!chainId || !currency) return null
