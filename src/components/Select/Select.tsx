@@ -93,8 +93,7 @@ export default function Select(props: Props) {
           },
           ...style
         }}
-        value={value ?? ''}
-        displayEmpty
+        value={value ? value : defaultValue ?? ''}
         disabled={disabled}
         MenuProps={{
           sx: {
@@ -103,10 +102,13 @@ export default function Select(props: Props) {
               borderRadius: '10px',
               mt: '20px',
               boxShadow: theme => theme.shadows[4],
-              transform: width ? 'translateX(-12px)!important' : 'none',
+              // transform: width && !isDownSm ? 'translateX(-12px)!important' : 'none',
+              '& ul': {
+                padding: 0
+              },
               '& li': {
                 fontSize: 16,
-                fontWeight: 500,
+                fontWeight: 400,
                 borderBottom: '1px solid rgba(0,0,0,0.1)',
                 display: 'flex',
                 alignItems: 'center',
@@ -136,14 +138,6 @@ export default function Select(props: Props) {
                 }
               }
             }
-          },
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'left'
-          },
-          transformOrigin: {
-            vertical: 'top',
-            horizontal: 'left'
           }
         }}
         input={<InputBase />}
