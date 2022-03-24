@@ -19,8 +19,9 @@ export function useDualInvestBalance(token?: Token) {
   const balanceRes = useSingleCallResult(token ? contract : null, 'balances', args)
 
   return useMemo(() => {
-    return token && balanceRes?.result ? parseBalance(balanceRes.result?.[0].toString(), token) : '-'
-  }, [balanceRes.result, token])
+    const result = token && balanceRes?.result ? parseBalance(balanceRes.result?.[0].toString(), token) : '-'
+    return result === 'NaN' ? '-' : result
+  }, [balanceRes, token])
 }
 
 export function useDualInvestCallback(): {
@@ -95,7 +96,6 @@ export function useDualInvestCallback(): {
             currency,
             [signRes[0].signatory, signRes[0].signV, signRes[0].signR, signRes[0].signS]
           ]
-
           const estimatedGas =
             CURRENCY_ADDRESS_MAP[toChecksumAddress(currency)]?.symbol ===
             DEFAULT_COIN_SYMBOL[chainId ?? NETWORK_CHAIN_ID]

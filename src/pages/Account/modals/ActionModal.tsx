@@ -239,7 +239,9 @@ export default function ActionModal({
               </Box>
               <Box display="flex" justifyContent="space-between" color={theme.palette.text.secondary}>
                 <Typography>Account Balance</Typography>
-                <Typography>{token ? (+contractBalance).toFixed(4) + ' ' + token.symbol : '-'}</Typography>
+                <Typography>
+                  {token && contractBalance !== '-' ? (+contractBalance).toFixed(4) + ' ' + token?.symbol : '-'}
+                </Typography>
               </Box>
             </OutlinedCard>
           </Box>

@@ -54,7 +54,7 @@ export function useAccountBalances(): AccountBalanceType {
     return usdtRes
       ? {
           ...usdtRes,
-          totalInvest: usdtRes.totalInvest ? trimNumberString(usdtRes.totalInvest, 2) : '-'
+          totalInvest: usdtRes.totalInvest ? trimNumberString(usdtRes.totalInvest, 4) : '-'
         }
       : undefined
   }, [usdtRes])
@@ -65,7 +65,7 @@ export function useAccountBalances(): AccountBalanceType {
       acc[symbol] = res
         ? {
             ...res,
-            totalInvest: res.totalInvest ? trimNumberString(res.totalInvest, 2) : '-'
+            totalInvest: res.totalInvest ? trimNumberString(res.totalInvest, 4) : '-'
           }
         : undefined
       return acc
