@@ -9,7 +9,6 @@ interface Props {
   defaultValue?: any
   value?: string | string[] | number | number[]
   disabled?: boolean
-  selected?: React.ReactNode
   placeholder?: string
   width?: string | number
   height?: string | number

@@ -8,10 +8,12 @@ import DEFI_VAULT_ABI from '../constants/abis/defi_vault.json'
 import { useActiveWeb3React } from 'hooks'
 import { useBlockNumber } from 'state/application/hooks'
 import { parseBalance } from 'utils/parseAmount'
+import { useSingleCallResult } from 'state/multicall/hooks'
+import { useDefiVaultContract } from './useContract'
 
 enum DefiProductDataOrder {
   balanceOf,
-  order
+  depositReceipts
 }
 
 export interface DefiProduct {
@@ -23,13 +25,22 @@ export interface DefiProduct {
   investCurrency: string
   chainId: ChainId | undefined
   balance?: string
+  instantBalance: string
 }
 
 export function useSingleDefiVault(chainName: string, currency: string, type: string): DefiProduct | null {
+  const { account } = useActiveWeb3React()
+  const args = useMemo(() => {
+    return [account ?? undefined]
+  }, [account])
+
   const cur = currency.toUpperCase()
   const productChainId: number = useMemo(() => {
     return ChainList.find(chain => chain.symbol.toUpperCase() === chainName.toUpperCase())?.id ?? NETWORK_CHAIN_ID
   }, [chainName])
+
+  const contract = useDefiVaultContract(productChainId, currency, type === 'CALL' ? 'CALL' : 'PUT')
+  const instantBalance = useSingleCallResult(contract, 'depositReceipts', args)
 
   const result = useMemo(() => {
     if (!SUPPORTED_DEFI_VAULT[productChainId as keyof typeof SUPPORTED_DEFI_VAULT]?.includes(currency.toUpperCase())) {
@@ -40,13 +51,14 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
         type: type.toUpperCase() === 'CALL' ? 'CALL' : 'PUT',
         currency: SUPPORTED_CURRENCIES[cur]?.symbol ?? '',
         investCurrency: type.toUpperCase() === 'CALL' ? SUPPORTED_CURRENCIES[cur]?.symbol ?? '' : 'USDT',
+        instantBalance: instantBalance.result?.amount ?? '-',
         strikePrice: '30000',
         expiredAt: 1000000000000000,
         apy: '100%',
         orderLimitU: '1000'
       } as DefiProduct
     }
-  }, [cur, currency, productChainId, type])
+  }, [cur, currency, instantBalance.result, productChainId, type])
   return result
 }
 
@@ -66,8 +78,8 @@ export function useDefiVaultList() {
           const addressPut = addresses?.[symbol]?.PUT
           const contractCall = addressCall && library ? getContract(addressCall, DEFI_VAULT_ABI, library) : null
           const contractPut = addressPut && library ? getContract(addressPut, DEFI_VAULT_ABI, library) : null
-          acc.push(Promise.all([contractCall?.balanceOf(account), contractCall?.owner()]))
-          acc.push(Promise.all([contractPut?.balanceOf(account), contractPut?.owner()]))
+          acc.push(Promise.all([contractCall?.balanceOf(account), contractCall?.depositReceipts(account)]))
+          acc.push(Promise.all([contractPut?.balanceOf(account), contractPut?.depositReceipts(account)]))
           return acc
         },
         [] as any[]
@@ -111,7 +123,8 @@ const defiVaultListUtil = (res?: any[][]) => {
               )
             : '-',
         type: 'CALL',
-        apy: '100%',
+        instantBalance: (res && res[idx1][idx2 * 2][DefiProductDataOrder.depositReceipts]).amount ?? '-',
+        apy: `${(Math.random() * 100).toFixed(2)}%`,
         expiredAt: 23847234987,
         investCurrency: symbol,
         strikePrice: '1000'
@@ -127,7 +140,8 @@ const defiVaultListUtil = (res?: any[][]) => {
               )
             : '-',
         type: 'PUT',
-        apy: '100%',
+        instantBalance: (res && res[idx1][idx2 * 2 + 1][DefiProductDataOrder.depositReceipts]).amount ?? '-',
+        apy: `${(Math.random() * 100).toFixed(2)}%`,
         expiredAt: 23847234987,
         investCurrency: 'USDT',
         strikePrice: '1000'

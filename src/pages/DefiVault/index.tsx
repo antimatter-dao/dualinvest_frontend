@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Box, MenuItem, Typography, useTheme } from '@mui/material'
 import ProductBanner from 'components/ProductBanner'
@@ -11,15 +11,71 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import { ChainId, ChainListMap } from 'constants/chain'
 import { DefiProduct, useDefiVaultList } from 'hooks/useDefiVault'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
+import NoDataCard from 'components/Card/NoDataCard'
+
+enum SortBy {
+  highToLow = 'hl',
+  lowToHigh = 'lh'
+}
+
+enum Strategy {
+  all = 'ALL',
+  call = 'CALL',
+  put = 'PUT'
+}
+
+const formatAssetVal = (chainId: ChainId, curSymbol: string) => {
+  return chainId + '-' + curSymbol
+}
+
+const filterDepositAsset = (selected: string, item: DefiProduct) => {
+  const splited = selected.split('-')
+  if (splited[0] === `${item.chainId}` && splited[1] === item.investCurrency) {
+    return true
+  }
+  return false
+}
 
 export default function DefiVault() {
   const history = useHistory()
   const theme = useTheme()
   const isDownSm = useBreakpoint('sm')
+  const [sortBy, setSortBy] = useState<SortBy>(SortBy.highToLow)
+  const [strategy, setStrategy] = useState<Strategy>(Strategy.all)
+  const [depositAsset, setDepositAsset] = useState<string>('ALL')
   const allList = useDefiVaultList()
   const filteredList = useMemo(() => {
-    return allList
-  }, [allList])
+    if (!allList) return undefined
+    const list = allList.reduce((acc, item) => {
+      if (strategy === Strategy.all || item.type == strategy) {
+        if (depositAsset === 'ALL' || filterDepositAsset(depositAsset, item)) {
+          acc.push(item)
+        }
+
+        return acc
+      }
+
+      return acc
+    }, [] as DefiProduct[])
+
+    const sorted = list.sort((a, b) => {
+      const isLarger = +a.apy.replace('%', '') > +b.apy.replace('%', '')
+      return sortBy === SortBy.highToLow ? (isLarger ? -1 : 1) : isLarger ? 1 : -1
+    })
+    return sorted
+  }, [allList, depositAsset, sortBy, strategy])
+
+  const handleSortBy = useCallback(e => {
+    setSortBy(e.target.value)
+  }, [])
+
+  const handleStreragy = useCallback(e => {
+    setStrategy(e.target.value)
+  }, [])
+
+  const handleDepositAsset = useCallback(e => {
+    setDepositAsset(e.target.value)
+  }, [])
 
   return (
     <Box
@@ -50,7 +106,13 @@ export default function DefiVault() {
         <Box display={{ xs: 'grid', sm: 'flex' }} gap={{ xs: 10, sm: 32 }} width="100%">
           <Box display={{ xs: 'grid', sm: 'flex' }} width={{ xs: '100%', sm: 'auto' }} alignItems="center" gap="14px">
             <Typography fontSize={16}>Strategy:</Typography>
-            <Select width={isDownSm ? '100%' : '176px'} height={'44px'} defaultValue="ALL">
+            <Select
+              width={isDownSm ? '100%' : '176px'}
+              height={'44px'}
+              defaultValue="ALL"
+              onChange={handleStreragy}
+              value={strategy}
+            >
               <MenuItem value={'ALL'}>All </MenuItem>
               <MenuItem value={'CALL'}>Covered Call </MenuItem>
               <MenuItem value={'PUT'}>Put Selling </MenuItem>
@@ -58,14 +120,21 @@ export default function DefiVault() {
           </Box>
           <Box display={{ xs: 'grid', sm: 'flex' }} width={{ xs: '100%', sm: 'auto' }} alignItems="center" gap="14px">
             <Typography fontSize={16}>Deposit Asset:</Typography>
-            <Select width={isDownSm ? '100%' : '232px'} height={'44px'} defaultValue="ALL">
+            <Select
+              width={isDownSm ? '100%' : '232px'}
+              height={'44px'}
+              defaultValue="ALL"
+              value={depositAsset}
+              onChange={handleDepositAsset}
+            >
               {Object.keys(SUPPORTED_DEFI_VAULT).reduce(
                 (acc, chainId) => {
                   const list = SUPPORTED_DEFI_VAULT[+chainId as ChainId]
                   if (list) {
                     list.map(curSymbol => {
+                      const val = formatAssetVal(+chainId, curSymbol)
                       acc.push(
-                        <MenuItem value={'1'} key="curSymbol">
+                        <MenuItem value={val} key={val}>
                           <Box display="flex" alignItems={'center'} gap={10}>
                             <CurrencyLogo currency={SUPPORTED_CURRENCIES[curSymbol]} size={'22px'} />
                             <Box>
@@ -80,7 +149,7 @@ export default function DefiVault() {
                     })
                   }
                   acc.push(
-                    <MenuItem value={'1'}>
+                    <MenuItem value={formatAssetVal(+chainId, 'USDT')}>
                       {' '}
                       <Box display="flex" alignItems={'center'} gap={10}>
                         <CurrencyLogo currency={SUPPORTED_CURRENCIES['USDT']} size={'22px'} />
@@ -113,15 +182,13 @@ export default function DefiVault() {
           <Typography fontSize={16} whiteSpace="nowrap">
             Sort by:
           </Typography>
-          <Select width={isDownSm ? '100%' : '176px'} height={'44px'} defaultValue="ALL">
-            <MenuItem value={'ALL'}>All </MenuItem>
-            <MenuItem value={'1'}>Newest First</MenuItem>
-            <MenuItem value={'2'}>Oldest First</MenuItem>
-            <MenuItem value={'3'}>Yield: High To Low</MenuItem>
-            <MenuItem value={'3'}>Yield: Low To High</MenuItem>
-          </Select>{' '}
+          <Select width={isDownSm ? '100%' : '189px'} height={'44px'} onChange={handleSortBy} value={sortBy}>
+            <MenuItem value={SortBy.highToLow}>Yield: High To Low</MenuItem>
+            <MenuItem value={SortBy.lowToHigh}>Yield: Low To High</MenuItem>
+          </Select>
         </Box>
       </Box>
+      {filteredList && filteredList.length === 0 && <NoDataCard />}
       <Box
         display={'grid'}
         gap={21}
@@ -132,7 +199,6 @@ export default function DefiVault() {
           maxWidth: theme => ({ xs: '100%', lg: theme.width.maxContent })
         }}
       >
-        {filteredList === null && <Typography>No vault available</Typography>}
         {filteredList &&
           filteredList.map((item: DefiProduct) => {
             if (!item) return null
