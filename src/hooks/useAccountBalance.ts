@@ -41,18 +41,18 @@ export function useAccountBalances(): AccountBalanceType {
   const contract = useDualInvestContract()
 
   const args = useMemo(() => {
-    const CUR = CURRENCIES[NETWORK_CHAIN_ID]
-    return SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].map(key => {
+    const CUR = CURRENCIES[chainId ?? NETWORK_CHAIN_ID]
+    return SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].map(key => {
       return [CUR[key]?.address ?? '', CUR[key]?.address ?? '', account ?? ZERO_ADDRESS]
     })
-  }, [account])
+  }, [account, chainId])
 
   const argsUsdt = useMemo(() => {
-    const CUR = CURRENCIES[NETWORK_CHAIN_ID]
-    return SUPPORTED_CURRENCY_SYMBOL[NETWORK_CHAIN_ID].map(key => {
+    const CUR = CURRENCIES[chainId ?? NETWORK_CHAIN_ID]
+    return SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].map(key => {
       return [CUR[key]?.address ?? '', CUR.USDT?.address ?? '', account ?? ZERO_ADDRESS]
     })
-  }, [account])
+  }, [account, chainId])
 
   const recurBalanceRes = useSingleContractMultipleData(contract, 'autoBalances', args)
   const recurLockedBalanceRes = useSingleContractMultipleData(contract, 'autoBalances_lock', args)
@@ -123,6 +123,7 @@ export function useAccountBalances(): AccountBalanceType {
       )
       const recurTotal = getRecurTotal(recurLocked, recurAvailable)
       const res = allRes?.[idx]?.data?.data?.Available ? assetBalanceFormatter(allRes[idx].data.data) : undefined
+      console.log(allRes, res)
       acc[symbol] = res
         ? {
             ...res,

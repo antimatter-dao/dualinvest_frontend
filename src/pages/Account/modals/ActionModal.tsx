@@ -66,10 +66,6 @@ export default function ActionModal({
   )
   const balance = token?.symbol === DEFAULT_COIN_SYMBOL[chainId ?? NETWORK_CHAIN_ID] ? balanceETH : balanceToken
 
-  // const handleSelect = useCallback(e => {
-  //   setSelectedCur(e.target.value)
-  // }, [])\
-
   const handleMax = useCallback(() => {
     if (balance && type === ActionType.DEPOSIT) {
       setVal(balance?.toExact())
