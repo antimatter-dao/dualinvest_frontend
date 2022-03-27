@@ -10,7 +10,13 @@ export function useProductList() {
   const [productList, setProductList] = useState<ProductList | undefined>(undefined)
   const { chainId } = useActiveWeb3React()
 
-  const promiseFn = useCallback(() => Axios.get('getProducts', { chainId: chainId ?? NETWORK_CHAIN_ID }), [chainId])
+  const promiseFn = useCallback(
+    () =>
+      Axios.get('getProducts', {
+        chainId: chainId ?? NETWORK_CHAIN_ID
+      }),
+    [chainId]
+  )
 
   const callbackFn = useCallback(r => {
     if (!r.data.data || !Array.isArray(r.data.data)) return
