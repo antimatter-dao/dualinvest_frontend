@@ -14,6 +14,7 @@ import { CURRENCIES } from 'constants/currencies'
 import Spinner from 'components/Spinner'
 import { NETWORK_CHAIN_ID } from 'constants/chain'
 import { useActiveWeb3React } from 'hooks'
+import { useSwitchChainModal } from 'hooks/useSwitchChainModal'
 
 enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -63,6 +64,8 @@ export function MgmtForm({
   const theme = useTheme()
   const toggleWallet = useWalletModalToggle()
   const { chainId } = useActiveWeb3React()
+  const { switchChain } = useSwitchChainModal()
+  const isCorrectChain = chainId && chainId === product?.chainId
 
   const showConfirm = useCallback(() => {
     setIsConfirmOpen(true)
@@ -159,7 +162,7 @@ export function MgmtForm({
           smallPlaceholder
           onDeposit={children ? undefined : showDeposit}
           placeholder={inputPlaceholder}
-          disabled={!product || !account || isConfirmed}
+          disabled={!product || !account || isConfirmed || !isCorrectChain}
           value={amount}
           onMax={onMax}
           label={'Subscription Amount'}
@@ -171,7 +174,10 @@ export function MgmtForm({
         />
         {children}
         {!account && <BlackButton onClick={toggleWallet}>Connect Wallet</BlackButton>}
-        {!isConfirmed && account && (
+        {account && !isCorrectChain && (
+          <BlackButton onClick={() => switchChain(product?.chainId)}>Switch to {product?.chain}</BlackButton>
+        )}
+        {!isConfirmed && account && isCorrectChain && (
           <ActionButton
             pending={pending}
             pendingText={'Pending'}
@@ -183,7 +189,7 @@ export function MgmtForm({
             success={!product?.isActive}
           />
         )}
-        {isConfirmed && account && (
+        {isConfirmed && account && isCorrectChain && (
           <ActionButton
             pending={pending}
             pendingText={'Pending'}
@@ -203,14 +209,14 @@ export function MgmtForm({
                 <>
                   <Typography component="span" color="error" fontSize={12}>
                     Insufficient Balance.
-                  </Typography>
+                  </Typography>{' '}
                   Please recharge your account first before opening wealth management
                 </>
               ) : (
                 <>
-                  <Typography component="span" color="error" fontSize={12} sx={{ display: 'block' }}>
+                  <Typography component="span" color="error" fontSize={12}>
                     Single Limit Exceeded.
-                  </Typography>
+                  </Typography>{' '}
                   Single financial management limit is {product?.multiplier ?? '-'}~
                   {product ? +product?.orderLimit * +product?.multiplier : '-'} BTC
                 </>
