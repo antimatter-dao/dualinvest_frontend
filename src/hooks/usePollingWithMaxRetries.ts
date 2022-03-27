@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 export default function usePollingWithMaxRetries(
   fn: (() => Promise<any>) | undefined,
   callback: (r: any) => void,
-  delay = 20000,
+  delay = 30000,
   retries = 5,
   promiseAll = false
 ) {
