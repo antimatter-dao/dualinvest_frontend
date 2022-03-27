@@ -178,8 +178,9 @@ export const CURRENCIES: { [key in ChainId]: { [key: string]: Token } } = ChainL
     const tokenMap = Object.keys(SUPPORTED_CURRENCIES).reduce((acc: { [key: string]: Token }, key) => {
       const item = SUPPORTED_CURRENCIES[key as keyof typeof SUPPORTED_CURRENCIES]
       const address = item.address[id]
+      const decimal = item.symbol === 'USDT' && (id === ChainId.AVAX || id === ChainId.MAINNET) ? 6 : item.decimals
       if (address) {
-        acc[key as keyof typeof SUPPORTED_CURRENCIES] = new Token(id, address, item.decimals, item.symbol, item.name)
+        acc[key as keyof typeof SUPPORTED_CURRENCIES] = new Token(id, address, decimal, item.symbol, item.name)
       }
 
       return acc
@@ -195,14 +196,10 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
   const item = SUPPORTED_CURRENCIES[key as keyof typeof SUPPORTED_CURRENCIES]
   ChainList.map(({ id: chainId }: { id: ChainId }) => {
     const address = item.address[chainId]
+    const decimal =
+      item.symbol === 'USDT' && (chainId === ChainId.AVAX || chainId === ChainId.MAINNET) ? 6 : item.decimals
     if (address) {
-      acc[address as keyof typeof SUPPORTED_CURRENCIES] = new Token(
-        +chainId,
-        address,
-        item.decimals,
-        item.symbol,
-        item.name
-      )
+      acc[address as keyof typeof SUPPORTED_CURRENCIES] = new Token(+chainId, address, decimal, item.symbol, item.name)
     }
   })
 
