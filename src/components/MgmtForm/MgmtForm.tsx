@@ -162,7 +162,7 @@ export function MgmtForm({
           smallPlaceholder
           onDeposit={children ? undefined : showDeposit}
           placeholder={inputPlaceholder}
-          disabled={!product || !account || isConfirmed || !isCorrectChain}
+          disabled={!product || !account || isConfirmed || !isCorrectChain || !product?.isActive}
           value={amount}
           onMax={onMax}
           label={'Subscription Amount'}
@@ -181,7 +181,7 @@ export function MgmtForm({
           <ActionButton
             pending={pending}
             pendingText={'Pending'}
-            error={!amount ? 'Please Input Amount' : ''}
+            error={!product?.isActive ? 'Ended' : !amount ? 'Please Input Amount' : ''}
             onAction={showConfirm}
             actionText=" Subscribe"
             disableAction={!product?.isActive ? true : !!error}
@@ -193,7 +193,7 @@ export function MgmtForm({
           <ActionButton
             pending={pending}
             pendingText={'Pending'}
-            error={!amount ? 'Please Input Amount' : ''}
+            error={!product?.isActive ? 'Ended' : !amount ? 'Please Input Amount' : ''}
             onAction={handleSubscribe}
             actionText=" Subscribe"
             disableAction={!product?.isActive ? true : !!error}

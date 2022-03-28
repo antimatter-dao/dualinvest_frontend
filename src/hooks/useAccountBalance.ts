@@ -62,7 +62,6 @@ export function useAccountBalances(): AccountBalanceType {
   const result = useMemo(() => {
     const resultMap = SUPPORTED_CURRENCY_SYMBOL[chainId ?? NETWORK_CHAIN_ID].reduce((acc, symbol, idx) => {
       const res = allRes?.[idx]?.data?.data?.Available ? assetBalanceFormatter(allRes[idx].data.data) : undefined
-      console.log(allRes, res)
       acc[symbol] = res
         ? {
             ...res,
