@@ -85,7 +85,7 @@ export const productFormatter = (raw: ProductRaw): Product => {
     expiredAt: raw.expired_at * 1000,
     apy: raw.annual_ror,
     type: raw.type,
-    isActive: raw.is_active,
+    isActive: raw.is_active && raw.annual_ror ? true : false,
     strikePrice: raw.strike_price,
     multiplier: raw.multiplier,
     currency: raw.currency,

@@ -123,7 +123,6 @@ export function useAccountBalances(): AccountBalanceType {
       )
       const recurTotal = getRecurTotal(recurLocked, recurAvailable)
       const res = allRes?.[idx]?.data?.data?.Available ? assetBalanceFormatter(allRes[idx].data.data) : undefined
-      console.log(allRes, res)
       acc[symbol] = res
         ? {
             ...res,
