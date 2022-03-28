@@ -7,7 +7,7 @@ interface Props {
   customCurrentTab?: number
   customOnChange?: (val: number) => void
   tabPadding?: string
-  CustomTab?: React.FC<TabProps>
+  CustomTab?: React.FC<TabProps & { selected?: boolean }>
   fontWeight?: number
 }
 

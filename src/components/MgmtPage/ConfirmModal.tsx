@@ -22,9 +22,9 @@ export default function ConfirmModal({
   subTitle,
   investCurrency,
   children,
-  approvalState
-}: // actionButton
-{
+  approvalState,
+  isNativeCur
+}: {
   isOpen: boolean
   onDismiss: () => void
   onConfirm: () => void
@@ -36,7 +36,7 @@ export default function ConfirmModal({
   showCancelWarning?: boolean
   showCompoundWarning?: boolean
   children?: React.ReactNode
-  // actionButton?: JSX.Element
+  isNativeCur?: boolean
   approvalState?: ApprovalState
 }) {
   const theme = useTheme()
@@ -95,9 +95,9 @@ export default function ConfirmModal({
       </Box>
       <ActionButton
         pending={approvalState === ApprovalState.PENDING}
-        pendingText="approving"
+        pendingText="Approving"
         onAction={onConfirm}
-        actionText="Confirm"
+        actionText={isNativeCur ? 'Confirm' : approvalState === ApprovalState.APPROVED ? 'Invest' : 'Approve'}
       />
       {/* {actionButton ?? (
         <Button onClick={onConfirm} height="60px">

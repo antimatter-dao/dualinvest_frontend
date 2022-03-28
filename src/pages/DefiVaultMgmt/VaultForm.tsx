@@ -20,11 +20,6 @@ import { CURRENCIES, DEFAULT_COIN_SYMBOL } from 'constants/currencies'
 import { Timer } from 'components/Timer'
 import { useApproveCallback, ApprovalState } from 'hooks/useApproveCallback'
 
-export enum ErrorType {
-  insufficientBalance = 'Insufficient Balance',
-  notAvailable = 'The current status is not available for subscription, please try again after the current period is settled'
-}
-
 export default function VaultForm({
   product,
   amount,
@@ -46,7 +41,7 @@ export default function VaultForm({
   const ETHBalance = useETHBalances([account ?? undefined])?.[account ?? '']
   const tokenBalance = useTokenBalance(account ?? undefined, investCurrency)
   const [snackbarOpen, setSnackbarOpen] = useState(true)
-  const [redeemConfirmOpen, setRedeemConfirmOpen] = useState(false)
+  const [wdConfirmOpen, setWdConfirmOpen] = useState(false)
   const [investConfirmOpen, setInvestConfirmOpen] = useState(false)
 
   const balance =
@@ -54,15 +49,19 @@ export default function VaultForm({
       ? ETHBalance?.toExact()
       : tokenBalance?.toExact()
 
-  const { depositCallback, withdrawCallback } = useDefiVaultCallback(product?.chainId, product?.currency, product?.type)
+  const {
+    depositCallback,
+    instantWithdrawCallback,
+    standardWithdrawCallback,
+    standardCompleteCallback
+  } = useDefiVaultCallback(product?.chainId, product?.currency, product?.type)
+
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()
   const [approvalState, approveCallback] = useApproveCallback(
     tryParseAmount(amount, investCurrency),
     getDefiVaultAddress(product?.currency, product?.chainId, product?.type)
   )
-
-  const autoBalance = '0'
 
   const formData = useMemo(
     () => ({
@@ -101,81 +100,103 @@ export default function VaultForm({
   const handleInvestConfirmDismiss = useCallback(() => {
     setInvestConfirmOpen(false)
   }, [])
-  const handleRedeemConfirmOpen = useCallback(() => {
-    setRedeemConfirmOpen(true)
+  const handleWdConfirmOpen = useCallback(() => {
+    setWdConfirmOpen(true)
   }, [])
-  const handleRedeemConfirmDismiss = useCallback(() => {
-    setRedeemConfirmOpen(false)
+  const handleWdConfirmDismiss = useCallback(() => {
+    setWdConfirmOpen(false)
   }, [])
 
-  const handleInvest = useCallback(async () => {
-    if (!currency || !depositCallback || !product || !investCurrency) return
-    showModal(<TransactionPendingModal />)
-    const val = tryParseAmount(amount, investCurrency)?.raw?.toString()
-    if (!val) return
-    try {
-      const r = await depositCallback(val)
-      hideModal()
+  const callbackFactory = useCallback(
+    (summary: string, callback: (...args: any[]) => Promise<any>) => {
+      return async (amount: string) => {
+        showModal(<TransactionPendingModal />)
+        const val = tryParseAmount(amount, investCurrency)?.raw?.toString()
+        if (!val) return
+        try {
+          const r = await callback(val)
+          hideModal()
 
-      addPopup(r, {
-        summary: `Subscribed ${amount} ${product.investCurrency} to ${
-          product.type === 'CALL'
-            ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-            : `${product?.currency ?? ''} Put Selling Recurring Strategy`
-        }`
-      })
-      setAmount('')
-      showModal(<TransactionSubmittedModal />)
-    } catch (e) {
-      setAmount('')
-      showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
-      console.error(e)
-    }
-  }, [currency, depositCallback, product, investCurrency, showModal, amount, hideModal, addPopup, setAmount])
+          addPopup(r, {
+            summary
+          })
+          setAmount('')
+          showModal(<TransactionSubmittedModal />)
+        } catch (e) {
+          setAmount('')
+          showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
+          console.error(e)
+        }
+      }
+    },
+    [addPopup, hideModal, investCurrency, setAmount, showModal]
+  )
 
-  const handleRedeem = useCallback(async () => {
-    if (!investCurrency || !withdrawCallback || !product || !currency) return
-    showModal(<TransactionPendingModal />)
+  const handleInvest = useMemo(() => {
+    if (!currency || !depositCallback || !product || !investCurrency) return () => {}
+    return callbackFactory(
+      `Subscribed ${amount} ${product.investCurrency} to ${
+        product.type === 'CALL'
+          ? `${product?.currency ?? ''} Covered Call Defi Vault`
+          : `${product?.currency ?? ''} Put Selling Defi Vault`
+      }`,
+      depositCallback
+    )
+  }, [currency, depositCallback, product, investCurrency, callbackFactory, amount])
 
-    try {
-      const r = await withdrawCallback()
-      addPopup(r, {
-        summary: `Redeemed ${autoBalance} ${product.investCurrency} from ${
-          product.type === 'CALL'
-            ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-            : `${product?.currency ?? ''} Put Selling Recurring Strategy`
-        }`
-      })
-      hideModal()
-      showModal(<TransactionSubmittedModal />)
-    } catch (e) {
-      showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
-      console.error(e)
-    }
-  }, [investCurrency, withdrawCallback, product, currency, showModal, addPopup, hideModal])
+  const handleInstantWd = useMemo(() => {
+    if (!investCurrency || !instantWithdrawCallback || !product || !currency) return () => {}
+    return callbackFactory(
+      `Instantly withdrawed ${amount} ${product.investCurrency} from ${
+        product.type === 'CALL'
+          ? `${product?.currency ?? ''} Covered Call Defi Vault`
+          : `${product?.currency ?? ''} Put Selling Defi Vault`
+      }`,
+      instantWithdrawCallback
+    )
+  }, [investCurrency, instantWithdrawCallback, product, currency, callbackFactory, amount])
 
-  const error = useMemo(() => {
-    if (!product || !balance) return ''
-    let str = ''
+  const handleStandardWd = useCallback(
+    (amount: string, initiated: boolean) => {
+      showModal(
+        <RedeemConfirmModal
+          isOpen={true}
+          onDismiss={hideModal}
+          onConfirm={() => {
+            if (!investCurrency || !standardWithdrawCallback || !product || !currency) {
+              return
+            }
 
-    if (amount !== '' && +balance < +amount) {
-      str = ErrorType.insufficientBalance
-    }
-
-    const now = Date.now()
-    const before = product.expiredAt - 7200000
-    const after = product.expiredAt + 1800000
-
-    if (now >= before && now < after) {
-      str = ErrorType.notAvailable
-    }
-
-    return str
-  }, [balance, amount, product])
+            callbackFactory(
+              `Withdrawed ${amount} ${product.investCurrency} from ${
+                product.type === 'CALL'
+                  ? `${product?.currency ?? ''} Covered Call Defi Vault`
+                  : `${product?.currency ?? ''} Put Selling Defi Vault`
+              }`,
+              initiated ? standardCompleteCallback : standardWithdrawCallback
+            )(amount)
+          }}
+          amount={amount}
+          currency={investCurrency}
+        />
+      )
+    },
+    [
+      callbackFactory,
+      currency,
+      hideModal,
+      investCurrency,
+      product,
+      showModal,
+      standardCompleteCallback,
+      standardWithdrawCallback
+    ]
+  )
 
   return (
     <>
       <InvestConfirmModal
+        isNativeCur={DEFAULT_COIN_SYMBOL[chainId ?? NETWORK_CHAIN_ID] === investCurrency.symbol}
         approvalState={approvalState}
         currency={investCurrency}
         productTitle={title}
@@ -187,18 +208,18 @@ export default function VaultForm({
           DEFAULT_COIN_SYMBOL[product?.chainId ?? NETWORK_CHAIN_ID] === investCurrency?.symbol ||
           approvalState === ApprovalState.APPROVED
             ? () => {
-                handleInvest()
+                handleInvest(amount)
                 setInvestConfirmOpen(false)
               }
             : approveCallback
         }
       />
       <RedeemConfirmModal
-        isOpen={redeemConfirmOpen}
-        onDismiss={handleRedeemConfirmDismiss}
+        isOpen={wdConfirmOpen}
+        onDismiss={handleWdConfirmDismiss}
         onConfirm={() => {
-          handleRedeem()
-          setRedeemConfirmOpen(false)
+          handleInstantWd(amount)
+          setWdConfirmOpen(false)
         }}
         amount={amount}
         currency={investCurrency}
@@ -231,11 +252,12 @@ export default function VaultForm({
         )}
 
         <VaultCard
+          walletBalance={balance}
           title={title}
           formData={formData}
-          error={error}
           product={product}
-          onWithdraw={handleRedeemConfirmOpen}
+          onStandardWd={handleStandardWd}
+          onInstantWd={handleWdConfirmOpen}
           onInvest={handleInvestConfirmOpen}
           available={balance}
           onInvestChange={handleInvestChange}

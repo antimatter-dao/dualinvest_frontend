@@ -28,7 +28,7 @@ export const absolute = (val: string) => {
   return val
 }
 
-export const parseBalance = (val: string | undefined, token: Token, toSignificant = 6): string => {
+export const parseBalance = (val: string | undefined, token: Token, toSignificant = 18): string => {
   const string = val?.toString()
   const amount = new TokenAmount(token, JSBI.BigInt(absolute(string ?? ''))).toSignificant(toSignificant)
   if (string && string[0] === '-') {

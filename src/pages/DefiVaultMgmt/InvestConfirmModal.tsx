@@ -10,7 +10,8 @@ export default function InvestConfirmModal({
   amount,
   currency,
   productTitle,
-  approvalState
+  approvalState,
+  isNativeCur
 }: {
   confirmData: { [key: string]: any }
   isOpen: boolean
@@ -20,9 +21,11 @@ export default function InvestConfirmModal({
   currency: Token | undefined
   productTitle: string
   approvalState?: ApprovalState
+  isNativeCur?: boolean
 }) {
   return (
     <ConfirmModal
+      isNativeCur={isNativeCur}
       isOpen={isOpen}
       onDismiss={onDismiss}
       onConfirm={onConfirm}

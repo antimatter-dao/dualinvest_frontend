@@ -26,6 +26,9 @@ export interface DefiProduct {
   chainId: ChainId | undefined
   balance?: string
   instantBalance?: string
+  completeBalance?: string
+  initiateBalance?: string
+  withdrawals?: any
 }
 
 export function useSingleDefiVault(chainName: string, currency: string, type: string): DefiProduct | null {
@@ -41,6 +44,9 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
 
   const contract = useDefiVaultContract(productChainId, cur, type === 'CALL' ? 'CALL' : 'PUT')
   const instantBalance = useSingleCallResult(contract, 'depositReceipts', args)
+  const initiateBalance = useSingleCallResult(contract, 'accountVaultBalance', args)
+  const withdrawals = useSingleCallResult(contract, 'withdrawals', args)
+
   const result = useMemo(() => {
     if (!SUPPORTED_DEFI_VAULT[productChainId as keyof typeof SUPPORTED_DEFI_VAULT]?.includes(cur)) {
       return null
@@ -55,12 +61,18 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
           instantBalance.result?.amount && productChainId
             ? parseBalance(instantBalance.result?.amount, CURRENCIES[productChainId as ChainId][investCurrency])
             : '-',
+        completeBalance: withdrawals?.result?.shares.toString(),
+        initiateBalance:
+          initiateBalance?.result?.[0] && productChainId
+            ? parseBalance(initiateBalance.result[0], CURRENCIES[productChainId as ChainId][investCurrency])
+            : '-',
+        withdrawals: withdrawals.result,
         strikePrice: '30000',
         expiredAt: 1000000000000000,
         apy: '100%'
       } as DefiProduct
     }
-  }, [cur, instantBalance.result, productChainId, type])
+  }, [cur, initiateBalance.result, instantBalance.result?.amount, productChainId, type, withdrawals.result])
   return result
 }
 

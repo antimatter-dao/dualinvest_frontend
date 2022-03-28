@@ -5,7 +5,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import { useActiveWeb3React } from 'hooks'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useCallback } from 'react'
-import { ErrorType } from 'pages/DefiVaultMgmt/VaultForm'
+import { ErrorType } from './VaultCard'
 import { ChainId, SUPPORTED_NETWORKS } from 'constants/chain'
 import { useSwitchChainModal } from 'hooks/useSwitchChainModal'
 import useBreakpoint from 'hooks/useBreakpoint'
@@ -46,7 +46,8 @@ export default function VaultForm({
   error,
   productChainId,
   formData,
-  children
+  children,
+  buttonText
 }: {
   type: string
   currencySymbol: string
@@ -59,6 +60,7 @@ export default function VaultForm({
   productChainId: ChainId | undefined
   formData: { [key: string]: any }
   children: React.ReactNode
+  buttonText: string
 }) {
   const { account, chainId } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
@@ -116,7 +118,7 @@ export default function VaultForm({
         <Box>
           {account && chainId === productChainId && (
             <Button onClick={onClick} disabled={disabled || !!error}>
-              {type}
+              {buttonText}
             </Button>
           )}
           {account && !(chainId === productChainId) && (
