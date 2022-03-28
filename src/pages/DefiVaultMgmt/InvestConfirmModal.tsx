@@ -1,5 +1,6 @@
 import ConfirmModal from 'components/MgmtPage/ConfirmModal'
 import { Token } from 'constants/token'
+import { ApprovalState } from 'hooks/useApproveCallback'
 
 export default function InvestConfirmModal({
   confirmData,
@@ -9,7 +10,7 @@ export default function InvestConfirmModal({
   amount,
   currency,
   productTitle,
-  actionButton
+  approvalState
 }: {
   confirmData: { [key: string]: any }
   isOpen: boolean
@@ -18,14 +19,14 @@ export default function InvestConfirmModal({
   amount: string
   currency: Token | undefined
   productTitle: string
-  actionButton?: JSX.Element
+  approvalState?: ApprovalState
 }) {
   return (
     <ConfirmModal
       isOpen={isOpen}
       onDismiss={onDismiss}
       onConfirm={onConfirm}
-      actionButton={actionButton}
+      approvalState={approvalState}
       amount={amount}
       data={confirmData}
       title={'Confirm'}

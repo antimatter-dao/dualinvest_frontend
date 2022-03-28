@@ -39,29 +39,28 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
     return ChainList.find(chain => chain.symbol.toUpperCase() === chainName.toUpperCase())?.id ?? NETWORK_CHAIN_ID
   }, [chainName])
 
-  const contract = useDefiVaultContract(productChainId, currency, type === 'CALL' ? 'CALL' : 'PUT')
+  const contract = useDefiVaultContract(productChainId, cur, type === 'CALL' ? 'CALL' : 'PUT')
   const instantBalance = useSingleCallResult(contract, 'depositReceipts', args)
-
   const result = useMemo(() => {
-    if (!SUPPORTED_DEFI_VAULT[productChainId as keyof typeof SUPPORTED_DEFI_VAULT]?.includes(currency.toUpperCase())) {
+    if (!SUPPORTED_DEFI_VAULT[productChainId as keyof typeof SUPPORTED_DEFI_VAULT]?.includes(cur)) {
       return null
     } else {
+      const investCurrency = type.toUpperCase() === 'CALL' ? SUPPORTED_CURRENCIES[cur]?.symbol ?? '' : 'USDC'
       return {
         chainId: productChainId,
         type: type.toUpperCase() === 'CALL' ? 'CALL' : 'PUT',
         currency: SUPPORTED_CURRENCIES[cur]?.symbol ?? '',
-        investCurrency: type.toUpperCase() === 'CALL' ? SUPPORTED_CURRENCIES[cur]?.symbol ?? '' : 'USDC',
+        investCurrency: investCurrency,
         instantBalance:
           instantBalance.result?.amount && productChainId
-            ? parseBalance(instantBalance.result?.amount, CURRENCIES[productChainId as ChainId][cur])
+            ? parseBalance(instantBalance.result?.amount, CURRENCIES[productChainId as ChainId][investCurrency])
             : '-',
         strikePrice: '30000',
         expiredAt: 1000000000000000,
-        apy: '100%',
-        orderLimitU: '1000'
+        apy: '100%'
       } as DefiProduct
     }
-  }, [cur, currency, instantBalance.result, productChainId, type])
+  }, [cur, instantBalance.result, productChainId, type])
   return result
 }
 

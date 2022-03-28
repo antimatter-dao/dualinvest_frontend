@@ -83,7 +83,6 @@ export default function DefiMgmt() {
   //   return <PastAggrChart />
   //   return null
   // }, [])
-
   return (
     <>
       {product === null ? (
@@ -133,7 +132,7 @@ export default function DefiMgmt() {
             />
           }
           returnOnInvestmentListItems={returnOnInvestmentListItems}
-          vaultForm={<VaultForm product={product} setInvestAmount={handleInput} investAmount={investAmount} />}
+          vaultForm={<VaultForm product={product} setAmount={handleInput} amount={investAmount} />}
           chart={chart}
         >
           <Grid xs={12} md={4} item>

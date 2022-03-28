@@ -1,6 +1,5 @@
 import { Box, Typography, useTheme } from '@mui/material'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import Button from 'components/Button/Button'
 import Modal from 'components/Modal'
 import Divider from 'components/Divider'
 import QuestionHelper from 'components/essential/QuestionHelper'
@@ -8,6 +7,8 @@ import { feeRate } from 'constants/index'
 import { Currency } from 'constants/token'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import React from 'react'
+import ActionButton from 'components/Button/ActionButton'
+import { ApprovalState } from 'hooks/useApproveCallback'
 
 export default function ConfirmModal({
   isOpen,
@@ -21,8 +22,9 @@ export default function ConfirmModal({
   subTitle,
   investCurrency,
   children,
-  actionButton
-}: {
+  approvalState
+}: // actionButton
+{
   isOpen: boolean
   onDismiss: () => void
   onConfirm: () => void
@@ -34,7 +36,8 @@ export default function ConfirmModal({
   showCancelWarning?: boolean
   showCompoundWarning?: boolean
   children?: React.ReactNode
-  actionButton?: JSX.Element
+  // actionButton?: JSX.Element
+  approvalState?: ApprovalState
 }) {
   const theme = useTheme()
 
@@ -90,12 +93,17 @@ export default function ConfirmModal({
           )
         })}
       </Box>
-
-      {actionButton ?? (
+      <ActionButton
+        pending={approvalState === ApprovalState.PENDING}
+        pendingText="approving"
+        onAction={onConfirm}
+        actionText="Confirm"
+      />
+      {/* {actionButton ?? (
         <Button onClick={onConfirm} height="60px">
           Confirm
         </Button>
-      )}
+      )} */}
       {showCancelWarning && (
         <Box>
           <InfoOutlinedIcon sx={{ color: theme.palette.primary.main, height: 12 }} />

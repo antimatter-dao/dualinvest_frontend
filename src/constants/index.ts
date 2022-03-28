@@ -128,3 +128,13 @@ export const DEFI_VAULT_ADDRESS: {
     AVAX: { CALL: '0xE31D8A9389d81b183C88069fd0Da85922dF7071a', PUT: '0x53205EBD4deA87789997fc4feEF027BE105Faf8e' }
   }
 }
+
+export const getDefiVaultAddress = (
+  currencySymbol: string | undefined,
+  chainId: ChainId | undefined,
+  type: string | undefined
+) => {
+  return currencySymbol && chainId && type
+    ? DEFI_VAULT_ADDRESS[chainId]?.[currencySymbol]?.[type === 'CALL' ? 'CALL' : 'PUT']
+    : undefined
+}

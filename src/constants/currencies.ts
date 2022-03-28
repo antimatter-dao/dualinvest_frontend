@@ -84,7 +84,7 @@ export const SUPPORTED_CURRENCIES: {
     address: {
       [ChainId.AVAX]: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664'
     },
-    decimals: 18,
+    decimals: 6,
     symbol: 'USDC',
     name: ' USD Coin (USDC.e)',
     logoUrl: USDCLogo,

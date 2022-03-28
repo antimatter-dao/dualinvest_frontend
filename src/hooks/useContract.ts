@@ -8,7 +8,7 @@ import {
   GOVERNANCE_ADDRESS,
   ANTIMATTER_GOVERNANCE_ADDRESS,
   DUAL_INVEST_ADDRESS,
-  DEFI_VAULT_ADDRESS
+  getDefiVaultAddress
 } from '../constants'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ENS_ABI from '../constants/abis/ens-registrar.json'
@@ -116,9 +116,5 @@ export function useDefiVaultContract(
   currencySymbol: string | undefined,
   type: 'CALL' | 'PUT' | undefined
 ): Contract | null {
-  return useContract(
-    currencySymbol && chainId && type ? DEFI_VAULT_ADDRESS[chainId]?.[currencySymbol]?.[type] : undefined,
-    DEFI_VAULT_ABI,
-    true
-  )
+  return useContract(getDefiVaultAddress(currencySymbol?.toUpperCase(), chainId, type), DEFI_VAULT_ABI, true)
 }

@@ -21,7 +21,7 @@ interface Props {
   formData: { [key: string]: any }
   available?: string
   onInvestChange: (val: string) => void
-  investAmount: string
+  amount: string
   onWithdraw: () => void
   onInvest: () => void
   error: string
@@ -29,14 +29,14 @@ interface Props {
 }
 
 export default function VaultCard(props: Props) {
-  const { title, formData, available, onInvestChange, investAmount, onWithdraw, onInvest, error, product } = props
+  const { title, formData, available, onInvestChange, amount, onWithdraw, onInvest, error, product } = props
   const [currentTab, setCurrentTab] = useState<TYPE>(0)
   const { chainId } = useActiveWeb3React()
 
   const isDownSm = useBreakpoint('md')
   const productChainId = product?.chainId
   const currencySymbol = product?.investCurrency ?? ''
-  const disabled = !product || !investAmount || chainId !== product?.chainId
+  const disabled = !product || !amount || chainId !== product?.chainId
 
   const handleTabClick = useCallback(
     (val: number) => {
@@ -86,7 +86,7 @@ export default function VaultCard(props: Props) {
                   currencySymbol={currencySymbol}
                   available={available}
                   onChange={onInvestChange}
-                  val={investAmount}
+                  val={amount}
                   onClick={onInvest}
                   disabled={disabled}
                   productChainId={productChainId}
@@ -102,7 +102,7 @@ export default function VaultCard(props: Props) {
                 <VaultForm
                   key={TYPE.standard}
                   type={'Standard'}
-                  val={investAmount}
+                  val={amount}
                   onChange={onInvestChange}
                   currencySymbol={currencySymbol}
                   onClick={onWithdraw}
@@ -115,13 +115,14 @@ export default function VaultCard(props: Props) {
                 <VaultForm
                   key={TYPE.instant}
                   type={'Instant'}
-                  val={investAmount}
+                  val={amount}
                   onChange={onInvestChange}
                   currencySymbol={currencySymbol}
                   onClick={onWithdraw}
                   disabled={disabled}
                   productChainId={productChainId}
                   formData={formData}
+                  available={product?.instantBalance}
                 >
                   <Typography display="flex" alignItems={'center'} variant="inherit">
                     Redeemable:

@@ -8,18 +8,16 @@ import TransactionPendingModal from 'components/Modal/TransactionModals/Transact
 import useModal from 'hooks/useModal'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import RecurConfirmModal from './RecurConfirmModal'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import RedeemConfirmModal from './RedeemConfirmModal'
 import InvestConfirmModal from './InvestConfirmModal'
-import { feeRate } from 'constants/index'
+import { feeRate, getDefiVaultAddress } from 'constants/index'
 import { NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from 'constants/chain'
 import { useETHBalances, useTokenBalance } from 'state/wallet/hooks'
 import { DefiProduct } from 'hooks/useDefiVault'
 import { useDefiVaultCallback } from 'hooks/useDefiVaultCallback'
-import { CURRENCIES } from 'constants/currencies'
+import { CURRENCIES, DEFAULT_COIN_SYMBOL } from 'constants/currencies'
 import { Timer } from 'components/Timer'
-import ActionButton from 'components/Button/ActionButton'
 import { useApproveCallback, ApprovalState } from 'hooks/useApproveCallback'
 
 export enum ErrorType {
@@ -29,12 +27,12 @@ export enum ErrorType {
 
 export default function VaultForm({
   product,
-  investAmount,
-  setInvestAmount
+  amount,
+  setAmount
 }: {
   product: DefiProduct | undefined
-  investAmount: string
-  setInvestAmount: (val: string) => void
+  amount: string
+  setAmount: (val: string) => void
 }) {
   const { account, chainId } = useActiveWeb3React()
   const currencySymbol = product?.investCurrency ?? ''
@@ -48,7 +46,6 @@ export default function VaultForm({
   const ETHBalance = useETHBalances([account ?? undefined])?.[account ?? '']
   const tokenBalance = useTokenBalance(account ?? undefined, investCurrency)
   const [snackbarOpen, setSnackbarOpen] = useState(true)
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [redeemConfirmOpen, setRedeemConfirmOpen] = useState(false)
   const [investConfirmOpen, setInvestConfirmOpen] = useState(false)
 
@@ -60,7 +57,10 @@ export default function VaultForm({
   const { depositCallback, withdrawCallback } = useDefiVaultCallback(product?.chainId, product?.currency, product?.type)
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()
-  const [approvalState, approveCallback] = useApproveCallback()
+  const [approvalState, approveCallback] = useApproveCallback(
+    tryParseAmount(amount, investCurrency),
+    getDefiVaultAddress(product?.currency, product?.chainId, product?.type)
+  )
 
   const autoBalance = '0'
 
@@ -90,9 +90,9 @@ export default function VaultForm({
 
   const handleInvestChange = useCallback(
     val => {
-      setInvestAmount(val)
+      setAmount(val)
     },
-    [setInvestAmount]
+    [setAmount]
   )
 
   const handleInvestConfirmOpen = useCallback(() => {
@@ -111,37 +111,27 @@ export default function VaultForm({
   const handleInvest = useCallback(async () => {
     if (!currency || !depositCallback || !product || !investCurrency) return
     showModal(<TransactionPendingModal />)
-    const val = tryParseAmount(investAmount, investCurrency)?.raw?.toString()
+    const val = tryParseAmount(amount, investCurrency)?.raw?.toString()
     if (!val) return
     try {
       const r = await depositCallback(val)
       hideModal()
 
       addPopup(r, {
-        summary: `Subscribed ${investAmount} ${product.investCurrency} to ${
+        summary: `Subscribed ${amount} ${product.investCurrency} to ${
           product.type === 'CALL'
             ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
             : `${product?.currency ?? ''} Put Selling Recurring Strategy`
         }`
       })
-      setInvestAmount('')
+      setAmount('')
       showModal(<TransactionSubmittedModal />)
     } catch (e) {
-      setInvestAmount('')
+      setAmount('')
       showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)
       console.error(e)
     }
-  }, [
-    currency,
-    depositCallback,
-    product,
-    investCurrency,
-    showModal,
-    investAmount,
-    hideModal,
-    addPopup,
-    setInvestAmount
-  ])
+  }, [currency, depositCallback, product, investCurrency, showModal, amount, hideModal, addPopup, setAmount])
 
   const handleRedeem = useCallback(async () => {
     if (!investCurrency || !withdrawCallback || !product || !currency) return
@@ -168,7 +158,7 @@ export default function VaultForm({
     if (!product || !balance) return ''
     let str = ''
 
-    if (investAmount !== '' && +balance < +investAmount) {
+    if (amount !== '' && +balance < +amount) {
       str = ErrorType.insufficientBalance
     }
 
@@ -181,41 +171,27 @@ export default function VaultForm({
     }
 
     return str
-  }, [balance, investAmount, product])
+  }, [balance, amount, product])
 
   return (
     <>
-      <RecurConfirmModal
-        isOpen={isConfirmOpen}
-        onDismiss={() => setIsConfirmOpen(false)}
-        type={'on'}
-        onConfirm={() => {
-          setIsConfirmOpen(false)
-        }}
-      />
       <InvestConfirmModal
-        actionButton={
-          SUPPORTED_NETWORKS[product?.chainId ?? NETWORK_CHAIN_ID].nativeCurrency.symbol === investCurrency.symbol ||
-          approvalState === ApprovalState.APPROVED ? (
-            undefined
-          ) : (
-            <ActionButton
-              actionText="Approve"
-              onAction={approveCallback}
-              pending={approvalState === ApprovalState.PENDING}
-            />
-          )
-        }
+        approvalState={approvalState}
         currency={investCurrency}
         productTitle={title}
-        amount={(+investAmount).toFixed(2)}
+        amount={(+amount).toFixed(2)}
         confirmData={confirmData}
         isOpen={investConfirmOpen}
         onDismiss={handleInvestConfirmDismiss}
-        onConfirm={() => {
-          handleInvest()
-          setInvestConfirmOpen(false)
-        }}
+        onConfirm={
+          DEFAULT_COIN_SYMBOL[product?.chainId ?? NETWORK_CHAIN_ID] === investCurrency?.symbol ||
+          approvalState === ApprovalState.APPROVED
+            ? () => {
+                handleInvest()
+                setInvestConfirmOpen(false)
+              }
+            : approveCallback
+        }
       />
       <RedeemConfirmModal
         isOpen={redeemConfirmOpen}
@@ -224,7 +200,7 @@ export default function VaultForm({
           handleRedeem()
           setRedeemConfirmOpen(false)
         }}
-        amount={autoBalance}
+        amount={amount}
         currency={investCurrency}
       />
 
@@ -263,7 +239,7 @@ export default function VaultForm({
           onInvest={handleInvestConfirmOpen}
           available={balance}
           onInvestChange={handleInvestChange}
-          investAmount={investAmount}
+          amount={amount}
         />
       </Box>
     </>
