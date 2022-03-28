@@ -7,6 +7,7 @@ import AVAXLogo from 'assets/svg/avax.svg'
 import LUNALogo from 'assets/svg/luna.svg'
 import MATICLogo from 'assets/svg/matic.svg'
 import CAKELogo from 'assets/svg/cake.svg'
+import USDCLogo from 'assets/svg/usdc.svg'
 import { ChainId, ChainList } from './chain'
 
 export const SYMBOL_MAP = {
@@ -77,6 +78,16 @@ export const SUPPORTED_CURRENCIES: {
     name: 'Tether USD',
     // name: 'Binance-Peg BSC-USDT',
     logoUrl: UsdtLogo,
+    color: '#1BA27A'
+  },
+  USDC: {
+    address: {
+      [ChainId.AVAX]: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664'
+    },
+    decimals: 18,
+    symbol: 'USDC',
+    name: ' USD Coin (USDC.e)',
+    logoUrl: USDCLogo,
     color: '#1BA27A'
   },
   ETH: {

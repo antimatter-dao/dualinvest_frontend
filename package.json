@@ -1,6 +1,6 @@
 {
-  "name": "@chainswap/interface",
-  "description": "Chainswap Interface",
+  "name": "@antimatter/interface",
+  "description": "Antimatter Interface",
   "homepage": ".",
   "private": true,
   "devDependencies": {

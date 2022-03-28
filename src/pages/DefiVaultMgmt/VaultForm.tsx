@@ -19,6 +19,8 @@ import { DefiProduct } from 'hooks/useDefiVault'
 import { useDefiVaultCallback } from 'hooks/useDefiVaultCallback'
 import { CURRENCIES } from 'constants/currencies'
 import { Timer } from 'components/Timer'
+import ActionButton from 'components/Button/ActionButton'
+import { useApproveCallback, ApprovalState } from 'hooks/useApproveCallback'
 
 export enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
@@ -58,6 +60,7 @@ export default function VaultForm({
   const { depositCallback, withdrawCallback } = useDefiVaultCallback(product?.chainId, product?.currency, product?.type)
   const { showModal, hideModal } = useModal()
   const addPopup = useTransactionAdder()
+  const [approvalState, approveCallback] = useApproveCallback()
 
   const autoBalance = '0'
 
@@ -191,6 +194,18 @@ export default function VaultForm({
         }}
       />
       <InvestConfirmModal
+        actionButton={
+          SUPPORTED_NETWORKS[product?.chainId ?? NETWORK_CHAIN_ID].nativeCurrency.symbol === investCurrency.symbol ||
+          approvalState === ApprovalState.APPROVED ? (
+            undefined
+          ) : (
+            <ActionButton
+              actionText="Approve"
+              onAction={approveCallback}
+              pending={approvalState === ApprovalState.PENDING}
+            />
+          )
+        }
         currency={investCurrency}
         productTitle={title}
         amount={(+investAmount).toFixed(2)}

@@ -626,7 +626,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "premium",
+        "name": "premiumPrice",
         "type": "uint256"
       },
       {
@@ -867,7 +867,7 @@
             "type": "string"
           }
         ],
-        "internalType": "struct MatchingThetaVault.InitParams",
+        "internalType": "struct AntimatterThetaVault.InitParams",
         "name": "_initParams",
         "type": "tuple"
       },

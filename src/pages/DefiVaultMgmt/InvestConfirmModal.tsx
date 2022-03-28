@@ -8,7 +8,8 @@ export default function InvestConfirmModal({
   onDismiss,
   amount,
   currency,
-  productTitle
+  productTitle,
+  actionButton
 }: {
   confirmData: { [key: string]: any }
   isOpen: boolean
@@ -17,12 +18,14 @@ export default function InvestConfirmModal({
   amount: string
   currency: Token | undefined
   productTitle: string
+  actionButton?: JSX.Element
 }) {
   return (
     <ConfirmModal
       isOpen={isOpen}
       onDismiss={onDismiss}
       onConfirm={onConfirm}
+      actionButton={actionButton}
       amount={amount}
       data={confirmData}
       title={'Confirm'}

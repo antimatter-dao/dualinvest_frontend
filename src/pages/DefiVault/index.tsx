@@ -149,7 +149,7 @@ export default function DefiVault() {
                     })
                   }
                   acc.push(
-                    <MenuItem value={formatAssetVal(+chainId, 'USDT')}>
+                    <MenuItem value={formatAssetVal(+chainId, 'USDT')} key={formatAssetVal(+chainId, 'USDT')}>
                       {' '}
                       <Box display="flex" alignItems={'center'} gap={10}>
                         <CurrencyLogo currency={SUPPORTED_CURRENCIES['USDT']} size={'22px'} />

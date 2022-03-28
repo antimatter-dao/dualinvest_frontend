@@ -124,5 +124,7 @@ export const feeRate = '3%'
 export const DEFI_VAULT_ADDRESS: {
   [chainId in ChainId]?: { [currencySymbol: string]: { CALL: string | undefined; PUT: string | undefined } }
 } = {
-  [ChainId.AVAX]: { AVAX: { CALL: '0xE31D8A9389d81b183C88069fd0Da85922dF7071a', PUT: undefined } }
+  [ChainId.AVAX]: {
+    AVAX: { CALL: '0xE31D8A9389d81b183C88069fd0Da85922dF7071a', PUT: '0x53205EBD4deA87789997fc4feEF027BE105Faf8e' }
+  }
 }

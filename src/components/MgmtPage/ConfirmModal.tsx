@@ -20,7 +20,8 @@ export default function ConfirmModal({
   title,
   subTitle,
   investCurrency,
-  children
+  children,
+  actionButton
 }: {
   isOpen: boolean
   onDismiss: () => void
@@ -33,6 +34,7 @@ export default function ConfirmModal({
   showCancelWarning?: boolean
   showCompoundWarning?: boolean
   children?: React.ReactNode
+  actionButton?: JSX.Element
 }) {
   const theme = useTheme()
 
@@ -89,9 +91,11 @@ export default function ConfirmModal({
         })}
       </Box>
 
-      <Button onClick={onConfirm} height="60px">
-        Confirm
-      </Button>
+      {actionButton ?? (
+        <Button onClick={onConfirm} height="60px">
+          Confirm
+        </Button>
+      )}
       {showCancelWarning && (
         <Box>
           <InfoOutlinedIcon sx={{ color: theme.palette.primary.main, height: 12 }} />
