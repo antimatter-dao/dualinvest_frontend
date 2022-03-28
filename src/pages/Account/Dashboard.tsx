@@ -25,7 +25,7 @@ import { getEtherscanLink } from 'utils/index'
 import { usePriceForAll } from 'hooks/usePriceSet'
 import { useAccountBalances } from 'hooks/useAccountBalance'
 import { toChecksumAddress } from 'web3-utils'
-import { CURRENCIES, SYMBOL_MAP } from 'constants/currencies'
+import { CURRENCIES, CURRENCY_ADDRESS_MAP, SYMBOL_MAP } from 'constants/currencies'
 import { toLocaleNumberString } from 'utils/toLocaleNumberString'
 import { NETWORK_CHAIN_ID } from 'constants/chain'
 
@@ -96,9 +96,7 @@ export default function Dashboard() {
 
     return records.map(record => {
       const scanLink = chainId ? getEtherscanLink(chainId, record.hash, 'transaction') : ''
-      const token = chainId
-        ? new Token(chainId, toChecksumAddress(record.currency), 18, record.symbol.toUpperCase())
-        : undefined
+      const token = chainId ? CURRENCY_ADDRESS_MAP[toChecksumAddress(record.currency)] : undefined
 
       return [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
@@ -159,7 +157,7 @@ export default function Dashboard() {
             balances?.pnl ?? '-',
             balances?.recurTotal ?? '-',
             <BalanceActions
-              key="btc1"
+              key={key}
               onDeposit={() => {
                 setCurrentCurrency(CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key])
                 handleDepositOpen()

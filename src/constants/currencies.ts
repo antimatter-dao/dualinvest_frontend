@@ -11,6 +11,7 @@ import { ChainId, ChainList } from './chain'
 
 export const SYMBOL_MAP = {
   BTC: 'BTC',
+  'USDT.e': 'USDT',
   USDT: 'USDT',
   BTCT: 'BTC',
   ETH: 'ETH',
