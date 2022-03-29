@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo } from 'react'
+import { useCallback, useState, useMemo, useEffect } from 'react'
 import { Box, Typography, styled, Tab, TabProps } from '@mui/material'
 import Card from 'components/Card/Card'
 import ProductCardHeader from 'components/ProductCardHeader'
@@ -9,6 +9,7 @@ import VaultForm from './VaultForm'
 import { DefiProduct } from 'hooks/useDefiVault'
 import { useActiveWeb3React } from 'hooks'
 import { Timer } from 'components/Timer'
+import { trimNumberString } from 'utils/trimNumberString'
 
 const StyledBox = styled(Box)<{ selected?: boolean }>(({ theme, selected }) => ({
   border: `1px solid ${selected ? theme.palette.primary.main : theme.palette.text.secondary}`,
@@ -76,6 +77,12 @@ export default function VaultCard(props: Props) {
     setStandardWithdrawlStep(step)
     return step === StandardWithdrawType.complete
   }, [product?.completeBalance])
+
+  useEffect(() => {
+    if (currentTab === TYPE.standard && initiated) {
+      onInvestChange(product?.completeBalance ?? '0')
+    }
+  }, [currentTab, initiated, onInvestChange, product?.completeBalance])
 
   const handleTabClick = useCallback(
     (val: number) => {
@@ -168,11 +175,11 @@ export default function VaultCard(props: Props) {
                   error={error}
                   key={TYPE.standard}
                   type={'Standard'}
-                  val={initiated ? product?.completeBalance ?? '0' : amount}
+                  val={amount}
                   onChange={onInvestChange}
                   currencySymbol={currencySymbol}
                   onClick={() => onStandardWd(amount, initiated)}
-                  disabled={initiated ? true : disabled}
+                  disabled={disabled}
                   productChainId={productChainId}
                   formData={formData}
                   available={initiated ? product?.completeBalance : product?.initiateBalance}
@@ -201,7 +208,8 @@ export default function VaultCard(props: Props) {
                   <Typography display="flex" alignItems={'center'} variant="inherit">
                     Redeemable:
                     <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
-                      {product?.instantBalance ?? '-'} {product?.investCurrency}
+                      {product?.instantBalance ? trimNumberString(product?.instantBalance, 8) : '-'}{' '}
+                      {product?.investCurrency}
                     </Typography>
                   </Typography>
                 </VaultForm>

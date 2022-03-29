@@ -5,6 +5,7 @@ import { escapeRegExp } from 'utils'
 import SecondaryButton from 'components/Button/SecondaryButton'
 import InputLabel from './InputLabel'
 import TextButton from 'components/Button/TextButton'
+import { trimNumberString } from 'utils/trimNumberString'
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
@@ -57,7 +58,7 @@ export default function NumericalInput({
           <Box display="flex" alignItems="baseline">
             {!!balance && (
               <InputLabel style={{ fontSize: '12px' }}>
-                Available: {balance} {unit ?? 'MATTER'}
+                Available: {trimNumberString(balance, 8)} {unit ?? 'MATTER'}
               </InputLabel>
             )}
             {onDeposit && (

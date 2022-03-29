@@ -2,7 +2,8 @@ import { useCallback, useMemo } from 'react'
 import { ChainId } from 'constants/chain'
 import { useDefiVaultContract } from './useContract'
 import { DEFAULT_COIN_SYMBOL } from 'constants/currencies'
-import { useActiveWeb3React } from 'hooks'
+// import { useActiveWeb3React } from 'hooks'
+// import JSBI from 'jsbi'
 
 export function useDefiVaultCallback(
   chainId: ChainId | undefined,
@@ -10,7 +11,7 @@ export function useDefiVaultCallback(
   type: 'CALL' | 'PUT' | undefined
 ) {
   const contract = useDefiVaultContract(chainId, currencySymbol, type)
-  const { account } = useActiveWeb3React()
+  // const { account } = useActiveWeb3React()
 
   const depositETH = useCallback(
     async (val: string): Promise<any> => {
@@ -53,7 +54,7 @@ export function useDefiVaultCallback(
         throw Error('no contract')
       }
       const estimatedGas = await contract.estimateGas.withdrawInstantly(amount).catch((error: Error) => {
-        console.debug(`Failed to instant withdraw token`, error)
+        console.debug(`Failed to instantly withdraw token`, error)
         throw error
       })
       return contract?.withdrawInstantly(amount, { gasLimit: estimatedGas })
@@ -66,30 +67,26 @@ export function useDefiVaultCallback(
       if (!contract) {
         throw Error('no contract')
       }
-      const estimatedGas = await contract.estimateGas.withdrawInstantly(amount).catch((error: Error) => {
+      const estimatedGas = await contract.estimateGas.initiateWithdraw(amount).catch((error: Error) => {
         console.debug(`Failed to initiate standard withdraw`, error)
         throw error
       })
-      return contract?.withdrawInstantly(amount, { gasLimit: estimatedGas })
+      return contract?.initiateWithdraw(amount, { gasLimit: estimatedGas })
     },
     [contract]
   )
 
-  const standardCompleteCallback = useCallback(
-    async (amount: string): Promise<any> => {
-      if (!contract) {
-        throw Error('no contract')
-      }
-      const shares = await contract.withdrawals(account)
-      console.log(shares)
-      const estimatedGas = await contract.estimateGas.withdrawInstantly(amount).catch((error: Error) => {
-        console.debug(`Failed to initiate standard withdraw`, error)
-        throw error
-      })
-      return contract?.withdrawInstantly(amount, { gasLimit: estimatedGas })
-    },
-    [account, contract]
-  )
+  const standardCompleteCallback = useCallback(async (): Promise<any> => {
+    if (!contract) {
+      throw Error('no contract')
+    }
+    try {
+      const estimatedGas = await contract.estimateGas.completeWithdraw()
+      return contract?.completeWithdraw({ gasLimit: estimatedGas })
+    } catch (e) {
+      console.debug(`Failed to complete standard withdraw`, e)
+    }
+  }, [contract])
 
   return useMemo(
     () => ({

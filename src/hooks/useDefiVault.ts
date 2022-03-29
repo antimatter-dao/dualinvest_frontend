@@ -10,6 +10,7 @@ import { useBlockNumber } from 'state/application/hooks'
 import { parseBalance } from 'utils/parseAmount'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useDefiVaultContract } from './useContract'
+import JSBI from 'jsbi'
 
 enum DefiProductDataOrder {
   balanceOf,
@@ -47,32 +48,46 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
   const initiateBalance = useSingleCallResult(contract, 'accountVaultBalance', args)
   const withdrawals = useSingleCallResult(contract, 'withdrawals', args)
 
+  const argPrice = useMemo(() => {
+    return [withdrawals?.result?.round]
+  }, [withdrawals?.result?.round])
+
+  const price = useSingleCallResult(contract, 'roundPricePerShare', argPrice)
+
   const result = useMemo(() => {
     if (!SUPPORTED_DEFI_VAULT[productChainId as keyof typeof SUPPORTED_DEFI_VAULT]?.includes(cur)) {
       return null
     } else {
       const investCurrency = type.toUpperCase() === 'CALL' ? SUPPORTED_CURRENCIES[cur]?.symbol ?? '' : 'USDC'
+      const token = CURRENCIES[productChainId as ChainId][investCurrency]
+      const shares = withdrawals?.result?.shares?.toString()
+      const price1 = price?.result?.[0]?.toString()
+
+      const val =
+        shares && price
+          ? JSBI.divide(
+              JSBI.multiply(JSBI.BigInt(shares), JSBI.BigInt(price1)),
+              JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(10))
+            ).toString()
+          : undefined
+
       return {
         chainId: productChainId,
         type: type.toUpperCase() === 'CALL' ? 'CALL' : 'PUT',
         currency: SUPPORTED_CURRENCIES[cur]?.symbol ?? '',
         investCurrency: investCurrency,
         instantBalance:
-          instantBalance.result?.amount && productChainId
-            ? parseBalance(instantBalance.result?.amount, CURRENCIES[productChainId as ChainId][investCurrency])
-            : '-',
-        completeBalance: withdrawals?.result?.shares.toString(),
+          instantBalance.result?.amount && productChainId ? parseBalance(instantBalance.result?.amount, token) : '-',
+        completeBalance: val ? parseBalance(val, token) : '-',
         initiateBalance:
-          initiateBalance?.result?.[0] && productChainId
-            ? parseBalance(initiateBalance.result[0], CURRENCIES[productChainId as ChainId][investCurrency])
-            : '-',
+          initiateBalance?.result?.[0] && productChainId ? parseBalance(initiateBalance.result[0], token) : '-',
         withdrawals: withdrawals.result,
         strikePrice: '30000',
         expiredAt: 1000000000000000,
         apy: '100%'
       } as DefiProduct
     }
-  }, [cur, initiateBalance.result, instantBalance.result?.amount, productChainId, type, withdrawals.result])
+  }, [cur, initiateBalance.result, instantBalance.result?.amount, price, productChainId, type, withdrawals.result])
   return result
 }
 

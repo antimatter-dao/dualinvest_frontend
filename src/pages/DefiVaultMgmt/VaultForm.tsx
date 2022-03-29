@@ -19,6 +19,7 @@ import { useDefiVaultCallback } from 'hooks/useDefiVaultCallback'
 import { CURRENCIES, DEFAULT_COIN_SYMBOL } from 'constants/currencies'
 import { Timer } from 'components/Timer'
 import { useApproveCallback, ApprovalState } from 'hooks/useApproveCallback'
+import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 export default function VaultForm({
   product,
@@ -46,7 +47,9 @@ export default function VaultForm({
 
   const balance =
     product?.investCurrency === SUPPORTED_NETWORKS[chainId ?? NETWORK_CHAIN_ID].nativeCurrency.symbol
-      ? ETHBalance?.toExact()
+      ? ETHBalance
+        ? maxAmountSpend(ETHBalance)?.toExact()
+        : '-'
       : tokenBalance?.toExact()
 
   const {

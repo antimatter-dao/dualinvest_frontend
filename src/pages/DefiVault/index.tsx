@@ -13,10 +13,10 @@ import { DefiProduct, useDefiVaultList } from 'hooks/useDefiVault'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import NoDataCard from 'components/Card/NoDataCard'
 
-enum SortBy {
-  highToLow = 'hl',
-  lowToHigh = 'lh'
-}
+// enum SortBy {
+//   highToLow = 'hl',
+//   lowToHigh = 'lh'
+// }
 
 enum Strategy {
   all = 'ALL',
@@ -40,7 +40,7 @@ export default function DefiVault() {
   const history = useHistory()
   const theme = useTheme()
   const isDownSm = useBreakpoint('sm')
-  const [sortBy, setSortBy] = useState<SortBy>(SortBy.highToLow)
+  // const [sortBy, setSortBy] = useState<SortBy>(SortBy.highToLow)
   const [strategy, setStrategy] = useState<Strategy>(Strategy.all)
   const [depositAsset, setDepositAsset] = useState<string>('ALL')
   const allList = useDefiVaultList()
@@ -58,16 +58,17 @@ export default function DefiVault() {
       return acc
     }, [] as DefiProduct[])
 
-    const sorted = list.sort((a, b) => {
-      const isLarger = +a.apy.replace('%', '') > +b.apy.replace('%', '')
-      return sortBy === SortBy.highToLow ? (isLarger ? -1 : 1) : isLarger ? 1 : -1
-    })
-    return sorted
-  }, [allList, depositAsset, sortBy, strategy])
+    // const sorted = list.sort((a, b) => {
+    //   const isLarger = +a.apy.replace('%', '') > +b.apy.replace('%', '')
+    //   return sortBy === SortBy.highToLow ? (isLarger ? -1 : 1) : isLarger ? 1 : -1
+    // })
+    // return sorted
+    return list
+  }, [allList, depositAsset, strategy])
 
-  const handleSortBy = useCallback(e => {
-    setSortBy(e.target.value)
-  }, [])
+  // const handleSortBy = useCallback(e => {
+  //   setSortBy(e.target.value)
+  // }, [])
 
   const handleStreragy = useCallback(e => {
     setStrategy(e.target.value)
@@ -173,7 +174,7 @@ export default function DefiVault() {
             </Select>
           </Box>
         </Box>
-        <Box
+        {/* <Box
           display={{ xs: 'grid', sm: 'flex' }}
           width={{ xs: '100%', sm: 'max-content' }}
           alignItems="center"
@@ -186,7 +187,7 @@ export default function DefiVault() {
             <MenuItem value={SortBy.highToLow}>Yield: High To Low</MenuItem>
             <MenuItem value={SortBy.lowToHigh}>Yield: Low To High</MenuItem>
           </Select>
-        </Box>
+        </Box> */}
       </Box>
       {filteredList && filteredList.length === 0 && <NoDataCard />}
       <Box

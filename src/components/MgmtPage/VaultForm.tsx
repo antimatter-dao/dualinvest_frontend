@@ -12,7 +12,6 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import { OutlinedCard } from 'components/Card/Card'
 import Card from 'components/Card/Card'
 import Divider from 'components/Divider'
-import { DEFAULT_COIN_SYMBOL } from 'constants/currencies'
 
 enum TYPE {
   invest = 'Invest',
@@ -75,20 +74,10 @@ export default function VaultForm({
   )
 
   const handleMax = useCallback(() => {
-    if (!available || !chainId || available === '-') return
-    const isDefaultCoin = DEFAULT_COIN_SYMBOL[chainId] === currencySymbol
-    if (isDefaultCoin) {
-      const min = 0.01
-      const res = +available - min
-      if (res <= 0) {
-        onChange('0')
-      } else {
-        onChange(`${res}`)
-      }
-    } else {
-      onChange(available)
-    }
-  }, [available, chainId, currencySymbol, onChange])
+    if (!available || available === '-') return
+
+    onChange(available)
+  }, [available, onChange])
 
   return (
     <Box
@@ -113,7 +102,12 @@ export default function VaultForm({
           onChange={handleChange}
           onMax={handleMax}
           value={val}
-          disabled={!account || error === ErrorType.notAvailable || chainId !== productChainId}
+          disabled={
+            !account ||
+            error === ErrorType.notAvailable ||
+            chainId !== productChainId ||
+            !!(available && +available === 0)
+          }
         />
         <Box>
           {account && chainId === productChainId && (
