@@ -66,14 +66,13 @@ export function useDefiVaultCallback(
       if (!contract) {
         throw Error('no contract')
       }
-      const shares = await contract.withdrawals(account)
       const estimatedGas = await contract.estimateGas.withdrawInstantly(amount).catch((error: Error) => {
         console.debug(`Failed to initiate standard withdraw`, error)
         throw error
       })
       return contract?.withdrawInstantly(amount, { gasLimit: estimatedGas })
     },
-    [account, contract]
+    [contract]
   )
 
   const standardCompleteCallback = useCallback(
@@ -82,6 +81,7 @@ export function useDefiVaultCallback(
         throw Error('no contract')
       }
       const shares = await contract.withdrawals(account)
+      console.log(shares)
       const estimatedGas = await contract.estimateGas.withdrawInstantly(amount).catch((error: Error) => {
         console.debug(`Failed to initiate standard withdraw`, error)
         throw error

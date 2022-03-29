@@ -75,17 +75,20 @@ export function useRecurStatistics() {
 
 export function useHomeStatistics(): { totalInvest: string; totalProgress: string } {
   const dualStatistics = useDualStatistics()
+  const recurStatistics = useRecurStatistics()
 
   const res = useMemo(() => {
-    const totalInvest = dualStatistics?.totalDeposit
-      ? toLocaleNumberString(+replaceAll(dualStatistics.totalDeposit, ',', ''), 0)
-      : '-'
+    const totalInvest =
+      dualStatistics?.totalDeposit && recurStatistics?.totalReInvest
+        ? toLocaleNumberString(+replaceAll(dualStatistics.totalDeposit, ',', '') + +recurStatistics.totalReInvest, 0)
+        : '-'
 
-    const totalProgress = dualStatistics?.totalInvestAmount
-      ? toLocaleNumberString(+dualStatistics.totalInvestAmount, 0)
-      : '-'
+    const totalProgress =
+      dualStatistics?.totalInvestAmount && recurStatistics?.totalProgress
+        ? toLocaleNumberString(+dualStatistics.totalInvestAmount + +recurStatistics.totalProgress, 0)
+        : '-'
     return { totalInvest, totalProgress }
-  }, [dualStatistics])
+  }, [dualStatistics, recurStatistics])
 
   return res
 }

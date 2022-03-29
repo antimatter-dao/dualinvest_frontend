@@ -5,11 +5,34 @@ import { useActiveWeb3React } from 'hooks'
 import { isAddress } from 'utils'
 import { Axios } from 'utils/axios'
 import { OrderRecord } from 'utils/fetch/record'
-import { RecurProductRaw, singleRecurProductFormatter, RecurProduct } from 'utils/fetch/recur'
+import {
+  RecurProductRaw,
+  recurProductListFormatter,
+  RecurProductList,
+  singleRecurProductFormatter,
+  RecurProduct,
+  prevRecurDetailsFormatter,
+  PrevRecur
+} from 'utils/fetch/recur'
 import { INVEST_TYPE } from './useAccountData'
 import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { InvestStatus } from './useAccountData'
 import { NETWORK_CHAIN_ID } from 'constants/chain'
+
+export function useRecurProcuctList() {
+  const [productList, setProductList] = useState<RecurProductList | undefined>(undefined)
+  // const { chainId } = useActiveWeb3React()
+
+  const promiseFn = useCallback(
+    () => Axios.get<RecurProductRaw>('getReinProducts', { chainId: NETWORK_CHAIN_ID }),
+    []
+  )
+  const callbackFn = useCallback(r => setProductList(recurProductListFormatter(r.data.data)), [])
+
+  usePollingWithMaxRetries(promiseFn, callbackFn, 60000)
+
+  return productList
+}
 
 export function useSingleRecurProcuct(currency: string, type: string) {
   const [productList, setProductList] = useState<RecurProduct | undefined>(undefined)
@@ -32,16 +55,16 @@ export function useSingleRecurProcuct(currency: string, type: string) {
 export function useRecurPnl(currency: string | undefined): { totalReInvest: string; pnl: string } {
   const [data, setData] = useState<{ totalReInvest: string; pnl: string }>({ totalReInvest: '-', pnl: '-' })
 
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
 
   const promiseFn = useCallback(() => {
     return Axios.get<RecurProductRaw>('getTotalReInvest', {
       account,
-      chainId,
+      chainId: NETWORK_CHAIN_ID,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currency!]?.address
+      currency: CURRENCIES[NETWORK_CHAIN_ID][currency!]?.address
     })
-  }, [account, chainId, currency])
+  }, [account, currency])
 
   const callbackFn = useCallback(r => {
     setData({ pnl: r?.data?.data?.pnl ?? '-', totalReInvest: r?.data?.data?.totalReInvest ?? '-' })
@@ -113,7 +136,7 @@ export function useRecurActiveOrderCount(
   refresh: string
 ) {
   const [count, setCount] = useState(0)
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
 
   const promiseFn = useCallback(() => {
     if (!account) return new Promise((resolve, reject) => reject(null))
@@ -122,9 +145,9 @@ export function useRecurActiveOrderCount(
       investType: INVEST_TYPE.recur,
       currency: vaultSymbol,
       investCurrency: curSymbol,
-      chainId: chainId ?? NETWORK_CHAIN_ID
+      chainId: NETWORK_CHAIN_ID
     })
-  }, [account, chainId, curSymbol, vaultSymbol])
+  }, [account, curSymbol, vaultSymbol])
 
   const callbackFn = useCallback(
     r => {
@@ -141,4 +164,30 @@ export function useRecurActiveOrderCount(
   usePollingWithMaxRetries(curSymbol ? promiseFn : undefined, callbackFn, 30000)
 
   return count
+}
+
+export function useLastCycleRecurDetails(currencyAddress: string | undefined, vaultAddress: string | undefined) {
+  const [details, setDetails] = useState<undefined | PrevRecur>(undefined)
+  const { account } = useActiveWeb3React()
+
+  useEffect(() => {
+    if (!currencyAddress || !currencyAddress) return
+    ;(async () => {
+      try {
+        const r = await Axios.get<any>('lastCycleProductDetail', {
+          account: account,
+          currency: currencyAddress,
+          vault: vaultAddress,
+          chainId: NETWORK_CHAIN_ID
+        })
+        if (r.data.data) {
+          setDetails(prevRecurDetailsFormatter(r.data.data))
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    })()
+  }, [account, currencyAddress, vaultAddress])
+
+  return details
 }

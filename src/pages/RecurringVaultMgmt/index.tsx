@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback, ReactElement } from 'react'
-import { NavLink, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Typography, Box, useTheme, styled, Grid } from '@mui/material'
 import MgmtPage from 'components/MgmtPage'
 import { routes } from 'constants/routes'
@@ -7,13 +7,16 @@ import { Subject } from 'components/MgmtPage/stableContent'
 import TextButton from 'components/Button/TextButton'
 import { vaultPolicyCall, vaultPolicyPut, valutPolicyTitle, vaultPolicyText } from 'components/MgmtPage/stableContent'
 import VaultForm from './VaultForm'
+import { useLastCycleRecurDetails, useSingleRecurProcuct } from 'hooks/useRecurData'
 import DualInvestChart /*,{ PastAggrChart }*/ from 'pages/DualInvestMgmt/Chart'
 import Card from 'components/Card/Card'
+import { CURRENCIES } from 'constants/currencies'
+import { PrevRecur } from 'utils/fetch/recur'
 import dayjs from 'dayjs'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { useSingleDefiVault } from 'hooks/useDefiVault'
-import { PrevRecur } from 'utils/fetch/recur'
-import { ReactComponent as ArrowLeft } from 'assets/componentsIcon/arrow_left.svg'
+import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
+import { useActiveWeb3React } from 'hooks'
+import SwitchChainModal from 'components/Modal/SwitchChainModal'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -32,18 +35,22 @@ export const StyledUnorderList = styled('ul')(({ theme }) => ({
   }
 }))
 
-export default function DefiMgmt() {
+export default function RecurringVaultMgmt() {
+  const { chainId } = useActiveWeb3React()
+
+  const [switchChainModalOpen, setSwitchChainModalOpen] = useState(chainId !== NETWORK_CHAIN_ID)
   const [investAmount, setInvestAmount] = useState('')
 
   const theme = useTheme()
-  const { currency, type, chainName } = useParams<{ currency: string; type: string; chainName: string }>()
-
-  const product = useSingleDefiVault(chainName ?? '', currency ?? '', type ?? '')
-
-  const prevDetails = undefined
+  const { currency, type } = useParams<{ currency: string; type: string }>()
+  const product = useSingleRecurProcuct(currency ?? '', type ?? '')
+  const prevDetails = useLastCycleRecurDetails(
+    product?.investCurrency ? CURRENCIES[NETWORK_CHAIN_ID][product.investCurrency]?.address : undefined,
+    product?.currency ? CURRENCIES[NETWORK_CHAIN_ID][product.currency]?.address : undefined
+  )
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
-  const isCall = type.toUpperCase() === 'CALL'
+  const isCall = product?.type === 'CALL'
 
   const returnOnInvestmentListItems = useMemo(() => {
     return [
@@ -68,7 +75,7 @@ export default function DefiMgmt() {
   const chart = useMemo(() => {
     return (
       <DualInvestChart
-        product={product ?? undefined}
+        product={product}
         str1={`Settlement Price ${isCall ? '≥' : '≤'} ${strikePrice} USDT, will be exercised`}
         str2={`Settlement Price ${isCall ? '<' : '>'} ${strikePrice} USDT, will not be exercised`}
       />
@@ -83,76 +90,99 @@ export default function DefiMgmt() {
   //   return <PastAggrChart />
   //   return null
   // }, [])
+
   return (
     <>
-      {product === null ? (
-        <Box
-          position="fixed"
-          top={{ xs: theme.height.mobileHeader, md: theme.height.header }}
-          left={0}
-          width={'100%'}
-          height={{
-            xs: `calc(100vh - ${theme.height.mobileHeader})`,
-            md: `calc(100vh - ${theme.height.header})`
-          }}
-          padding={isDownMd ? '24px 24px 28px' : '27px 24px'}
-          sx={{ background: '#ffffff' }}
-        >
-          <Box
-            component={NavLink}
-            to={routes.defiVault}
-            zIndex={2}
-            style={{ textDecoration: 'none', display: 'block', width: 'max-content' }}
-          >
-            <ArrowLeft />
-            <Typography component="span" color={theme.bgColor.bg1} fontSize={{ xs: 12, md: 14 }} ml={16}>
-              Go Back
-            </Typography>
-          </Box>
-          <Box width="100%" height="100%" display="flex" justifyContent={'center'} alignItems="center">
-            Product Not Available
-          </Box>
-        </Box>
-      ) : (
-        <MgmtPage
-          isDefiVault={true}
-          graphTitle="Current Subscription Status"
-          showFaq={false}
-          backLink={routes.defiVault}
-          pageTitle={
-            product?.type === 'CALL'
-              ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-              : `${product?.currency ?? ''} Put Selling Recurring Strategy`
-          }
-          product={product ?? undefined}
-          subject={Subject.RecurringVault}
-          subscribeForm={
-            <RecurringPolicy
-              type={product?.type.toLocaleLowerCase() === 'call' ? 'call' : 'put'}
-              currencySymbol={product?.currency ?? '-'}
-            />
-          }
-          returnOnInvestmentListItems={returnOnInvestmentListItems}
-          vaultForm={<VaultForm product={product} setAmount={handleInput} amount={investAmount} />}
-          chart={chart}
-        >
-          <Grid xs={12} md={4} item>
-            <PrevCycleStats prevDetails={prevDetails} />
-          </Grid>
-          {!isDownMd && (
-            <Grid xs={12} md={8} item>
-              <Card style={{ height: '100%' }}>
-                <Box height="100%" width="100%" display="flex" alignItems={'center'} padding="24px">
-                  <Typography sx={{ margin: 'auto auto' }} align="center">
-                    Past aggregate earnings graph <br />
-                    Coming soon...
-                  </Typography>
+      <SwitchChainModal
+        customOnDismiss={() => setSwitchChainModalOpen(false)}
+        customIsOpen={switchChainModalOpen}
+        fromChain={ChainListMap[chainId ?? NETWORK_CHAIN_ID]}
+        toChain={ChainListMap[NETWORK_CHAIN_ID]}
+      >
+        Product only available on {ChainListMap[NETWORK_CHAIN_ID].name}, please switch to corresponding chain
+      </SwitchChainModal>
+      <MgmtPage
+        graphTitle="Current Subscription Status"
+        showFaq={false}
+        backLink={routes.recurringVault}
+        product={product}
+        subject={Subject.RecurringVault}
+        subscribeForm={
+          <RecurringPolicy
+            type={product?.type.toLocaleLowerCase() === 'call' ? 'call' : 'put'}
+            currencySymbol={product?.currency ?? '-'}
+          />
+        }
+        returnOnInvestmentListItems={returnOnInvestmentListItems}
+        vaultForm={<VaultForm product={product} setInvestAmount={handleInput} investAmount={investAmount} />}
+        chart={chart}
+      >
+        <Grid xs={12} md={4} item>
+          <PrevCycleStats prevDetails={prevDetails} />
+        </Grid>
+        {!isDownMd && (
+          <Grid xs={12} md={8} item>
+            <Card style={{ height: '100%' }}>
+              <Box height="100%" width="100%" display="flex" alignItems={'center'} padding="24px">
+                <Typography sx={{ margin: 'auto auto' }} align="center">
+                  Past aggregate earnings graph <br />
+                  Coming soon...
+                </Typography>
+              </Box>
+              {/* <Box
+              maxHeight="100%"
+              height="100%"
+              gap={0}
+              display={{ xs: 'grid', md: 'flex', maxWidth: 'calc(100vw - 100px)' }}
+              flexDirection={'column'}
+              padding={'32px 24px'}
+            >
+              <Typography fontSize={{ xs: 14, md: 16 }} paddingTop={18} paddingLeft={24} sx={{ opacity: 0.5 }}>
+                Past Aggregate Earnings (Platform)
+              </Typography>
+              <Box
+                display="flex"
+                justifyContent={isDownMd ? 'flex-start' : 'space-between'}
+                flexDirection={isDownMd ? 'column' : 'row'}
+                alignItems="center"
+                gap={18}
+              >
+                <Typography
+                  component="div"
+                  display="flex"
+                  alignItems="baseline"
+                  fontSize={{ xs: 40, md: 44 }}
+                  paddingTop={13}
+                  paddingLeft={24}
+                  fontWeight={700}
+                >
+                  82,890
+                  <Typography sx={{ fontSize: 16, fontWeight: 700, ml: 4, lineHeight: 1 }}>$</Typography>
+                </Typography>
+                <Box display="flex" flexDirection={'column'} gap={8}>
+                  <Box display="flex" alignItems="center" gap={8}>
+                    <Box height={10} width={10} borderRadius="50%" bgcolor="#ADDFB5" />
+                    <Typography fontSize={14} color="#ADDFB5">
+                      Unexercised
+                    </Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center" gap={8}>
+                    <Box height={10} width={10} borderRadius="50%" bgcolor="#E3E3E3" />
+                    <Typography fontSize={14} color="#E3E3E3">
+                      Exercised
+                    </Typography>
+                  </Box>
                 </Box>
-              </Card>
-            </Grid>
-          )}
-        </MgmtPage>
-      )}
+              </Box>
+              <Typography fontSize={{ xs: 11, md: 13 }} paddingLeft={24}>
+                Aug 26, 2021
+              </Typography>
+              {chart2}
+            </Box> */}
+            </Card>
+          </Grid>
+        )}
+      </MgmtPage>
     </>
   )
 }

@@ -42,6 +42,7 @@ interface Props {
   vaultForm?: React.ReactNode
   children?: React.ReactNode
   graphTitle: string
+  isDefiVault?: boolean
 }
 
 export default function MgmtPage(props: Props) {
@@ -57,7 +58,8 @@ export default function MgmtPage(props: Props) {
     returnOnInvestmentListItems,
     vaultForm,
     children,
-    graphTitle
+    graphTitle,
+    isDefiVault
   } = props
 
   const isDownMd = useBreakpoint('md')
@@ -111,7 +113,7 @@ export default function MgmtPage(props: Props) {
               </Typography>
             </Box>
 
-            {vaultForm && !isDownMd && (
+            {isDefiVault && !isDownMd && (
               <Box padding="0 24px">
                 <div style={{ height: '43px' }}></div>
                 <LogoTitle

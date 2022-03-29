@@ -22,6 +22,7 @@ import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 import DEFI_VAULT_ABI from '../constants/abis/defi_vault.json'
 import { ChainId, NETWORK_CHAIN_ID } from 'constants/chain'
+import { getOtherNetworkLibrary } from 'connectors/MultiNetworkConnector'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -109,6 +110,21 @@ export function useDualInvestContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
 
   return useContract(DUAL_INVEST_ADDRESS[chainId ?? NETWORK_CHAIN_ID], DUAL_INVEST_ABI, true)
+}
+
+export function useBSCDualInvestContract(): Contract | null {
+  const { account } = useActiveWeb3React()
+  return useMemo(() => {
+    const library = getOtherNetworkLibrary(NETWORK_CHAIN_ID)
+    try {
+      if (!DUAL_INVEST_ADDRESS[NETWORK_CHAIN_ID] || !library) return null
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return getContract(DUAL_INVEST_ADDRESS[NETWORK_CHAIN_ID]!, DUAL_INVEST_ABI, library, account ?? undefined)
+    } catch (error) {
+      console.error('Failed to get contract', error)
+      return null
+    }
+  }, [account])
 }
 
 export function useDefiVaultContract(

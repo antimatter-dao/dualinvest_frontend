@@ -11,6 +11,8 @@ export const routes = {
   noService: 'no-service',
   defiVault: '/defi',
   defiVaultMgmt: '/defi-vault-mgmt/:chainName/:currency/:type',
+  recurringVault: '/recurring-vault',
+  recurringVaultMgmt: '/recurring-vault-mgmt/:currency/:type',
   referral: '/:referrer'
 }
 

@@ -1,3 +1,10 @@
+import { SYMBOL_MAP } from 'constants/currencies'
+
+const TYPE = {
+  call: 'CALL',
+  put: 'PUT'
+}
+
 export interface PrevRecurRaw {
   currency: string
   delivery_price: string
@@ -66,6 +73,10 @@ export interface RecurProduct {
   price: any
 }
 
+export type RecurProductList = {
+  [key in Partial<keyof typeof SYMBOL_MAP>]: { call: RecurProduct | undefined; put: RecurProduct | undefined }
+}
+
 const recurProductFormatter = (raw: RecurProductRaw): RecurProduct => {
   return {
     productId: raw.product_id,
@@ -84,6 +95,24 @@ const recurProductFormatter = (raw: RecurProductRaw): RecurProduct => {
     strikeCurrency: raw.strike_currency,
     price: raw.price
   }
+}
+
+export const recurProductListFormatter = (raw: RecurProductRaw[]): RecurProductList => {
+  return raw.reduce((acc, item) => {
+    const res = recurProductFormatter(item)
+    if (!acc[item.currency as Partial<keyof typeof SYMBOL_MAP>]) {
+      acc[item.currency as Partial<keyof typeof SYMBOL_MAP>] = {
+        call: undefined,
+        put: undefined
+      }
+    }
+    if (item.type === TYPE.call) {
+      acc[item.currency as Partial<keyof typeof SYMBOL_MAP>].call = res
+    } else {
+      acc[item.currency as Partial<keyof typeof SYMBOL_MAP>].put = res
+    }
+    return acc
+  }, {} as RecurProductList)
 }
 
 export const singleRecurProductFormatter = (
