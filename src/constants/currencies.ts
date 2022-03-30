@@ -83,7 +83,8 @@ export const SUPPORTED_CURRENCIES: {
   },
   USDC: {
     address: {
-      [ChainId.AVAX]: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664'
+      [ChainId.AVAX]: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664',
+      [ChainId.MAINNET]: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
     },
     decimals: 6,
     symbol: 'USDC',

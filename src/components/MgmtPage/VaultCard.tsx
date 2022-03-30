@@ -208,7 +208,7 @@ export default function VaultCard(props: Props) {
                   <Typography display="flex" alignItems={'center'} variant="inherit">
                     Redeemable:
                     <Typography component={'span'} color="primary" fontWeight={700} variant="inherit" ml={5}>
-                      {product?.instantBalance ? trimNumberString(product?.instantBalance, 8) : '-'}{' '}
+                      {product?.instantBalance ? trimNumberString(product?.instantBalance, 6) : '-'}{' '}
                       {product?.investCurrency}
                     </Typography>
                   </Typography>

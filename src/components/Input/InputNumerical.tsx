@@ -58,7 +58,7 @@ export default function NumericalInput({
           <Box display="flex" alignItems="baseline">
             {!!balance && (
               <InputLabel style={{ fontSize: '12px' }}>
-                Available: {trimNumberString(balance, 8)} {unit ?? 'MATTER'}
+                Available: {trimNumberString(balance, 6)} {unit ?? 'MATTER'}
               </InputLabel>
             )}
             {onDeposit && (

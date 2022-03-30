@@ -20,6 +20,7 @@ import { CURRENCIES, DEFAULT_COIN_SYMBOL } from 'constants/currencies'
 import { Timer } from 'components/Timer'
 import { useApproveCallback, ApprovalState } from 'hooks/useApproveCallback'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
+import { trimNumberString } from 'utils/trimNumberString'
 
 export default function VaultForm({
   product,
@@ -36,8 +37,8 @@ export default function VaultForm({
   const currency = CURRENCIES[product?.chainId ?? NETWORK_CHAIN_ID][product?.currency ?? '']
   const title =
     product?.type === 'CALL'
-      ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
-      : `${product?.currency ?? ''} Put Selling Recurring Strategy`
+      ? `${product?.currency ?? ''} Covered Call Defi Vault`
+      : `${product?.currency ?? ''} Put Selling Defi Vault`
 
   const ETHBalance = useETHBalances([account ?? undefined])?.[account ?? '']
   const tokenBalance = useTokenBalance(account ?? undefined, investCurrency)
@@ -68,11 +69,12 @@ export default function VaultForm({
 
   const formData = useMemo(
     () => ({
-      ['P&L:']: '-' + ' ' + currencySymbol,
-      ['Current cycle invested amount:']: '-' + ' ' + currencySymbol,
+      ['']: '',
+      ['Current cycle invested amount:']:
+        (product?.initiateBalance ? trimNumberString(product.initiateBalance, 6) : '-') + ' ' + currencySymbol,
       ['Progress order due time:']: <Timer timer={product?.expiredAt ?? 0} />
     }),
-    [currencySymbol, product?.expiredAt]
+    [currencySymbol, product?.expiredAt, product?.initiateBalance]
   )
 
   const confirmData = useMemo(
@@ -171,7 +173,7 @@ export default function VaultForm({
             }
 
             callbackFactory(
-              `Withdrawed ${amount} ${product.investCurrency} from ${
+              `${initiated ? 'Initiated' : 'Completed'} withdrawal ${amount} ${product.investCurrency} from ${
                 product.type === 'CALL'
                   ? `${product?.currency ?? ''} Covered Call Defi Vault`
                   : `${product?.currency ?? ''} Put Selling Defi Vault`
@@ -199,7 +201,7 @@ export default function VaultForm({
   return (
     <>
       <InvestConfirmModal
-        isNativeCur={DEFAULT_COIN_SYMBOL[chainId ?? NETWORK_CHAIN_ID] === investCurrency.symbol}
+        isNativeCur={DEFAULT_COIN_SYMBOL[chainId ?? NETWORK_CHAIN_ID] === investCurrency?.symbol}
         approvalState={approvalState}
         currency={investCurrency}
         productTitle={title}
