@@ -11,7 +11,7 @@ import DEFI_VAULT_ABI from '../constants/abis/defi_vault.json'
 import DEFI_VAULT_OPTION_ABI from '../constants/abis/defi_vault_option.json'
 import { useActiveWeb3React } from 'hooks'
 import { useBlockNumber } from 'state/application/hooks'
-import { parseBalance } from 'utils/parseAmount'
+import { parseBalance, parsePrecision } from 'utils/parseAmount'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useDefiVaultContract } from './useContract'
 import { trimNumberString } from 'utils/trimNumberString'
@@ -28,11 +28,15 @@ export interface DefiProduct {
   instantBalance?: string
   completeBalance?: string
   initiateBalance?: string
+  cap?: number
+  totalBalance?: number
 }
 
 enum DefiProductDataOrder {
-  accountVaultBalance
-  // currentOption
+  accountVaultBalance,
+  decimals,
+  cap,
+  totalBalance
 }
 
 const APY = '100%'
@@ -163,44 +167,73 @@ export function useDefiVaultList() {
 
 // defi list vault calls
 const callsFactory = (contract: Contract | null, account: string | null | undefined) => {
-  return Promise.all([account ? contract?.accountVaultBalance(account) : null])
+  return Promise.all([
+    account ? contract?.accountVaultBalance(account) : null,
+    contract?.decimals(),
+    contract?.cap(),
+    contract?.totalBalance()
+  ])
 }
 
 const defiVaultListUtil = (res?: any[][]) => {
   return Object.keys(SUPPORTED_DEFI_VAULT).reduce((accMain, chainId: string, idx1: number) => {
     SUPPORTED_DEFI_VAULT[+chainId as keyof typeof SUPPORTED_DEFI_VAULT]?.map((symbol: string, idx2: number) => {
+      const resCall = res?.[idx1][idx2 * 2]
       accMain.push({
         chainId: +chainId,
         currency: symbol,
         balance:
-          res && res[idx1][idx2 * 2][DefiProductDataOrder.accountVaultBalance]
+          resCall && resCall[DefiProductDataOrder.accountVaultBalance]
             ? trimNumberString(
                 parseBalance(
-                  res[idx1][idx2][DefiProductDataOrder.accountVaultBalance].toString(),
+                  resCall[DefiProductDataOrder.accountVaultBalance].toString(),
                   CURRENCIES[+chainId as ChainId][symbol]
                 ),
                 4
               )
             : '-',
+        cap:
+          resCall && resCall[DefiProductDataOrder.cap] && resCall[DefiProductDataOrder.decimals]
+            ? +parsePrecision(resCall[DefiProductDataOrder.cap].toString(), resCall[DefiProductDataOrder.decimals])
+            : 100,
+        totalBalance:
+          resCall && resCall[DefiProductDataOrder.totalBalance] && resCall[DefiProductDataOrder.decimals]
+            ? +parsePrecision(
+                resCall[DefiProductDataOrder.totalBalance].toString(),
+                resCall[DefiProductDataOrder.decimals]
+              )
+            : 0,
         type: 'CALL',
         apy: APY,
         expiredAt: getExpireAt(),
         investCurrency: symbol,
         strikePrice: '-'
       })
+      const resPut = res?.[idx1][idx2 * 2 + 1]
       accMain.push({
         chainId: +chainId,
         currency: symbol,
         balance:
-          res && res[idx1][idx2 * 2 + 1][DefiProductDataOrder.accountVaultBalance]
+          resPut && resPut[DefiProductDataOrder.accountVaultBalance]
             ? trimNumberString(
                 parseBalance(
-                  res[idx1][idx2][DefiProductDataOrder.accountVaultBalance].toString(),
+                  resPut[DefiProductDataOrder.accountVaultBalance].toString(),
                   CURRENCIES[+chainId as ChainId]['USDC']
                 ),
                 4
               )
             : '-',
+        cap:
+          resPut && resPut[DefiProductDataOrder.cap] && resPut[DefiProductDataOrder.decimals]
+            ? +parsePrecision(resPut[DefiProductDataOrder.cap].toString(), resPut[DefiProductDataOrder.decimals])
+            : 100,
+        totalBalance:
+          resPut && resPut[DefiProductDataOrder.totalBalance] && resPut[DefiProductDataOrder.decimals]
+            ? +parsePrecision(
+                resPut[DefiProductDataOrder.totalBalance].toString(),
+                resPut[DefiProductDataOrder.decimals]
+              )
+            : 0,
         type: 'PUT',
         apy: APY,
         expiredAt: getExpireAt(),
@@ -219,10 +252,7 @@ const getStrikePrice = async (contractAddress: string | undefined, library: Web3
     const contract = getContract(contractAddress, DEFI_VAULT_OPTION_ABI, library)
     const price = await contract?.strikePrice()
     const decimals = await contract?.decimals()
-    return JSBI.divide(
-      JSBI.BigInt(price.toString()),
-      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))
-    ).toString()
+    return parsePrecision(price.toString(), decimals)
   } catch (e) {
     console.error(e)
     return '-'

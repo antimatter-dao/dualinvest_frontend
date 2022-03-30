@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material'
-import { Timer } from 'components/Timer'
+// import { Timer } from 'components/Timer'
 import Button from 'components/Button/Button'
 import Spinner from 'components/Spinner'
 import { SUPPORTED_CURRENCIES } from 'constants/currencies'
@@ -69,16 +69,31 @@ export default function VaultProductCard({
             </Box>
           </Box>
           <Box display="grid" gap={9}>
-            <SimpleProgress val={50} total={100} hideValue width="100%" customColor={color} height={8} />
+            <SimpleProgress
+              val={product?.totalBalance ?? 0}
+              total={product?.cap ?? 100}
+              hideValue
+              width="100%"
+              customColor={color}
+              height={8}
+            />
             <Box display="flex" alignItems={'center'} justifyContent="space-between">
               <Typography fontSize={12} color="rgba(0,0,0,0.5)" fontWeight={500}>
-                Countdown to the start
+                Total Balance: {product?.totalBalance ?? '-'} {product?.investCurrency ?? '-'}
               </Typography>
               <Typography fontSize={12} fontWeight={700}>
-                <Timer timer={product?.expiredAt ?? 0} />
+                Cap: {product?.cap ?? '-'} {product?.investCurrency ?? '-'}
               </Typography>{' '}
             </Box>
           </Box>
+          {/* <Box display="flex" alignItems={'center'} justifyContent="space-between">
+            <Typography fontSize={12} color="rgba(0,0,0,0.5)" fontWeight={500}>
+              Countdown to the start
+            </Typography>
+            <Typography fontSize={12} fontWeight={700}>
+              <Timer timer={product?.expiredAt ?? 0} />
+            </Typography>{' '}
+          </Box> */}
           <Button backgroundColor={color} onClick={onClick}>
             Add
           </Button>

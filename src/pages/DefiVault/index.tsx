@@ -44,6 +44,7 @@ export default function DefiVault() {
   const [strategy, setStrategy] = useState<Strategy>(Strategy.all)
   const [depositAsset, setDepositAsset] = useState<string>('ALL')
   const allList = useDefiVaultList()
+
   const filteredList = useMemo(() => {
     if (!allList) return undefined
     const list = allList.reduce((acc, item) => {

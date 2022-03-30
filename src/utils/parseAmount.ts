@@ -46,3 +46,10 @@ export const parsedGreaterThan = (userInput: string, balance: string) => {
   }
   return
 }
+
+export const parsePrecision = (value: string, decimals: number | string) => {
+  return JSBI.divide(
+    JSBI.BigInt(value.toString()),
+    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))
+  ).toString()
+}
