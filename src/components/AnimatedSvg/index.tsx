@@ -2,8 +2,6 @@ import { useEffect, useRef } from 'react'
 import Lottie from 'lottie-web'
 import { Box, SxProps } from '@mui/material'
 
-let loaded = false
-
 export default function AnimatedSvg({
   fileName,
   sx,
@@ -19,16 +17,14 @@ export default function AnimatedSvg({
 
   useEffect(() => {
     if (!ref.current) return
-    if (!loaded) {
-      Lottie.loadAnimation({
-        container: ref.current, // the dom element that will contain the animation
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: `/animations/${fileName}.json`
-      })
-      loaded = true
-    }
+
+    Lottie.loadAnimation({
+      container: ref.current, // the dom element that will contain the animation
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: `/animations/${fileName}.json`
+    })
   }, [fileName])
 
   return (
