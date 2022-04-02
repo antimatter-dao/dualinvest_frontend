@@ -23,6 +23,7 @@ import DefiVaultMgmt from './DefiVaultMgmt'
 import RecurringVault from './RecurringVault'
 import RecurringVaultMgmt from './RecurringVaultMgmt'
 import { IS_TEST_NET } from 'constants/chain'
+// import Footer from 'components/Footer'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -96,6 +97,7 @@ export default function App() {
                 </BindModalProvider>
               </Web3ReactManager>
             </BodyWrapper>
+            {/* <Footer /> */}
           </ContentWrapper>
         </AppWrapper>
       </ModalProvider>

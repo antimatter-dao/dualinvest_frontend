@@ -125,11 +125,11 @@ export const theme = {
   height: {
     header: '80px',
     mobileHeader: '51px',
-    footer: '60px'
+    footer: '150px'
   },
   width: {
     sidebar: '250px',
-    maxContent: '1110px'
+    maxContent: '1200px'
   },
   shape: {
     border: '1px solid',

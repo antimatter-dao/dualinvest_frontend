@@ -41,6 +41,7 @@ export default function DualInvest() {
       gap={{ xs: 36, md: 48 }}
     >
       <ProductBanner
+        imgFileName="dual_invest"
         title="Dual Investment"
         checkpoints={['Earn fixed yield on idle assets', 'Earn on both ups and downs']}
         val1={statistics?.totalDeposit ?? '-'}
@@ -49,6 +50,7 @@ export default function DualInvest() {
         val2={statistics ? toLocaleNumberString(statistics.totalInvestAmount, 0) : '-'}
         subVal2={'Cumulative Investment Amount'}
         unit2={'USDT'}
+        startingGuide
       />
       <Box width={'100%'} sx={{ maxWidth: theme => theme.width.maxContent, margin: '0 24px', padding: '0 20px' }}>
         <CurrencyTabs

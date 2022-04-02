@@ -4,7 +4,6 @@ import { Box, MenuItem, Typography, useTheme } from '@mui/material'
 import ProductBanner from 'components/ProductBanner'
 import VaultProductCard from './VaultProductCard'
 import { routes } from 'constants/routes'
-import { ReactComponent as RecurVault } from 'assets/svg/recurVault.svg'
 import { SUPPORTED_CURRENCIES, SUPPORTED_DEFI_VAULT } from 'constants/currencies'
 import Select from 'components/Select/Select'
 import useBreakpoint from 'hooks/useBreakpoint'
@@ -92,7 +91,8 @@ export default function DefiVault() {
       <ProductBanner
         title="Defi option Vault"
         checkpoints={['Automated strategy for yield generation']}
-        img={<RecurVault />}
+        imgFileName={'defi_vault'}
+        svgMargin={'0 0 -12px'}
       />
       <Box
         width="100%"

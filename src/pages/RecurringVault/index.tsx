@@ -4,7 +4,6 @@ import { Box, useTheme } from '@mui/material'
 import ProductBanner from 'components/ProductBanner'
 import VaultCard from './RecurProductCard'
 import { routes } from 'constants/routes'
-import { ReactComponent as RecurVault } from 'assets/svg/recurVault.svg'
 import { useRecurProcuctList } from 'hooks/useRecurData'
 import { SUPPORTED_CURRENCIES } from 'constants/currencies'
 import { useRecurStatistics } from 'hooks/useStatistics'
@@ -37,7 +36,7 @@ export default function RecurringVault() {
         unit2={''}
         subVal1={'Total Recurring Amount'}
         subVal2={'Amount of Recurring in Progress'}
-        img={<RecurVault />}
+        imgFileName={'recur'}
       />
       {SUPPORTED.map(key => {
         return (

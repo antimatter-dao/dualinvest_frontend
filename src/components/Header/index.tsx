@@ -131,6 +131,8 @@ const Filler = styled('div')(({ theme }) => ({
 }))
 
 const MainLogo = styled(NavLink)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
   '& img': {
     width: 180.8,
     height: 34.7

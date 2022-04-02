@@ -5,9 +5,13 @@ import checkUrl from 'assets/images/check.png'
 import { ReactComponent as DualInvestGuide } from 'assets/svg/dualInvestGuide.svg'
 import useBreakpoint from 'hooks/useBreakpoint'
 import NumericalCard from 'components/Card/NumericalCard'
+import AnimatedSvg from 'components/AnimatedSvg'
+import { useCallback } from 'react'
 
 const StyledImg = styled(Box)(({ theme }) => ({
   svg: {
+    marginTop: 'auto',
+    maxHeight: 280,
     '& #dualInvestGuide': {
       zIndex: 2,
       '&:hover, :focus, :active': {
@@ -18,7 +22,7 @@ const StyledImg = styled(Box)(({ theme }) => ({
     flexShrink: 1,
     [theme.breakpoints.down('md')]: {
       width: '100%',
-      margin: '20px auto 0'
+      margin: 'auto auto 0'
     }
   }
 }))
@@ -32,9 +36,11 @@ export default function ProductBanner({
   unit2,
   subVal2,
   checkpoints,
-  img
+  imgFileName,
+  svgMargin,
+  startingGuide
 }: {
-  title: string
+  title: string | JSX.Element
   val1?: string
   unit1?: string | JSX.Element
   subVal1?: string
@@ -42,10 +48,16 @@ export default function ProductBanner({
   unit2?: string | JSX.Element
   subVal2?: string
   checkpoints: string[]
-  img?: JSX.Element
+  imgFileName?: string
+  svgMargin?: string
+  startingGuide?: boolean
 }) {
   const isDownMd = useBreakpoint('md')
   const isDownSm = useBreakpoint('sm')
+
+  const startingGuideCallback = useCallback(() => {
+    window.open('https://docs.antimatter.finance/antimatter-structured-product/dual-investment', '_blank')
+  }, [])
 
   return (
     <Box
@@ -53,11 +65,9 @@ export default function ProductBanner({
       justifyContent="center"
       sx={{
         width: '100%',
+        height: { xs: 'auto', md: 340 },
         background: theme => theme.palette.background.paper,
-        padding:
-          !val2 && !val1
-            ? { xs: '32px 20px 0px', md: '40px 40px 0', lg: '20px 61px 0' }
-            : { xs: '32px 20px 20px', md: '40px', lg: '44px 61px' }
+        padding: { xs: '30px 20px 0px', md: '40px 40px 0', lg: '20px 61px 0' }
       }}
     >
       <Box
@@ -65,10 +75,10 @@ export default function ProductBanner({
         width="100%"
         display={{ xs: 'grid', sm: 'flex' }}
         justifyContent={{ sm: 'center', md: 'space-between' }}
-        alignItems="center"
+        alignItems={'flex-end'}
         gap={15}
       >
-        <Box display="grid" gap={12}>
+        <Box display="grid" gap={12} margin="auto 0">
           <Typography component="h1" sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700 }}>
             {title}
           </Typography>
@@ -82,7 +92,7 @@ export default function ProductBanner({
             ))}
           </Box>
           {val1 && val2 && (
-            <Grid container spacing={{ xs: 8, md: 20 }}>
+            <Grid container spacing={{ xs: 8, md: 20 }} marginBottom={{ xs: 20, md: 35 }}>
               <Grid item xs={12} md={6} height={{ xs: 76, md: 'auto' }}>
                 <NumericalCard
                   fontSize={isDownMd ? '20px' : undefined}
@@ -110,14 +120,44 @@ export default function ProductBanner({
             </Grid>
           )}
         </Box>
-        <StyledImg
-          sx={{
-            marginBottom: val1 && val2 ? 13 : -6,
-            height: 'max-content'
-          }}
-        >
-          {img ? img : <DualInvestGuide />}
-        </StyledImg>
+
+        {imgFileName ? (
+          <StyledImg
+            sx={{
+              '& svg': {
+                margin: isDownMd ? undefined : svgMargin
+              }
+            }}
+          >
+            <AnimatedSvg
+              fileName={imgFileName}
+              className={startingGuide ? 'starting_guide' : undefined}
+              onClick={startingGuide ? startingGuideCallback : undefined}
+              sx={
+                startingGuide
+                  ? {
+                      ':hover': {
+                        cursor: 'pointer',
+                        '& #starting_guide': {
+                          stroke: '#ffffff',
+                          strokeWidth: 3
+                        }
+                      }
+                    }
+                  : undefined
+              }
+            />
+          </StyledImg>
+        ) : (
+          <StyledImg
+            sx={{
+              marginBottom: val1 && val2 ? 13 : -6,
+              height: 'max-content'
+            }}
+          >
+            <DualInvestGuide />{' '}
+          </StyledImg>
+        )}
       </Box>
     </Box>
   )

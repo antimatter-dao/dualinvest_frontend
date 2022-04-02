@@ -13,16 +13,23 @@ export default function Footer() {
     <HideOnMobile>
       <footer
         style={{
-          height: theme.height.footer
+          height: theme.height.footer,
+          display: 'flex',
+          alignItems: 'flex-end'
         }}
       >
         <Box
           display="flex"
           alignItems="center"
-          justifyContent="flex-end"
+          justifyContent="center"
           width="100%"
-          padding="9px 60px 28px"
+          padding="9px 85px 28px 60px"
           gap="40px"
+          sx={{
+            '& svg': {
+              fill: theme => theme.palette.text.primary
+            }
+          }}
         >
           <TextButton>
             <ExternalLink href="">

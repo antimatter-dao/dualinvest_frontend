@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, ReactElement } from 'react'
+import { useMemo, useState, useCallback, ReactElement, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Typography, Box, useTheme, styled, Grid } from '@mui/material'
 import MgmtPage from 'components/MgmtPage'
@@ -71,6 +71,12 @@ export default function RecurringVaultMgmt() {
       </>
     ]
   }, [isCall, product?.strikePrice, theme.palette.text.primary])
+
+  useEffect(() => {
+    if (chainId === NETWORK_CHAIN_ID) {
+      setSwitchChainModalOpen(false)
+    }
+  }, [chainId])
 
   const chart = useMemo(() => {
     return (

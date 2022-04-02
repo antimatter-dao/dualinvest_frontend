@@ -8,10 +8,11 @@ import Button from 'components/Button/Button'
 import securityUrl from 'assets/images/security.png'
 import highReturnUrl from 'assets/images/high_return.png'
 import flexibleUrl from 'assets/images/flexible.png'
-
+import DualPlusUrl from 'assets/svg/home_dual_plus.svg'
 import SaddleOptionUrl from 'assets/svg/home_saddle_option.svg'
 import TieredOptionUrl from 'assets/svg/home_tiered_option.svg'
-import recurringVaultUrl from 'assets/svg/home_recurring_vault.svg'
+import recurringVaultUrl from 'assets/svg/home_recur.svg'
+import defiVaultUrl from 'assets/svg/home_defi.svg'
 import Card from 'components/Card/Card'
 import { routes } from 'constants/routes'
 import { useBindModal } from 'hooks/useReferralModal'
@@ -24,13 +25,10 @@ import { ChevronRight } from '@mui/icons-material'
 
 const StyledHomeSvg = styled(Box)(({ theme }) => ({
   flexShrink: 0,
-  minHeight: 200,
-  height: 360,
-  maxHeight: 360,
   maxWidth: 487,
+  alignSelf: 'flex-end',
   [theme.breakpoints.down('md')]: {
-    height: 221,
-    width: 'calc(100vw - 80px)'
+    maxWidth: 'calc(100% - 80px)'
   }
 }))
 
@@ -71,9 +69,9 @@ export default function Home() {
         justifyContent="center"
         sx={{
           width: '100%',
-          height: { xs: 'auto', md: '360px' },
+          // height: { xs: 'auto', md: '360px' },
           background: theme => theme.palette.background.paper,
-          padding: { xs: '32px 20px', md: '44px 61px' }
+          padding: { xs: '32px 20px', md: '44px 61px 0' }
         }}
       >
         <Box
@@ -84,7 +82,7 @@ export default function Home() {
           justifyContent={{ sm: 'center', md: 'space-between' }}
           alignItems={{ xs: 'unset', md: 'center' }}
         >
-          <Box display="grid" gap={12}>
+          <Box display="grid" gap={12} mb={{ xs: 32, md: 61 }}>
             <Typography
               component="h1"
               sx={{ fontSize: { xs: 32, md: 44 }, fontWeight: 700, textAlign: { xs: 'center', md: 'left' } }}
@@ -111,11 +109,12 @@ export default function Home() {
             <Box
               mt={24}
               width="100%"
-              height={221}
+              pt={20}
               borderRadius="16px"
               border="1px solid rgba(0,0,0,0.1)"
               display="flex"
               justifyContent="center"
+              alignItems="flex-end"
             >
               <StyledHomeSvg>
                 <AnimatedSvg fileName={'home'}></AnimatedSvg>
@@ -168,62 +167,72 @@ export default function Home() {
           </Grid>
         </Grid>
         <Card>
-          <Box padding={{ xs: '24px 0', md: '60px 0' }}>
-            <ProductCard
-              large
-              imgHeight={420}
-              imgTitle={'dualInvest'}
-              title="Dual Investment"
-              synospis={`Earn both ups and downs within 
-a fluctuation range`}
-              onClick={() => {
-                history.push(routes.dualInvest)
-              }}
-            />
-            <Box
-              padding={{ xs: '0 24px', md: '0 60px' }}
-              display={'flex'}
-              flexDirection={{ xs: 'column-reverse', md: 'row' }}
-              sx={{
-                alignItems: 'center',
-                overflow: 'hidden',
-                background: theme => theme.palette.background.default,
-                position: 'relative',
-                '&:before': {
-                  content: "''",
-                  width: '100%',
-                  height: '100%',
-                  background: '#ffffff',
-                  opacity: 0.5,
-                  zIndex: 2,
-                  position: 'absolute',
-                  top: 0,
-                  left: 0
-                }
-              }}
-            >
-              <Box
-                maxHeight="315px"
-                sx={{
-                  marginRight: isDownMd ? '0' : 'auto',
-                  height: '315px'
-                }}
-              >
-                <AnimatedSvg fileName="dualInvest" />
-              </Box>
-
+          <Box padding={{ xs: '40px 0 80px', md: '40px 0 100px' }} display="grid" gap={{ xs: 30, md: 130 }}>
+            <Box>
               <ProductCard
                 large
-                title="Dual Investment Plus"
-                synospis={`Dual Investment standard
-+ advanced settings`}
+                imgHeight={420}
+                contemtMargin={'0 0 60px'}
+                imgTitle={'home_dualInvest'}
+                title="Dual Investment"
+                synospis={`Earn both ups and downs within 
+a fluctuation range`}
+                onClick={() => {
+                  history.push(routes.dualInvest)
+                }}
               />
+              <Box
+                padding={{ xs: '0 24px', md: '0 60px' }}
+                display={'flex'}
+                flexDirection={{ xs: 'column-reverse', md: 'row' }}
+                mb={{ md: -20 }}
+                sx={{
+                  alignItems: 'center',
+                  overflow: 'hidden',
+                  background: theme => theme.palette.background.default,
+                  position: 'relative',
+                  '&:before': {
+                    content: "''",
+                    width: '100%',
+                    height: '100%',
+                    background: '#ffffff',
+                    opacity: 0.5,
+                    zIndex: 3,
+                    position: 'absolute',
+                    top: 0,
+                    left: 0
+                  }
+                }}
+              >
+                <Box
+                  maxHeight="315px"
+                  sx={{
+                    marginRight: isDownMd ? '0' : 'auto',
+                    height: '315px',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Image src={DualPlusUrl} />
+                </Box>
+                <Box width={isDownMd ? '100%' : undefined}>
+                  <ProductCard
+                    grayButton
+                    contemtMargin={isDownMd ? '60px 0 20px' : '0'}
+                    large
+                    title="Dual Investment Plus"
+                    synospis={`Dual Investment standard
++ advanced settings`}
+                  />
+                </Box>
+              </Box>
             </Box>
+
             <ProductCard
               large
               grayButton
               actionText="Explore"
-              imgTitle={recurringVaultUrl}
+              imgUrl={recurringVaultUrl}
               title="Recurring Strategy"
               synospis={`Automatic management of funds, cyclic compound interest.
 Earn yield on your idle assets`}
@@ -235,7 +244,7 @@ Earn yield on your idle assets`}
               large
               grayButton
               actionText="Explore"
-              imgTitle={recurringVaultUrl}
+              imgUrl={defiVaultUrl}
               title="Defi option Vault"
               synospis={`Automatic management of funds, cyclic compound interest.
 Earn yield on your idle assets`}
@@ -244,25 +253,27 @@ Earn yield on your idle assets`}
               }}
             />
 
-            <Box display="grid" gap={{ xs: 16, md: 32 }} padding={{ xs: '0 24px', md: '0 60px' }}>
+            <Box display="grid" gap={{ xs: 24, md: 40 }} padding={{ xs: '0 24px', md: '0 60px' }}>
               <Typography fontSize={36} fontWeight={500}>
                 Chain Option
               </Typography>
-              <Grid container spacing={{ xs: 12, md: 20 }}>
+              <Grid container spacing={{ xs: 50, md: 80 }}>
                 <ProductCard
                   grayButton
-                  imgTitle={SaddleOptionUrl}
+                  imgUrl={SaddleOptionUrl}
                   title="Saddle Options"
-                  synospis="Suitable to buy when the price will fluctuate for a period of time"
+                  synospis={`Suitable to buy when the price
+will fluctuate for a period of time`}
                   // onClick={() => {
                   //   history.push(routes.chainOptionTyped.replace(':type', 'saddle'))
                   // }}
                 />
                 <ProductCard
                   grayButton
-                  imgTitle={TieredOptionUrl}
+                  imgUrl={TieredOptionUrl}
                   title="Tiered Options"
-                  synospis="Suitable for buying when the price will continue to rise or fall for a period of time"
+                  synospis={`Suitable for buying when the price
+will fluctuate for a period of time`}
                   // onClick={() => {
                   //   history.push(routes.chainOptionTyped.replace(':type', 'tiered'))
                   // }}
@@ -337,7 +348,9 @@ function ProductCard({
   onClick,
   large,
   grayButton,
-  imgHeight
+  imgHeight,
+  imgUrl,
+  contemtMargin
 }: {
   imgTitle?: string
   title: string
@@ -347,18 +360,27 @@ function ProductCard({
   large?: boolean
   grayButton?: boolean
   imgHeight?: number
+  imgUrl?: string
+  contemtMargin?: string
 }) {
   const isDownMd = useBreakpoint('md')
+  const isDownSm = useBreakpoint('sm')
   const theme = useTheme()
   return (
-    <Grid item xs={12} sm={large ? 12 : 6} padding={{ xs: '0 24px', md: '0 60px' }}>
+    <Grid item xs={12} sm={large ? 12 : 6} padding={large ? { xs: '0 24px', md: '0 60px' } : 0}>
       <Box display={{ xs: 'grid', md: 'flex' }} gap={large ? 0 : 60} position="relative">
-        <Box paddingTop={large ? '32px' : 0}>
+        <Box
+          position="relative"
+          display="flex"
+          flexDirection={'column'}
+          justifyContent="center"
+          margin={contemtMargin ?? 0}
+        >
           <Typography fontSize={large ? 36 : 24} fontWeight={500}>
             {title}
           </Typography>
           <Typography
-            sx={{ color: theme.palette.text.secondary, mt: 8, fontSize: 16 }}
+            sx={{ color: theme.palette.text.secondary, mt: 8, fontSize: 16, zIndex: 2 }}
             whiteSpace="pre-wrap"
             textAlign={'left'}
             mb={imgHeight && !isDownMd ? 70 : 40}
@@ -366,13 +388,14 @@ function ProductCard({
             {synospis}
           </Typography>
           <Button
-            width={isDownMd ? '100%' : '156px'}
+            width={isDownSm ? '100%' : '156px'}
             disabled={!onClick}
             onClick={onClick}
             height="53px"
             style={
               grayButton
                 ? {
+                    zIndex: 2,
                     backgroundColor: theme.palette.background.default,
                     color: theme.palette.text.primary,
                     '&:hover': {
@@ -399,11 +422,28 @@ function ProductCard({
               opacity: !onClick ? 0.5 : 1,
               marginLeft: 'auto',
               height: imgHeight ?? '200px',
+              maxHeight: 385,
               padding: large ? '0px' : '10px 15px'
             }}
           >
             <AnimatedSvg fileName={imgTitle} />
           </Box>
+        )}
+        {imgUrl && (
+          <img
+            src={imgUrl}
+            style={{
+              position: isDownMd ? 'static' : 'absolute',
+              right: 0,
+              bottom: 0,
+              maxWidth: '100%',
+              margin: isDownMd ? '0 auto' : 'auto auto 0',
+              opacity: !onClick ? 0.5 : 1,
+              marginLeft: 'auto',
+              height: imgHeight ?? '200px',
+              padding: 0
+            }}
+          ></img>
         )}
       </Box>
     </Grid>
