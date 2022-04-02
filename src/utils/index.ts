@@ -5,7 +5,7 @@ import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Percent } from '../constants/token/fractions'
 import JSBI from 'jsbi'
-import { ChainId } from '../constants/chain'
+import { ChainId, SUPPORTED_NETWORKS } from '../constants/chain'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -67,28 +67,35 @@ interface ChainObject {
   }
 }
 
-const chains: ChainObject = {
-  [ChainId.MAINNET]: {
-    link: 'https://etherscan.io',
-    builder: explorers.etherscan
-  },
-  [ChainId.ROPSTEN]: {
-    link: 'https://ropsten.etherscan.io',
-    builder: explorers.etherscan
-  },
-  [ChainId.BSC]: {
-    link: 'https://bscscan.com',
-    builder: explorers.etherscan
-  },
-  [ChainId.AVAX]: {
-    link: 'https://cchain.explorer.avax.network',
-    builder: explorers.blockscout
-  },
-  [ChainId.RINKEBY]: {
-    link: 'https://rinkeby.etherscan.io/',
+const chains: ChainObject = Object.keys(SUPPORTED_NETWORKS).reduce((acc, chainId) => {
+  acc[+chainId] = {
+    link: SUPPORTED_NETWORKS[+chainId as ChainId].blockExplorerUrls[0],
     builder: explorers.etherscan
   }
-}
+  return acc
+}, {} as any)
+// {
+//   [ChainId.MAINNET]: {
+//     link: 'https://etherscan.io',
+//     builder: explorers.etherscan
+//   },
+//   [ChainId.ROPSTEN]: {
+//     link: 'https://ropsten.etherscan.io',
+//     builder: explorers.etherscan
+//   },
+//   [ChainId.BSC]: {
+//     link: 'https://bscscan.com',
+//     builder: explorers.etherscan
+//   },
+//   [ChainId.AVAX]: {
+//     link: 'https://cchain.explorer.avax.network',
+//     builder: explorers.blockscout
+//   },
+//   [ChainId.RINKEBY]: {
+//     link: 'https://rinkeby.etherscan.io',
+//     builder: explorers.etherscan
+//   }
+// }
 
 export function getEtherscanLink(
   chainId: ChainId,

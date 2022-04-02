@@ -26,7 +26,7 @@ export default function TransactionSubmittedModal({
             style={{ fontSize: 12 }}
             underline="hover"
           >
-            View on BSCscan
+            View on explorer
           </ExternalLink>
         )}
       </Box>

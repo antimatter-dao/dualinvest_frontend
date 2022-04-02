@@ -22,6 +22,7 @@ export const SYMBOL_MAP = {
   WAVAX: 'AVAX',
   LUNA: 'LUNA',
   MATIC: 'MATIC',
+  WMATIC: 'MATIC',
   CAKE: 'CAKE'
 }
 
@@ -30,7 +31,8 @@ export const SUPPORTED_CURRENCY_SYMBOL = {
   [ChainId.ROPSTEN]: [SYMBOL_MAP.BTC, SYMBOL_MAP.ETH, SYMBOL_MAP.BNB, SYMBOL_MAP.AVAX],
   [ChainId.MAINNET]: [SYMBOL_MAP.ETH],
   [ChainId.AVAX]: [SYMBOL_MAP.AVAX],
-  [ChainId.RINKEBY]: [SYMBOL_MAP.AVAX]
+  [ChainId.RINKEBY]: [SYMBOL_MAP.AVAX],
+  [ChainId.POLYGON]: [SYMBOL_MAP.MATIC]
 }
 
 export const SUPPORTED_CURRENCIES: {
@@ -71,7 +73,8 @@ export const SUPPORTED_CURRENCIES: {
       [ChainId.BSC]: '0x55d398326f99059fF775485246999027B3197955',
       [ChainId.AVAX]: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
       [ChainId.MAINNET]: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-      [ChainId.RINKEBY]: '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16'
+      [ChainId.RINKEBY]: '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16',
+      [ChainId.POLYGON]: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'
     },
     decimals: 18,
     symbol: 'USDT',
@@ -150,9 +153,21 @@ export const SUPPORTED_CURRENCIES: {
     logoUrl: LUNALogo,
     color: '#172852'
   },
+  WMATIC: {
+    address: {
+      [ChainId.BSC]: '0xCC42724C6683B7E57334c4E856f4c9965ED682bD',
+      [ChainId.POLYGON]: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
+    },
+    decimals: 18,
+    symbol: 'MATIC',
+    name: 'Matic Token',
+    logoUrl: MATICLogo,
+    color: '#8247E5'
+  },
   MATIC: {
     address: {
-      [ChainId.BSC]: '0xCC42724C6683B7E57334c4E856f4c9965ED682bD'
+      [ChainId.BSC]: '0xCC42724C6683B7E57334c4E856f4c9965ED682bD',
+      [ChainId.POLYGON]: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
     },
     decimals: 18,
     symbol: 'MATIC',
@@ -198,7 +213,7 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
   ChainList.map(({ id: chainId }: { id: ChainId }) => {
     const address = item.address[chainId]
     const decimal =
-      item.symbol === 'USDT' && (chainId === ChainId.AVAX || chainId === ChainId.MAINNET) ? 6 : item.decimals
+      item.symbol === 'USDT' && [ChainId.AVAX, ChainId.MAINNET, ChainId.POLYGON].includes(chainId) ? 6 : item.decimals
     if (address) {
       acc[address as keyof typeof SUPPORTED_CURRENCIES] = new Token(+chainId, address, decimal, item.symbol, item.name)
     }
@@ -217,5 +232,6 @@ export const DEFAULT_COIN_SYMBOL: { [chainId in ChainId]: string } = {
   [ChainId.BSC]: 'BNB',
   [ChainId.ROPSTEN]: 'BNB',
   [ChainId.AVAX]: 'AVAX',
-  [ChainId.RINKEBY]: 'AVAX'
+  [ChainId.RINKEBY]: 'AVAX',
+  [ChainId.POLYGON]: 'MATIC'
 }
