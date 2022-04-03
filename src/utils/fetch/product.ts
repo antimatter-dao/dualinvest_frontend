@@ -74,6 +74,9 @@ export const productFormatter = (raw: ProductRaw): Product => {
         return ChainId.ROPSTEN
       }
     }
+    if (raw.chain === 'MATIC' || raw.chain === 'POLYGON') {
+      return ChainId.POLYGON
+    }
     return ChainList.find(chain => chain.symbol === raw.chain)?.id ?? NETWORK_CHAIN_ID
   }
   return {
