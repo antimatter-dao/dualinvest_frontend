@@ -18,7 +18,7 @@ export enum ChainId {
   BSC = 56,
   AVAX = 43114,
   RINKEBY = 4,
-  POLYGON = 137
+  MATIC = 137
 }
 
 export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
@@ -28,8 +28,8 @@ export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
 export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
 
 export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
-  ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.POLYGON]
-  : [ChainId.BSC, ChainId.AVAX, ChainId.POLYGON]
+  ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.MATIC]
+  : [ChainId.BSC, ChainId.AVAX, ChainId.MATIC]
 
 export const ChainList: Chain[] = [
   ...(IS_TEST_NET
@@ -72,8 +72,8 @@ export const ChainList: Chain[] = [
           icon: <MATIC />,
           logo: MATICUrl,
           symbol: 'MATIC',
-          name: 'Polygon',
-          id: ChainId.POLYGON,
+          name: 'Matic',
+          id: ChainId.MATIC,
           hex: '0xA86A'
         }
       ])
@@ -162,9 +162,9 @@ export const SUPPORTED_NETWORKS: {
     rpcUrls: ['https://rinkeby.infura.io/v3/'],
     blockExplorerUrls: ['https://rinkeby.etherscan.io']
   },
-  [ChainId.POLYGON]: {
-    chainId: toHex(ChainId.POLYGON),
-    chainName: 'Polygon',
+  [ChainId.MATIC]: {
+    chainId: toHex(ChainId.MATIC),
+    chainName: 'Matic',
     nativeCurrency: {
       name: 'Matic Token',
       symbol: 'MATIC',

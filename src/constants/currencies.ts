@@ -32,7 +32,7 @@ export const SUPPORTED_CURRENCY_SYMBOL = {
   [ChainId.MAINNET]: [SYMBOL_MAP.ETH],
   [ChainId.AVAX]: [SYMBOL_MAP.AVAX],
   [ChainId.RINKEBY]: [SYMBOL_MAP.AVAX],
-  [ChainId.POLYGON]: [SYMBOL_MAP.MATIC]
+  [ChainId.MATIC]: [SYMBOL_MAP.MATIC]
 }
 
 export const SUPPORTED_CURRENCIES: {
@@ -74,7 +74,7 @@ export const SUPPORTED_CURRENCIES: {
       [ChainId.AVAX]: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
       [ChainId.MAINNET]: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
       [ChainId.RINKEBY]: '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16',
-      [ChainId.POLYGON]: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'
+      [ChainId.MATIC]: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'
     },
     decimals: 6,
     symbol: 'USDT',
@@ -156,7 +156,7 @@ export const SUPPORTED_CURRENCIES: {
   WMATIC: {
     address: {
       [ChainId.BSC]: '0xCC42724C6683B7E57334c4E856f4c9965ED682bD',
-      [ChainId.POLYGON]: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
+      [ChainId.MATIC]: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
     },
     decimals: 18,
     symbol: 'MATIC',
@@ -167,7 +167,7 @@ export const SUPPORTED_CURRENCIES: {
   MATIC: {
     address: {
       [ChainId.BSC]: '0xCC42724C6683B7E57334c4E856f4c9965ED682bD',
-      [ChainId.POLYGON]: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
+      [ChainId.MATIC]: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
     },
     decimals: 18,
     symbol: 'MATIC',
@@ -234,5 +234,5 @@ export const DEFAULT_COIN_SYMBOL: { [chainId in ChainId]: string } = {
   [ChainId.ROPSTEN]: 'BNB',
   [ChainId.AVAX]: 'AVAX',
   [ChainId.RINKEBY]: 'AVAX',
-  [ChainId.POLYGON]: 'MATIC'
+  [ChainId.MATIC]: 'MATIC'
 }
