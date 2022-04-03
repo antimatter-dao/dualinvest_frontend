@@ -76,7 +76,7 @@ export const SUPPORTED_CURRENCIES: {
       [ChainId.RINKEBY]: '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16',
       [ChainId.POLYGON]: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'
     },
-    decimals: 18,
+    decimals: 6,
     symbol: 'USDT',
     name: 'Tether USD',
     // name: 'Binance-Peg BSC-USDT',
@@ -194,7 +194,8 @@ export const CURRENCIES: { [key in ChainId]: { [key: string]: Token } } = ChainL
     const tokenMap = Object.keys(SUPPORTED_CURRENCIES).reduce((acc: { [key: string]: Token }, key) => {
       const item = SUPPORTED_CURRENCIES[key as keyof typeof SUPPORTED_CURRENCIES]
       const address = item.address[id]
-      const decimal = item.symbol === 'USDT' && (id === ChainId.AVAX || id === ChainId.MAINNET) ? 6 : item.decimals
+      const decimal =
+        item.symbol === 'USDT' && [ChainId.ROPSTEN, ChainId.BSC, ChainId.RINKEBY].includes(id) ? 18 : item.decimals
       if (address) {
         acc[key as keyof typeof SUPPORTED_CURRENCIES] = new Token(id, address, decimal, item.symbol, item.name)
       }
@@ -213,7 +214,7 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
   ChainList.map(({ id: chainId }: { id: ChainId }) => {
     const address = item.address[chainId]
     const decimal =
-      item.symbol === 'USDT' && [ChainId.AVAX, ChainId.MAINNET, ChainId.POLYGON].includes(chainId) ? 6 : item.decimals
+      item.symbol === 'USDT' && [ChainId.ROPSTEN, ChainId.BSC, ChainId.RINKEBY].includes(chainId) ? 18 : item.decimals
     if (address) {
       acc[address as keyof typeof SUPPORTED_CURRENCIES] = new Token(+chainId, address, decimal, item.symbol, item.name)
     }
