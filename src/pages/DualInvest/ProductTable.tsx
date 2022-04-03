@@ -78,18 +78,18 @@ export default function ProductTable({
   const isDownMd = useBreakpoint('md')
   const history = useHistory()
   const { chainId } = useActiveWeb3React()
-  const { switchChain } = useSwitchChainModal()
+  const { switchChainModalCallback } = useSwitchChainModal()
 
   const handleSubscribe = useCallback(
     (id: number, productChainId) => () => {
       if (chainId !== productChainId) {
-        switchChain(productChainId)
+        switchChainModalCallback(productChainId)
         return
       }
 
       history.push(routes.dualInvestMgmt.replace(':id', id + ''))
     },
-    [chainId, history, switchChain]
+    [chainId, history, switchChainModalCallback]
   )
 
   return (

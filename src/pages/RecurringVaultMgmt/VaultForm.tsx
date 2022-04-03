@@ -1,8 +1,8 @@
 import { useState, useCallback, useMemo } from 'react'
 import { Box, Alert, Typography } from '@mui/material'
 import dayjs from 'dayjs'
-import VaultCard from 'components/MgmtPage/VaultCard'
-import VaultFormComponent from 'components/MgmtPage/VaultForm'
+import VaultCard from 'components/MgmtPage/RecurCard'
+import VaultFormComponent from 'components/MgmtPage/RecurForm'
 import { useActiveWeb3React } from 'hooks'
 import { useDualInvestBalance } from 'hooks/useDualInvest'
 import { CURRENCIES } from 'constants/currencies'
@@ -35,10 +35,10 @@ export default function VaultForm({
   investAmount: string
   setInvestAmount: (val: string) => void
 }) {
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const currencySymbol = product?.investCurrency ?? ''
-  const investCurrency = CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currencySymbol] ?? undefined
-  const currency = CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product?.currency ?? ''] ?? undefined
+  const investCurrency = CURRENCIES[NETWORK_CHAIN_ID][currencySymbol] ?? undefined
+  const currency = CURRENCIES[NETWORK_CHAIN_ID][product?.currency ?? ''] ?? undefined
   const title =
     product?.type === 'CALL'
       ? `${product?.currency ?? ''} Covered Call Recurring Strategy`
@@ -226,7 +226,7 @@ export default function VaultForm({
         amount={autoBalance}
         currency={investCurrency}
       />
-      <Box display="grid" position="relative" gap="35px" mt={-24}>
+      <Box display="grid" position="relative" gap="35px" mt={24}>
         {snackbarOpen && (
           <Alert
             onClose={handleCloseSnakebar}

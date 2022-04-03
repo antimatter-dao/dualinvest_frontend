@@ -12,11 +12,17 @@ import { useActiveWeb3React } from 'hooks'
 export default function SwitchChainModal({
   fromChain,
   toChain,
-  onConfirm
+  onConfirm,
+  customIsOpen,
+  customOnDismiss,
+  children
 }: {
   fromChain: Chain | null
   toChain: Chain | null
   onConfirm?: () => void
+  customOnDismiss?: () => void
+  customIsOpen?: boolean
+  children?: React.ReactNode
 }) {
   const theme = useTheme()
   const { library, account } = useActiveWeb3React()
@@ -32,9 +38,10 @@ export default function SwitchChainModal({
   }, [account, library, toChain])
 
   return (
-    <Modal>
+    <Modal customIsOpen={customIsOpen} customOnDismiss={customOnDismiss} closeIcon={!!customOnDismiss}>
       <Box padding="40px" display="grid" gap="32px" justifyItems="center" width="100%">
         <Typography variant="h6">Switch Chain</Typography>
+        {children}
         {fromChain && toChain && (
           <Box display="flex" justifyContent="space-between" width="100%" alignItems="center">
             <OutlinedCard width="100%" color={theme.textColor.text4}>

@@ -64,7 +64,7 @@ export function MgmtForm({
   const theme = useTheme()
   const toggleWallet = useWalletModalToggle()
   const { chainId } = useActiveWeb3React()
-  const { switchChain } = useSwitchChainModal()
+  const { switchChainCallback } = useSwitchChainModal()
   const isCorrectChain = chainId && chainId === product?.chainId
 
   const showConfirm = useCallback(() => {
@@ -175,7 +175,7 @@ export function MgmtForm({
         {children}
         {!account && <BlackButton onClick={toggleWallet}>Connect Wallet</BlackButton>}
         {account && !isCorrectChain && (
-          <BlackButton onClick={() => switchChain(product?.chainId)}>Switch to {product?.chain}</BlackButton>
+          <BlackButton onClick={switchChainCallback(product?.chainId)}>Switch to {product?.chain}</BlackButton>
         )}
         {!isConfirmed && account && isCorrectChain && (
           <ActionButton

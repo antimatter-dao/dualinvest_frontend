@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, ReactElement } from 'react'
+import { useMemo, useState, useCallback, ReactElement, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Typography, Box, useTheme, styled, Grid } from '@mui/material'
 import MgmtPage from 'components/MgmtPage'
@@ -14,8 +14,9 @@ import { CURRENCIES } from 'constants/currencies'
 import { PrevRecur } from 'utils/fetch/recur'
 import dayjs from 'dayjs'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
 import { useActiveWeb3React } from 'hooks'
+import SwitchChainModal from 'components/Modal/SwitchChainModal'
 
 export const StyledUnorderList = styled('ul')(({ theme }) => ({
   paddingLeft: '14px',
@@ -35,15 +36,17 @@ export const StyledUnorderList = styled('ul')(({ theme }) => ({
 }))
 
 export default function RecurringVaultMgmt() {
+  const { chainId } = useActiveWeb3React()
+
+  const [switchChainModalOpen, setSwitchChainModalOpen] = useState(chainId !== NETWORK_CHAIN_ID)
   const [investAmount, setInvestAmount] = useState('')
 
   const theme = useTheme()
-  const { chainId } = useActiveWeb3React()
   const { currency, type } = useParams<{ currency: string; type: string }>()
   const product = useSingleRecurProcuct(currency ?? '', type ?? '')
   const prevDetails = useLastCycleRecurDetails(
-    product?.investCurrency ? CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product.investCurrency]?.address : undefined,
-    product?.currency ? CURRENCIES[chainId ?? NETWORK_CHAIN_ID][product.currency]?.address : undefined
+    product?.investCurrency ? CURRENCIES[NETWORK_CHAIN_ID][product.investCurrency]?.address : undefined,
+    product?.currency ? CURRENCIES[NETWORK_CHAIN_ID][product.currency]?.address : undefined
   )
   const isDownMd = useBreakpoint('md')
   const strikePrice = product?.strikePrice ?? '-'
@@ -69,6 +72,12 @@ export default function RecurringVaultMgmt() {
     ]
   }, [isCall, product?.strikePrice, theme.palette.text.primary])
 
+  useEffect(() => {
+    if (chainId === NETWORK_CHAIN_ID) {
+      setSwitchChainModalOpen(false)
+    }
+  }, [chainId])
+
   const chart = useMemo(() => {
     return (
       <DualInvestChart
@@ -90,6 +99,14 @@ export default function RecurringVaultMgmt() {
 
   return (
     <>
+      <SwitchChainModal
+        customOnDismiss={() => setSwitchChainModalOpen(false)}
+        customIsOpen={switchChainModalOpen}
+        fromChain={ChainListMap[chainId ?? NETWORK_CHAIN_ID]}
+        toChain={ChainListMap[NETWORK_CHAIN_ID]}
+      >
+        Product only available on {ChainListMap[NETWORK_CHAIN_ID].name}, please switch to corresponding chain
+      </SwitchChainModal>
       <MgmtPage
         graphTitle="Current Subscription Status"
         showFaq={false}

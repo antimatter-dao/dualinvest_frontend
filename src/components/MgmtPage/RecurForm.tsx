@@ -13,7 +13,8 @@ import { OutlinedCard } from 'components/Card/Card'
 import { ErrorType } from 'pages/RecurringVaultMgmt/VaultForm'
 import Divider from 'components/Divider'
 import useBreakpoint from 'hooks/useBreakpoint'
-import { NETWORK_CHAIN_ID } from 'constants/chain'
+import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
+import { useSwitchChainModal } from 'hooks/useSwitchChainModal'
 
 enum TYPE {
   invest = 'Invest',
@@ -129,6 +130,7 @@ function Form({
 }) {
   const { account, chainId } = useActiveWeb3React()
   const toggleWallet = useWalletModalToggle()
+  const { switchChainCallback } = useSwitchChainModal()
 
   const handleMax = useCallback(() => {
     onChange &&
@@ -175,7 +177,7 @@ function Form({
             onChange={handleChange}
             onMax={handleMax}
             value={val}
-            disabled={!account || error === ErrorType.notAvailable}
+            disabled={!account || chainId !== NETWORK_CHAIN_ID || error === ErrorType.notAvailable}
           />
 
           <Box mt={12}>
@@ -187,7 +189,9 @@ function Form({
                     Available: {available ? available : '-'}
                     {currencySymbol}
                   </InputLabel>
-                  <DepositModalButton currentCurrency={CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currencySymbol]} />
+                  {chainId === NETWORK_CHAIN_ID && (
+                    <DepositModalButton currentCurrency={CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currencySymbol]} />
+                  )}
                 </>
               </Box>
             </Box>
@@ -225,13 +229,18 @@ function Form({
         </Box>
       )}
       <Box mt={16}>
-        {account ? (
+        {account && !(chainId === NETWORK_CHAIN_ID) && (
+          <BlackButton onClick={switchChainCallback(NETWORK_CHAIN_ID)}>
+            Switch to {ChainListMap[NETWORK_CHAIN_ID].name}
+          </BlackButton>
+        )}
+        {account && chainId === NETWORK_CHAIN_ID && (
           <Button onClick={onClick} disabled={disabled || !!error}>
             {type}
           </Button>
-        ) : (
-          <BlackButton onClick={toggleWallet}>Connect</BlackButton>
         )}
+
+        {!account && <BlackButton onClick={toggleWallet}>Connect</BlackButton>}
       </Box>
       {error && (
         <Box display="flex" mt={8}>
