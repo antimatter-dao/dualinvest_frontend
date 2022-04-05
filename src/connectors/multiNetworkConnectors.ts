@@ -2,7 +2,7 @@ import { NetworkConnector } from './NetworkConnector'
 import { Web3Provider } from '@ethersproject/providers'
 
 const MainNetwork = new NetworkConnector({
-  urls: { 1: 'https://mainnet.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847' }
+  urls: { 1: 'https://mainnet.infura.io/v3/d49aedc5c8d04128ab366779756cfacd' }
 })
 const RopstenNetwork = new NetworkConnector({
   urls: { 3: 'https://ropsten.infura.io/v3/ab440a3a67f74b6b8a0a8e8e13a76a52' }
