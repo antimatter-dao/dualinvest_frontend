@@ -53,14 +53,6 @@ export const ChainList: Chain[] = [
           name: 'Rinkeby Testnet',
           id: ChainId.RINKEBY,
           hex: '0x4'
-        },
-        {
-          icon: <ETH />,
-          logo: EthUrl,
-          symbol: 'Kovan',
-          name: 'Kovan Testnet',
-          id: ChainId.KOVAN,
-          hex: '0x2a'
         }
       ]
     : [
@@ -96,6 +88,14 @@ export const ChainList: Chain[] = [
     name: 'Avalanche',
     id: ChainId.AVAX,
     hex: '0xA86A'
+  },
+  {
+    icon: <ETH />,
+    logo: EthUrl,
+    symbol: 'Kovan',
+    name: 'Kovan Testnet',
+    id: ChainId.KOVAN,
+    hex: '0x2a'
   }
 ]
 
