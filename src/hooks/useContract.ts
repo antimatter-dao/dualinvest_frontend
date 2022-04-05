@@ -22,7 +22,7 @@ import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 import DEFI_VAULT_ABI from '../constants/abis/defi_vault.json'
 import { ChainId, NETWORK_CHAIN_ID } from 'constants/chain'
-import { getOtherNetworkLibrary } from 'connectors/MultiNetworkConnector'
+import { getOtherNetworkLibrary } from 'connectors/multiNetworkConnectors'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {

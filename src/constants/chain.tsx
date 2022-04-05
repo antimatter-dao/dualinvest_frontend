@@ -21,7 +21,8 @@ export enum ChainId {
   BSC = 56,
   AVAX = 43114,
   RINKEBY = 4,
-  MATIC = 137
+  MATIC = 137,
+  KOVAN = 42
 }
 
 export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
@@ -31,7 +32,7 @@ export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
 export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
 
 export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
-  ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC]
+  ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.KOVAN, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC]
   : [ChainId.BSC, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC]
 
 export const ChainList: Chain[] = [
@@ -52,6 +53,14 @@ export const ChainList: Chain[] = [
           name: 'Rinkeby Testnet',
           id: ChainId.RINKEBY,
           hex: '0x4'
+        },
+        {
+          icon: <ETH />,
+          logo: EthUrl,
+          symbol: 'Kovan',
+          name: 'Kovan Testnet',
+          id: ChainId.KOVAN,
+          hex: '0x2a'
         }
       ]
     : [
@@ -175,6 +184,17 @@ export const SUPPORTED_NETWORKS: {
     },
     rpcUrls: ['https://polygon-rpc.com/'],
     blockExplorerUrls: ['https://polygonscan.com']
+  },
+  [ChainId.KOVAN]: {
+    chainId: '0x2a',
+    chainName: 'Kovan',
+    nativeCurrency: {
+      name: 'Kovan',
+      symbol: 'ETH',
+      decimals: 18
+    },
+    rpcUrls: ['https://kovan.infura.io/v3/'],
+    blockExplorerUrls: ['https://kovan.etherscan.io/']
   }
 }
 
@@ -183,7 +203,8 @@ export const ChainsBgImgs: { [key in ChainId]?: JSX.Element } = {
   [ChainId.BSC]: <BSCBg />,
   [ChainId.MAINNET]: <ETHBg />,
   [ChainId.RINKEBY]: <AVAXBg />,
-  [ChainId.ROPSTEN]: <BSCBg />
+  [ChainId.ROPSTEN]: <BSCBg />,
+  [ChainId.KOVAN]: <ETHBg />
 }
 
 export const ChainsBgImgsFilled: { [key in ChainId]?: JSX.Element } = {
@@ -191,5 +212,6 @@ export const ChainsBgImgsFilled: { [key in ChainId]?: JSX.Element } = {
   [ChainId.MAINNET]: <ETHBgFilled />,
   [ChainId.RINKEBY]: <AVAXBgFilled />,
   [ChainId.ROPSTEN]: <BSCBgFilled />,
-  [ChainId.BSC]: <BSCBgFilled />
+  [ChainId.BSC]: <BSCBgFilled />,
+  [ChainId.KOVAN]: <ETHBgFilled />
 }

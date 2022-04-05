@@ -130,6 +130,9 @@ export const DEFI_VAULT_ADDRESS: {
   },
   [ChainId.MAINNET]: {
     ETH: { CALL: '0x25751853Eab4D0eB3652B5eB6ecB102A2789644B', PUT: undefined }
+  },
+  [ChainId.KOVAN]: {
+    ETH: { CALL: '0x2089C2959039139A195f8F69E95306fCaaEcc231', PUT: '0x1944c84535fc07cd816475E3fa246ca87Cd0f98A' }
   }
 }
 

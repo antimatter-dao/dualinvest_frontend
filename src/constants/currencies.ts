@@ -33,7 +33,8 @@ export const SUPPORTED_CURRENCY_SYMBOL = {
   [ChainId.MAINNET]: [SYMBOL_MAP.ETH],
   [ChainId.AVAX]: [SYMBOL_MAP.AVAX],
   [ChainId.RINKEBY]: [SYMBOL_MAP.AVAX],
-  [ChainId.MATIC]: [SYMBOL_MAP.MATIC]
+  [ChainId.MATIC]: [SYMBOL_MAP.MATIC],
+  [ChainId.KOVAN]: [SYMBOL_MAP.ETH]
 }
 
 export const SUPPORTED_CURRENCIES: {
@@ -75,8 +76,9 @@ export const SUPPORTED_CURRENCIES: {
       [ChainId.AVAX]: '0xc7198437980c041c805A1EDcbA50c1Ce5db95118',
       [ChainId.MAINNET]: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
       [ChainId.RINKEBY]: '0x7E45149820Fa33B66DCD3fd57158A0E755A67a16',
-      [ChainId.MATIC]: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'
-    },
+      [ChainId.MATIC]: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+      [ChainId.KOVAN]: '0x7e6edA50d1c833bE936492BF42C1BF376239E9e2'
+    } as { [chainId in ChainId]: string },
     decimals: 6,
     symbol: 'USDT',
     name: 'Tether USD',
@@ -87,7 +89,8 @@ export const SUPPORTED_CURRENCIES: {
   USDC: {
     address: {
       [ChainId.AVAX]: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664',
-      [ChainId.MAINNET]: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+      [ChainId.MAINNET]: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+      [ChainId.KOVAN]: '0x7e6edA50d1c833bE936492BF42C1BF376239E9e2'
     },
     decimals: 6,
     symbol: 'USDC',
@@ -99,7 +102,8 @@ export const SUPPORTED_CURRENCIES: {
     address: {
       [ChainId.ROPSTEN]: '0x55795b02C44Bd098D21bC1854036C2E75d7E7c43',
       [ChainId.BSC]: '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
-      [ChainId.MAINNET]: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
+      [ChainId.MAINNET]: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+      [ChainId.KOVAN]: '0xd0A1E359811322d97991E03f863a0C30C2cF029C'
     },
     decimals: 18,
     symbol: 'ETH',
@@ -237,7 +241,8 @@ export const CURRENCY_ADDRESS_MAP = Object.keys(SUPPORTED_CURRENCIES).reduce((ac
 
 export const SUPPORTED_DEFI_VAULT: { [chainId in ChainId]?: string[] } = {
   [ChainId.AVAX]: ['AVAX'],
-  [ChainId.MAINNET]: ['ETH', 'BTC']
+  [ChainId.MAINNET]: ['ETH', 'BTC'],
+  [ChainId.KOVAN]: ['ETH']
 }
 
 export const DEFAULT_COIN_SYMBOL: { [chainId in ChainId]: string } = {
@@ -246,5 +251,6 @@ export const DEFAULT_COIN_SYMBOL: { [chainId in ChainId]: string } = {
   [ChainId.ROPSTEN]: 'BNB',
   [ChainId.AVAX]: 'AVAX',
   [ChainId.RINKEBY]: 'AVAX',
-  [ChainId.MATIC]: 'MATIC'
+  [ChainId.MATIC]: 'MATIC',
+  [ChainId.KOVAN]: 'ETH'
 }

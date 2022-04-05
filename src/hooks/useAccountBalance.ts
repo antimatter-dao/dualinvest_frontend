@@ -77,8 +77,8 @@ export function useAccountBalances(): AccountBalanceType {
       Axios.post('getUserAssets', undefined, {
         account,
         chainId: chainId ?? NETWORK_CHAIN_ID,
-        currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT.address,
-        symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID].USDT.symbol
+        currency: CURRENCIES[chainId ?? NETWORK_CHAIN_ID]?.USDT?.address,
+        symbol: CURRENCIES[chainId ?? NETWORK_CHAIN_ID]?.USDT?.symbol
       }),
     [account, chainId]
   )
