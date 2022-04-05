@@ -95,8 +95,8 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
         currency: SUPPORTED_CURRENCIES[cur]?.symbol ?? '',
         investCurrency: investCurrency,
         instantBalance:
-          instantBalance.result?.amount && productChainId
-            ? parseBalance(instantBalanceDisabled ? '0' : instantBalance.result?.amount, token)
+          instantBalance.result?.unredeemedShares && productChainId
+            ? parseBalance(instantBalanceDisabled ? '0' : instantBalance.result?.unredeemedShares, token)
             : '-',
         completeBalance: val ? parseBalance(val.toString(), token) : '-',
         initiateBalance:
@@ -109,12 +109,13 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
   }, [
     cur,
     initiateBalance.result,
-    instantBalance.result?.amount,
-    price?.result,
+    instantBalance.result?.unredeemedShares,
+    price.result,
     productChainId,
     strikePrice,
     type,
-    withdrawals.result
+    withdrawals.result?.round,
+    withdrawals.result?.shares
   ])
   return result
 }
