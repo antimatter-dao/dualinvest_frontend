@@ -54,8 +54,8 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
   }, [chainName])
 
   const contract = useDefiVaultContract(productChainId, cur, type === 'CALL' ? 'CALL' : 'PUT')
-  const instantBalance = useSingleCallResult(contract, 'depositReceipts', args)
-  const initiateBalance = useSingleCallResult(contract, 'accountVaultBalance', args)
+  const depositReceipts = useSingleCallResult(contract, 'depositReceipts', args)
+  // const initiateBalance = useSingleCallResult(contract, 'accountVaultBalance', args)
   const withdrawals = useSingleCallResult(contract, 'withdrawals', args)
   const optionAddress = useSingleCallResult(contract, 'currentOption')
 
@@ -80,7 +80,7 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
       const token = CURRENCIES[productChainId as ChainId][investCurrency]
       const shares = withdrawals.result?.shares?.toString()
       const priceResult = price.result?.[0]?.toString()
-      const instantBalanceDisabled = withdrawals.result?.round === initiateBalance.result?.round
+      const instantBalanceDisabled = withdrawals.result?.round === depositReceipts.result?.round
       const val =
         shares && priceResult
           ? JSBI.divide(
@@ -95,12 +95,14 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
         currency: SUPPORTED_CURRENCIES[cur]?.symbol ?? '',
         investCurrency: investCurrency,
         instantBalance:
-          instantBalance.result?.unredeemedShares && productChainId
-            ? parseBalance(instantBalanceDisabled ? '0' : instantBalance.result?.unredeemedShares, token)
+          depositReceipts?.result?.amount && productChainId
+            ? parseBalance(instantBalanceDisabled ? '0' : depositReceipts.result.amount, token)
             : '-',
         completeBalance: val ? parseBalance(val.toString(), token) : '-',
         initiateBalance:
-          initiateBalance.result?.[0] && productChainId ? parseBalance(initiateBalance.result[0], token) : '-',
+          depositReceipts?.result?.unredeemedShares && productChainId
+            ? parseBalance(depositReceipts.result.unredeemedShares, token)
+            : '-',
         strikePrice: strikePrice,
         expiredAt: getExpireAt(),
         apy: APY
@@ -108,8 +110,9 @@ export function useSingleDefiVault(chainName: string, currency: string, type: st
     }
   }, [
     cur,
-    initiateBalance.result,
-    instantBalance.result?.unredeemedShares,
+    depositReceipts?.result?.amount,
+    depositReceipts?.result?.round,
+    depositReceipts?.result?.unredeemedShares,
     price.result,
     productChainId,
     strikePrice,
