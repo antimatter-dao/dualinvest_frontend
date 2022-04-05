@@ -97,7 +97,6 @@ export default function Dashboard() {
     return records.map(record => {
       const scanLink = chainId ? getEtherscanLink(chainId, record.hash, 'transaction') : ''
       const token = chainId ? CURRENCY_ADDRESS_MAP[toChecksumAddress(record.currency)] : undefined
-
       return [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
         <Box key={1} display="flex" gap={10} alignItems="center">
@@ -150,7 +149,7 @@ export default function Dashboard() {
       ? Object.keys(accountBalances).map(key => {
           const balances = accountBalances[key as keyof typeof accountBalances]
           return [
-            <TokenHeader key={key} token={CURRENCIES[NETWORK_CHAIN_ID][key]} />,
+            <TokenHeader key={key} token={CURRENCIES[chainId ?? NETWORK_CHAIN_ID][key]} />,
             balances?.totalInvest ?? '-',
             balances?.available ?? '-',
             balances?.locked ?? '-',

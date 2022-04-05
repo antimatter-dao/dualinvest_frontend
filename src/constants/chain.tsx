@@ -5,19 +5,23 @@ import BSCUrl from 'assets/svg/binance.svg'
 import { ReactComponent as BSC } from 'assets/svg/binance.svg'
 import { ReactComponent as AVAX } from 'assets/svg/avax.svg'
 import AVAXUrl from 'assets/svg/avax.svg'
+import { ReactComponent as MATIC } from 'assets/svg/matic.svg'
+import MATICUrl from 'assets/svg/matic.svg'
 import { ReactComponent as AVAXBg } from 'assets/svg/avax_bg.svg'
 import { ReactComponent as BSCBg } from 'assets/svg/bsc_bg.svg'
 import { ReactComponent as ETHBg } from 'assets/svg/eth_bg.svg'
 import { ReactComponent as AVAXBgFilled } from 'assets/svg/avax_bg_filled.svg'
 import { ReactComponent as ETHBgFilled } from 'assets/svg/eth_bg_filled.svg'
 import { ReactComponent as BSCBgFilled } from 'assets/svg/bsc_bg_filled.svg'
+import { toHex } from 'web3-utils'
 
 export enum ChainId {
   MAINNET = 1,
   ROPSTEN = 3,
   BSC = 56,
   AVAX = 43114,
-  RINKEBY = 4
+  RINKEBY = 4,
+  MATIC = 137
 }
 
 export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
@@ -27,8 +31,8 @@ export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
 export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
 
 export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
-  ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.AVAX, ChainId.MAINNET]
-  : [ChainId.BSC, ChainId.AVAX, ChainId.MAINNET]
+  ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC]
+  : [ChainId.BSC, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC]
 
 export const ChainList: Chain[] = [
   ...(IS_TEST_NET
@@ -58,6 +62,14 @@ export const ChainList: Chain[] = [
           name: 'Binance Smart Chain',
           id: ChainId.BSC,
           hex: '0x38'
+        },
+        {
+          icon: <MATIC />,
+          logo: MATICUrl,
+          symbol: 'MATIC',
+          name: 'Matic',
+          id: ChainId.MATIC,
+          hex: '0xA86A'
         }
       ]),
   {
@@ -107,7 +119,7 @@ export const SUPPORTED_NETWORKS: {
       decimals: 18
     },
     rpcUrls: ['https://mainnet.infura.io/v3'],
-    blockExplorerUrls: ['https://etherscan.com']
+    blockExplorerUrls: ['https://etherscan.io']
   },
   [ChainId.ROPSTEN]: {
     chainId: '0x3',
@@ -118,7 +130,7 @@ export const SUPPORTED_NETWORKS: {
       decimals: 18
     },
     rpcUrls: ['https://ropsten.infura.io/v3/'],
-    blockExplorerUrls: ['https://ropsten.etherscan.io/']
+    blockExplorerUrls: ['https://ropsten.etherscan.io']
   },
   [ChainId.BSC]: {
     chainId: '0x38',
@@ -140,7 +152,7 @@ export const SUPPORTED_NETWORKS: {
       decimals: 18
     },
     rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
-    blockExplorerUrls: ['https://cchain.explorer.avax.network']
+    blockExplorerUrls: ['https://snowtrace.io/']
   },
   [ChainId.RINKEBY]: {
     chainId: '0x4',
@@ -151,7 +163,18 @@ export const SUPPORTED_NETWORKS: {
       decimals: 18
     },
     rpcUrls: ['https://rinkeby.infura.io/v3/'],
-    blockExplorerUrls: ['https://rinkeby.etherscan.io/']
+    blockExplorerUrls: ['https://rinkeby.etherscan.io']
+  },
+  [ChainId.MATIC]: {
+    chainId: toHex(ChainId.MATIC),
+    chainName: 'Matic',
+    nativeCurrency: {
+      name: 'Matic Token',
+      symbol: 'MATIC',
+      decimals: 18
+    },
+    rpcUrls: ['https://polygon-rpc.com/'],
+    blockExplorerUrls: ['https://polygonscan.com']
   }
 }
 

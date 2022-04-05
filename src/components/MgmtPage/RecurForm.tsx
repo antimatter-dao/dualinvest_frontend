@@ -21,7 +21,7 @@ enum TYPE {
   redeem = 'Redeem'
 }
 
-export default function VaultForm({
+export default function RecurForm({
   formData,
   currencySymbol,
   available,

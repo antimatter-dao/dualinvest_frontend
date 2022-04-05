@@ -29,7 +29,7 @@ interface Props {
   activeOrder: number | string
 }
 
-export default function VaultCard(props: Props) {
+export default function RecurCard(props: Props) {
   const {
     logoCurSymbol,
     title,
