@@ -204,7 +204,7 @@ export default function DefiVault() {
         {filteredList &&
           filteredList.map((item: DefiProduct) => {
             if (!item) return null
-            const { chainId, currency, type, investCurrency } = item
+            const { chainId, currency, type } = item
             if (!chainId || !currency) return null
             return (
               <React.Fragment key={chainId + (currency ?? '') + type}>
@@ -223,7 +223,7 @@ export default function DefiVault() {
                         .replace(':chainName', ChainListMap[+chainId].symbol)
                     )
                   }}
-                  color={SUPPORTED_CURRENCIES[investCurrency ?? ''].color ?? theme.palette.primary.main}
+                  color={type === 'CALL' ? theme.palette.primary.main : '#D65049'}
                 />
               </React.Fragment>
             )
