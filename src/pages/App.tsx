@@ -18,10 +18,10 @@ import { BindModalProvider } from 'context/BindContext'
 import Home from './Home'
 // import ChainOption from './ChainOption'
 // import ChainOptionMgmt from './ChainOptionMgmt'
-import DefiVault from './DefiVault'
-import DefiVaultMgmt from './DefiVaultMgmt'
-import RecurringVault from './RecurringVault'
-import RecurringVaultMgmt from './RecurringVaultMgmt'
+// import DefiVault from './DefiVault'
+// import DefiVaultMgmt from './DefiVaultMgmt'
+// import RecurringVault from './RecurringVault'
+// import RecurringVaultMgmt from './RecurringVaultMgmt'
 import { IS_TEST_NET } from 'constants/chain'
 // import Footer from 'components/Footer'
 
@@ -83,10 +83,10 @@ export default function App() {
 
                       <Route exact strict path={routes.dualInvest} component={DualInvest} />
                       <Route exact strict path={routes.dualInvestMgmt} component={DualInvestMgmt} />
-                      <Route exact strict path={routes.defiVault} component={DefiVault} />
-                      <Route exact strict path={routes.defiVaultMgmt} component={DefiVaultMgmt} />
-                      <Route exact strict path={routes.recurringVault} component={RecurringVault} />
-                      <Route exact strict path={routes.recurringVaultMgmt} component={RecurringVaultMgmt} />
+                      {/* <Route exact strict path={routes.defiVault} component={DefiVault} />
+                      <Route exact strict path={routes.defiVaultMgmt} component={DefiVaultMgmt} /> */}
+                      {/* <Route exact strict path={routes.recurringVault} component={RecurringVault} />
+                      <Route exact strict path={routes.recurringVaultMgmt} component={RecurringVaultMgmt} /> */}
                       <Route exact strict path={routes.home} component={Home} />
                       <Route exact strict path={routes.referral} component={Home} />
                       <Route path="/">

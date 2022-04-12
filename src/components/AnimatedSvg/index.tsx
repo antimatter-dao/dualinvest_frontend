@@ -31,7 +31,7 @@ export default function AnimatedSvg({
     <Box
       ref={ref}
       className={className}
-      style={{ height: '100%', width: '100%', display: 'flex', alignItems: 'flex-end' }}
+      style={{ width: '100%', display: 'flex', alignItems: 'flex-end' }}
       sx={sx}
       onClick={onClick}
     ></Box>

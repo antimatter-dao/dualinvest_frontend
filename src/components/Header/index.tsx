@@ -29,10 +29,10 @@ export const Tabs: Tab[] = [
   {
     title: 'Invest',
     subTab: [
-      { title: 'Defi Option Vault', route: routes.defiVault },
-      { title: 'Dual Investment', route: routes.dualInvest },
+      { title: 'Defi Option Vault', link: 'https://dov.antimatter.finance/#/defi' },
+      { title: 'Dual Investment', route: routes.dualInvest }
       // { title: 'Chain-type Option', route: routes.chainOption },
-      { title: 'Recurring Strategy', route: routes.recurringVault }
+      // { title: 'Recurring Strategy', route: routes.recurringVault }
     ]
   },
   // { title: 'Dual Investment', route: routes.dualInvest },
@@ -61,10 +61,10 @@ export const Tabs: Tab[] = [
 const navLinkSX = ({ theme }: any) => ({
   textDecoration: 'none',
   fontSize: 14,
-  color: theme.palette.text.primary,
-  opacity: 0.5,
+  color: theme.palette.text.primary + '!important',
+  opacity: 0.5 + '!important',
   '&:hover': {
-    opacity: 1
+    opacity: 1 + '!important'
   }
 })
 
@@ -220,11 +220,13 @@ export default function Header() {
                             <ExternalLink
                               href={sub.link}
                               className={'link'}
-                              color="#00000050"
+                              color={'#25252570'}
                               sx={{
                                 '&:hover': {
-                                  color: '#232323!important'
-                                }
+                                  color: '#252525!important'
+                                },
+                                ...navLinkSX,
+                                fontSize: 14
                               }}
                             >
                               {sub.titleContent ?? sub.title}

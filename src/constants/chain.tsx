@@ -32,47 +32,43 @@ export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
 export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
 
 export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
-  ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.KOVAN, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC]
-  : [ChainId.BSC, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC, ChainId.KOVAN]
+  ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC]
+  : [ChainId.BSC, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC]
 
 export const ChainList: Chain[] = [
-  ...(IS_TEST_NET
-    ? [
-        {
-          icon: <ETH />,
-          logo: EthUrl,
-          symbol: 'Ropsten',
-          name: 'Ropsten Test Network',
-          id: ChainId.ROPSTEN,
-          hex: '0x3'
-        },
-        {
-          icon: <ETH />,
-          logo: EthUrl,
-          symbol: 'Rinkeby',
-          name: 'Rinkeby Testnet',
-          id: ChainId.RINKEBY,
-          hex: '0x4'
-        }
-      ]
-    : [
-        {
-          icon: <BSC height={20} width={20} />,
-          logo: BSCUrl,
-          symbol: 'BSC',
-          name: 'Binance Smart Chain',
-          id: ChainId.BSC,
-          hex: '0x38'
-        },
-        {
-          icon: <MATIC />,
-          logo: MATICUrl,
-          symbol: 'MATIC',
-          name: 'Matic',
-          id: ChainId.MATIC,
-          hex: '0xA86A'
-        }
-      ]),
+  {
+    icon: <ETH />,
+    logo: EthUrl,
+    symbol: 'Ropsten',
+    name: 'Ropsten Test Network',
+    id: ChainId.ROPSTEN,
+    hex: '0x3'
+  },
+  {
+    icon: <ETH />,
+    logo: EthUrl,
+    symbol: 'Rinkeby',
+    name: 'Rinkeby Testnet',
+    id: ChainId.RINKEBY,
+    hex: '0x4'
+  },
+
+  {
+    icon: <BSC height={20} width={20} />,
+    logo: BSCUrl,
+    symbol: 'BSC',
+    name: 'Binance Smart Chain',
+    id: ChainId.BSC,
+    hex: '0x38'
+  },
+  {
+    icon: <MATIC />,
+    logo: MATICUrl,
+    symbol: 'MATIC',
+    name: 'Matic',
+    id: ChainId.MATIC,
+    hex: '0xA86A'
+  },
   {
     icon: <ETH />,
     logo: EthUrl,

@@ -2,7 +2,7 @@ import { MenuItem, Box } from '@mui/material'
 import LogoText from 'components/LogoText'
 import Select from 'components/Select/Select'
 import { useActiveWeb3React } from 'hooks'
-import { ChainId, ChainList, NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from 'constants/chain'
+import { ChainId, ChainListMap, NETWORK_CHAIN_ID, SUPPORTED_CHAIN_ID, SUPPORTED_NETWORKS } from 'constants/chain'
 import useBreakpoint from 'hooks/useBreakpoint'
 import Image from 'components/Image'
 
@@ -29,30 +29,33 @@ export default function NetworkSelect() {
           }
         }}
       >
-        {ChainList.map(option => (
-          <MenuItem
-            onClick={() => {
-              if ([1, 3, 4, 5, 42].includes(option.id)) {
-                library?.send('wallet_switchEthereumChain', [
-                  { chainId: SUPPORTED_NETWORKS[option.id as ChainId]?.chainId },
-                  account
-                ])
-              } else {
-                const params = SUPPORTED_NETWORKS[option.id as ChainId]
-                library?.send('wallet_addEthereumChain', [params, account])
-              }
-            }}
-            value={option.id}
-            key={option.id}
-            selected={chainId === option.id}
-          >
-            {isDownSm ? (
-              <Image src={option.logo} style={{ height: 14, width: 'auto', margin: '5px 0 0' }} />
-            ) : (
-              <LogoText logo={option.logo} text={option.symbol} gapSize={'small'} fontSize={14} />
-            )}
-          </MenuItem>
-        ))}
+        {SUPPORTED_CHAIN_ID.map((chainId: ChainId) => {
+          const option = ChainListMap[chainId]
+          return (
+            <MenuItem
+              onClick={() => {
+                if ([1, 3, 4, 5, 42].includes(option.id)) {
+                  library?.send('wallet_switchEthereumChain', [
+                    { chainId: SUPPORTED_NETWORKS[option.id as ChainId]?.chainId },
+                    account
+                  ])
+                } else {
+                  const params = SUPPORTED_NETWORKS[option.id as ChainId]
+                  library?.send('wallet_addEthereumChain', [params, account])
+                }
+              }}
+              value={option.id}
+              key={option.id}
+              selected={chainId === option.id}
+            >
+              {isDownSm ? (
+                <Image src={option.logo} style={{ height: 14, width: 'auto', margin: '5px 0 0' }} />
+              ) : (
+                <LogoText logo={option.logo} text={option.symbol} gapSize={'small'} fontSize={14} />
+              )}
+            </MenuItem>
+          )
+        })}
       </Select>
     </Box>
   )

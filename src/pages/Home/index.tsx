@@ -11,7 +11,7 @@ import flexibleUrl from 'assets/images/flexible.png'
 import DualPlusUrl from 'assets/svg/home_dual_plus.svg'
 import SaddleOptionUrl from 'assets/svg/home_saddle_option.svg'
 import TieredOptionUrl from 'assets/svg/home_tiered_option.svg'
-import recurringVaultUrl from 'assets/svg/home_recur.svg'
+// import recurringVaultUrl from 'assets/svg/home_recur.svg'
 import defiVaultUrl from 'assets/svg/home_defi.svg'
 import Card from 'components/Card/Card'
 import { routes } from 'constants/routes'
@@ -166,13 +166,14 @@ export default function Home() {
             />
           </Grid>
         </Grid>
+
         <Card>
-          <Box padding={{ xs: '40px 0 80px', md: '40px 0 100px' }} display="grid" gap={{ xs: 30, md: 130 }}>
+          <Box padding={{ xs: '40px 0 80px', md: '40px 0 100px' }} display="grid" gap={{ xs: 77, md: 130 }}>
             <Box>
               <ProductCard
                 large
-                imgHeight={420}
-                contemtMargin={'0 0 60px'}
+                imgHeight={isDownMd ? 300 : 420}
+                contentMargin={'0 0 60px'}
                 imgTitle={'home_dualInvest'}
                 title="Dual Investment"
                 synospis={`Earn both ups and downs within 
@@ -218,7 +219,7 @@ a fluctuation range`}
                 <Box width={isDownMd ? '100%' : undefined}>
                   <ProductCard
                     grayButton
-                    contemtMargin={isDownMd ? '60px 0 20px' : '0'}
+                    contentMargin={isDownMd ? '60px 0 20px' : '0'}
                     large
                     title="Dual Investment Plus"
                     synospis={`Dual Investment standard
@@ -228,10 +229,11 @@ a fluctuation range`}
               </Box>
             </Box>
 
-            <ProductCard
+            {/* <ProductCard
               large
               grayButton
               actionText="Explore"
+              contentMargin={'0 0 50px 0'}
               imgUrl={recurringVaultUrl}
               title="Recurring Strategy"
               synospis={`Automatic management of funds, cyclic compound interest.
@@ -239,17 +241,18 @@ Earn yield on your idle assets`}
               onClick={() => {
                 history.push(routes.defiVault)
               }}
-            />
+            /> */}
             <ProductCard
               large
               grayButton
               actionText="Explore"
+              contentMargin={'0 0 50px 0'}
               imgUrl={defiVaultUrl}
               title="Defi option Vault"
               synospis={`Automatic management of funds, cyclic compound interest.
 Earn yield on your idle assets`}
               onClick={() => {
-                history.push(routes.defiVault)
+                window.location.href = 'https://dov.antimatter.finance/#/defi'
               }}
             />
 
@@ -350,7 +353,7 @@ function ProductCard({
   grayButton,
   imgHeight,
   imgUrl,
-  contemtMargin
+  contentMargin
 }: {
   imgTitle?: string
   title: string
@@ -361,7 +364,7 @@ function ProductCard({
   grayButton?: boolean
   imgHeight?: number
   imgUrl?: string
-  contemtMargin?: string
+  contentMargin?: string
 }) {
   const isDownMd = useBreakpoint('md')
   const isDownSm = useBreakpoint('sm')
@@ -374,7 +377,7 @@ function ProductCard({
           display="flex"
           flexDirection={'column'}
           justifyContent="center"
-          margin={contemtMargin ?? 0}
+          margin={contentMargin ?? 0}
         >
           <Typography fontSize={large ? 36 : 24} fontWeight={500}>
             {title}
@@ -423,7 +426,9 @@ function ProductCard({
               marginLeft: 'auto',
               height: imgHeight ?? '200px',
               maxHeight: 385,
-              padding: large ? '0px' : '10px 15px'
+              padding: large ? '0px' : '10px 15px',
+              display: 'flex',
+              alignItems: 'flex-end'
             }}
           >
             <AnimatedSvg fileName={imgTitle} />
