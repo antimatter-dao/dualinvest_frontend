@@ -260,6 +260,10 @@ export default function Dashboard() {
                   </OutlineButton>
                 </NumericalCard>
               )}
+              <Typography margin={'20px 20px 40px'}>
+                *You don&apos;t need to deposit o access defi option vault. The deposit is oply available for dual
+                investment.
+              </Typography>
 
               {balanceData && isDownMd ? (
                 <AccountBalanceCards data={balanceData} />
