@@ -26,6 +26,7 @@ import { ChevronRight } from '@mui/icons-material'
 const StyledHomeSvg = styled(Box)(({ theme }) => ({
   flexShrink: 0,
   maxWidth: 487,
+  marginBottom: -1,
   alignSelf: 'flex-end',
   [theme.breakpoints.down('md')]: {
     maxWidth: 'calc(100% - 80px)'
