@@ -31,7 +31,7 @@ const Instructions: { [type in TYPE]: JSX.Element | string } = {
       part of the income.
     </>
   ),
-  [TYPE.instant]: `Instant withdrawals are for funds that have been deposited but not yet deployed in the Defi option Vault. Because these funds haven't been deployed they can be withdrawn immediately.`
+  [TYPE.instant]: `Instant withdrawals are for funds that have been deposited, but are not yet deployed in the Defi Option Vault. Because these funds haven't been deployed they can be withdrawn immediately.`
 }
 
 export default function VaultForm({

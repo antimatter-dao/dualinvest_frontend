@@ -89,7 +89,7 @@ export default function DefiVault() {
       gap={{ xs: 36, md: 48 }}
     >
       <ProductBanner
-        title="Defi option Vault"
+        title="Defi Option Vault"
         checkpoints={['Automated strategy for yield generation']}
         imgFileName={'defi_vault'}
         svgMargin={'0 0 -12px'}

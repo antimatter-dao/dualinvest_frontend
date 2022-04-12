@@ -109,7 +109,7 @@ export default function Home() {
                 history.push(routes.dualInvest)
               }}
             >
-              Call to action
+              Start Now
             </Button>
           </Box>
 
@@ -149,13 +149,13 @@ export default function Home() {
             <StyledUsdtLogo src={UsdtBlack} />
             <NumericalCard
               width={'100%'}
-              title={isDownMd ? undefined : 'Total investment amount'}
+              title={isDownMd ? undefined : 'Total Investment Amount'}
               value={totalInvest}
               fontSize={isDownMd ? '20px' : '44px'}
               unit="USDT"
               unitSize={isDownMd ? '12px' : '16px'}
               border
-              subValue={isDownMd ? 'Total investment amount' : undefined}
+              subValue={isDownMd ? 'Total Investment Amount' : undefined}
               padding="24px"
             />
           </Grid>
@@ -163,13 +163,13 @@ export default function Home() {
             <StyledUsdtLogo src={UsdtBlack} />
             <NumericalCard
               width={'100%'}
-              title={isDownMd ? undefined : 'Amount of investment in progress'}
+              title={isDownMd ? undefined : 'Amount of Investment in Progress'}
               value={totalProgress}
               fontSize={isDownMd ? '20px' : '44px'}
               unit="USDT"
               unitSize={isDownMd ? '12px' : '16px'}
               border
-              subValue={isDownMd ? 'Amount of investment in progress' : undefined}
+              subValue={isDownMd ? 'Amount of Investment in Progress' : undefined}
               padding="24px"
             />
           </Grid>
@@ -184,7 +184,7 @@ export default function Home() {
                 contentMargin={'0 0 60px'}
                 imgTitle={'home_dualInvest'}
                 title="Dual Investment"
-                synospis={`Earn both ups and downs within 
+                synospis={`Earn on both ups and downs within 
 a fluctuation range`}
                 onClick={() => {
                   history.push(routes.dualInvest)
@@ -253,10 +253,10 @@ Earn yield on your idle assets`}
             <ProductCard
               large
               grayButton
-              actionText="Explore"
+              actionText="Start Now"
               contentMargin={'0 0 50px 0'}
               imgUrl={defiVaultUrl}
-              title="Defi option Vault"
+              title="Defi Option Vault"
               synospis={`Automatic management of funds, cyclic compound interest.
 Earn yield on your idle assets`}
               onClick={() => {
