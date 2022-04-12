@@ -252,7 +252,6 @@ Earn yield on your idle assets`}
             /> */}
             <ProductCard
               large
-              grayButton
               actionText="Start Now"
               contentMargin={'0 0 50px 0'}
               imgUrl={defiVaultUrl}
@@ -421,7 +420,7 @@ function ProductCard({
                 : undefined
             }
           >
-            {!onClick ? 'Coming soon' : actionText ?? 'Start now'}
+            {!onClick ? 'Coming soon...' : actionText ?? 'Start Now'}
             {actionText === 'Explore' && <ChevronRight />}
           </Button>
         </Box>
