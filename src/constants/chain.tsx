@@ -32,8 +32,8 @@ export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
 export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
 
 export const SUPPORTED_CHAIN_ID: Array<ChainId> = IS_TEST_NET
-  ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC]
-  : [ChainId.BSC, ChainId.AVAX, ChainId.MAINNET, ChainId.MATIC]
+  ? [ChainId.ROPSTEN, ChainId.RINKEBY, ChainId.AVAX, ChainId.MATIC]
+  : [ChainId.BSC, ChainId.AVAX, ChainId.MATIC]
 
 export const ChainList: Chain[] = [
   {
