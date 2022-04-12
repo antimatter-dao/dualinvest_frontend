@@ -3,10 +3,12 @@ import { Box, Typography } from '@mui/material'
 import Button from 'components/Button/Button'
 import Spinner from 'components/Spinner'
 import { SUPPORTED_CURRENCIES } from 'constants/currencies'
-import { ChainId, ChainsBgImgs } from 'constants/chain'
+import { ChainId } from 'constants/chain'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
 import { SimpleProgress } from 'components/Progress'
 import { DefiProduct } from 'hooks/useDefiVault'
+import { ChainListMap } from 'constants/chain'
+import Image from 'components/Image'
 
 export default function VaultProductCard({
   title,
@@ -39,14 +41,12 @@ export default function VaultProductCard({
         width: '100%'
       }}
     >
-      <Box position="absolute" left={182} bottom={380}>
-        {ChainsBgImgs[onChain]}
-      </Box>
+      <ChainTag chainId={onChain} />
 
       <CurrencyLogo
         currency={SUPPORTED_CURRENCIES[product?.investCurrency ?? '']}
-        size={'80px'}
-        style={{ marginBottom: 20, zIndex: 2 }}
+        size={'52px'}
+        style={{ zIndex: 2, position: 'absolute', right: 23, top: 20 }}
       />
 
       <TextCard text={title} subText={description} maxWidth={240} />
@@ -127,6 +127,29 @@ function TextCard({
       </Typography>
       <Typography sx={{ color: 'rgba(0,0,0,0.5)' }} fontSize={12} fontWeight={subTextBold ? 500 : 400}>
         {subText}
+      </Typography>
+    </Box>
+  )
+}
+
+function ChainTag({ chainId }: { chainId: ChainId }) {
+  return (
+    <Box
+      bgcolor="rgba(49, 176, 71, 0.2)"
+      borderRadius="10px"
+      padding="7px 14px"
+      width="fit-content"
+      display="flex"
+      alignItems="center"
+      gap={4.8}
+    >
+      <Image
+        src={ChainListMap[chainId]?.logo}
+        alt={`${ChainListMap[chainId]?.name} logo`}
+        style={{ width: 14, height: 14 }}
+      />
+      <Typography color="#31B047" sx={{ letterSpacing: 2.4 }}>
+        {ChainListMap[chainId]?.name}
       </Typography>
     </Box>
   )
