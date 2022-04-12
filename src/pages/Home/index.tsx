@@ -100,7 +100,14 @@ export default function Home() {
                 </Typography>
               }
             />
-            <Button width={'193px'} height="53px" style={{ margin: isDownMd ? '20px auto 0' : '48px 0 0' }}>
+            <Button
+              width={'193px'}
+              height="53px"
+              style={{ margin: isDownMd ? '20px auto 0' : '48px 0 0' }}
+              onClick={() => {
+                history.push(routes.dualInvest)
+              }}
+            >
               Call to action
             </Button>
           </Box>

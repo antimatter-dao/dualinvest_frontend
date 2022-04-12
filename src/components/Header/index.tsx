@@ -220,6 +220,7 @@ export default function Header() {
                             <ExternalLink
                               href={sub.link}
                               className={'link'}
+                              target=""
                               color={'#25252570'}
                               sx={{
                                 '&:hover': {
