@@ -66,7 +66,7 @@ export function RiskStatement({ subject }: { subject: Subject }) {
         'This product is a non-principal-guaranteed wealth management product. Market fluctuations may result in a loss of principal. Please invest with caution.',
         'The investment amount is calculated in real time with the market, please refer to the actual purchase transaction.',
         'The annualized rate of return changes in real time with the market, please refer to the actual rate of return of the purchase transaction.',
-        'The average spot price of the last 30 minutes at 12:00 (UTC) on the delivery date will be used as the settlement price.',
+        'The average spot price of the last 30 minutes at 08:00 (UTC) on the delivery date will be used as the settlement price.',
         'Early redemption is not supported, and users can only get rewards after the expiry date.',
         'After the product is purchased, you can view it on my currency holding page, and the payment will be automatically issued to the Account after the delivery.'
       ],
@@ -74,7 +74,7 @@ export function RiskStatement({ subject }: { subject: Subject }) {
         'This product is a non-principal-guaranteed wealth management product. Market fluctuations may result in a loss of principal. Please invest with caution.',
         'The investment amount is calculated in real time with the market, please refer to the actual purchase transaction.',
         'The annualized rate of return changes in real time with the market, please refer to the actual rate of return of the purchase transaction.',
-        'The average spot price of the last 30 minutes at 12:00 (UTC+8) on the delivery date will be used as the settlement price.',
+        'The average spot price of the last 30 minutes at 08:00 (UTC+8) on the delivery date will be used as the settlement price.',
         'Early redemption is not supported, and users can only get rewards after the expiry date.',
         'After the product is purchased, you can check the operation status on the position page.'
       ],
@@ -82,7 +82,7 @@ export function RiskStatement({ subject }: { subject: Subject }) {
         'This product is a non-principal-guaranteed wealth management product. Market fluctuations may result in a loss of principal. Please invest with caution.',
         'The investment amount is calculated in real time with the market, please refer to the actual purchase transaction.',
         'The annualized rate of return changes in real time with the market, please refer to the actual rate of return of the purchase transaction.',
-        'The average spot price of the last 30 minutes at 12:00 (UTC+8) on the delivery date will be used as the settlement price.',
+        'The average spot price of the last 30 minutes at 08:00 (UTC+8) on the delivery date will be used as the settlement price.',
         'Early redemption is not supported, and users can only get rewards after the expiry date.',
         <Typography fontSize={16} key={1}>
           After the product is purchased, you can view it on my currency{' '}
