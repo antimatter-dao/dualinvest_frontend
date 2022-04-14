@@ -126,7 +126,9 @@ export default function PositionDualInvest() {
           productId,
           deliveryPrice,
           `${dayjs(expiredAt * 1000).format('MMM DD, YYYY')} 08:30 AM UTC`,
-          status === 'progressing' ? null : <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
+          status === 'progressing' || +deliveryPrice === 0 ? null : (
+            <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
+          )
         ]
         hiddenList.push(hiddenData)
         hiddenPartsList.push(

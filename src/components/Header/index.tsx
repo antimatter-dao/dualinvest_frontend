@@ -30,9 +30,9 @@ export const Tabs: Tab[] = [
     title: 'Invest',
     subTab: [
       { title: 'Defi Option Vault', link: 'https://dov.antimatter.finance/#/defi' },
-      { title: 'Dual Investment', route: routes.dualInvest }
+      { title: 'Dual Investment', route: routes.dualInvest },
       // { title: 'Chain-type Option', route: routes.chainOption },
-      // { title: 'Recurring Strategy', route: routes.recurringVault }
+      { title: 'Recurring Strategy', route: routes.recurringVault }
     ]
   },
   // { title: 'Dual Investment', route: routes.dualInvest },
