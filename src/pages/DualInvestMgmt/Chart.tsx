@@ -34,7 +34,12 @@ export default function DualInvestChart({
         xs={12}
         md={9}
         sx={{
-          height: { xs: '300px', md: '100%', maxWidth: 'calc(100% - 100px)', width: { xs: '100%', md: 'auto' } }
+          height: {
+            xs: '300px',
+            md: '100%',
+            maxWidth: { xs: '100%', md: 'calc(100% - 100px)' },
+            width: { xs: '100%', md: 'auto' }
+          }
         }}
         ref={graphContainer}
       >
