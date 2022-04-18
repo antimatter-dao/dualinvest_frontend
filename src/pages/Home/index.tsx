@@ -177,63 +177,73 @@ export default function Home() {
 
         <Card>
           <Box padding={{ xs: '40px 0 80px', md: '40px 0 100px' }} display="grid" gap={{ xs: 77, md: 130 }}>
-            <Box>
-              <ProductCard
-                large
-                imgHeight={isDownMd ? 300 : 420}
-                contentMargin={'0 0 60px'}
-                imgTitle={'home_dualInvest'}
-                title="Dual Investment"
-                synospis={`Earn on both ups and downs within 
+            <ProductCard
+              large
+              imgHeight={isDownMd ? 300 : 420}
+              contentMargin={'0 0 60px'}
+              imgTitle={'home_dualInvest'}
+              title="Dual Investment"
+              synospis={`Earn on both ups and downs within 
 a fluctuation range`}
-                onClick={() => {
-                  history.push(routes.dualInvest)
-                }}
-              />
+              onClick={() => {
+                history.push(routes.dualInvest)
+              }}
+            />
+            <ProductCard
+              large
+              actionText="Start Now"
+              contentMargin={'0 0 50px 0'}
+              imgUrl={defiVaultUrl}
+              title="Defi Option Vault"
+              synospis={`Automatic management of funds, cyclic compound interest.
+Earn yield on your idle assets`}
+              onClick={() => {
+                window.location.href = 'https://dov.antimatter.finance/#/defi'
+              }}
+            />
+            <Box
+              padding={{ xs: '0 24px', md: '0 60px' }}
+              display={'flex'}
+              flexDirection={{ xs: 'column-reverse', md: 'row' }}
+              mb={{ md: -20 }}
+              sx={{
+                alignItems: 'center',
+                overflow: 'hidden',
+                background: theme => theme.palette.background.default,
+                position: 'relative',
+                '&:before': {
+                  content: "''",
+                  width: '100%',
+                  height: '100%',
+                  background: '#ffffff',
+                  opacity: 0.5,
+                  zIndex: 3,
+                  position: 'absolute',
+                  top: 0,
+                  left: 0
+                }
+              }}
+            >
               <Box
-                padding={{ xs: '0 24px', md: '0 60px' }}
-                display={'flex'}
-                flexDirection={{ xs: 'column-reverse', md: 'row' }}
-                mb={{ md: -20 }}
+                maxHeight="315px"
                 sx={{
-                  alignItems: 'center',
-                  overflow: 'hidden',
-                  background: theme => theme.palette.background.default,
-                  position: 'relative',
-                  '&:before': {
-                    content: "''",
-                    width: '100%',
-                    height: '100%',
-                    background: '#ffffff',
-                    opacity: 0.5,
-                    zIndex: 3,
-                    position: 'absolute',
-                    top: 0,
-                    left: 0
-                  }
+                  marginRight: isDownMd ? '0' : 'auto',
+                  height: '315px',
+                  display: 'flex',
+                  alignItems: 'center'
                 }}
               >
-                <Box
-                  maxHeight="315px"
-                  sx={{
-                    marginRight: isDownMd ? '0' : 'auto',
-                    height: '315px',
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Image src={DualPlusUrl} />
-                </Box>
-                <Box width={isDownMd ? '100%' : undefined}>
-                  <ProductCard
-                    grayButton
-                    contentMargin={isDownMd ? '60px 0 20px' : '0'}
-                    large
-                    title="Dual Investment Plus"
-                    synospis={`Dual Investment standard
+                <Image src={DualPlusUrl} />
+              </Box>
+              <Box width={isDownMd ? '100%' : undefined}>
+                <ProductCard
+                  grayButton
+                  contentMargin={isDownMd ? '60px 0 20px' : '0'}
+                  large
+                  title="Dual Investment Plus"
+                  synospis={`Dual Investment standard
 + advanced settings`}
-                  />
-                </Box>
+                />
               </Box>
             </Box>
 
@@ -250,18 +260,6 @@ Earn yield on your idle assets`}
                 history.push(routes.defiVault)
               }}
             /> */}
-            <ProductCard
-              large
-              actionText="Start Now"
-              contentMargin={'0 0 50px 0'}
-              imgUrl={defiVaultUrl}
-              title="Defi Option Vault"
-              synospis={`Automatic management of funds, cyclic compound interest.
-Earn yield on your idle assets`}
-              onClick={() => {
-                window.location.href = 'https://dov.antimatter.finance/#/defi'
-              }}
-            />
 
             <Box display="grid" gap={{ xs: 24, md: 40 }} padding={{ xs: '0 24px', md: '0 60px' }}>
               <Typography fontSize={36} fontWeight={500}>
