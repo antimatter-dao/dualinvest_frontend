@@ -103,7 +103,10 @@ export default function SubscribeForm({
     if (!product || !balance) return ''
     let str = ''
     if (amount !== '' && +balance < +amount * +product.multiplier * multiplier) str = ErrorType.insufficientBalance
-    if (amount !== '' && (+amount > +product.orderLimit / +product.multiplier || +amount < 1))
+    if (
+      amount !== '' &&
+      (+amount > +product.orderLimit / +product.multiplier || +amount < getMinAmount(product).amount)
+    )
       str = ErrorType.singleLimitExceed
     return str
   }, [amount, balance, multiplier, product])
@@ -246,7 +249,7 @@ export default function SubscribeForm({
         infoText={"Once subscribed the APY will get locked in, the product can't be cancelled after subscription."}
       >
         <Box>
-          <Box display="flex" justifyContent="space-between">
+          <Box display="flex" justifyContent="space-between" maxWidth={'100%'} flexWrap="wrap">
             <InputLabel>Investment Amount</InputLabel>
             <Box display="flex" alignItems="baseline">
               {!!balance && (
@@ -293,15 +296,30 @@ export default function SubscribeForm({
             </Box>
           </OutlinedCard>
           <Box display="flex" mt={12} justifyContent="space-between">
-            <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-              <span>Min: {product ? +product.multiplier * multiplier + ' ' + product.investCurrency : '-'}</span>
+            <Typography fontSize={12} sx={{ opacity: 0.5, whiteSpace: 'pre' }}>
+              <span>Min: {getMinAmount(product).string}</span>
             </Typography>
-            <Typography fontSize={12} sx={{ opacity: 0.5 }}>
-              <span>Max: {product ? +product.orderLimit * multiplier + ' ' + product.investCurrency : '-'}</span>
+            <Typography fontSize={12} sx={{ opacity: 0.5, whiteSpace: 'pre' }}>
+              <span>Max: {getMaxAmount(product)}</span>
             </Typography>
           </Box>
         </Box>
       </MgmtForm>
     </>
   )
+}
+
+const getMinAmount = (product: Product | undefined) => {
+  if (!product) return { string: '-', amount: 1 }
+  const divider = product.type === 'PUT' ? 1 : +product.strikePrice
+  const multiplier = product.type === 'CALL' ? 1 : +product.strikePrice
+  const amount = Math.ceil((100 / divider) * +product.multiplier)
+  return { string: `${amount} (${amount * multiplier * +product.multiplier} ${product.investCurrency})`, amount }
+}
+
+const getMaxAmount = (product: Product | undefined) => {
+  if (!product) return '-'
+  const multiplier = product.type === 'CALL' ? 1 : +product.strikePrice
+
+  return `${+product.orderLimit} (${+product.orderLimit * multiplier} ${product.investCurrency})`
 }

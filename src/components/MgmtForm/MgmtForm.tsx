@@ -150,7 +150,10 @@ export function MgmtForm({
             {/* {key === 'Current Progress' ? (
 <SimpleProgress key={1} val={0.16} total={1} />
 ) : ( */}
-            <Typography color={key === 'APY' ? theme.palette.primary.main : theme.palette.text.primary}>
+            <Typography
+              color={key === 'APY' ? theme.palette.primary.main : theme.palette.text.primary}
+              sx={{ textAlign: 'right' }}
+            >
               {data[key as keyof typeof data]}
             </Typography>
             {/* )} */}
