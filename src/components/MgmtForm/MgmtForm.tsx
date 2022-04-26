@@ -220,8 +220,18 @@ export function MgmtForm({
                   <Typography component="span" color="error" fontSize={12}>
                     Single Limit Exceeded.
                   </Typography>{' '}
-                  Single financial management limit is {product?.multiplier ?? '-'}~
-                  {product ? +product?.orderLimit * +product?.multiplier : '-'} BTC
+                  Single financial management limit is{' '}
+                  {product
+                    ? `${Math.ceil(100 / +product.strikePrice) *
+                        (product.type === 'CALL' ? 1 : +product.strikePrice) *
+                        +product.multiplier} ${product.investCurrency}`
+                    : '-'}
+                  ~
+                  {product
+                    ? (+product?.orderLimit / +product?.multiplier) *
+                      (product.type === 'CALL' ? 1 : +product.strikePrice)
+                    : '-'}{' '}
+                  {product?.investCurrency}
                 </>
               )
             ) : (
