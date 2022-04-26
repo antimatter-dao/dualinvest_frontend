@@ -46,7 +46,7 @@ export default function HistoryDualInvest() {
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   // const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
-  console.log(orderList)
+
   const data = useMemo(() => {
     if (!orderList) return { hiddenList: [], summaryList: [] }
     const hiddenList: any[][] = []
