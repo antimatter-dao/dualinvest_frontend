@@ -311,15 +311,13 @@ export default function SubscribeForm({
 
 const getMinAmount = (product: Product | undefined) => {
   if (!product) return { string: '-', amount: 1 }
-  const divider = product.type === 'PUT' ? 1 : +product.strikePrice
   const multiplier = product.type === 'CALL' ? 1 : +product.strikePrice
-  const amount = Math.ceil((100 / divider) * +product.multiplier)
+  const amount = Math.ceil(100 / +product.strikePrice)
   return { string: `${amount} (${amount * multiplier * +product.multiplier} ${product.investCurrency})`, amount }
 }
 
 const getMaxAmount = (product: Product | undefined) => {
   if (!product) return '-'
   const multiplier = product.type === 'CALL' ? 1 : +product.strikePrice
-
   return `${+product.orderLimit} (${+product.orderLimit * multiplier} ${product.investCurrency})`
 }
