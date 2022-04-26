@@ -97,7 +97,15 @@ export default function ConfirmModal({
         pending={approvalState === ApprovalState.PENDING}
         pendingText="Approving"
         onAction={onConfirm}
-        actionText={isNativeCur ? 'Confirm' : approvalState === ApprovalState.APPROVED ? 'Invest' : 'Approve'}
+        actionText={
+          isNativeCur === undefined
+            ? 'Confirm'
+            : isNativeCur
+            ? 'Confirm'
+            : approvalState === ApprovalState.APPROVED
+            ? 'Invest'
+            : 'Approve'
+        }
       />
       {/* {actionButton ?? (
         <Button onClick={onConfirm} height="60px">
