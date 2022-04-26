@@ -36,23 +36,17 @@ const HistoryTableHeader = [
 ]
 
 const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '', '']
-
+const statusList = [InvestStatus.Settled, InvestStatus.OrderFailed, InvestStatus.EverythingFailed]
 export default function HistoryDualInvest() {
   const [page, setPage] = useState(1)
   const [hiddenParts, setHiddenParts] = useState<JSX.Element[]>([])
   const [checkedFilterOption, setCheckedFilterOption] = useState<FilterType>('All')
-  const { orderList, pageParams } = useOrderRecords(
-    INVEST_TYPE.dualInvest,
-    checkedFilterOption,
-    InvestStatus.Settled,
-    page,
-    8
-  )
+  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, checkedFilterOption, statusList, page, 8)
 
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   // const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
-
+  console.log(orderList)
   const data = useMemo(() => {
     if (!orderList) return { hiddenList: [], summaryList: [] }
     const hiddenList: any[][] = []
@@ -71,9 +65,11 @@ export default function HistoryDualInvest() {
         investCurrency,
         orderId,
         productId,
+        investStatus,
         type
       } = order
       const exercised = type === 'CALL' ? !!(+deliveryPrice > +strikePrice) : !!(+deliveryPrice < +strikePrice)
+      const failed = investStatus !== InvestStatus.Settled
       const hiddenData = [
         orderId,
         productId,
@@ -130,9 +126,9 @@ export default function HistoryDualInvest() {
         dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC',
         strikePrice,
         type === 'CALL' ? 'Upward' : 'Down',
-        `${dayjs().diff(dayjs(ts * 1000), 'day')} days`,
-        `${returnedAmount} ${returnedCurrency}`,
-        dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + '\n08:30 AM UTC'
+        failed ? '' : `${dayjs().diff(dayjs(ts * 1000), 'day')} days`,
+        failed ? '' : `${returnedAmount} ${returnedCurrency}`,
+        failed ? <StatusTag status="failed" /> : dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + '\n08:30 AM UTC'
       ]
     })
     setHiddenParts(hiddenPartsList)
