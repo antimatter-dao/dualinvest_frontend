@@ -12,6 +12,7 @@ interface Height {
 interface Width {
   sidebar: string
   maxContent: string
+  minContent: string
 }
 
 interface TextColor {
@@ -129,7 +130,8 @@ export const theme = {
   },
   width: {
     sidebar: '250px',
-    maxContent: '1200px'
+    maxContent: '1200px',
+    minContent: '300px'
   },
   shape: {
     border: '1px solid',
