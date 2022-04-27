@@ -77,7 +77,7 @@ export function useOrderRecords(
       chainId: chainId ?? NETWORK_CHAIN_ID,
       investStatus: Array.isArray(investStatus) ? undefined : investStatus,
       pageNum: Array.isArray(investStatus) ? undefined : pageNum,
-      pageSize: pageSize,
+      pageSize: Array.isArray(investStatus) ? 999999 : pageSize,
       currency: currency === 'All' ? undefined : currency
     })
   }, [account, chainId, currency, investStatus, investType, pageNum, pageSize])

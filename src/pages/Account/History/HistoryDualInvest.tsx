@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Box, Typography, Container } from '@mui/material'
+import dayjsPluginUTC from 'dayjs-plugin-utc'
 import Card from 'components/Card/Card'
 import NoDataCard from 'components/Card/NoDataCard'
 import Table from 'components/Table'
@@ -14,6 +15,8 @@ import HistoryTableCards from 'components/Account/HistoryTableCards'
 import StatusTag from 'components/Status/StatusTag'
 import Filter from 'components/Filter'
 // import { useShowClaimSuccessModal } from 'hooks/useSuccessImage'
+
+dayjs.extend(dayjsPluginUTC)
 
 enum HistoryMoreHeaderIndex {
   OrderID,
@@ -32,7 +35,8 @@ const HistoryTableHeader = [
   'Exercise',
   'Holding Days',
   'Execute Amount',
-  'Delivery Date'
+  'Delivery Date',
+  'Status'
 ]
 
 const HistoryMoreHeader = ['Order ID', 'Product ID', 'Settlement Price', 'Settlement Time', '', '']
@@ -41,8 +45,13 @@ export default function HistoryDualInvest() {
   const [page, setPage] = useState(1)
   const [hiddenParts, setHiddenParts] = useState<JSX.Element[]>([])
   const [checkedFilterOption, setCheckedFilterOption] = useState<FilterType>('All')
-  const { orderList, pageParams } = useOrderRecords(INVEST_TYPE.dualInvest, checkedFilterOption, statusList, page, 8)
-
+  const { orderList, pageParams } = useOrderRecords(
+    INVEST_TYPE.dualInvest,
+    checkedFilterOption,
+    statusList,
+    page,
+    999999
+  )
   const isDownMd = useBreakpoint('md')
   const { account } = useActiveWeb3React()
   // const { showClaimSuccessModalCallback } = useShowClaimSuccessModal()
@@ -74,8 +83,8 @@ export default function HistoryDualInvest() {
         orderId,
         productId,
         deliveryPrice,
-        `${dayjs(expiredAt * 1000).format('MMM DD, YYYY')} 08:30 AM UTC`,
-        <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
+        `${dayjs(expiredAt * 1000).format('MMM DD, YYYY')} 08:30 AM UTC`
+        // failed ? null : <StatusTag status={exercised ? 'exercised' : 'unexercised'} key={orderId} />
         // <Box key="orderId" margin="0 auto" width="max-content" display="inline-block" mt="5px">
         //   <Button
         //     height={'36px'}
@@ -123,12 +132,13 @@ export default function HistoryDualInvest() {
         <Typography color="primary" key="1" fontWeight={{ xs: 600, md: 400 }}>
           {(+annualRor * 100).toFixed(2)}%
         </Typography>,
-        dayjs(ts * 1000).format('MMM DD, YYYY hh:mm A') + ' UTC',
+        (dayjs(ts * 1000) as any).utc().format('MMM DD, YYYY \nhh:mm A') + ' UTC',
         strikePrice,
         type === 'CALL' ? 'Upward' : 'Down',
         failed ? '' : `${dayjs().diff(dayjs(ts * 1000), 'day')} days`,
         failed ? '' : `${returnedAmount} ${returnedCurrency}`,
-        failed ? <StatusTag status="failed" /> : dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + '\n08:30 AM UTC'
+        failed ? '' : dayjs(+expiredAt * 1000).format('MMM DD, YYYY') + '\n08:30 AM UTC',
+        <StatusTag key={orderId} status={failed ? 'failed' : exercised ? 'exercised' : 'unexercised'} />
       ]
     })
     setHiddenParts(hiddenPartsList)
@@ -170,7 +180,17 @@ export default function HistoryDualInvest() {
             </Box>
           )}
           {data.summaryList.length && isDownMd ? (
-            <HistoryTableCards data={data} header={HistoryTableHeader} moreHeader={HistoryMoreHeader} />
+            <>
+              <HistoryTableCards data={data} header={HistoryTableHeader} moreHeader={HistoryMoreHeader} />{' '}
+              <PaginationView
+                count={pageParams?.count}
+                page={page}
+                perPage={pageParams?.perPage}
+                boundaryCount={0}
+                total={pageParams.total}
+                onChange={(event, value) => setPage(value)}
+              />
+            </>
           ) : data.summaryList.length ? (
             <>
               <Table
