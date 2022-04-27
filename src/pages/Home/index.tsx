@@ -411,11 +411,11 @@ function ProductCard({
                       backgroundColor: theme.palette.primary.main
                     },
                     '&:disabled': {
-                      backgroundColor: theme.palette.background.paper,
-                      border: '1px solid #000000'
+                      backgroundColor: theme.palette.background.default,
+                      color: theme.palette.text.primary
                     }
                   }
-                : undefined
+                : { zIndex: 2 }
             }
           >
             {!onClick ? 'Coming soon...' : actionText ?? 'Start Now'}

@@ -1,10 +1,9 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useActiveWeb3React } from 'hooks'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { calculateGasMargin } from 'utils'
 import { Axios } from 'utils/axios'
 import { useDualInvestContract } from './useContract'
-import usePollingWithMaxRetries from './usePollingWithMaxRetries'
 import { CURRENCIES, SUPPORTED_CURRENCY_SYMBOL } from 'constants/currencies'
 import { NETWORK_CHAIN_ID, ChainId } from 'constants/chain'
 
@@ -58,8 +57,6 @@ export function useReferral(): {
     setAllRes(r)
   }, [])
 
-  usePollingWithMaxRetries(allTokenPromiseFn, allTokenCallbackFn, 300000, 5, true)
-
   const result = useMemo(() => {
     const resultMap = ['USDT', 'BTC'].reduce((acc, symbol, idx) => {
       acc[symbol] = allRes?.[idx]?.data?.data ? allRes[idx].data.data.balance : '-'
@@ -67,6 +64,27 @@ export function useReferral(): {
     }, {} as ReferBalanceType)
     return resultMap
   }, [allRes])
+
+  useEffect(() => {
+    let isMounted = true
+    allTokenPromiseFn()
+      .then(r => {
+        r.map((item: any) => {
+          if (item.data.code !== 200) {
+            throw Error(item.data.msg)
+          }
+        })
+        if (isMounted) {
+          allTokenCallbackFn(r)
+        }
+      })
+      .catch(e => {
+        console.error(e)
+      })
+    return () => {
+      isMounted = false
+    }
+  }, [allTokenCallbackFn, allTokenPromiseFn])
 
   return useMemo(
     () => ({
