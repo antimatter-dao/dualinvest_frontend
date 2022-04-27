@@ -449,7 +449,6 @@ function ProductCard({
               maxWidth: '100%',
               margin: isDownMd ? '0 auto' : 'auto auto 0',
               opacity: !onClick ? 0.5 : 1,
-              marginLeft: 'auto',
               height: imgHeight ?? '200px',
               padding: 0
             }}

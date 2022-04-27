@@ -21,7 +21,7 @@ import { ReactComponent as UpperRightIcon } from 'assets/componentsIcon/upper_ri
 import { useAccountRecord } from 'hooks/useAccountData'
 import Spinner from 'components/Spinner'
 import { ExternalLink } from 'theme/components'
-import { getEtherscanLink } from 'utils/index'
+import { getEtherscanLink, isAddress } from 'utils/index'
 import { usePriceForAll } from 'hooks/usePriceSet'
 import { useAccountBalances } from 'hooks/useAccountBalance'
 import { toChecksumAddress } from 'web3-utils'
@@ -96,7 +96,8 @@ export default function Dashboard() {
 
     return records.map(record => {
       const scanLink = chainId ? getEtherscanLink(chainId, record.hash, 'transaction') : ''
-      const token = chainId ? CURRENCY_ADDRESS_MAP[toChecksumAddress(record.currency)] : undefined
+      const token =
+        chainId && isAddress(record.currency) ? CURRENCY_ADDRESS_MAP[toChecksumAddress(record.currency)] : undefined
       return [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
         <Box key={1} display="flex" gap={10} alignItems="center">
