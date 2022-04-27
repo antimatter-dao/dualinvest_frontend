@@ -4,8 +4,8 @@ import InputNumerical from 'components/Input/InputNumerical'
 import Button, { BlackButton } from 'components/Button/Button'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import InputLabel from 'components/Input/InputLabel'
-import DepositModalButton from 'pages/Account/modals/DepositModalButton'
-import { CURRENCIES } from 'constants/currencies'
+// import DepositModalButton from 'pages/Account/modals/DepositModalButton'
+// import { CURRENCIES } from 'constants/currencies'
 import { useActiveWeb3React } from 'hooks'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useCallback } from 'react'
@@ -190,9 +190,9 @@ function Form({
                     Available: {available ? available : '-'}
                     {currencySymbol}
                   </InputLabel>
-                  {chainId === NETWORK_CHAIN_ID && (
+                  {/* {chainId === NETWORK_CHAIN_ID && (
                     <DepositModalButton currentCurrency={CURRENCIES[chainId ?? NETWORK_CHAIN_ID][currencySymbol]} />
-                  )}
+                  )} */}
                 </>
               </Box>
             </Box>
