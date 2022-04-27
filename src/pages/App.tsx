@@ -28,6 +28,7 @@ import { IS_TEST_NET } from 'constants/chain'
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
+  minWidth: theme.width.minContent,
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column'
   }

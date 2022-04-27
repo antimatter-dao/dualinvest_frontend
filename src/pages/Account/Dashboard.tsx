@@ -89,20 +89,23 @@ export default function Dashboard() {
     }, 0)
     return accumulated.toFixed(2) + ''
   }, [accountBalances, indexPrices])
-
+  console.log(accountRecord?.records)
   const accountDetailsData = useMemo(() => {
     const records = accountRecord?.records
     if (!records) return []
 
-    return records.map(record => {
+    return records.reduce((acc, record) => {
+      if (![1, 2, 3, 4].includes(record.type)) {
+        return acc
+      }
       const scanLink = chainId ? getEtherscanLink(chainId, record.hash, 'transaction') : ''
       const token =
         chainId && isAddress(record.currency) ? CURRENCY_ADDRESS_MAP[toChecksumAddress(record.currency)] : undefined
-      return [
+      const parsed = [
         <TransactionTypeIcon key="type" txType={RecordType[record.type]} />,
         <Box key={1} display="flex" gap={10} alignItems="center">
           <CurrencyLogo currency={token} size="16px" />
-          {SYMBOL_MAP[record.symbol as keyof typeof SYMBOL_MAP] ?? record.symbol}
+          {record.id} {SYMBOL_MAP[record.symbol as keyof typeof SYMBOL_MAP] ?? record.symbol}
         </Box>,
         <Box key={1} display="flex" alignItems="center">
           <ExternalLink
@@ -126,7 +129,9 @@ export default function Dashboard() {
         dayjs(new Date(+record.timestamp * 1000).toUTCString()).format('MMM DD, YYYY hh:mm:ss A') + ' UTC',
         <>{!isDownMd && <StatusTag key="status" status="completed" />}</>
       ]
-    })
+      acc.push(parsed)
+      return acc
+    }, [] as any[])
   }, [accountRecord?.records, chainId, isDownMd])
 
   const handleDepositOpen = useCallback(() => {
