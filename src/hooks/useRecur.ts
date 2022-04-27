@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Token } from 'constants/token'
 import { useActiveWeb3React } from 'hooks'
-import { useBSCDualInvestContract } from './useContract'
+import { useBSCDualInvestContract, useDualInvestContract } from './useContract'
 import { parseBalance } from 'utils/parseAmount'
 import { trimNumberString } from 'utils/trimNumberString'
 
@@ -55,7 +55,7 @@ export function useRecurCallback(): {
   investCallback: undefined | ((val: string, curAddress: string, investCurAddress: string) => Promise<any>)
   redeemCallback: undefined | ((val: string, curAddress: string, investCurAddress: string) => Promise<any>)
 } {
-  const contract = useBSCDualInvestContract()
+  const contract = useDualInvestContract()
 
   const invest = useCallback(
     async (val, curAddress, investCurAddress): Promise<any> => {
