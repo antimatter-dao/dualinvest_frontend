@@ -10,7 +10,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useCallback } from 'react'
 import { OutlinedCard } from 'components/Card/Card'
-import { ErrorType } from 'pages/RecurringVaultMgmt/VaultForm'
+// import { ErrorType } from 'pages/RecurringVaultMgmt/VaultForm'
 import Divider from 'components/Divider'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { ChainListMap, NETWORK_CHAIN_ID } from 'constants/chain'
@@ -171,13 +171,14 @@ function Form({
       {type === TYPE.invest && val !== undefined && onChange && (
         <Box>
           <InputNumerical
-            error={!!error && error !== ErrorType.notAvailable}
+            // error={!!error && error !== ErrorType.notAvailable}
             smallPlaceholder
             placeholder={`Each unit represents ${multiplier} ${currencySymbol}`}
             onChange={handleChange}
             onMax={handleMax}
             value={val}
-            disabled={!account || chainId !== NETWORK_CHAIN_ID || error === ErrorType.notAvailable}
+            disabled={true}
+            // disabled={!account || chainId !== NETWORK_CHAIN_ID || error === ErrorType.notAvailable}
           />
 
           <Box mt={12}>

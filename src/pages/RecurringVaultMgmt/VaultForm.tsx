@@ -23,7 +23,8 @@ import { NETWORK_CHAIN_ID } from 'constants/chain'
 
 export enum ErrorType {
   insufficientBalance = 'Insufficient Balance',
-  notAvailable = 'The current status is not available for subscription, please try again after the current period is settled'
+  notAvailable = 'The current status is not available for subscription, please try again after the current period is settled',
+  closed = 'This product is no longer available, please redeem all you investment'
 }
 
 export default function VaultForm({
@@ -170,26 +171,27 @@ export default function VaultForm({
   }, [investCurrency, redeemCallback, product, currency, showModal, autoBalanceRaw, addPopup, autoBalance, hideModal])
 
   const error = useMemo(() => {
-    if (!product || !contractBalance) return ''
-    let str = ''
+    // if (!product || !contractBalance) return ''
+    // let str = ''
 
-    if (
-      investAmount !== '' &&
-      +contractBalance < +investAmount * +product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice)
-    ) {
-      str = ErrorType.insufficientBalance
-    }
+    // if (
+    //   investAmount !== '' &&
+    //   +contractBalance < +investAmount * +product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice)
+    // ) {
+    //   str = ErrorType.insufficientBalance
+    // }
 
-    const now = Date.now()
-    const before = product.expiredAt - 7200000
-    const after = product.expiredAt + 1800000
+    // const now = Date.now()
+    // const before = product.expiredAt - 7200000
+    // const after = product.expiredAt + 1800000
 
-    if (product.price === null || (now >= before && now < after)) {
-      str = ErrorType.notAvailable
-    }
+    // if (product.price === null || (now >= before && now < after)) {
+    //   str = ErrorType.notAvailable
+    // }
 
-    return str
-  }, [contractBalance, investAmount, product])
+    // return str
+    return ErrorType.closed
+  }, [])
 
   return (
     <>
@@ -270,7 +272,8 @@ export default function VaultForm({
             <VaultFormComponent
               error={error}
               redeemDisabled={!product || !+autoBalance}
-              investDisabled={!product || !investAmount}
+              investDisabled={true}
+              // investDisabled={!product || !investAmount}
               onWithdraw={handleRedeemConfirmOpen}
               onInvest={handleInvestConfirmOpen}
               formData={formData}
