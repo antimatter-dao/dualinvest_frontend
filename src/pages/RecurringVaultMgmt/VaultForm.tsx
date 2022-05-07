@@ -118,7 +118,6 @@ export default function VaultForm({
       hideModal()
 
       toggleRecur(RECUR_TOGGLE_STATUS.open)
-
       addPopup(r, {
         summary: `Subscribed ${(
           +investAmount * (product ? product.multiplier * (product.type === 'CALL' ? 1 : +product.strikePrice) : 1)
@@ -130,6 +129,7 @@ export default function VaultForm({
       })
       setInvestAmount('')
       showModal(<TransactionSubmittedModal />)
+      refresh++
     } catch (e) {
       setInvestAmount('')
       showModal(<MessageBox type="error">{(e as any)?.error?.message || (e as Error).message || e}</MessageBox>)

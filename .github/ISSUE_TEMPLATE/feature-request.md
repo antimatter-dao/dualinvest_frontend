@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest an idea for improving the UX of the Uniswap Interface
+about: Suggest an idea for improving antimatter contracts
 title: ''
 labels: 'improvement'
 assignees: ''
